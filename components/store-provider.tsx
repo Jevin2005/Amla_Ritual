@@ -181,20 +181,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     (slug: string) => {
       const product = getProduct(slug);
       if (!product) return;
-      setWishlist((current) => {
-        const exists = current.includes(slug);
-        setAnnouncement(
-          `${product.name} ${exists ? "removed from" : "saved to"} your wishlist.`,
-        );
-        track(exists ? "remove_from_wishlist" : "add_to_wishlist", {
-          item_id: slug,
-        });
-        return exists
+      const exists = wishlist.includes(slug);
+      setWishlist((current) =>
+        current.includes(slug)
           ? current.filter((item) => item !== slug)
-          : [...current, slug];
+          : [...current, slug],
+      );
+      setAnnouncement(
+        `${product.name} ${exists ? "removed from" : "saved to"} your wishlist.`,
+      );
+      track(exists ? "remove_from_wishlist" : "add_to_wishlist", {
+        item_id: slug,
       });
     },
-    [track],
+    [track, wishlist],
   );
 
   const subtotalPaise = useMemo(

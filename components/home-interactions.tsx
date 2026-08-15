@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   bundles,
   formatCurrency,
@@ -13,21 +13,37 @@ import {
 import { ProductJar } from "@/components/product-jar";
 import { useStore } from "@/components/store-provider";
 
-export function HeroPurchase() {
-  const amla = products[0];
-  const { addToCart } = useStore();
+export function HeroPurchase({
+  slug,
+  name,
+  pricePaise,
+}: {
+  slug: string;
+  name: string;
+  pricePaise: number;
+}) {
+  const { addToCart, isWishlisted, toggleWishlist } = useStore();
   const [added, setAdded] = useState(false);
+  const resetTimer = useRef<number | null>(null);
+  const wished = isWishlisted(slug);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+    };
+  }, []);
 
   const add = () => {
-    addToCart(amla.slug);
+    addToCart(slug);
     setAdded(true);
-    window.setTimeout(() => setAdded(false), 1800);
+    if (resetTimer.current) window.clearTimeout(resetTimer.current);
+    resetTimer.current = window.setTimeout(() => setAdded(false), 1800);
   };
 
   return (
     <div className="hero-purchase">
       <div className="hero-price-row">
-        <span>{formatCurrency(amla.pricePaise)}</span>
+        <span>{formatCurrency(pricePaise)}</span>
         <small>Preview price · final pack details pending</small>
       </div>
       <div className="hero-actions">
@@ -35,10 +51,19 @@ export function HeroPurchase() {
           {added ? "Added to your ritual" : "Add to Bag"}
           <span aria-hidden="true">{added ? "✓" : "↗"}</span>
         </button>
-        <a className="button button--ghost" href="#amla-ritual">
-          Explore the ritual
-        </a>
+        <button
+          className={`hero-wishlist ${wished ? "is-active" : ""}`}
+          type="button"
+          aria-label={wished ? `Remove ${name} from wishlist` : `Save ${name} to wishlist`}
+          aria-pressed={wished}
+          onClick={() => toggleWishlist(slug)}
+        >
+          <span aria-hidden="true">{wished ? "♥" : "♡"}</span>
+        </button>
       </div>
+      <a className="hero-ritual-link" href="#amla-ritual">
+        Explore the ritual <span aria-hidden="true">↓</span>
+      </a>
     </div>
   );
 }
@@ -276,4 +301,3 @@ export function BundleCards() {
     </div>
   );
 }
-

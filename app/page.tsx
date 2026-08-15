@@ -87,19 +87,8 @@ export default function Home() {
   return (
     <main id="main-content">
       <section className="hero" aria-labelledby="hero-title">
-        <div className="hero__image" aria-hidden="true">
-          <Image
-            src={heroImage}
-            alt=""
-            fill
-            sizes="100vw"
-            fetchPriority="high"
-            className="hero__photo"
-          />
-          <span className="hero__image-shade" />
-        </div>
-        <div className="hero__botanical hero__botanical--one" aria-hidden="true">
-          <i />
+        <span className="hero__texture" aria-hidden="true" />
+        <div className="hero__orbit" aria-hidden="true">
           <i />
           <i />
           <i />
@@ -107,44 +96,94 @@ export default function Home() {
         <div className="hero__content">
           <p className="eyebrow">The Amla Ritual · No. 01</p>
           <h1 id="hero-title">
-            Pure amla.
-            <span>Powerful ritual.</span>
+            <span className="hero__title-line">Indulge in</span>
+            <span className="hero__title-line hero__title-line--pure">
+              Pure
+              <span className="hero__glimpse" aria-hidden="true">
+                <Image
+                  src={heroImage}
+                  alt=""
+                  fill
+                  sizes="160px"
+                  className="hero__glimpse-photo"
+                />
+              </span>
+            </span>
+            <em>Botanical ritual.</em>
           </h1>
           <p className="hero__lede">
-            One storied botanical, thoughtfully prepared for soft-feeling,
+            A storied Indian botanical, thoughtfully prepared for soft-feeling,
             luminous-looking hair—and an unhurried moment of care.
           </p>
-          <HeroPurchase />
+          <HeroPurchase
+            slug={amla.slug}
+            name={amla.name}
+            pricePaise={amla.pricePaise}
+          />
           <ul className="hero__trust" aria-label="NatureMist principles">
             <li><span>01</span> Single botanical</li>
             <li><span>02</span> Clearly explained</li>
             <li><span>03</span> Made for home rituals</li>
           </ul>
         </div>
-        <div className="hero__product">
-          <p>NatureMist / Ritual 01</p>
-          <ProductJar product={amla} size="hero" />
-          <span className="hero__product-note">Packaging preview</span>
-        </div>
-        <div className="hero__scroll" aria-hidden="true">
-          <span />
-          Scroll to discover
-        </div>
-      </section>
 
-      <section className="hero-details" id="amla-ritual" aria-label="Amla product details">
-        <details>
-          <summary>Why you’ll love it <span>＋</span></summary>
-          <p>{amla.shortDescription}</p>
-        </details>
-        <details>
-          <summary>How to use <span>＋</span></summary>
-          <p>Mix gradually with water until smooth, apply in sections and follow the final pack timing before rinsing thoroughly.</p>
-        </details>
-        <details>
-          <summary>Ingredient details <span>＋</span></summary>
-          <p>{amla.ingredient}</p>
-        </details>
+        <div className="hero__portrait">
+          <div className="hero__portrait-frame">
+            <Image
+              src={heroImage}
+              alt="A woman with long, dark natural hair in a sunlit botanical setting"
+              fill
+              sizes="(max-width: 680px) 92vw, (max-width: 900px) 52vw, 38vw"
+              preload
+              className="hero__portrait-photo"
+            />
+            <span className="hero__portrait-shade" aria-hidden="true" />
+            <span className="hero__portrait-index" aria-hidden="true">01 / 06</span>
+          </div>
+          <div className="hero__ritual-note">
+            <span>01</span>
+            <div>
+              <strong>Amla · pre-wash</strong>
+              <small>Softness + luminous-looking shine</small>
+            </div>
+            <i aria-hidden="true" />
+          </div>
+          <a className="hero__scroll" href="#collection-title" aria-label="Scroll to the botanical collection">
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+
+        <aside className="hero__spotlight" id="amla-ritual" aria-label="Featured Amla ritual">
+          <nav className="hero__switch" aria-label="Browse featured rituals">
+            <Link href="/shop/hibiscus-powder" aria-label="Previous featured ritual, Hibiscus">←</Link>
+            <span>Featured ritual</span>
+            <Link href="/shop/reetha-powder" aria-label="Next featured ritual, Reetha">→</Link>
+          </nav>
+          <div className="hero__product-stage">
+            <span className="hero__product-leaves" aria-hidden="true"><i /><i /><i /></span>
+            <ProductJar product={amla} size="medium" />
+            <span className="hero__powder-dish" aria-hidden="true" />
+          </div>
+          <div className="hero__spotlight-heading">
+            <span>NatureMist / Ritual 01</span>
+            <h2>Amla powder</h2>
+            <p>Condition + shine · packaging preview</p>
+          </div>
+          <div className="hero__facts">
+            <details>
+              <summary>Why you’ll love it <span aria-hidden="true">＋</span></summary>
+              <p>{amla.shortDescription}</p>
+            </details>
+            <details>
+              <summary>How to prepare <span aria-hidden="true">＋</span></summary>
+              <p>Mix gradually with water until smooth, apply in sections and follow the final pack timing before rinsing thoroughly.</p>
+            </details>
+            <details open>
+              <summary>Ingredient clarity <span aria-hidden="true">＋</span></summary>
+              <p>{amla.ingredient}</p>
+            </details>
+          </div>
+        </aside>
       </section>
 
       <section className="section collection-section reveal" aria-labelledby="collection-title">

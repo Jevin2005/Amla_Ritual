@@ -31,7 +31,7 @@ export async function generateMetadata(
       url: `/shop/${slug}`,
       images: [
         {
-          url: "/og.png",
+          url: "/naturemist-social-redesign.png",
           width: 1536,
           height: 1024,
           alt: "NatureMist botanical rituals",
@@ -185,4 +185,3 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
     </main>
   );
 }
-

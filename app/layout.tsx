@@ -47,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: "/",
       images: [
         {
-          url: "/og.png",
+          url: "/naturemist-social-redesign.png",
           width: 1536,
           height: 1024,
           alt: "NatureMist — Pure botanicals. Powerful rituals.",
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/og.png"],
+      images: ["/naturemist-social-redesign.png"],
     },
     robots: {
       index: true,
