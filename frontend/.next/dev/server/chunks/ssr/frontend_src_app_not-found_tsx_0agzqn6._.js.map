@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///E:/jevin/Amla_Ritual/frontend/src/app/not-found.tsx"],"sourcesContent":["import Link from \"next/link\";\n\nexport default function NotFound() {\n  return (\n    <main id=\"main-content\" className=\"status-page\">\n      <span className=\"status-page__number\">404</span>\n      <p className=\"eyebrow\">This path has gone quiet</p>\n      <h1>The ritual isn’t here.</h1>\n      <p>Return to the botanical cabinet and begin again.</p>\n      <Link className=\"button button--dark\" href=\"/shop\">Explore the collection</Link>\n    </main>\n  );\n}\n\n"],"names":["NotFound","id","className","href"],"mappings":";;;;;AAAA;;;AAEe,SAASA;IACtB,qBACE,8OAAC;QAAKC,IAAG;QAAeC,WAAU;;0BAChC,8OAAC;gBAAKA,WAAU;0BAAsB;;;;;;0BACtC,8OAAC;gBAAEA,WAAU;0BAAU;;;;;;0BACvB,8OAAC;0BAAG;;;;;;0BACJ,8OAAC;0BAAE;;;;;;0BACH,8OAAC,0LAAI;gBAACA,WAAU;gBAAsBC,MAAK;0BAAQ;;;;;;;;;;;;AAGzD"}}]
+}

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///E:/jevin/Amla_Ritual/frontend/src/app/error.tsx"],"sourcesContent":["\"use client\";\n\nexport default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {\n  return (\n    <main id=\"main-content\" className=\"status-page\">\n      <span className=\"status-page__number\">○</span>\n      <p className=\"eyebrow\">A small pause</p>\n      <h1>This ritual needs another try.</h1>\n      <p>Nothing has been lost. Refresh this moment and continue.</p>\n      <button className=\"button button--dark\" type=\"button\" onClick={reset}>Try again</button>\n    </main>\n  );\n}\n\n"],"names":["ErrorPage","reset","id","className","type","onClick"],"mappings":";;;;;AAAA;;AAEe,SAASA,UAAU,EAAEC,KAAK,EAA6D;IACpG,qBACE,8OAAC;QAAKC,IAAG;QAAeC,WAAU;;0BAChC,8OAAC;gBAAKA,WAAU;0BAAsB;;;;;;0BACtC,8OAAC;gBAAEA,WAAU;0BAAU;;;;;;0BACvB,8OAAC;0BAAG;;;;;;0BACJ,8OAAC;0BAAE;;;;;;0BACH,8OAAC;gBAAOA,WAAU;gBAAsBC,MAAK;gBAASC,SAASJ;0BAAO;;;;;;;;;;;;AAG5E"}}]
+}

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///E:/jevin/Amla_Ritual/frontend/src/app/loading.tsx"],"sourcesContent":["export default function Loading() {\n  return (\n    <main className=\"loading-page\" aria-label=\"Loading NatureMist\">\n      <span className=\"loading-leaf\" aria-hidden=\"true\"><i /><i /></span>\n      <p>Preparing your ritual…</p>\n    </main>\n  );\n}\n\n"],"names":["Loading","className"],"mappings":";;;;;;AAAe,SAASA;IACtB,qBACE,8OAAC;QAAKC,WAAU;QAAe,cAAW;;0BACxC,8OAAC;gBAAKA,WAAU;gBAAe,eAAY;;kCAAO,8OAAC;;;;;kCAAI,8OAAC;;;;;;;;;;;0BACxD,8OAAC;0BAAE;;;;;;;;;;;;AAGT"}}]
+}

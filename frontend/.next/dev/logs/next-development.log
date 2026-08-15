@@ -1,0 +1,24 @@
+{"timestamp":"00:00:00.510","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:00.511","source":"Server","level":"LOG","message":"✓ Generated AGENTS.md and CLAUDE.md for AI agents. Set `agentRules: false` in next.config to disable."}
+{"timestamp":"00:05:10.879","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:05:25.033","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:05:25.297","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:05:25.318","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:05:25.338","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:05:25.352","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:05:25.362","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:05:25.372","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:05:25.382","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:08:19.690","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:08:19.706","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:08:19.741","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:08:19.755","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:08:22.680","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:08:22.694","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:08:22.702","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:11:22.447","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:11:22.507","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:11:22.520","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:11:28.121","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:11:28.147","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
+{"timestamp":"00:11:28.157","source":"Server","level":"ERROR","message":"⨯ Error: failed to pipe response"}
