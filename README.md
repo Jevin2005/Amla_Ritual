@@ -6,7 +6,7 @@ The experience includes an editorial homepage, the full six-product collection, 
 
 ## Local development
 
-Node.js 20.9 or newer is required.
+Node.js 22 or newer is required.
 
 ```bash
 npm ci
@@ -21,13 +21,26 @@ Open `http://localhost:3000`.
 npm run lint
 npm run typecheck
 npm run build
+npm run check:site
 ```
 
-`npm run check` runs all three gates in order.
+`npm run check` runs the complete Next.js and Sites production gate in order.
+
+## Project architecture
+
+Application source lives in `src/` and is organized by responsibility:
+
+- `src/app/` — Next.js routes, metadata and global styles
+- `src/domain/` — framework-light catalog data, types and selectors
+- `src/features/` — customer-facing capabilities such as catalog, cart, rituals and checkout
+- `src/shared/` — reusable layout, hooks and low-level UI
+- `src/widgets/` — page-level compositions that join multiple features
+
+Static files remain in `public/`, while Sites build integration stays at the project root in `build/`, `worker/` and `.openai/`. See `docs/architecture.md` for the dependency rules and extension guide.
 
 ## Editing products
 
-All product copy, accent colours, preview prices, ritual guidance and FAQs live in `lib/products.ts`. The current prices and packaging visuals are explicitly pre-launch placeholders. Replace them with verified commercial data and original pack photography before accepting real orders.
+All product copy, accent colours, preview prices, ritual guidance and FAQs live in `src/domain/catalog/products.ts`. The current prices and packaging visuals are explicitly pre-launch placeholders. Replace them with verified commercial data and original pack photography before accepting real orders.
 
 Do not publish certifications, reviews, inventory, origin, net weight, batch claims, shipping promises or discount terms until they are verified. Indigo colour guidance and all final preparation timings must match the approved product label.
 
@@ -51,7 +64,7 @@ The UI emits no-op-safe `naturemist:analytics` browser events and optionally pus
 
 ## Brand imagery
 
-Project imagery is stored in `public/images/`, and the social preview is `public/og.png`. These assets were created specifically for the NatureMist concept and should be replaced or supplemented with approved original product photography when available.
+Project imagery is stored in `public/images/`, and the social preview is `public/naturemist-social-redesign.png`. These assets were created specifically for the NatureMist concept and should be replaced or supplemented with approved original product photography when available.
 
 ## Sites production build
 
