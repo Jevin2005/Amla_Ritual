@@ -2,23 +2,14 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useModalFocus } from "../hooks/use-modal-focus";
+import { useStore } from "@/features/store/store-provider";
+import { useModalFocus } from "@/shared/hooks/use-modal-focus";
 import { BrandMark } from "./brand-mark";
 import { MobileMenu } from "./mobile-menu";
 
-type SiteHeaderProps = {
-  cartCount: number;
-  wishlistCount: number;
-  onOpenCart: () => void;
-  onOpenSearch: () => void;
-};
-
-export function SiteHeader({
-  cartCount,
-  wishlistCount,
-  onOpenCart,
-  onOpenSearch,
-}: SiteHeaderProps) {
+export function SiteHeader() {
+  const { cartCount, wishlist, openCart, openSearch } = useStore();
+  const wishlistCount = wishlist.length;
   const [compact, setCompact] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileRef = useRef<HTMLElement>(null);
@@ -63,13 +54,13 @@ export function SiteHeader({
             <BrandMark />
           </Link>
           <div className="site-nav__actions">
-            <button className="text-action desktop-action" type="button" onClick={onOpenSearch}>
+            <button className="text-action desktop-action" type="button" onClick={openSearch}>
               Search
             </button>
             <Link className="text-action desktop-action" href="/wishlist">
               Wishlist <span className="count-badge">{wishlistCount}</span>
             </Link>
-            <button className="text-action" type="button" onClick={onOpenCart}>
+            <button className="text-action" type="button" onClick={openCart}>
               Bag <span className="count-badge">{cartCount}</span>
             </button>
             <button
@@ -91,7 +82,7 @@ export function SiteHeader({
         wishlistCount={wishlistCount}
         menuRef={mobileRef}
         onClose={closeMobile}
-        onSearch={onOpenSearch}
+        onSearch={openSearch}
       />
     </>
   );

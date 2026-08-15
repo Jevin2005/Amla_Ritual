@@ -1,8 +1,8 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { NewsletterForm } from "@/features/newsletter/components/newsletter-form";
 import { BrandMark } from "./brand-mark";
 
-export function SiteFooter({ newsletter }: { newsletter: ReactNode }) {
+export function SiteFooter() {
   return (
     <footer className="site-footer" id="newsletter">
       <div className="site-footer__newsletter">
@@ -12,7 +12,7 @@ export function SiteFooter({ newsletter }: { newsletter: ReactNode }) {
         </div>
         <div>
           <p>Ingredient stories, preparation guides and thoughtful new arrivals.</p>
-          {newsletter}
+          <NewsletterForm />
         </div>
       </div>
       <div className="site-footer__links">
