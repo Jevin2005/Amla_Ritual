@@ -56,7 +56,7 @@ export function HomePage() {
           className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(rgba(23,63,42,0.22)_0.55px,transparent_0.55px)] bg-size-[7px_7px] opacity-20 [mask-image:linear-gradient(115deg,transparent_8%,black_45%,transparent_88%)]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto grid min-h-[max(780px,calc(100svh-var(--header-height)-29px))] w-full max-w-[1440px] grid-cols-[minmax(280px,0.78fr)_minmax(470px,1.52fr)_minmax(230px,0.62fr)] gap-[clamp(18px,1.8vw,28px)] px-[clamp(24px,5vw,72px)] pt-[clamp(42px,4vw,60px)] pb-[clamp(34px,3.5vw,52px)] max-[1180px]:min-h-[740px] max-[1180px]:grid-cols-[minmax(245px,0.8fr)_minmax(390px,1.35fr)_minmax(210px,0.65fr)] max-[1180px]:gap-[20px] max-[1080px]:min-h-0 max-[1080px]:grid-cols-[minmax(285px,0.84fr)_minmax(390px,1.16fr)] max-[1080px]:gap-[42px_32px] max-[1080px]:px-[5vw] max-[1080px]:pt-[52px] max-[1080px]:pb-[64px] max-[900px]:grid-cols-[minmax(230px,0.84fr)_minmax(300px,1.16fr)] max-[900px]:gap-[38px_26px] max-[900px]:px-[6vw] max-[900px]:pt-[46px] max-[900px]:pb-[60px] max-[680px]:grid max-[680px]:h-[100svh] max-[680px]:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] max-[680px]:items-start max-[680px]:gap-x-3 max-[680px]:gap-y-0 max-[680px]:pt-0 max-[680px]:pr-0 max-[680px]:pb-0 max-[680px]:pl-4">
+        <div className="relative mx-auto grid min-h-[max(780px,calc(100svh-var(--header-height)-29px))] w-full max-w-[1440px] grid-cols-[minmax(280px,0.78fr)_minmax(470px,1.52fr)_minmax(230px,0.62fr)] gap-[clamp(18px,1.8vw,28px)] px-[clamp(24px,5vw,72px)] pt-[clamp(42px,4vw,60px)] pb-[clamp(34px,3.5vw,52px)] max-[1180px]:min-h-[740px] max-[1180px]:grid-cols-[minmax(245px,0.8fr)_minmax(390px,1.35fr)_minmax(210px,0.65fr)] max-[1180px]:gap-[20px] max-[1080px]:min-h-0 max-[1080px]:grid-cols-[minmax(285px,0.84fr)_minmax(390px,1.16fr)] max-[1080px]:gap-[42px_32px] max-[1080px]:px-[5vw] max-[1080px]:pt-[52px] max-[1080px]:pb-[64px] max-[900px]:grid-cols-[minmax(230px,0.84fr)_minmax(300px,1.16fr)] max-[900px]:gap-[38px_26px] max-[900px]:px-[6vw] max-[900px]:pt-[46px] max-[900px]:pb-[60px] max-[680px]:grid max-[680px]:h-[100svh] max-[680px]:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] max-[680px]:items-start max-[680px]:gap-x-0 max-[680px]:gap-y-0 max-[680px]:p-0">
         <div
           className="pointer-events-none absolute top-[3%] left-[30%] z-[1] h-[90%] w-[51%] rounded-[48%_52%_46%_54%/52%_45%_55%_48%] border border-[rgba(63,125,58,0.4)] opacity-75 [transform:rotate(16deg)] [animation:hero-orbit-drift_9s_ease-in-out_infinite_alternate] [will-change:transform] max-[1180px]:left-[29%] max-[1180px]:w-[53%] min-[901px]:max-[1080px]:top-[1%] min-[901px]:max-[1080px]:left-[39%] min-[901px]:max-[1080px]:h-[58%] min-[901px]:max-[1080px]:w-[60%] max-[900px]:top-[1%] max-[900px]:left-[39%] max-[900px]:h-[58%] max-[900px]:w-[60%] max-[680px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(16deg)]"
           aria-hidden="true"
@@ -71,8 +71,8 @@ export function HomePage() {
             <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] [animation:hero-arrow_4.9s_ease-in-out_-2.1s_infinite] [will-change:transform] motion-reduce:animate-none" />
           </span>
         </div>
-        <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] max-[1180px]:w-[108%] max-[1080px]:w-[106%] max-[900px]:mt-[-22px] max-[900px]:w-[110%] max-[900px]:self-start max-[680px]:mt-0 max-[680px]:w-full max-[680px]:self-start max-[680px]:pt-7 max-[680px]:pr-1 max-[680px]:pb-8 motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-          <p className={`${eyebrowClass} max-[680px]:mb-3 max-[680px]:text-[0.55rem] max-[680px]:tracking-[0.14em]`}>
+        <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] max-[1180px]:w-[108%] max-[1080px]:w-[106%] max-[900px]:mt-[-22px] max-[900px]:w-[110%] max-[900px]:self-start max-[680px]:mt-0 max-[680px]:w-full max-[680px]:self-center max-[680px]:pt-8 max-[680px]:px-5 max-[680px]:pb-0 motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+          <p className={`${eyebrowClass} max-[680px]:mb-2 max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.12em]`}>
             The Amla Ritual · No. 01
           </p>
           <h1
@@ -85,7 +85,7 @@ export function HomePage() {
             <span className="flex items-center gap-[clamp(13px,1.4vw,22px)] [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
               Pure
               <span
-                className="relative inline-block h-[0.58em] w-[clamp(105px,10.5vw,168px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[680px]:w-[clamp(38px,10.5vw,62px)]"
+                className="relative inline-block h-[0.58em] w-[clamp(105px,10.5vw,168px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[680px]:w-[clamp(36px,10vw,58px)]"
                 aria-hidden="true"
               >
                 <Image
@@ -97,11 +97,11 @@ export function HomePage() {
                 />
               </span>
             </span>
-            <em className="mt-[0.08em] ml-[0.03em] block whitespace-nowrap text-[0.91em] leading-[inherit] font-normal tracking-[-0.055em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:whitespace-normal max-[680px]:text-[0.85em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+            <em className="mt-[0.05em] ml-[0.03em] block whitespace-nowrap text-[0.91em] leading-[inherit] font-normal tracking-[-0.055em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:whitespace-normal max-[680px]:text-[0.82em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
               Botanical ritual.
             </em>
           </h1>
-          <p className="my-[clamp(28px,3.2vh,42px)_22px] max-w-[440px] text-[clamp(0.95rem,1.05vw,1.08rem)] leading-[1.7] text-[#4b5047] max-[900px]:my-[24px_18px] max-[900px]:max-w-[430px] max-[900px]:text-[0.82rem] max-[900px]:leading-[1.65] max-[680px]:my-[12px_11px] max-[680px]:text-xs max-[680px]:leading-[1.5]">
+          <p className="my-[clamp(28px,3.2vh,42px)_22px] max-w-[440px] text-[clamp(0.95rem,1.05vw,1.08rem)] leading-[1.7] text-[#4b5047] max-[900px]:my-[24px_18px] max-[900px]:max-w-[430px] max-[900px]:text-[0.82rem] max-[900px]:leading-[1.65] max-[680px]:my-[8px_9px] max-[680px]:text-[0.67rem] max-[680px]:leading-[1.48] max-[680px]:line-clamp-3">
             A storied Indian botanical, thoughtfully prepared for soft-feeling,
             luminous-looking hair—and an unhurried moment of care.
           </p>
@@ -135,7 +135,7 @@ export function HomePage() {
           </ul>
         </div>
 
-        <div className="relative z-[2] h-[clamp(620px,72vh,760px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(560px,68vh,670px)] max-[1080px]:h-[clamp(460px,58vh,540px)] max-[900px]:mt-[-46px] max-[900px]:h-[clamp(450px,58vh,520px)] max-[900px]:self-start max-[680px]:mt-0 max-[680px]:h-full max-[680px]:min-h-[300px] max-[680px]:self-stretch motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+        <div className="relative z-[2] h-[clamp(620px,72vh,760px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(560px,68vh,670px)] max-[1080px]:h-[clamp(460px,58vh,540px)] max-[900px]:mt-[-46px] max-[900px]:h-[clamp(450px,58vh,520px)] max-[900px]:self-start max-[680px]:mt-0 max-[680px]:h-[100svh] max-[680px]:self-stretch max-[680px]:overflow-hidden motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
           <span
             className="pointer-events-none absolute top-[1%] right-[-7%] bottom-[-3%] left-[-8%] z-0 rounded-[49%_51%_17%_83%/35%_38%_62%_65%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)] max-[1080px]:hidden"
             aria-hidden="true"
@@ -249,7 +249,7 @@ export function HomePage() {
             />
           </Link>
           <a
-            className="absolute right-[-18px] bottom-[18px] z-[6] grid size-[76px] place-items-center rounded-full border border-[rgba(255,255,255,0.8)] bg-[rgba(23,63,42,0.14)] text-[1.75rem] text-white shadow-[0_14px_34px_rgba(18,38,23,0.12)] backdrop-blur-[8px] [font-family:var(--font-display)] [transition:background_250ms_ease,transform_250ms_ease] hover:bg-[rgba(23,63,42,0.5)] hover:[transform:translateY(4px)] max-[680px]:right-3 max-[680px]:bottom-[max(12px,env(safe-area-inset-bottom))] max-[680px]:size-16 motion-reduce:transition-none"
+            className="absolute right-[-18px] bottom-[18px] z-[6] grid size-[76px] place-items-center rounded-full border border-[rgba(255,255,255,0.8)] bg-[rgba(23,63,42,0.14)] text-[1.75rem] text-white shadow-[0_14px_34px_rgba(18,38,23,0.12)] backdrop-blur-[8px] [font-family:var(--font-display)] [transition:background_250ms_ease,transform_250ms_ease] hover:bg-[rgba(23,63,42,0.5)] hover:[transform:translateY(4px)] max-[680px]:right-2 max-[680px]:bottom-[max(16px,env(safe-area-inset-bottom))] max-[680px]:size-14 max-[680px]:text-[1.3rem] motion-reduce:transition-none"
             href="#collection-title"
             aria-label="Scroll to the botanical collection"
           >
@@ -371,7 +371,7 @@ export function HomePage() {
         className={`${sectionClass} ${revealClass} overflow-hidden max-[680px]:pt-16 max-[680px]:pb-16`}
         aria-labelledby="collection-title"
       >
-        <div className={splitHeadingClass}>
+        <div className="grid grid-cols-[minmax(0,1.35fr)_minmax(260px,0.65fr)] items-end gap-[clamp(48px,6vw,88px)] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(210px,0.85fr)] max-[900px]:gap-8 max-[680px]:grid-cols-1 max-[680px]:gap-3">
           <div>
             <p className={eyebrowClass}>The botanical cabinet</p>
             <h2 className={sectionTitleClass} id="collection-title">
@@ -393,7 +393,7 @@ export function HomePage() {
             <ProductCard product={product} key={product.slug} />
           ))}
         </div>
-        <p className="mx-auto mt-7 max-w-[680px] text-center text-[0.7rem] leading-[1.6] text-[var(--muted)] max-[680px]:mt-8 max-[680px]:px-2 max-[680px]:text-[0.68rem]">
+        <p className="mx-auto mt-6 max-w-[680px] text-center text-[0.7rem] leading-[1.6] text-[var(--muted)] max-[680px]:mt-6 max-[680px]:px-3 max-[680px]:text-[0.65rem]">
           Product jars and prices are editable launch previews. Final labels, net weights, batch data and commercial terms will replace them before sale.
         </p>
       </section>
@@ -535,12 +535,12 @@ export function HomePage() {
       </section>
 
       <section
-        className={`mx-auto grid w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] items-center gap-[clamp(52px,7vw,96px)] px-[clamp(24px,5vw,72px)] pb-[clamp(84px,9vw,132px)] max-[900px]:grid-cols-[0.8fr_1.2fr] max-[900px]:gap-11 max-[680px]:grid-cols-[0.9fr_1.1fr] max-[680px]:items-center max-[680px]:gap-3 max-[680px]:px-5 max-[680px]:pb-16 ${revealClass}`}
+        className={`mx-auto grid w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] items-center gap-[clamp(52px,7vw,96px)] px-[clamp(24px,5vw,72px)] pb-[clamp(84px,9vw,132px)] max-[900px]:grid-cols-[0.8fr_1.2fr] max-[900px]:gap-11 max-[680px]:grid-cols-[0.88fr_1.12fr] max-[680px]:items-start max-[680px]:gap-x-3 max-[680px]:gap-y-0 max-[680px]:px-4 max-[680px]:pb-12 ${revealClass}`}
         id="ingredient-standards"
         aria-labelledby="purity-title"
       >
         <div className="relative">
-          <div className="relative aspect-[0.72] w-full overflow-hidden rounded-[50%_50%_4px_4px/22%_22%_4px_4px] bg-[var(--beige)] max-[680px]:aspect-[0.65]">
+          <div className="relative aspect-[0.72] w-full overflow-hidden rounded-[50%_50%_4px_4px/22%_22%_4px_4px] bg-[var(--beige)] max-[680px]:aspect-[0.72]">
             <Image
               src={ritualImage}
               alt="A hand slowly mixing a fresh green amla paste in a ceramic bowl beside amla fruit"
