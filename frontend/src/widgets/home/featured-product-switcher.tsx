@@ -44,7 +44,7 @@ export function FeaturedProductSwitcher() {
         ))}
       </div>
       <div
-        className="relative flex min-w-0 items-center justify-center overflow-hidden max-[900px]:min-h-[520px] max-[680px]:min-h-[380px] max-[430px]:min-h-[350px]"
+        className="relative flex min-w-0 items-center justify-center overflow-hidden max-[900px]:min-h-[520px] max-[680px]:min-h-[380px]"
       >
         <span
           className="absolute aspect-square w-[min(82%,400px)] rounded-full border border-[color-mix(in_srgb,var(--family-accent)_28%,transparent)] before:absolute before:inset-[11%] before:rounded-full before:border before:border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] before:content-[''] after:absolute after:inset-[24%] after:rounded-full after:border after:border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] after:content-['']"

@@ -26,7 +26,7 @@ export function ProductCard({
       style={style}
     >
       <div className="relative flex h-[clamp(330px,28vw,430px)] flex-none items-end justify-center overflow-hidden pb-[35px] [background:radial-gradient(circle_at_50%_78%,rgba(255,255,255,0.95)_0,rgba(255,255,255,0.28)_28%,transparent_55%),linear-gradient(145deg,color-mix(in_srgb,var(--product-soft)_72%,white),var(--product-soft))] before:absolute before:top-[14%] before:h-[65%] before:w-[65%] before:rounded-t-[50%] before:border before:border-[color-mix(in_srgb,var(--product-accent)_35%,transparent)] before:content-[''] max-[800px]:pb-7 max-[680px]:h-[clamp(200px,55vw,300px)] max-[680px]:pb-4 max-[520px]:h-[200px] @max-[220px]:h-[350px] @max-[220px]:pb-6 @max-[220px]:before:top-[10%] @max-[220px]:before:h-[72%] @max-[220px]:before:w-[88%]">
-        <span className="absolute top-[14%] right-[7%] h-40 w-[100px] rotate-24 before:absolute before:left-1/2 before:h-full before:w-px before:bg-[color-mix(in_srgb,var(--product-accent)_45%,transparent)] before:content-[''] [&>i]:absolute [&>i]:h-[18px] [&>i]:w-[37px] [&>i]:rounded-[100%_0_100%_0] [&>i]:bg-[color-mix(in_srgb,var(--product-accent)_25%,transparent)] [&>i:nth-child(1)]:top-5 [&>i:nth-child(1)]:left-4 [&>i:nth-child(2)]:top-[65px] [&>i:nth-child(2)]:right-[15px] [&>i:nth-child(2)]:-scale-x-100 [&>i:nth-child(3)]:top-[108px] [&>i:nth-child(3)]:left-[15px] @max-[220px]:right-[-6px] @max-[220px]:top-[8%] @max-[220px]:scale-[0.82]" aria-hidden="true">
+        <span className="absolute top-[14%] right-[7%] h-40 w-[100px] rotate-24 before:absolute before:left-1/2 before:h-full before:w-px before:bg-[color-mix(in_srgb,var(--product-accent)_45%,transparent)] before:content-[''] [&>i]:absolute [&>i]:h-[18px] [&>i]:w-[37px] [&>i]:rounded-[100%_0_100%_0] [&>i]:bg-[color-mix(in_srgb,var(--product-accent)_25%,transparent)] [&>i:nth-child(1)]:top-5 [&>i:nth-child(1)]:left-4 [&>i:nth-child(2)]:top-[65px] [&>i:nth-child(2)]:right-[15px] [&>i:nth-child(2)]:-scale-x-100 [&>i:nth-child(3)]:top-[108px] [&>i:nth-child(3)]:left-[15px] @max-[220px]:top-[8%] @max-[220px]:right-2 @max-[220px]:origin-top-right @max-[220px]:scale-[0.66]" aria-hidden="true">
           <i />
           <i />
           <i />
@@ -57,7 +57,7 @@ export function ProductCard({
           <ProductJar
             product={product}
             size={compact ? "small" : "medium"}
-            className="max-[680px]:scale-[0.72] max-[680px]:origin-bottom @max-[220px]:origin-bottom @max-[220px]:scale-[0.94]"
+            className="max-[680px]:origin-bottom max-[680px]:scale-[0.72] @max-[220px]:origin-bottom @max-[220px]:scale-[0.94] @max-[220px]:[filter:drop-shadow(0_12px_8px_rgba(43,48,34,0.16))]"
             decorative
           />
         </Link>
@@ -66,7 +66,7 @@ export function ProductCard({
         <p className="mb-2 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--product-accent)] uppercase @max-[220px]:mb-2 @max-[220px]:text-[0.58rem] @max-[220px]:tracking-[0.12em]">Ritual {product.collectionNumber}</p>
         <Link
           href={`/shop/${product.slug}`}
-          className="inline-block font-serif text-[clamp(1.8rem,2.2vw,2.5rem)] leading-none tracking-[-0.04em] text-[var(--forest)] max-[680px]:text-[1.25rem] max-[680px]:leading-tight @max-[220px]:flex @max-[220px]:min-h-[2em] @max-[220px]:items-start @max-[220px]:text-[1.7rem] @max-[220px]:leading-none @max-[220px]:tracking-[-0.04em] @max-[220px]:[overflow-wrap:anywhere]"
+          className="inline-block font-serif text-[clamp(1.8rem,2.2vw,2.5rem)] leading-none tracking-[-0.04em] text-[var(--forest)] max-[680px]:inline-flex max-[680px]:min-h-11 max-[680px]:items-start max-[680px]:text-[1.25rem] max-[680px]:leading-tight @max-[220px]:flex @max-[220px]:min-h-[2em] @max-[220px]:items-start @max-[220px]:text-[1.7rem] @max-[220px]:leading-none @max-[220px]:tracking-[-0.04em] @max-[220px]:[overflow-wrap:anywhere]"
           onClick={() =>
             track("select_item", { item_id: product.slug, placement: "product_title" })
           }
@@ -81,7 +81,7 @@ export function ProductCard({
           </div>
           <button
             type="button"
-            className="grid size-[46px] flex-none place-items-center rounded-full border border-[var(--product-accent,var(--forest))] bg-transparent text-[1.3rem] text-[var(--product-accent,var(--forest))] transition-[background,color,transform] duration-[260ms] ease-[ease] hover:rotate-90 hover:bg-[var(--product-accent,var(--forest))] hover:text-[var(--paper)] max-[680px]:size-9 max-[680px]:text-[1rem] @max-[220px]:size-11"
+            className="grid size-[46px] flex-none place-items-center rounded-full border border-[var(--product-accent,var(--forest))] bg-transparent text-[1.3rem] text-[var(--product-accent,var(--forest))] transition-[background,color,transform] duration-[260ms] ease-[ease] hover:rotate-90 hover:bg-[var(--product-accent,var(--forest))] hover:text-[var(--paper)] max-[680px]:size-11 max-[680px]:text-[1rem] @max-[220px]:size-11"
             onClick={() => addToCart(product.slug)}
             aria-label={`Add ${product.name} to bag`}
           >

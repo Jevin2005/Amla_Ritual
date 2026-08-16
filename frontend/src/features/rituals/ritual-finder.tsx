@@ -160,11 +160,11 @@ export function RitualFinder() {
               <button className="inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)]" type="button" onClick={() => addToCart(result.slug)}>
                 Add to bag <span aria-hidden="true">↗</span>
               </button>
-              <Link className="inline-flex items-center gap-3.5 border-b border-[var(--paper)] pb-[5px] text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--paper)] transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px]" href={`/shop/${result.slug}`}>
+              <Link className="inline-flex items-center gap-3.5 border-b border-[var(--paper)] pb-[5px] text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--paper)] transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px] max-[680px]:min-h-11" href={`/shop/${result.slug}`}>
                 Read the ritual
               </Link>
             </div>
-            <button className="mt-[25px] border-b border-white/50 bg-transparent pb-[3px] text-[0.66rem] uppercase tracking-[0.1em] text-white/70" type="button" onClick={reset}>
+            <button className="mt-[25px] border-b border-white/50 bg-transparent pb-[3px] text-[0.66rem] uppercase tracking-[0.1em] text-white/70 max-[680px]:inline-flex max-[680px]:min-h-11 max-[680px]:items-center" type="button" onClick={reset}>
               Start again
             </button>
           </div>
