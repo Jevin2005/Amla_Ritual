@@ -1,34 +1,38 @@
 # Frontend architecture
 
-NatureMist is a standalone frontend package. Its repository folder is named `frontend`, so a future API, CMS adapter or infrastructure package can be added beside it without mixing concerns.
+NatureMist is a standalone, single-package frontend. The application and its build configuration live directly at the repository root; future APIs, CMS adapters, or infrastructure packages should be introduced only when a real second deployable unit exists.
 
 ## Directory map
 
 ```text
-frontend/
+Amla_Ritual/
+├─ .openai/hosting.json              Sites project binding
+├─ build/                            Source for the Sites/Vite build adapter
+├─ docs/                             Engineering documentation
+├─ public/                           Browser-served images and static assets
 ├─ src/
-│  ├─ app/                       Next.js App Router routes and metadata
+│  ├─ app/                           Thin Next.js routes, metadata and global CSS
 │  ├─ domain/
-│  │  └─ catalog/                Product data, types and pure selectors
+│  │  └─ catalog/                    Product data, types and pure selectors
 │  ├─ features/
-│  │  ├─ cart/components/        Cart drawer and quantity management
-│  │  ├─ catalog/components/     Browse and product purchase UI
-│  │  ├─ checkout/components/    Checkout-provider handoff
-│  │  ├─ home/components/        Homepage-only interactive sections
-│  │  ├─ newsletter/components/  Newsletter integration boundary
-│  │  ├─ rituals/                Recommendation logic and finder UI
-│  │  ├─ search/components/      Catalog search dialog
-│  │  ├─ store/                  Cart, wishlist, persistence and events
-│  │  ├─ tracking/components/    Fulfilment-provider handoff
-│  │  └─ wishlist/components/    Saved-product experience
-│  ├─ shared/                    Reusable layout, hooks and primitives
-│  └─ widgets/                   Cross-feature page compositions
-├─ public/                       Browser-served images and static assets
-├─ build/                        Source for the Sites/Vite build adapter
-├─ worker/                       Sites runtime entry point
-├─ docs/                         Engineering documentation
-├─ .openai/hosting.json          Existing Sites project binding
-└─ package.json                  Frontend scripts and dependencies
+│  │  ├─ cart/components/            Cart drawer and quantity management
+│  │  ├─ catalog/components/         Browse and product purchase UI
+│  │  ├─ checkout/components/        Checkout-provider handoff
+│  │  ├─ newsletter/components/      Newsletter integration boundary
+│  │  ├─ rituals/                    Recommendation logic and finder UI
+│  │  ├─ search/components/          Catalogue search dialog
+│  │  ├─ store/                      Cart, wishlist, persistence and events
+│  │  ├─ tracking/components/        Fulfilment-provider handoff
+│  │  └─ wishlist/components/        Saved-product experience
+│  ├─ shared/
+│  │  └─ hooks/                      Domain-neutral reusable hooks
+│  └─ widgets/
+│     ├─ home/                       Homepage composition and content
+│     └─ site-chrome/                Header, navigation, footer and site shell
+├─ worker/                            Sites runtime entry point
+├─ next.config.ts                    Next.js configuration and response headers
+├─ vite.config.ts                    Vinext/Sites build configuration
+└─ package.json                      Frontend scripts and dependencies
 ```
 
 `public`, configuration files, environment files and hosting adapters stay at the package root. Next.js supports `src/app`, but does not support moving `public` or the configuration files into `src`.
@@ -43,10 +47,10 @@ src/app → src/widgets → src/features → src/domain
 ```
 
 - `app` owns routes and composes widgets or features. Route files stay thin and are Server Components unless interactivity requires otherwise.
-- `widgets` may compose several features and shared components.
+- `widgets` own page-level or site-wide compositions and may combine several features with shared code.
 - `features` own a user capability. A feature may use the catalog domain and shared code; cross-feature imports must be explicit and should not form cycles.
 - `domain` contains product facts and pure operations. It must not import React components or browser state.
-- `shared` contains reusable, domain-neutral presentation and hooks. It must not import feature modules.
+- `shared` contains reusable, domain-neutral hooks or presentation. It must not import feature modules.
 - Prefer direct imports over broad barrel files so client-bundle dependencies remain visible.
 
 The `@/` alias resolves only to `src/`. Assets in `public/` are referenced with browser paths such as `/images/naturemist-hero.png`.
@@ -72,7 +76,7 @@ The store provider reads browser storage after mount. New browser APIs must foll
 
 ## Quality gates
 
-Run from the `frontend` directory:
+Run from the repository root:
 
 ```bash
 npm ci
@@ -82,4 +86,4 @@ npm run build
 npm run check:site
 ```
 
-`npm run build` verifies the native Next.js output. `npm run check:site` verifies Vinext compatibility and produces the deployable Sites artifact. Sites commands must run from this directory because the Vite adapter resolves `.openai`, `build`, `worker` and `dist` relative to the package root.
+`npm run build` verifies the native Next.js output. `npm run check:site` verifies Vinext compatibility and produces the deployable Sites artifact. Sites commands must run from the repository root because the Vite adapter resolves `.openai`, `build`, `worker` and `dist` relative to that root.

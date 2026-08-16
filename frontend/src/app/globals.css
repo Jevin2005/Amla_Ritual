@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  --ivory: #f7f4e8;
+  --ivory-deep: #eee8d8;
+  --forest: #173f2a;
+  --forest-dark: #0e2c1c;
+  --botanical: #3f7d3a;
+  --amla: #a7c943;
+  --charcoal: #22261f;
+  --beige: #ddd5c2;
+  --paper: #fffdf6;
+  --muted: #66695f;
+  --line: rgb(23 63 42 / 18%);
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Baskerville, Georgia, serif;
+  --font-display: var(--font-serif);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 28px 70px rgb(37 48 30 / 12%);
+}
+
+@theme inline {
+  --color-background: var(--ivory);
+  --color-foreground: var(--charcoal);
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
+@keyframes hero-copy-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(-18px, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-title-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-portrait-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes hero-jar-float {
+  0%,
+  100% {
+    transform: scale(var(--hero-jar-scale)) translateY(0);
+  }
+  50% {
+    transform: scale(var(--hero-jar-scale)) translateY(-6px);
+  }
+}
+
+@keyframes hero-arrow {
+  0%,
+  100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes hero-orbit-drift {
+  from {
+    transform: rotate(14deg) translate3d(0, -3px, 0);
+  }
+  to {
+    transform: rotate(17deg) translate3d(5px, 5px, 0);
+  }
+}
+
+@keyframes jar-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes product-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+}
+
+@keyframes loading-leaf {
+  to {
+    transform: translateY(-5px) rotate(8deg);
+  }
+}
+
+@keyframes section-reveal {
+  from {
+    opacity: 0.2;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

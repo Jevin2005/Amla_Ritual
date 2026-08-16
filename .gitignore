@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+frontend/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -16,10 +17,14 @@
 # next.js
 /.next/
 /out/
+frontend/.next/
+frontend/out/
 
 # generated deployment output
 /dist
 /.wrangler
+frontend/dist/
+frontend/.wrangler/
 
 # misc
 .DS_Store
