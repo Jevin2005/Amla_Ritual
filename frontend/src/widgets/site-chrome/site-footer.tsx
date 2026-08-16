@@ -5,12 +5,12 @@ import { BrandMark } from "./brand-mark";
 const footerHeadingClass =
   "m-0 mb-[18px] text-[0.63rem] tracking-[0.14em] text-[var(--paper)] uppercase";
 const footerLinkClass =
-  "my-[5px] w-max text-[0.77rem] text-[rgba(255,255,255,0.56)] transition-[color,transform] duration-200 ease-[ease] hover:text-[var(--paper)] hover:[transform:translateX(3px)]";
+  "inline-flex min-h-11 w-fit max-w-full items-center text-[0.77rem] leading-[1.3] text-[rgba(255,255,255,0.56)] transition-[color,transform] duration-200 ease-[ease] hover:text-[var(--paper)] hover:[transform:translateX(3px)]";
 
 export function SiteFooter() {
   return (
     <footer
-      className="bg-[var(--forest)] px-[clamp(25px,6vw,96px)] pt-[clamp(75px,8vw,120px)] pb-[25px] text-[rgba(255,255,255,0.72)] max-[680px]:px-5"
+      className="bg-[var(--forest)] px-[clamp(25px,6vw,96px)] pt-[clamp(75px,8vw,120px)] pb-[25px] text-[rgba(255,255,255,0.72)] max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pb-[calc(25px+env(safe-area-inset-bottom))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]"
       id="newsletter"
     >
       <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_0.75fr] gap-[8vw] border-b border-[rgba(255,255,255,0.16)] pb-[70px] max-[900px]:grid-cols-[1fr]">
@@ -29,7 +29,7 @@ export function SiteFooter() {
           <NewsletterForm />
         </div>
       </div>
-      <div className="mx-auto grid max-w-[1440px] grid-cols-[1.6fr_repeat(3,0.7fr)] gap-[45px] py-[65px] max-[900px]:grid-cols-[1.5fr_repeat(3,1fr)] max-[680px]:grid-cols-[1fr_1fr]">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-[1.6fr_repeat(3,0.7fr)] gap-[45px] py-[65px] max-[900px]:grid-cols-[1.5fr_repeat(3,1fr)] max-[680px]:grid-cols-[1fr_1fr] max-[680px]:gap-x-6 max-[680px]:gap-y-10">
         <div className="max-[680px]:col-span-full">
           <Link
             className="inline-block"

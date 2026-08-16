@@ -46,7 +46,7 @@ export function MobileMenu({
         tabIndex={-1}
       />
       <aside
-        className={`absolute inset-y-0 right-0 hidden w-[min(440px,100%)] overflow-y-auto overscroll-contain bg-[var(--paper)] pb-[max(28px,env(safe-area-inset-bottom))] shadow-[-30px_0_70px_rgba(0,0,0,0.15)] transition-[transform] duration-[520ms] ease-[var(--ease)] max-[680px]:block ${
+        className={`absolute inset-y-0 right-0 hidden w-[min(440px,100%)] overflow-y-auto overscroll-contain bg-[var(--paper)] pb-[calc(28px+env(safe-area-inset-bottom))] shadow-[-30px_0_70px_rgba(0,0,0,0.15)] transition-[transform] duration-[520ms] ease-[var(--ease)] max-[680px]:block ${
           open ? "[transform:translateX(0)]" : "[transform:translateX(102%)]"
         }`}
         ref={menuRef}
@@ -55,7 +55,7 @@ export function MobileMenu({
         aria-modal="true"
         aria-label="Mobile navigation"
       >
-        <div className="flex min-h-[88px] items-center justify-between border-b border-[var(--line)] px-5 py-[17px]">
+        <div className="flex min-h-[88px] items-center justify-between border-b border-[var(--line)] pr-[max(20px,env(safe-area-inset-right))] pb-[17px] pl-[max(20px,env(safe-area-inset-left))] pt-[calc(17px+env(safe-area-inset-top))]">
           <Link href="/" aria-label="NatureMist home" onClick={onClose}>
             <BrandMark />
           </Link>
@@ -70,7 +70,7 @@ export function MobileMenu({
           </button>
         </div>
         <nav
-          className="grid px-5 pt-4 pb-8"
+          className="grid pr-[max(20px,env(safe-area-inset-right))] pb-8 pl-[max(20px,env(safe-area-inset-left))] pt-4"
           aria-label="Mobile primary navigation"
         >
           <Link
@@ -115,15 +115,17 @@ export function MobileMenu({
             </span>
           </Link>
         </nav>
-        <button
-          type="button"
-          className="mx-5 inline-flex min-h-[50px] w-[calc(100%_-_40px)] items-center justify-center gap-[22px] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--forest)] uppercase transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
-          onClick={handleSearch}
-        >
-          Search botanicals <span aria-hidden="true">↗</span>
-        </button>
+        <div className="pr-[max(20px,env(safe-area-inset-right))] pl-[max(20px,env(safe-area-inset-left))]">
+          <button
+            type="button"
+            className="inline-flex min-h-[50px] w-full items-center justify-center gap-[22px] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--forest)] uppercase transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
+            onClick={handleSearch}
+          >
+            Search botanicals <span aria-hidden="true">↗</span>
+          </button>
+        </div>
         <nav
-          className="mx-5 mt-6 grid grid-cols-2 gap-x-5"
+          className="mt-6 grid grid-cols-2 gap-x-5 pr-[max(20px,env(safe-area-inset-right))] pl-[max(20px,env(safe-area-inset-left))]"
           aria-label="Customer care"
         >
           <Link
@@ -161,7 +163,7 @@ export function MobileMenu({
             Terms
           </Link>
         </nav>
-        <p className="mx-5 mt-[26px] text-center text-[0.65rem] tracking-[0.12em] text-[var(--muted)] uppercase">
+        <p className="mt-[26px] pr-[max(20px,env(safe-area-inset-right))] pl-[max(20px,env(safe-area-inset-left))] text-center text-[0.65rem] tracking-[0.12em] text-[var(--muted)] uppercase">
           One ingredient. Clearly explained.
         </p>
       </aside>

@@ -31,21 +31,34 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
 
   return (
     <div className="w-full max-w-[430px]">
-      <div className="flex items-baseline justify-between gap-4 border-t border-[rgba(23,63,42,0.18)] py-[14px_12px] max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-0">
+      <div className="flex items-baseline justify-between gap-4 border-t border-[rgba(23,63,42,0.18)] py-[14px_12px] max-[680px]:flex-row max-[680px]:items-baseline max-[680px]:gap-2 max-[680px]:py-[8px_7px]">
         <span className="[color:var(--forest)] [font-family:var(--font-display)] text-[1.55rem]">
           {formatCurrency(pricePaise)}
         </span>
-        <small className="[color:var(--muted)] text-[0.62rem] tracking-[0.04em]">
+        <small className="[color:var(--muted)] text-[0.62rem] tracking-[0.04em] max-[680px]:hidden">
           Preview price · final pack details pending
         </small>
       </div>
       <div className="flex items-center gap-3 max-[680px]:gap-[10px]">
         <button
-          className="inline-flex min-h-[50px] min-w-[min(245px,calc(100%_-_62px))] items-center justify-center gap-[22px] border border-transparent bg-[var(--botanical)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)] max-[900px]:min-h-[46px] max-[900px]:px-4 max-[680px]:min-h-[50px] max-[680px]:w-[calc(100%_-_60px)] max-[680px]:px-5"
+          className="inline-flex min-h-[50px] min-w-[min(245px,calc(100%_-_62px))] items-center justify-center gap-[22px] border border-transparent bg-[var(--botanical)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)] max-[900px]:min-h-[46px] max-[900px]:px-4 max-[680px]:min-h-[50px] max-[680px]:min-w-0 max-[680px]:flex-1 max-[680px]:gap-2 max-[680px]:px-2 max-[680px]:text-[0.63rem]"
           type="button"
           onClick={add}
         >
-          {added ? "Added to your ritual" : "Add to Bag"}
+          <span className="max-[680px]:hidden">
+            {added ? "Added to your ritual" : "Add to Bag"}
+          </span>
+          <span className="hidden leading-[1.08] max-[680px]:block">
+            {added ? (
+              "Added"
+            ) : (
+              <>
+                Add to
+                <br />
+                bag
+              </>
+            )}
+          </span>
           <span aria-hidden="true">{added ? "✓" : "↗"}</span>
         </button>
         <button
@@ -63,7 +76,7 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
         </button>
       </div>
       <a
-        className="group mt-[15px] inline-flex items-center gap-[9px] text-[0.61rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase"
+        className="group mt-[15px] inline-flex items-center gap-[9px] text-[0.61rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase max-[680px]:hidden"
         href="#amla-ritual"
       >
         Explore the ritual{" "}

@@ -67,7 +67,7 @@ export function ShopExplorer() {
               <button
                 type="button"
                 key={option}
-                className={`relative min-h-9 bg-transparent py-[3px] pr-0 pl-[22px] text-left text-[0.76rem] before:absolute before:top-1/2 before:left-0 before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] max-[900px]:min-h-10 max-[900px]:py-1.5 max-[900px]:pr-3 max-[900px]:pl-[30px] max-[900px]:before:left-[9px] ${
+                className={`relative min-h-9 bg-transparent py-[3px] pr-0 pl-[22px] text-left text-[0.76rem] before:absolute before:top-1/2 before:left-0 before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] max-[900px]:min-h-10 max-[900px]:py-1.5 max-[900px]:pr-3 max-[900px]:pl-[30px] max-[900px]:before:left-[9px] max-[680px]:min-h-11 ${
                   goal === option
                     ? "font-bold text-[var(--forest)] before:border-[3px] before:border-[var(--ivory)] before:bg-[var(--botanical)] before:shadow-[0_0_0_1px_var(--botanical)]"
                     : "text-[var(--muted)] before:border before:border-[var(--line)]"
@@ -87,7 +87,7 @@ export function ShopExplorer() {
               <button
                 type="button"
                 key={option}
-                className={`relative min-h-9 bg-transparent py-[3px] pr-0 pl-[22px] text-left text-[0.76rem] before:absolute before:top-1/2 before:left-0 before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] max-[900px]:min-h-10 max-[900px]:py-1.5 max-[900px]:pr-3 max-[900px]:pl-[30px] max-[900px]:before:left-[9px] ${
+                className={`relative min-h-9 bg-transparent py-[3px] pr-0 pl-[22px] text-left text-[0.76rem] before:absolute before:top-1/2 before:left-0 before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] max-[900px]:min-h-10 max-[900px]:py-1.5 max-[900px]:pr-3 max-[900px]:pl-[30px] max-[900px]:before:left-[9px] max-[680px]:min-h-11 ${
                   step === option
                     ? "font-bold text-[var(--forest)] before:border-[3px] before:border-[var(--ivory)] before:bg-[var(--botanical)] before:shadow-[0_0_0_1px_var(--botanical)]"
                     : "text-[var(--muted)] before:border before:border-[var(--line)]"
@@ -103,7 +103,7 @@ export function ShopExplorer() {
             ))}
           </div>
         </div>
-        <button className="border-b border-[var(--forest)] bg-transparent pb-[3px] text-[0.63rem] tracking-[0.08em] text-[var(--forest)] uppercase max-[900px]:col-span-full max-[900px]:justify-self-start" type="button" onClick={clear}>
+        <button className="inline-flex min-h-11 items-center border-b border-[var(--forest)] bg-transparent pb-[3px] text-[0.63rem] tracking-[0.08em] text-[var(--forest)] uppercase max-[900px]:col-span-full max-[900px]:justify-self-start" type="button" onClick={clear}>
           Clear all filters
         </button>
       </aside>
