@@ -10,7 +10,7 @@ export function CheckoutPreview() {
 
   if (!cart.length) {
     return (
-      <section className="flex min-h-[560px] flex-col items-center justify-center px-[25px] py-[70px] text-center">
+      <section className="mx-auto flex min-h-[560px] w-full max-w-[960px] flex-col items-center justify-center px-6 py-[70px] text-center max-[680px]:min-h-[480px]">
         <span className="mb-[30px] grid size-[90px] place-items-center rounded-full border border-[var(--line)] text-2xl text-[var(--botanical)]" aria-hidden="true">○</span>
         <p className="m-0 font-serif text-[clamp(2rem,3vw,3rem)] leading-[1.04]">Your bag is waiting.</p>
         <p className="max-w-[360px] text-[var(--muted)]">Add a botanical ritual before continuing to checkout.</p>
@@ -20,11 +20,11 @@ export function CheckoutPreview() {
   }
 
   return (
-    <section className="mx-auto grid w-full max-w-[1300px] grid-cols-[1fr_0.8fr] gap-[clamp(55px,9vw,130px)] px-[25px] pb-[140px] pt-[95px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[100px] max-[680px]:pt-[75px]">
+    <section className="mx-auto grid w-full max-w-[1280px] grid-cols-[1fr_0.82fr] gap-[clamp(52px,7vw,96px)] px-[clamp(24px,5vw,64px)] pb-[140px] pt-[95px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[100px] max-[680px]:pt-[72px]">
       <div>
         <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Secure checkout handoff</p>
-        <h2 className="m-0 font-serif text-[clamp(3.4rem,5vw,6rem)] font-normal leading-[0.94] tracking-[-0.055em] text-[var(--forest)]">Ready for your verified payment provider.</h2>
-        <p className="max-w-[650px] text-[var(--muted)]">
+        <h2 className="m-0 max-w-[12ch] font-serif text-[clamp(3.2rem,5vw,5.5rem)] font-normal leading-[0.94] tracking-[-0.055em] text-[var(--forest)] text-balance">Ready for your verified payment provider.</h2>
+        <p className="max-w-[650px] leading-[1.75] text-[var(--muted)]">
           This storefront preview deliberately does not collect card details or create a pretend order. Connect your chosen hosted checkout provider before launch, then this step can hand over the exact bag safely.
         </p>
         <div className="my-7 grid gap-[7px] border-l-[3px] border-[var(--amla)] bg-[var(--paper)] p-6">
@@ -34,7 +34,7 @@ export function CheckoutPreview() {
         <button className="inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:text-[var(--paper)]" type="button" onClick={openCart}>Return to bag</button>
         <Link className="ml-[22px] inline-flex items-center gap-3.5 border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px] max-[680px]:ml-0 max-[680px]:mt-5" href="/shop">Continue exploring ↗</Link>
       </div>
-      <aside className="self-start bg-[var(--paper)] p-[30px] max-[680px]:px-5 max-[680px]:py-6" aria-label="Order preview">
+      <aside className="self-start bg-[var(--paper)] p-[30px] min-[901px]:sticky min-[901px]:top-[calc(var(--header-height)+24px)] max-[680px]:px-5 max-[680px]:py-6" aria-label="Order preview">
         <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Order preview</p>
         <div className="border-t border-[var(--line)]">
           {cart.map((item) => {

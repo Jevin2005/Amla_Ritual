@@ -39,7 +39,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
       <p className="mb-[18px] flex items-center gap-[9px] text-[0.68rem] tracking-[0.08em] text-[var(--muted)] uppercase">
         <i className="size-[7px] rounded-full bg-[var(--pdp-accent)] shadow-[0_0_0_4px_color-mix(in_srgb,var(--pdp-accent)_14%,transparent)]" /> {product.availability}
       </p>
-      <div className="grid grid-cols-[130px_1fr] gap-3 max-[680px]:grid-cols-[106px_1fr]">
+      <div className="grid grid-cols-[130px_minmax(0,1fr)] gap-3 max-[680px]:grid-cols-[104px_minmax(0,1fr)] max-[420px]:grid-cols-1">
         <div className="inline-grid h-[52px] grid-cols-3 items-center border border-[var(--line)] [&>button]:h-[50px] [&>button]:bg-transparent [&>span]:text-center" aria-label={`Quantity for ${product.name}`}>
           <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))} aria-label="Decrease quantity">−</button>
           <span aria-live="polite">{quantity}</span>
@@ -50,7 +50,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
           <span aria-hidden="true">{added ? "✓" : "↗"}</span>
         </button>
       </div>
-      <div className="mt-3 grid grid-cols-[1fr_auto] gap-3 max-[680px]:grid-cols-1">
+      <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-3 max-[680px]:grid-cols-1">
         <button className="inline-flex min-h-[50px] w-full items-center justify-center gap-[22px] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--forest)] uppercase transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:text-[var(--paper)]" type="button" onClick={buyNow}>
           Continue to secure checkout
         </button>

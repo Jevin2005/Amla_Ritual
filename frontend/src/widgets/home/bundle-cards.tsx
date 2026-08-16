@@ -13,17 +13,17 @@ export function BundleCards() {
   const bundleBackgrounds = ["bg-[#d9dfc7]", "bg-[#e2ccc4]", "bg-[#c8d0c2]"];
 
   return (
-    <div className="mt-[70px] grid grid-cols-3 gap-[22px] max-[1180px]:gap-[14px] max-[900px]:grid-cols-1">
+    <div className="mt-[clamp(52px,5vw,68px)] grid grid-cols-3 gap-[clamp(14px,1.6vw,22px)] max-[900px]:grid-cols-1">
       {bundles.map((bundle, index) => {
         const bundleProducts = getBundleProducts(bundle.slugs);
         const total = bundleProducts.reduce((sum, product) => sum + product.pricePaise, 0);
         return (
           <article
-            className="overflow-hidden bg-[var(--paper)] max-[900px]:grid max-[900px]:grid-cols-2 max-[680px]:block"
+            className="flex h-full flex-col overflow-hidden bg-[var(--paper)] ring-1 ring-[var(--line)] max-[900px]:grid max-[900px]:grid-cols-2 max-[680px]:block"
             key={bundle.id}
           >
             <div
-              className={`relative flex h-[330px] items-end justify-center pb-[30px] ${bundleBackgrounds[index]} max-[900px]:h-auto max-[900px]:min-h-[330px] max-[680px]:h-[310px]`}
+              className={`relative flex h-[320px] items-end justify-center pb-[30px] ${bundleBackgrounds[index]} max-[900px]:h-auto max-[900px]:min-h-[320px] max-[680px]:h-[290px] max-[680px]:min-h-0`}
               aria-hidden="true"
             >
               {bundleProducts.slice(0, 4).map((product, productIndex) => (
@@ -45,7 +45,7 @@ export function BundleCards() {
                 </span>
               )}
             </div>
-            <div className="px-[30px] pt-7 pb-8 max-[680px]:px-6 max-[680px]:pt-[26px] max-[680px]:pb-[30px]">
+            <div className="flex flex-1 flex-col px-[30px] pt-7 pb-8 max-[680px]:px-6 max-[680px]:pt-[26px] max-[680px]:pb-[30px]">
               <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">
                 Ritual set {String(index + 1).padStart(2, "0")}
               </p>
@@ -64,7 +64,7 @@ export function BundleCards() {
                 </small>
               </div>
               <button
-                className="inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)]"
+                className="mt-auto inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)]"
                 type="button"
                 onClick={() => addManyToCart(bundle.slugs)}
               >

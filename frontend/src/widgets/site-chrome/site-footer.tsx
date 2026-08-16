@@ -13,7 +13,7 @@ export function SiteFooter() {
       className="bg-[var(--forest)] px-[clamp(25px,6vw,96px)] pt-[clamp(75px,8vw,120px)] pb-[25px] text-[rgba(255,255,255,0.72)] max-[680px]:px-5"
       id="newsletter"
     >
-      <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_0.75fr] gap-[8vw] border-b border-[rgba(255,255,255,0.16)] pb-[70px] max-[900px]:grid-cols-[1fr]">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_0.75fr] gap-[8vw] border-b border-[rgba(255,255,255,0.16)] pb-[70px] max-[900px]:grid-cols-[1fr]">
         <div>
           <p className="m-0 mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[#c8d88e] uppercase">
             A quieter kind of beauty note
@@ -29,14 +29,20 @@ export function SiteFooter() {
           <NewsletterForm />
         </div>
       </div>
-      <div className="mx-auto grid max-w-[1400px] grid-cols-[1.6fr_repeat(3,0.7fr)] gap-[45px] py-[65px] max-[900px]:grid-cols-[1.5fr_repeat(3,1fr)] max-[680px]:grid-cols-[1fr_1fr]">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-[1.6fr_repeat(3,0.7fr)] gap-[45px] py-[65px] max-[900px]:grid-cols-[1.5fr_repeat(3,1fr)] max-[680px]:grid-cols-[1fr_1fr]">
         <div className="max-[680px]:col-span-full">
-          <BrandMark variant="footer" />
+          <Link
+            className="inline-block"
+            href="/"
+            aria-label="NatureMist home"
+          >
+            <BrandMark variant="footer" />
+          </Link>
           <p className="mt-[22px] max-w-[350px] text-[rgba(255,255,255,0.52)]">
             Traditional Indian botanicals, translated into clear and considered care.
           </p>
         </div>
-        <div className="flex flex-col">
+        <nav className="flex flex-col" aria-label="Shop links">
           <h3 className={footerHeadingClass}>Shop</h3>
           <Link className={footerLinkClass} href="/shop">
             All botanicals
@@ -50,8 +56,8 @@ export function SiteFooter() {
           <Link className={footerLinkClass} href="/shop?goal=Botanical+Colour">
             Botanical colour
           </Link>
-        </div>
-        <div className="flex flex-col">
+        </nav>
+        <nav className="flex flex-col" aria-label="Discover links">
           <h3 className={footerHeadingClass}>Discover</h3>
           <Link className={footerLinkClass} href="/rituals">
             Build your ritual
@@ -65,8 +71,8 @@ export function SiteFooter() {
           <Link className={footerLinkClass} href="/#faq">
             Frequently asked
           </Link>
-        </div>
-        <div className="flex flex-col">
+        </nav>
+        <nav className="flex flex-col" aria-label="Customer care links">
           <h3 className={footerHeadingClass}>Care</h3>
           <Link className={footerLinkClass} href="/track-order">
             Track an order
@@ -80,9 +86,9 @@ export function SiteFooter() {
           <Link className={footerLinkClass} href="/terms">
             Terms
           </Link>
-        </div>
+        </nav>
       </div>
-      <div className="mx-auto flex max-w-[1400px] justify-between border-t border-[rgba(255,255,255,0.12)] pt-[22px] text-[0.54rem] tracking-[0.11em] text-[rgba(255,255,255,0.38)] uppercase max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-2">
+      <div className="mx-auto flex max-w-[1440px] justify-between border-t border-[rgba(255,255,255,0.12)] pt-[22px] text-[0.54rem] tracking-[0.11em] text-[rgba(255,255,255,0.38)] uppercase max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-2">
         <span>© {new Date().getFullYear()} NatureMist</span>
         <span>Rooted in Ayurveda. Made for modern rituals.</span>
         <span>India · Worldwide vision</span>

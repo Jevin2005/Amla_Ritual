@@ -29,23 +29,25 @@ export default function OurStoryPage() {
             className="object-cover max-[680px]:object-[64%_center]"
           />
         </div>
-        <div className="relative z-2 flex min-h-[inherit] flex-col justify-center px-[7vw] py-[100px] text-[var(--paper)] max-[680px]:px-5 max-[680px]:py-20">
-          <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[#c8d88e]">
-            The NatureMist philosophy
-          </p>
-          <h1 className="m-0 max-w-[950px] font-serif text-[clamp(4.5rem,8vw,9rem)] font-normal leading-[0.82] tracking-[-0.065em] max-[680px]:text-[clamp(4rem,19vw,6rem)]">
-            Rooted in Ayurveda.<br />
-            <em className="font-normal text-[#d8e6af]">Made for modern rituals.</em>
-          </h1>
+        <div className="relative z-2 flex min-h-[inherit] flex-col justify-center py-[100px] text-[var(--paper)] max-[680px]:py-20">
+          <div className="mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] max-[680px]:px-5">
+            <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[#c8d88e]">
+              The NatureMist philosophy
+            </p>
+            <h1 className="m-0 max-w-[11ch] font-serif text-[clamp(4.25rem,7vw,8rem)] font-normal leading-[0.84] tracking-[-0.065em] text-balance max-[680px]:text-[clamp(3.6rem,17vw,5.5rem)]">
+              Rooted in Ayurveda.<br />
+              <em className="font-normal text-[#d8e6af]">Made for modern rituals.</em>
+            </h1>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-[1500px] grid-cols-[0.4fr_1.6fr] gap-[7vw] px-[clamp(25px,6vw,96px)] py-[clamp(92px,10vw,155px)] max-[900px]:grid-cols-1 max-[680px]:gap-[30px] max-[680px]:px-5 max-[680px]:py-[85px]">
+      <section className="mx-auto grid w-full max-w-[1440px] grid-cols-[0.4fr_1.6fr] gap-[clamp(48px,7vw,96px)] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[900px]:grid-cols-1 max-[680px]:gap-[30px] max-[680px]:px-5 max-[680px]:py-[75px]">
         <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">
           Where we begin
         </p>
         <div>
-          <h2 className="m-0 max-w-[900px] font-serif text-[clamp(3.6rem,6vw,7rem)] font-normal leading-[0.92] tracking-[-0.06em] text-[var(--forest)]">
+          <h2 className="m-0 max-w-[900px] font-serif text-[clamp(3.4rem,5.5vw,6.5rem)] font-normal leading-[0.92] tracking-[-0.06em] text-[var(--forest)] text-balance">
             Tradition is most powerful when it can be understood.
           </h2>
           <p className="mb-0 ml-auto mt-8 max-w-[650px] text-[1.05rem] leading-[1.8] text-[var(--muted)]">
@@ -54,37 +56,40 @@ export default function OurStoryPage() {
         </div>
       </section>
 
-      <section className="mx-auto mb-[130px] grid max-w-[1500px] grid-cols-3 gap-px bg-[var(--line)] max-[900px]:grid-cols-1 max-[680px]:mb-20">
-        <article className={storyPillarClass}>
+      <section className="mb-[130px] px-[clamp(24px,5vw,72px)] max-[680px]:mb-20 max-[680px]:px-5">
+        <div className="mx-auto grid w-full max-w-[1296px] grid-cols-3 gap-px bg-[var(--line)] max-[900px]:grid-cols-1">
+          <article className={storyPillarClass}>
           <span className="text-[0.62rem] text-[var(--botanical)]">01</span>
           <h2 className={storyPillarTitleClass}>Name what is inside.</h2>
-          <p className="text-[0.8rem] text-[var(--muted)]">
+          <p className="text-[0.8rem] leading-[1.7] text-[var(--muted)]">
             The botanical, the plant part, the batch and the way to use it belong in plain sight—not behind inflated language.
           </p>
-        </article>
-        <article className={storyPillarClass}>
+          </article>
+          <article className={storyPillarClass}>
           <span className="text-[0.62rem] text-[var(--botanical)]">02</span>
           <h2 className={storyPillarTitleClass}>Teach before selling.</h2>
-          <p className="text-[0.8rem] text-[var(--muted)]">
+          <p className="text-[0.8rem] leading-[1.7] text-[var(--muted)]">
             Beginners deserve practical preparation and safety guidance. Familiar users deserve the same precision.
           </p>
-        </article>
-        <article className={storyPillarClass}>
+          </article>
+          <article className={storyPillarClass}>
           <span className="text-[0.62rem] text-[var(--botanical)]">03</span>
           <h2 className={storyPillarTitleClass}>Let the ritual stay beautiful.</h2>
-          <p className="text-[0.8rem] text-[var(--muted)]">
+          <p className="text-[0.8rem] leading-[1.7] text-[var(--muted)]">
             Care can be effective, tactile and deeply desirable without becoming loud, rushed or excessive.
           </p>
-        </article>
+          </article>
+        </div>
       </section>
 
-      <section className="grid min-h-[580px] grid-cols-[1fr_0.85fr] items-center gap-[8vw] bg-[var(--forest-dark)] px-[clamp(25px,7vw,110px)] py-[85px] text-[var(--paper)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[75px]">
-        <p className="m-0 font-serif text-[clamp(4rem,7vw,8rem)] leading-[0.82] tracking-[-0.06em] max-[680px]:text-[clamp(4rem,18vw,6rem)]">
+      <section className="bg-[var(--forest-dark)] text-[var(--paper)]">
+        <div className="mx-auto grid min-h-[580px] w-full max-w-[1440px] grid-cols-[1fr_0.85fr] items-center gap-[clamp(52px,7vw,100px)] px-[clamp(24px,5vw,72px)] py-[85px] max-[900px]:grid-cols-1 max-[680px]:min-h-0 max-[680px]:px-5 max-[680px]:py-[72px]">
+        <p className="m-0 max-w-[10ch] font-serif text-[clamp(3.8rem,6vw,7rem)] leading-[0.84] tracking-[-0.06em] text-balance max-[680px]:text-[clamp(3.5rem,16vw,5.25rem)]">
           “One ingredient.<br />Nothing unnecessary.”
         </p>
         <div>
-          <h2 className="m-0 font-serif text-5xl font-normal">From nature to your ritual.</h2>
-          <p className="text-white/60">
+          <h2 className="m-0 max-w-[12ch] font-serif text-[clamp(2.7rem,4vw,3.5rem)] font-normal leading-[0.96] text-balance">From nature to your ritual.</h2>
+          <p className="max-w-[580px] leading-[1.75] text-white/60">
             Final sourcing, processing and certification details will be published only when verified for each batch and pack. That standard of restraint is part of the brand.
           </p>
           <Link
@@ -93,6 +98,7 @@ export default function OurStoryPage() {
           >
             Meet the botanicals ↗
           </Link>
+          </div>
         </div>
       </section>
     </main>

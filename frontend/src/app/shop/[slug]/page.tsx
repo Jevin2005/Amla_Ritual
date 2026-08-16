@@ -76,22 +76,22 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <nav className="mx-auto flex max-w-[1500px] items-center gap-2.5 px-[clamp(25px,5vw,80px)] py-[22px] text-[0.61rem] tracking-[0.06em] text-[var(--muted)] uppercase [&>a:hover]:text-[var(--forest)] max-[680px]:overflow-x-auto max-[680px]:px-5 max-[680px]:py-[17px] max-[680px]:whitespace-nowrap" aria-label="Breadcrumb">
+      <nav className="mx-auto flex w-full max-w-[1440px] items-center gap-2.5 px-[clamp(24px,5vw,72px)] py-[22px] text-[0.61rem] uppercase tracking-[0.06em] text-[var(--muted)] [&>a]:transition-colors [&>a:hover]:text-[var(--forest)] max-[680px]:overflow-x-auto max-[680px]:px-5 max-[680px]:py-[17px] max-[680px]:whitespace-nowrap" aria-label="Breadcrumb">
         <Link href="/">Home</Link><span>/</span><Link href="/shop">Shop</Link><span>/</span><span>{product.name}</span>
       </nav>
 
       <section
-        className="mx-auto grid max-w-[1500px] grid-cols-[minmax(0,1.08fr)_minmax(370px,0.92fr)] gap-[clamp(55px,7vw,105px)] px-[clamp(25px,5vw,80px)] pb-[115px] [--pdp-accent:var(--botanical)] [--pdp-soft:var(--beige)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[75px]"
+        className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-[clamp(40px,6vw,88px)] px-[clamp(24px,5vw,72px)] pb-[110px] [--pdp-accent:var(--botanical)] [--pdp-soft:var(--beige)] max-[960px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[75px]"
         style={{
           "--pdp-accent": product.accent,
           "--pdp-soft": product.accentSoft,
         } as React.CSSProperties}
       >
         <div>
-          <div className="sticky top-[95px] flex min-h-[675px] items-end justify-center overflow-hidden pb-[60px] [background:radial-gradient(circle_at_50%_73%,rgba(255,255,255,0.85),transparent_35%),color-mix(in_srgb,var(--pdp-soft)_78%,var(--ivory))] max-[900px]:relative max-[900px]:top-auto max-[680px]:min-h-[520px]">
+          <div className="sticky top-[calc(var(--header-height)+24px)] flex min-h-[clamp(560px,50vw,675px)] items-end justify-center overflow-hidden pb-[60px] [background:radial-gradient(circle_at_50%_73%,rgba(255,255,255,0.85),transparent_35%),color-mix(in_srgb,var(--pdp-soft)_78%,var(--ivory))] max-[960px]:relative max-[960px]:top-auto max-[680px]:min-h-[460px] max-[680px]:pb-10">
             <span className="absolute top-[9%] h-[68%] w-[62%] rounded-t-[50%] border border-[color-mix(in_srgb,var(--pdp-accent)_35%,transparent)]" aria-hidden="true" />
             <span className="absolute top-[10%] right-[10%] z-[2] h-[250px] w-[130px] rotate-[28deg] before:absolute before:left-1/2 before:h-full before:w-px before:bg-[color-mix(in_srgb,var(--pdp-accent)_45%,transparent)] before:content-[''] [&>i]:absolute [&>i]:h-[27px] [&>i]:w-[58px] [&>i]:rounded-[100%_0_100%_0] [&>i]:bg-[color-mix(in_srgb,var(--pdp-accent)_23%,transparent)] [&>i:nth-child(1)]:top-[30px] [&>i:nth-child(1)]:left-[7px] [&>i:nth-child(2)]:top-[87px] [&>i:nth-child(2)]:right-[5px] [&>i:nth-child(2)]:scale-x-[-1] [&>i:nth-child(3)]:top-[145px] [&>i:nth-child(3)]:left-[5px] [&>i:nth-child(4)]:top-[198px] [&>i:nth-child(4)]:right-[7px] [&>i:nth-child(4)]:scale-x-[-1]" aria-hidden="true"><i /><i /><i /><i /></span>
-            <ProductJar product={product} size="large" className="z-[3] scale-[1.12] max-[680px]:scale-[0.88]" />
+            <ProductJar product={product} size="large" className="z-[3] scale-[1.08] max-[680px]:origin-bottom max-[680px]:scale-[0.82]" />
             <p className="absolute right-[25px] bottom-[18px] left-[25px] z-[4] m-0 text-center text-[0.52rem] tracking-[0.1em] text-[color-mix(in_srgb,var(--pdp-accent)_55%,var(--muted))] uppercase">Final product photography and label artwork will replace this packaging preview.</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 max-[680px]:grid-cols-1">
@@ -106,11 +106,11 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
           </div>
         </div>
 
-        <div className="pt-[30px] max-[900px]:pt-0">
+        <div className="min-w-0 pt-[30px] max-[960px]:pt-0">
           <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--pdp-accent)] uppercase">NatureMist · Ritual {product.collectionNumber}</p>
-          <h1 className="m-0 font-serif text-[clamp(4.1rem,6.4vw,7.8rem)] leading-[0.83] font-normal tracking-[-0.055em] text-[var(--forest)] max-[680px]:text-[clamp(4rem,19vw,6rem)]">{product.name}</h1>
+          <h1 className="m-0 max-w-[10ch] font-serif text-[clamp(3.6rem,5.5vw,6.75rem)] font-normal leading-[0.86] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(3.15rem,15vw,5rem)]">{product.name}</h1>
           <p className="mt-[23px] mb-0 font-serif text-2xl text-[var(--pdp-accent)] italic">{product.subtitle}</p>
-          <p className="mt-6 mb-[30px] max-w-[550px] text-[1.02rem] leading-[1.75] text-[var(--muted)] max-[900px]:max-w-[720px]">{product.shortDescription}</p>
+          <p className="mb-[30px] mt-6 max-w-[550px] text-[1.02rem] leading-[1.75] text-[var(--muted)] max-[960px]:max-w-[720px]">{product.shortDescription}</p>
           <div className="flex items-center justify-between border-y border-[var(--line)] py-4 text-[0.68rem]"><span className="tracking-[0.1em] text-[var(--muted)] uppercase">Format</span><strong className="font-semibold text-[var(--forest)]">{product.size}</strong></div>
           <ProductDetailActions product={product} />
           <div className="mt-[22px] grid grid-cols-3 gap-2.5 border-y border-[var(--line)] py-[25px] max-[680px]:grid-cols-1">
@@ -135,12 +135,12 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
         </div>
       </section>
 
-      <section className={`mx-auto w-[min(100%,1500px)] border-t border-[var(--line)] px-[clamp(25px,6vw,96px)] py-[clamp(92px,10vw,155px)] max-[680px]:px-5 max-[680px]:py-[85px] ${revealClass}`} aria-labelledby="ritual-details-title">
+      <section className={`mx-auto w-full max-w-[1440px] border-t border-[var(--line)] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px] ${revealClass}`} aria-labelledby="ritual-details-title">
         <div className="mx-auto mb-[clamp(50px,6vw,85px)] max-w-[840px] text-center max-[680px]:mb-[45px]">
           <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">Know your botanical</p>
-          <h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.5rem)] leading-[0.96] font-normal tracking-[-0.055em] text-[var(--forest)] max-[680px]:text-[clamp(3rem,15vw,4.8rem)]" id="ritual-details-title">Everything the ritual asks of you.</h2>
+          <h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]" id="ritual-details-title">Everything the ritual asks of you.</h2>
         </div>
-        <div className="grid grid-cols-4 gap-px bg-[var(--line)] max-[900px]:grid-cols-2 max-[680px]:grid-cols-1">
+        <div className="grid grid-cols-4 gap-px bg-[var(--line)] max-[1050px]:grid-cols-2 max-[680px]:grid-cols-1">
           <article className="min-h-[335px] bg-[var(--paper)] p-[30px] max-[680px]:min-h-[290px]"><span className="text-[0.59rem] tracking-[0.1em] text-[var(--botanical)]">01</span><h3 className="mt-[90px] mb-[18px] font-serif text-[1.8rem] font-normal text-[var(--forest)] max-[680px]:mt-[65px]">Mix it with</h3><ul className="m-0 list-none p-0">{product.mixers.map((item) => <li className="border-b border-[var(--line)] py-[7px] text-[0.75rem] text-[var(--muted)]" key={item}>{item}</li>)}</ul></article>
           <article className="min-h-[335px] bg-[var(--paper)] p-[30px] max-[680px]:min-h-[290px]"><span className="text-[0.59rem] tracking-[0.1em] text-[var(--botanical)]">02</span><h3 className="mt-[90px] mb-[18px] font-serif text-[1.8rem] font-normal text-[var(--forest)] max-[680px]:mt-[65px]">Well suited to</h3><ul className="m-0 list-none p-0">{product.suitableFor.map((item) => <li className="border-b border-[var(--line)] py-[7px] text-[0.75rem] text-[var(--muted)]" key={item}>{item}</li>)}</ul></article>
           <article className="min-h-[335px] bg-[var(--forest)] p-[30px] max-[680px]:min-h-[290px]"><span className="text-[0.59rem] tracking-[0.1em] text-[var(--botanical)]">03</span><h3 className="mt-[90px] mb-[18px] font-serif text-[1.8rem] font-normal text-[var(--paper)] max-[680px]:mt-[65px]">Use with care</h3><ul className="m-0 list-none p-0">{product.safety.map((item) => <li className="border-b border-white/14 py-[7px] text-[0.75rem] text-[var(--paper)] opacity-72" key={item}>{item}</li>)}</ul></article>
@@ -149,21 +149,23 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
         <p className="mt-[25px] bg-[var(--ivory-deep)] p-[25px] text-[0.74rem] text-[var(--muted)]"><strong className="text-[var(--forest)]">For every ritual:</strong> {globalSafety}</p>
       </section>
 
-      <section className={`mx-auto grid max-w-[1500px] grid-cols-[0.7fr_1.3fr] gap-[7vw] bg-[var(--forest-dark)] px-[clamp(25px,6vw,96px)] py-[clamp(80px,9vw,135px)] text-[var(--paper)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[75px] ${revealClass}`}>
-        <div>
-          <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[#c8d88e] uppercase">Why NatureMist</p>
-          <h2 className="m-0 font-serif text-[clamp(3.5rem,5vw,6rem)] leading-[0.94] font-normal tracking-[-0.055em]">Tradition deserves clarity.</h2>
-        </div>
-        <div className="border-t border-white/18">
-          <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">01</span><h3 className="m-0 font-serif text-2xl font-normal">One ingredient at a time</h3><p className="col-start-2 mt-[-12px] mb-0 text-[0.78rem] text-white/58">So you can understand what belongs in your bowl and why.</p></article>
-          <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">02</span><h3 className="m-0 font-serif text-2xl font-normal">Guidance without folklore overload</h3><p className="col-start-2 mt-[-12px] mb-0 text-[0.78rem] text-white/58">Clear preparation, pairing and safety language for real routines.</p></article>
-          <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">03</span><h3 className="m-0 font-serif text-2xl font-normal">No inflated promises</h3><p className="col-start-2 mt-[-12px] mb-0 text-[0.78rem] text-white/58">Cosmetic care described honestly, with final claims tied to verified product data.</p></article>
+      <section className={`bg-[var(--forest-dark)] text-[var(--paper)] ${revealClass}`}>
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[0.7fr_1.3fr] gap-[clamp(52px,7vw,100px)] px-[clamp(24px,5vw,72px)] py-[clamp(80px,9vw,130px)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[72px]">
+          <div>
+            <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[#c8d88e]">Why NatureMist</p>
+            <h2 className="m-0 max-w-[12ch] font-serif text-[clamp(3.25rem,5vw,5.75rem)] font-normal leading-[0.94] tracking-[-0.055em] text-balance">Tradition deserves clarity.</h2>
+          </div>
+          <div className="border-t border-white/18">
+            <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">01</span><h3 className="m-0 font-serif text-2xl font-normal">One ingredient at a time</h3><p className="col-start-2 mb-0 mt-[-12px] text-[0.78rem] text-white/58">So you can understand what belongs in your bowl and why.</p></article>
+            <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">02</span><h3 className="m-0 font-serif text-2xl font-normal">Guidance without folklore overload</h3><p className="col-start-2 mb-0 mt-[-12px] text-[0.78rem] text-white/58">Clear preparation, pairing and safety language for real routines.</p></article>
+            <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">03</span><h3 className="m-0 font-serif text-2xl font-normal">No inflated promises</h3><p className="col-start-2 mb-0 mt-[-12px] text-[0.78rem] text-white/58">Cosmetic care described honestly, with final claims tied to verified product data.</p></article>
+          </div>
         </div>
       </section>
 
-      <section className={`mx-auto w-[min(100%,1500px)] px-[clamp(25px,6vw,96px)] py-[clamp(92px,10vw,155px)] max-[680px]:px-5 max-[680px]:py-[85px] ${revealClass}`} aria-labelledby="product-faq-title">
+      <section className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px] ${revealClass}`} aria-labelledby="product-faq-title">
         <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(260px,0.6fr)] items-end gap-[8vw] max-[900px]:grid-cols-1 max-[900px]:gap-[35px]">
-          <div><p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">Before you mix</p><h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.5rem)] leading-[0.96] font-normal tracking-[-0.055em] text-[var(--forest)] max-[680px]:text-[clamp(3rem,15vw,4.8rem)]" id="product-faq-title">Questions about {product.name.replace(" Powder", "")}.</h2></div>
+          <div><p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Before you mix</p><h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]" id="product-faq-title">Questions about {product.name.replace(" Powder", "")}.</h2></div>
           <p className="max-w-[460px] pb-1 leading-[1.75] text-[var(--muted)] max-[900px]:p-0">Product-specific guidance matters. If the final pack differs from this preview, always follow the pack.</p>
         </div>
         <div className="mt-[70px] ml-auto max-w-[950px] border-t border-[var(--line)] max-[680px]:mt-[45px]">
@@ -176,9 +178,9 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
         </div>
       </section>
 
-      <section className="mx-auto w-[min(100%,1500px)] px-[clamp(25px,6vw,96px)] py-[clamp(92px,10vw,155px)] max-[680px]:px-5 max-[680px]:py-[85px]" aria-labelledby="related-title">
+      <section className="mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px]" aria-labelledby="related-title">
         <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(260px,0.6fr)] items-end gap-[8vw] max-[900px]:grid-cols-1 max-[900px]:gap-[35px]">
-          <div><p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">Continue the ritual</p><h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.5rem)] leading-[0.96] font-normal tracking-[-0.055em] text-[var(--forest)] max-[680px]:text-[clamp(3rem,15vw,4.8rem)]" id="related-title">Botanicals in good company.</h2></div>
+          <div><p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Continue the ritual</p><h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]" id="related-title">Botanicals in good company.</h2></div>
           <Link className="mt-[15px] inline-flex items-center gap-3.5 border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px]" href="/shop">Explore all six <span aria-hidden="true">↗</span></Link>
         </div>
         <div className="mt-[65px] grid grid-cols-3 gap-[22px] max-[900px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:[&>article]:w-full">
