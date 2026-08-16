@@ -30,7 +30,7 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
   };
 
   return (
-    <div className="max-w-[430px]">
+    <div className="w-full max-w-[430px]">
       <div className="flex items-baseline justify-between gap-4 border-t border-[rgba(23,63,42,0.18)] py-[14px_12px] max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-0">
         <span className="[color:var(--forest)] [font-family:var(--font-display)] text-[1.55rem]">
           {formatCurrency(pricePaise)}
@@ -41,7 +41,7 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
       </div>
       <div className="flex items-center gap-3 max-[680px]:gap-[10px]">
         <button
-          className="inline-flex min-h-[50px] min-w-[min(245px,calc(100%_-_62px))] items-center justify-center gap-[22px] border border-transparent bg-[var(--botanical)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)] max-[680px]:w-[calc(100%_-_60px)]"
+          className="inline-flex min-h-[50px] min-w-[min(245px,calc(100%_-_62px))] items-center justify-center gap-[22px] border border-transparent bg-[var(--botanical)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)] max-[900px]:min-h-[46px] max-[900px]:px-4 max-[680px]:min-h-[50px] max-[680px]:w-[calc(100%_-_60px)] max-[680px]:px-5"
           type="button"
           onClick={add}
         >
@@ -49,7 +49,7 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
           <span aria-hidden="true">{added ? "✓" : "↗"}</span>
         </button>
         <button
-          className={`grid size-[50px] shrink-0 place-items-center rounded-full border border-[rgba(23,63,42,0.45)] text-[1.35rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] ${
+          className={`grid size-[50px] shrink-0 place-items-center rounded-full border border-[rgba(23,63,42,0.45)] text-[1.35rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] max-[900px]:size-[46px] max-[680px]:size-[50px] ${
             wished
               ? "bg-[var(--forest)] text-[var(--paper)] [transform:translateY(-2px)]"
               : "bg-[rgba(255,253,246,0.7)] text-[var(--forest)]"

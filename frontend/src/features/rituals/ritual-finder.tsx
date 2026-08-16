@@ -53,11 +53,11 @@ export function RitualFinder() {
             <span className="mb-2 font-sans text-[0.65rem] font-bold tracking-[0.14em] text-[var(--amla)]">01</span>
             What would you like your ritual to focus on?
           </legend>
-          <div className="mb-[26px] grid grid-cols-2 gap-px bg-white/12 max-[680px]:grid-cols-1">
+          <div className="mb-[26px] grid grid-cols-2 gap-px bg-white/12 max-[620px]:grid-cols-1">
             {goalOptions.map((option) => (
               <label
                 key={option.goal}
-                className={`relative grid min-h-[145px] cursor-pointer bg-[var(--forest)] p-6 transition-[background-color,color] duration-300 hover:bg-white/10 [&:has(input:focus-visible)]:-outline-offset-3 [&:has(input:focus-visible)]:outline-2 [&:has(input:focus-visible)]:outline-[var(--amla)] max-[680px]:min-h-[125px] ${
+                className={`relative grid min-h-[145px] cursor-pointer bg-[var(--forest)] p-6 transition-[background-color,color] duration-300 hover:bg-white/10 [&:has(input:focus-visible)]:-outline-offset-3 [&:has(input:focus-visible)]:outline-2 [&:has(input:focus-visible)]:outline-[var(--amla)] max-[620px]:min-h-[125px] max-[620px]:p-5 ${
                   goal === option.goal ? "bg-white/10" : ""
                 }`}
               >
@@ -102,7 +102,7 @@ export function RitualFinder() {
             <span className="mb-2 font-sans text-[0.65rem] font-bold tracking-[0.14em] text-[var(--amla)]">02</span>
             How do your hair and lengths feel today?
           </legend>
-          <div className="mb-[35px] grid grid-cols-2 gap-3 max-[680px]:grid-cols-1">
+          <div className="mb-[35px] grid grid-cols-2 gap-3 max-[620px]:grid-cols-1">
             {hairFeels.map((option) => (
               <label
                 key={option}
@@ -145,9 +145,9 @@ export function RitualFinder() {
       )}
 
       {step === 3 && result && (
-        <div className="grid grid-cols-[0.6fr_1fr] items-center gap-[45px] max-[680px]:grid-cols-1" aria-live="polite">
-          <div className="flex min-h-[390px] items-end justify-center bg-white/8 max-[680px]:min-h-[325px]">
-            <ProductJar product={result} size="large" className="max-[680px]:origin-bottom max-[680px]:scale-[0.82]" decorative />
+        <div className="grid grid-cols-[0.68fr_1fr] items-center gap-[clamp(32px,5vw,56px)] max-[780px]:grid-cols-1" aria-live="polite">
+          <div className="flex min-h-[390px] items-end justify-center bg-white/8 max-[780px]:min-h-[340px]">
+            <ProductJar product={result} size="large" className="max-[780px]:origin-bottom max-[780px]:scale-[0.82]" decorative />
           </div>
           <div>
             <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[#c8d88e]">Your starting ritual</p>

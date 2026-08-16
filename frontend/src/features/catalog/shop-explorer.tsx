@@ -58,8 +58,8 @@ export function ShopExplorer() {
   };
 
   return (
-    <div className="mx-auto grid w-[min(100%,1500px)] grid-cols-[235px_1fr] gap-[clamp(40px,5vw,75px)] px-[clamp(25px,6vw,96px)] pt-[70px] pb-[140px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pt-[50px] max-[680px]:pb-[95px]">
-      <aside className="self-start max-[900px]:grid max-[900px]:grid-cols-2 max-[900px]:gap-5 max-[680px]:grid-cols-1" aria-label="Collection filters">
+    <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[220px_minmax(0,1fr)] gap-[clamp(36px,4.5vw,64px)] px-[clamp(24px,5vw,72px)] pb-[140px] pt-[72px] max-[900px]:grid-cols-1 max-[900px]:gap-10 max-[680px]:px-5 max-[680px]:pb-[95px] max-[680px]:pt-[50px]">
+      <aside className="self-start min-[901px]:sticky min-[901px]:top-[calc(var(--header-height)+24px)] max-[900px]:grid max-[900px]:grid-cols-2 max-[900px]:gap-5 max-[680px]:grid-cols-1 max-[680px]:gap-3" aria-label="Collection filters">
         <div className="border-t border-[var(--line)] py-[25px] max-[900px]:border max-[900px]:p-5">
           <h2 className="mt-0 mb-4 text-[0.63rem] tracking-[0.13em] text-[var(--forest)] uppercase">Ritual goal</h2>
           <div className="flex flex-col items-start gap-[3px] max-[900px]:flex-row max-[900px]:flex-wrap max-[900px]:items-center">
@@ -112,7 +112,7 @@ export function ShopExplorer() {
           <div>
             <label className="mb-[7px] block text-[0.58rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase" htmlFor="collection-search">Search this collection</label>
             <input
-              className="h-[50px] w-full rounded-none border border-[var(--line)] bg-[var(--paper)] px-[15px] outline-none"
+              className="h-[50px] w-full rounded-none border border-[var(--line)] bg-[var(--paper)] px-[15px] outline-none transition-colors focus:border-[var(--botanical)]"
               id="collection-search"
               type="search"
               value={query}
@@ -123,7 +123,7 @@ export function ShopExplorer() {
           <div>
             <label className="mb-[7px] block text-[0.58rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase" htmlFor="collection-sort">Sort by</label>
             <select
-              className="h-[50px] w-full rounded-none border border-[var(--line)] bg-[var(--paper)] px-[15px] outline-none"
+              className="h-[50px] w-full rounded-none border border-[var(--line)] bg-[var(--paper)] px-[15px] outline-none transition-colors focus:border-[var(--botanical)]"
               id="collection-sort"
               value={sort}
               onChange={(event) => setSort(event.target.value as typeof sort)}
@@ -139,7 +139,7 @@ export function ShopExplorer() {
           <span className="text-[0.61rem] tracking-[0.1em] text-[var(--muted)] uppercase">{goal === "All" ? "The complete collection" : goal}</span>
         </div>
         {filtered.length ? (
-          <div className="grid grid-cols-2 gap-[22px] max-[680px]:grid-cols-1 [&>article>div:first-child]:h-[clamp(340px,32vw,460px)]">
+          <div className="grid grid-cols-3 gap-[22px] max-[1240px]:grid-cols-2 max-[680px]:grid-cols-1 [&>article>div:first-child]:h-[clamp(330px,28vw,430px)] max-[680px]:[&>article>div:first-child]:h-[360px]">
             {filtered.map((product) => (
               <ProductCard key={product.slug} product={product} />
             ))}

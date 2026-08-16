@@ -17,7 +17,7 @@ export function TrackingForm() {
 
   return (
     <form
-      className="self-center bg-[var(--paper)] p-[35px] max-[680px]:px-5 max-[680px]:py-6"
+      className="w-full max-w-[520px] self-center bg-[var(--paper)] p-[35px] max-[900px]:max-w-none max-[680px]:px-5 max-[680px]:py-6"
       onSubmit={submit}
       noValidate
     >
@@ -28,7 +28,7 @@ export function TrackingForm() {
         Order reference
       </label>
       <input
-        className="h-[54px] w-full border border-[var(--line)] bg-[var(--ivory)] px-[15px] outline-none"
+        className="h-[54px] w-full border border-[var(--line)] bg-[var(--ivory)] px-[15px] outline-none transition-colors focus:border-[var(--botanical)]"
         id="order-reference"
         value={reference}
         onChange={(event) => setReference(event.target.value)}

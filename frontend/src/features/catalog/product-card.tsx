@@ -22,10 +22,10 @@ export function ProductCard({
 
   return (
     <article
-      className="relative min-w-0 bg-[var(--paper)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow] duration-[480ms] ease-[var(--ease)] hover:z-[2] hover:-translate-y-1.5 hover:shadow-[var(--shadow-soft)]"
+      className="relative flex h-full min-w-0 flex-col bg-[var(--paper)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow] duration-[480ms] ease-[var(--ease)] hover:z-[2] hover:-translate-y-1.5 hover:shadow-[var(--shadow-soft)]"
       style={style}
     >
-      <div className="relative flex h-[clamp(340px,33vw,480px)] items-end justify-center overflow-hidden pb-[35px] [background:radial-gradient(circle_at_50%_78%,rgba(255,255,255,0.95)_0,rgba(255,255,255,0.28)_28%,transparent_55%),linear-gradient(145deg,color-mix(in_srgb,var(--product-soft)_72%,white),var(--product-soft))] before:absolute before:top-[14%] before:h-[65%] before:w-[65%] before:rounded-t-[50%] before:border before:border-[color-mix(in_srgb,var(--product-accent)_35%,transparent)] before:content-[''] max-[680px]:h-[390px]">
+      <div className="relative flex h-[clamp(330px,28vw,430px)] flex-none items-end justify-center overflow-hidden pb-[35px] [background:radial-gradient(circle_at_50%_78%,rgba(255,255,255,0.95)_0,rgba(255,255,255,0.28)_28%,transparent_55%),linear-gradient(145deg,color-mix(in_srgb,var(--product-soft)_72%,white),var(--product-soft))] before:absolute before:top-[14%] before:h-[65%] before:w-[65%] before:rounded-t-[50%] before:border before:border-[color-mix(in_srgb,var(--product-accent)_35%,transparent)] before:content-[''] max-[680px]:h-[360px]">
         <span className="absolute top-[14%] right-[7%] h-40 w-[100px] rotate-24 before:absolute before:left-1/2 before:h-full before:w-px before:bg-[color-mix(in_srgb,var(--product-accent)_45%,transparent)] before:content-[''] [&>i]:absolute [&>i]:h-[18px] [&>i]:w-[37px] [&>i]:rounded-[100%_0_100%_0] [&>i]:bg-[color-mix(in_srgb,var(--product-accent)_25%,transparent)] [&>i:nth-child(1)]:top-5 [&>i:nth-child(1)]:left-4 [&>i:nth-child(2)]:top-[65px] [&>i:nth-child(2)]:right-[15px] [&>i:nth-child(2)]:-scale-x-100 [&>i:nth-child(3)]:top-[108px] [&>i:nth-child(3)]:left-[15px]" aria-hidden="true">
           <i />
           <i />
@@ -57,7 +57,7 @@ export function ProductCard({
           <ProductJar product={product} size={compact ? "small" : "medium"} decorative />
         </Link>
       </div>
-      <div className="px-[30px] pt-7 pb-[30px]">
+      <div className="flex flex-1 flex-col px-[30px] pb-[30px] pt-7 max-[680px]:px-6 max-[680px]:pb-6">
         <p className="mb-2 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--product-accent)] uppercase">Ritual {product.collectionNumber}</p>
         <Link
           href={`/shop/${product.slug}`}
@@ -68,8 +68,8 @@ export function ProductCard({
         >
           {product.name}
         </Link>
-        <p className="mt-2.5 mb-6 text-[0.78rem] tracking-[0.04em] text-[var(--muted)]">{product.subtitle}</p>
-        <div className="flex items-end justify-between gap-[15px] border-t border-[var(--line)] pt-5">
+        <p className="mb-6 mt-2.5 min-h-[2.5em] text-[0.78rem] leading-[1.5] tracking-[0.04em] text-[var(--muted)]">{product.subtitle}</p>
+        <div className="mt-auto flex items-end justify-between gap-[15px] border-t border-[var(--line)] pt-5">
           <div className="grid">
             <span className="font-serif text-xl text-[var(--forest)]">{formatCurrency(product.pricePaise)}</span>
             <span className="text-[0.52rem] tracking-[0.11em] text-[var(--muted)] uppercase">Preview price</span>
