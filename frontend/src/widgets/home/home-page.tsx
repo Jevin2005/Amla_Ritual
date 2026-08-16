@@ -23,7 +23,7 @@ const sectionTitleClass =
 const sectionClass =
   "mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(80px,8vw,124px)] max-[680px]:px-5 max-[680px]:py-[74px]";
 const splitHeadingClass =
-  "grid grid-cols-[minmax(0,1.35fr)_minmax(260px,0.65fr)] items-end gap-[clamp(48px,6vw,88px)] max-[900px]:grid-cols-1 max-[900px]:gap-[30px]";
+  "grid grid-cols-[minmax(0,1.35fr)_minmax(260px,0.65fr)] items-end gap-[clamp(48px,6vw,88px)] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(210px,0.85fr)] max-[900px]:gap-8 max-[680px]:grid-cols-1 max-[680px]:gap-[30px]";
 const centeredHeadingClass =
   "mx-auto mb-[clamp(46px,5vw,72px)] max-w-[820px] text-center max-[680px]:mb-10";
 const textLinkClass =
@@ -50,14 +50,20 @@ export function HomePage() {
           className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(rgba(23,63,42,0.22)_0.55px,transparent_0.55px)] bg-size-[7px_7px] opacity-20 [mask-image:linear-gradient(115deg,transparent_8%,black_45%,transparent_88%)]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto grid min-h-[max(720px,calc(100svh-var(--header-height)-29px))] w-full max-w-[1440px] grid-cols-[minmax(285px,0.92fr)_minmax(390px,1.12fr)_minmax(250px,0.72fr)] gap-[clamp(22px,2.3vw,36px)] px-[clamp(24px,5vw,72px)] pt-[clamp(44px,4.5vw,68px)] pb-[clamp(34px,3.5vw,54px)] max-[1180px]:grid-cols-[minmax(255px,0.9fr)_minmax(350px,1.1fr)_minmax(220px,0.7fr)] max-[1180px]:gap-[22px] max-[1080px]:min-h-0 max-[1080px]:grid-cols-[minmax(285px,0.84fr)_minmax(390px,1.16fr)] max-[1080px]:gap-[42px_32px] max-[1080px]:px-[5vw] max-[1080px]:pt-[52px] max-[1080px]:pb-[64px] max-[900px]:grid-cols-[minmax(230px,0.84fr)_minmax(300px,1.16fr)] max-[900px]:gap-[38px_26px] max-[900px]:px-[6vw] max-[900px]:pt-[46px] max-[900px]:pb-[60px] max-[680px]:flex max-[680px]:flex-col max-[680px]:gap-0 max-[680px]:px-5 max-[680px]:pt-10 max-[680px]:pb-14">
+        <div className="relative mx-auto grid min-h-[max(780px,calc(100svh-var(--header-height)-29px))] w-full max-w-[1440px] grid-cols-[minmax(280px,0.78fr)_minmax(470px,1.52fr)_minmax(230px,0.62fr)] gap-[clamp(18px,1.8vw,28px)] px-[clamp(24px,5vw,72px)] pt-[clamp(42px,4vw,60px)] pb-[clamp(34px,3.5vw,52px)] max-[1180px]:min-h-[740px] max-[1180px]:grid-cols-[minmax(245px,0.8fr)_minmax(390px,1.35fr)_minmax(210px,0.65fr)] max-[1180px]:gap-[20px] max-[1080px]:min-h-0 max-[1080px]:grid-cols-[minmax(285px,0.84fr)_minmax(390px,1.16fr)] max-[1080px]:gap-[42px_32px] max-[1080px]:px-[5vw] max-[1080px]:pt-[52px] max-[1080px]:pb-[64px] max-[900px]:grid-cols-[minmax(230px,0.84fr)_minmax(300px,1.16fr)] max-[900px]:gap-[38px_26px] max-[900px]:px-[6vw] max-[900px]:pt-[46px] max-[900px]:pb-[60px] max-[680px]:flex max-[680px]:flex-col max-[680px]:gap-0 max-[680px]:px-5 max-[680px]:pt-10 max-[680px]:pb-14">
         <div
-          className="pointer-events-none absolute top-[4%] left-[31%] z-[1] h-[88%] w-[47%] rounded-full border-2 border-[rgba(63,125,58,0.42)] [transform:rotate(16deg)] [animation:hero-orbit-drift_8s_ease-in-out_infinite_alternate] max-[1180px]:left-[29%] max-[1180px]:w-1/2 min-[901px]:max-[1080px]:top-[1%] min-[901px]:max-[1080px]:left-[39%] min-[901px]:max-[1080px]:h-[58%] min-[901px]:max-[1080px]:w-[60%] max-[900px]:top-[1%] max-[900px]:left-[39%] max-[900px]:h-[58%] max-[900px]:w-[60%] max-[680px]:top-[34%] max-[680px]:left-[-17%] max-[680px]:h-[42%] max-[680px]:w-[132%] max-[680px]:opacity-75 motion-reduce:animate-none motion-reduce:[transform:rotate(16deg)]"
+          className="pointer-events-none absolute top-[3%] left-[30%] z-[1] h-[90%] w-[51%] rounded-[48%_52%_46%_54%/52%_45%_55%_48%] border border-[rgba(63,125,58,0.4)] opacity-75 [transform:rotate(16deg)] [animation:hero-orbit-drift_9s_ease-in-out_infinite_alternate] [will-change:transform] max-[1180px]:left-[29%] max-[1180px]:w-[53%] min-[901px]:max-[1080px]:top-[1%] min-[901px]:max-[1080px]:left-[39%] min-[901px]:max-[1080px]:h-[58%] min-[901px]:max-[1080px]:w-[60%] max-[900px]:top-[1%] max-[900px]:left-[39%] max-[900px]:h-[58%] max-[900px]:w-[60%] max-[680px]:top-[34%] max-[680px]:left-[-17%] max-[680px]:h-[42%] max-[680px]:w-[132%] motion-reduce:animate-none motion-reduce:[transform:rotate(16deg)]"
           aria-hidden="true"
         >
-          <i className="absolute top-[1%] left-[48%] h-[18px] w-[38px] rotate-[-58deg] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-          <i className="absolute right-[-9px] bottom-[28%] h-[18px] w-[38px] [transform:rotate(30deg)_scale(0.75)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-          <i className="absolute bottom-[1%] left-[19%] h-[18px] w-[38px] [transform:rotate(135deg)_scale(0.65)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
+          <span className="absolute top-[1%] left-[48%] rotate-[-58deg]">
+            <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] [animation:hero-arrow_4.6s_ease-in-out_infinite] [will-change:transform] motion-reduce:animate-none" />
+          </span>
+          <span className="absolute right-[-9px] bottom-[28%] rotate-[30deg] scale-75">
+            <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] [animation:hero-arrow_5.2s_ease-in-out_-1.2s_infinite] [will-change:transform] motion-reduce:animate-none" />
+          </span>
+          <span className="absolute bottom-[1%] left-[19%] rotate-[135deg] scale-[0.65]">
+            <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] [animation:hero-arrow_4.9s_ease-in-out_-2.1s_infinite] [will-change:transform] motion-reduce:animate-none" />
+          </span>
         </div>
         <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] max-[1180px]:w-[108%] max-[1080px]:w-[106%] max-[900px]:mt-[-22px] max-[900px]:w-[110%] max-[900px]:self-start max-[680px]:mt-0 max-[680px]:w-full motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
           <p className={eyebrowClass}>The Amla Ritual · No. 01</p>
@@ -121,13 +127,39 @@ export function HomePage() {
           </ul>
         </div>
 
-        <div className="relative z-[2] h-[clamp(520px,65vh,650px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(500px,62vh,610px)] max-[1080px]:h-[clamp(460px,58vh,540px)] max-[900px]:mt-[-46px] max-[900px]:h-[clamp(450px,58vh,520px)] max-[900px]:self-start max-[680px]:mt-9 max-[680px]:h-auto max-[680px]:aspect-[4/5] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-          <div className="group/portrait absolute inset-0 overflow-hidden rounded-[50%_50%_8px_8px/28%_28%_1%_1%] border border-[rgba(23,63,42,0.08)] bg-[var(--beige)] shadow-[0_30px_75px_rgba(40,51,33,0.16)] max-[680px]:rounded-[50%_50%_8px_8px/25%_25%_1%_1%]">
+        <div className="relative z-[2] h-[clamp(620px,72vh,760px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(560px,68vh,670px)] max-[1080px]:h-[clamp(460px,58vh,540px)] max-[900px]:mt-[-46px] max-[900px]:h-[clamp(450px,58vh,520px)] max-[900px]:self-start max-[680px]:mt-9 max-[680px]:h-auto max-[680px]:aspect-[4/5] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+          <span
+            className="pointer-events-none absolute top-[1%] right-[-7%] bottom-[-3%] left-[-8%] z-0 rounded-[49%_51%_17%_83%/35%_38%_62%_65%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)] max-[1080px]:hidden"
+            aria-hidden="true"
+          />
+          <span
+            className="pointer-events-none absolute top-[-3%] right-[-5%] bottom-[1%] left-[-6%] z-[1] rounded-[52%_48%_14%_86%/31%_39%_61%_69%] border border-[rgba(57,111,58,0.44)] [animation:hero-orbit-drift_11s_ease-in-out_infinite_alternate] [will-change:transform] max-[1080px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(15deg)]"
+            aria-hidden="true"
+          />
+          <span
+            className="pointer-events-none absolute top-[9%] right-[-9%] z-[4] rotate-[24deg] max-[1080px]:hidden"
+            aria-hidden="true"
+          >
+            <i className="block h-[24px] w-[52px] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.82)] shadow-[0_8px_20px_rgba(23,63,42,0.12)] [animation:hero-arrow_4.8s_ease-in-out_infinite] [will-change:transform] motion-reduce:animate-none" />
+          </span>
+          <span
+            className="pointer-events-none absolute bottom-[15%] left-[-12%] z-[4] rotate-[-32deg] max-[1080px]:hidden"
+            aria-hidden="true"
+          >
+            <i className="block h-[20px] w-[44px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.7)] [animation:hero-arrow_5.4s_ease-in-out_-1.6s_infinite] [will-change:transform] motion-reduce:animate-none" />
+          </span>
+          <span
+            className="pointer-events-none absolute right-[5%] bottom-[-2%] z-[4] rotate-[138deg] max-[1080px]:hidden"
+            aria-hidden="true"
+          >
+            <i className="block h-[17px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(143,159,78,0.68)] [animation:hero-arrow_4.2s_ease-in-out_-0.8s_infinite] [will-change:transform] motion-reduce:animate-none" />
+          </span>
+          <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[52%_48%_9%_13%/29%_34%_5%_7%] border border-[rgba(23,63,42,0.11)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.2)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_8px_8px/25%_25%_1%_1%]">
             <Image
               src={heroImage}
               alt="A woman with long, dark natural hair in a sunlit botanical setting"
               fill
-              sizes="(max-width: 680px) 92vw, (max-width: 900px) 52vw, 38vw"
+              sizes="(max-width: 680px) 92vw, (max-width: 900px) 52vw, (max-width: 1080px) 55vw, (max-width: 1440px) 44vw, 600px"
               preload
               className="object-cover object-[76%_center] [transform:scale(1.04)] [transition:transform_1.1s_var(--ease)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/portrait:[transform:scale(1.065)] max-[680px]:object-[74%_center] motion-reduce:transition-none motion-reduce:[transform:scale(1.04)]"
             />
@@ -184,8 +216,8 @@ export function HomePage() {
           >
             <Link
               className="grid size-[42px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
-              href="/shop/hibiscus-powder"
-              aria-label="Previous featured ritual, Hibiscus"
+              href="/shop/indigo-powder"
+              aria-label="Previous featured ritual, Indigo"
             >
               ←
             </Link>
@@ -358,11 +390,11 @@ export function HomePage() {
         className={`bg-[var(--forest)] text-[var(--paper)] ${revealClass}`}
         aria-labelledby="builder-title"
       >
-        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[0.72fr_1.28fr] items-start gap-[clamp(50px,6vw,88px)] px-[clamp(24px,5vw,72px)] py-[clamp(76px,8vw,116px)] max-[900px]:grid-cols-1 max-[900px]:gap-12 max-[680px]:px-5 max-[680px]:py-[70px]">
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[0.72fr_1.28fr] items-start gap-[clamp(50px,6vw,88px)] px-[clamp(24px,5vw,72px)] py-[clamp(76px,8vw,116px)] max-[900px]:grid-cols-[minmax(190px,0.7fr)_minmax(0,1.3fr)] max-[900px]:gap-8 max-[680px]:grid-cols-1 max-[680px]:gap-12 max-[680px]:px-5 max-[680px]:py-[70px]">
           <div className="max-[900px]:max-w-[680px]">
             <p className={lightEyebrowClass}>Build your ritual</p>
             <h2
-              className="m-0 [font-family:var(--font-display)] text-[clamp(3rem,4.4vw,5rem)] leading-[0.95] font-normal tracking-[-0.055em] max-[680px]:text-[clamp(2.9rem,13vw,3.8rem)]"
+              className="m-0 [font-family:var(--font-display)] text-[clamp(3rem,4.4vw,5rem)] leading-[0.95] font-normal tracking-[-0.055em] max-[900px]:text-[clamp(2.45rem,5.5vw,3.2rem)] max-[680px]:text-[clamp(2.9rem,13vw,3.8rem)]"
               id="builder-title"
             >
               A botanical starting point, chosen with care.

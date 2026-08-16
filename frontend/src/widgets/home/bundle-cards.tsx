@@ -13,17 +13,17 @@ export function BundleCards() {
   const bundleBackgrounds = ["bg-[#d9dfc7]", "bg-[#e2ccc4]", "bg-[#c8d0c2]"];
 
   return (
-    <div className="mt-[clamp(52px,5vw,68px)] grid grid-cols-3 gap-[clamp(14px,1.6vw,22px)] max-[900px]:grid-cols-1">
+    <div className="mt-[clamp(52px,5vw,68px)] grid grid-cols-3 gap-[clamp(14px,1.6vw,22px)] max-[1080px]:grid-cols-2 max-[680px]:grid-cols-1">
       {bundles.map((bundle, index) => {
         const bundleProducts = getBundleProducts(bundle.slugs);
         const total = bundleProducts.reduce((sum, product) => sum + product.pricePaise, 0);
         return (
           <article
-            className="flex h-full flex-col overflow-hidden bg-[var(--paper)] ring-1 ring-[var(--line)] max-[900px]:grid max-[900px]:grid-cols-2 max-[680px]:block"
+            className="flex h-full flex-col overflow-hidden bg-[var(--paper)] ring-1 ring-[var(--line)]"
             key={bundle.id}
           >
             <div
-              className={`relative flex h-[320px] items-end justify-center pb-[30px] ${bundleBackgrounds[index]} max-[900px]:h-auto max-[900px]:min-h-[320px] max-[680px]:h-[290px] max-[680px]:min-h-0`}
+              className={`relative flex h-[320px] items-end justify-center pb-[30px] ${bundleBackgrounds[index]} max-[520px]:h-[290px] max-[520px]:pb-6`}
               aria-hidden="true"
             >
               {bundleProducts.slice(0, 4).map((product, productIndex) => (
@@ -32,15 +32,15 @@ export function BundleCards() {
                   product={product}
                   size="small"
                   decorative
-                  className={`mx-[-9px] max-[1180px]:mx-[-15px] ${
+                  className={`mx-[-9px] max-[1180px]:mx-[-15px] max-[380px]:mx-[-20px] ${
                     productIndex % 2 === 1
-                      ? "[transform:translateY(-14px)] max-[1180px]:[transform:translateY(-12px)_scale(0.88)]"
-                      : "max-[1180px]:[transform:scale(0.88)]"
+                      ? "[transform:translateY(-14px)] max-[1180px]:[transform:translateY(-12px)_scale(0.88)] max-[380px]:[transform:translateY(-10px)_scale(0.74)]"
+                      : "max-[1180px]:[transform:scale(0.88)] max-[380px]:[transform:scale(0.74)]"
                   }`}
                 />
               ))}
               {bundleProducts.length > 4 && (
-                <span className="ml-[5px] grid size-[46px] self-center rounded-full bg-[var(--forest)] text-[0.72rem] text-[var(--paper)] [place-items:center]">
+                <span className="ml-[5px] grid size-[46px] flex-none self-center rounded-full bg-[var(--forest)] text-[0.72rem] text-[var(--paper)] [place-items:center] max-[380px]:ml-0 max-[380px]:size-10">
                   +{bundleProducts.length - 4}
                 </span>
               )}

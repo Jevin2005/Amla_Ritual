@@ -38,7 +38,7 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    const desktopNavigation = window.matchMedia("(min-width: 681px)");
+    const desktopNavigation = window.matchMedia("(min-width: 680px)");
     const handleBreakpointChange = (event: MediaQueryListEvent) => {
       if (event.matches) setMobileOpen(false);
     };
