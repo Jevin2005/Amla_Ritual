@@ -139,7 +139,7 @@ export function ShopExplorer() {
           <span className="text-[0.61rem] tracking-[0.1em] text-[var(--muted)] uppercase">{goal === "All" ? "The complete collection" : goal}</span>
         </div>
         {filtered.length ? (
-          <div className="grid grid-cols-3 gap-[22px] max-[1240px]:grid-cols-2 max-[680px]:grid-cols-1 [&>article>div:first-child]:h-[clamp(330px,28vw,430px)] max-[680px]:[&>article>div:first-child]:h-[360px]">
+          <div className="grid grid-cols-3 gap-[clamp(14px,2vw,22px)] max-[1240px]:grid-cols-2 max-[680px]:grid-cols-1 [&>article>div:first-child]:h-[clamp(330px,28vw,430px)] max-[680px]:[&>article>div:first-child]:h-[clamp(360px,70vw,430px)] max-[520px]:[&>article>div:first-child]:h-[360px]">
             {filtered.map((product) => (
               <ProductCard key={product.slug} product={product} />
             ))}
