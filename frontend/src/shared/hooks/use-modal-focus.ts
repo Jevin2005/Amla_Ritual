@@ -37,10 +37,10 @@ export function useModalFocus(
     };
 
     document.addEventListener("keydown", handleKey);
-    document.body.classList.add("has-overlay");
+    document.body.classList.add("overflow-hidden");
     return () => {
       document.removeEventListener("keydown", handleKey);
-      document.body.classList.remove("has-overlay");
+      document.body.classList.remove("overflow-hidden");
       previousFocus?.focus();
     };
   }, [active, onClose, ref]);

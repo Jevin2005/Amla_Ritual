@@ -1,5 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { CheckoutPreview } from "@/features/checkout/checkout-preview";
+import { PageHero } from "@/shared/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Checkout Preview",
@@ -10,9 +11,11 @@ export const metadata: Metadata = {
 export default function CheckoutPage() {
   return (
     <main id="main-content">
-      <section className="page-hero checkout-page-hero">
-        <div className="page-hero__inner"><p className="eyebrow">Your ritual bag</p><h1>Checkout,<br />without shortcuts.</h1><p>Commercial data and a verified hosted payment provider come before real orders.</p></div>
-      </section>
+      <PageHero
+        eyebrow="Your ritual bag"
+        title={<><span>Checkout,</span><br />without shortcuts.</>}
+        description="Commercial data and a verified hosted payment provider come before real orders."
+      />
       <CheckoutPreview />
     </main>
   );

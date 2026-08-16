@@ -10,47 +10,47 @@ export function CheckoutPreview() {
 
   if (!cart.length) {
     return (
-      <section className="checkout-empty empty-state">
-        <span className="empty-state__mark" aria-hidden="true">○</span>
-        <p className="display-small">Your bag is waiting.</p>
-        <p>Add a botanical ritual before continuing to checkout.</p>
-        <Link className="button button--dark" href="/shop">Shop the collection</Link>
+      <section className="flex min-h-[560px] flex-col items-center justify-center px-[25px] py-[70px] text-center">
+        <span className="mb-[30px] grid size-[90px] place-items-center rounded-full border border-[var(--line)] text-2xl text-[var(--botanical)]" aria-hidden="true">○</span>
+        <p className="m-0 font-serif text-[clamp(2rem,3vw,3rem)] leading-[1.04]">Your bag is waiting.</p>
+        <p className="max-w-[360px] text-[var(--muted)]">Add a botanical ritual before continuing to checkout.</p>
+        <Link className="mt-[15px] inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--paper)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)]" href="/shop">Shop the collection</Link>
       </section>
     );
   }
 
   return (
-    <section className="checkout-layout">
-      <div className="checkout-message">
-        <p className="eyebrow">Secure checkout handoff</p>
-        <h2>Ready for your verified payment provider.</h2>
-        <p>
+    <section className="mx-auto grid w-full max-w-[1300px] grid-cols-[1fr_0.8fr] gap-[clamp(55px,9vw,130px)] px-[25px] pb-[140px] pt-[95px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[100px] max-[680px]:pt-[75px]">
+      <div>
+        <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Secure checkout handoff</p>
+        <h2 className="m-0 font-serif text-[clamp(3.4rem,5vw,6rem)] font-normal leading-[0.94] tracking-[-0.055em] text-[var(--forest)]">Ready for your verified payment provider.</h2>
+        <p className="max-w-[650px] text-[var(--muted)]">
           This storefront preview deliberately does not collect card details or create a pretend order. Connect your chosen hosted checkout provider before launch, then this step can hand over the exact bag safely.
         </p>
-        <div className="notice-box">
+        <div className="my-7 grid gap-[7px] border-l-[3px] border-[var(--amla)] bg-[var(--paper)] p-6">
           <strong>No payment data is collected here.</strong>
-          <span>Prices, inventory, shipping, tax and discount rules must also be confirmed before accepting an order.</span>
+          <span className="text-[0.78rem] text-[var(--muted)]">Prices, inventory, shipping, tax and discount rules must also be confirmed before accepting an order.</span>
         </div>
-        <button className="button button--outline" type="button" onClick={openCart}>Return to bag</button>
-        <Link className="text-link checkout-shop-link" href="/shop">Continue exploring ↗</Link>
+        <button className="inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:text-[var(--paper)]" type="button" onClick={openCart}>Return to bag</button>
+        <Link className="ml-[22px] inline-flex items-center gap-3.5 border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px] max-[680px]:ml-0 max-[680px]:mt-5" href="/shop">Continue exploring ↗</Link>
       </div>
-      <aside className="checkout-summary" aria-label="Order preview">
-        <p className="eyebrow">Order preview</p>
-        <div className="checkout-summary__items">
+      <aside className="self-start bg-[var(--paper)] p-[30px] max-[680px]:px-5 max-[680px]:py-6" aria-label="Order preview">
+        <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Order preview</p>
+        <div className="border-t border-[var(--line)]">
           {cart.map((item) => {
             const product = getProduct(item.slug);
             if (!product) return null;
             return (
-              <article key={item.slug}>
-                <span style={{ backgroundColor: product.accentSoft }}><ProductJar product={product} size="small" decorative /></span>
-                <div><strong>{product.name}</strong><small>Quantity {item.quantity}</small></div>
-                <em>{formatCurrency(product.pricePaise * item.quantity)}</em>
+              <article className="grid grid-cols-[68px_1fr_auto] items-center gap-3 border-b border-[var(--line)] py-[15px] max-[680px]:grid-cols-[58px_1fr]" key={item.slug}>
+                <span className="flex h-[82px] w-[68px] items-end justify-center overflow-hidden" style={{ backgroundColor: product.accentSoft }}><ProductJar product={product} size="small" className="origin-bottom scale-50" decorative /></span>
+                <div><strong className="block font-serif font-normal text-[var(--forest)]">{product.name}</strong><small className="text-[0.62rem] text-[var(--muted)]">Quantity {item.quantity}</small></div>
+                <em className="font-serif not-italic text-[var(--forest)] max-[680px]:col-start-2">{formatCurrency(product.pricePaise * item.quantity)}</em>
               </article>
             );
           })}
         </div>
-        <div className="subtotal-line"><span>Preview subtotal</span><strong>{formatCurrency(subtotalPaise)}</strong></div>
-        <p className="commercial-note">Not a final payable total. Shipping, tax and verified commercial terms are not yet applied.</p>
+        <div className="mt-[22px] flex items-center justify-between border-t border-[var(--line)] pb-[10px] pt-[22px] text-[var(--forest)]"><span>Preview subtotal</span><strong className="font-serif text-[1.4rem] font-normal">{formatCurrency(subtotalPaise)}</strong></div>
+        <p className="mt-3 text-[0.7rem] leading-[1.6] text-[var(--muted)]">Not a final payable total. Shipping, tax and verified commercial terms are not yet applied.</p>
       </aside>
     </section>
   );

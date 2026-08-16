@@ -1,5 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { WishlistPage } from "@/features/wishlist/wishlist-page";
+import { PageHero } from "@/shared/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Saved Rituals",
@@ -11,13 +12,11 @@ export const metadata: Metadata = {
 export default function WishlistRoute() {
   return (
     <main id="main-content">
-      <section className="page-hero">
-        <div className="page-hero__inner">
-          <p className="eyebrow">Your botanical shelf</p>
-          <h1>Saved rituals.</h1>
-          <p>Keep a quiet shortlist while you learn what each botanical brings to the bowl.</p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Your botanical shelf"
+        title="Saved rituals."
+        description="Keep a quiet shortlist while you learn what each botanical brings to the bowl."
+      />
       <WishlistPage />
     </main>
   );

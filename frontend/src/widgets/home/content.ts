@@ -4,28 +4,24 @@ export const ritualCards = [
     title: "Cleanse",
     copy: "Low-lather botanicals for a considered wash-day reset.",
     href: "/shop?goal=Cleanse",
-    className: "ritual-card--cleanse",
   },
   {
     number: "02",
     title: "Nourish",
     copy: "Grounding masks for cared-for scalp and lengths.",
     href: "/shop?goal=Scalp+Ritual",
-    className: "ritual-card--nourish",
   },
   {
     number: "03",
     title: "Softness + shine",
     copy: "Conditioning powders for smooth, luminous-looking hair.",
     href: "/shop?goal=Softness+%2B+Shine",
-    className: "ritual-card--shine",
   },
   {
     number: "04",
     title: "Botanical colour",
     copy: "Carefully explained leaf colour, with safety first.",
     href: "/shop?goal=Botanical+Colour",
-    className: "ritual-card--colour",
   },
 ] as const;
 
