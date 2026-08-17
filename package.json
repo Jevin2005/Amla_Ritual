@@ -1,0 +1,28 @@
+{
+  "name": "naturemist",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NatureMist monorepo — frontend (Next.js) and backend (Cloudflare Worker).",
+  "scripts": {
+    "dev": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspace=frontend",
+    "start": "npm run start --workspace=frontend",
+    "lint": "npm run lint --workspace=frontend",
+    "typecheck": "npm run typecheck --workspace=frontend",
+    "build:site": "npm run build:site --workspace=frontend",
+    "preview:site": "npm run preview:site --workspace=frontend",
+    "check": "npm run check --workspace=frontend"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "overrides": {
+    "vite": "^8.2.1",
+    "vinext": "1.0.0-beta.6",
+    "esbuild": "^0.28.1",
+    "undici": "^7.28.1",
+    "ws": "^8.20.2",
+    "sharp": "^0.35.0"
+  }
+}

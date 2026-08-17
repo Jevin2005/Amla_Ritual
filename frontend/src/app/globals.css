@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+:root {
+  --ivory: #f7f4e8;
+  --ivory-deep: #eee8d8;
+  --forest: #173f2a;
+  --forest-dark: #0e2c1c;
+  --botanical: #3f7d3a;
+  --amla: #a7c943;
+  --charcoal: #22261f;
+  --beige: #ddd5c2;
+  --paper: #fffdf6;
+  --muted: #66695f;
+  --line: rgb(23 63 42 / 18%);
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Baskerville, Georgia, serif;
+  --font-display: var(--font-serif);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 28px 70px rgb(37 48 30 / 12%);
+}
+
+@theme inline {
+  --color-background: var(--ivory);
+  --color-foreground: var(--charcoal);
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
+@keyframes hero-copy-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(-18px, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-title-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-portrait-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes hero-jar-float {
+  0%,
+  100% {
+    transform: scale(var(--hero-jar-scale)) translateY(0);
+  }
+  50% {
+    transform: scale(var(--hero-jar-scale)) translateY(-6px);
+  }
+}
+
+@keyframes hero-arrow {
+  0%,
+  100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes hero-orbit-drift {
+  from {
+    transform: rotate(14deg) translate3d(0, -3px, 0);
+  }
+  to {
+    transform: rotate(17deg) translate3d(5px, 5px, 0);
+  }
+}
+
+@keyframes jar-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes product-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+}
+
+@keyframes loading-leaf {
+  to {
+    transform: translateY(-5px) rotate(8deg);
+  }
+}
+
+@keyframes section-reveal {
+  from {
+    opacity: 0.2;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile hero animated shapes */
+@keyframes mobile-float-a {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-9px) rotate(4deg); }
+  66% { transform: translateY(4px) rotate(-3deg); }
+}
+
+@keyframes mobile-float-b {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  40% { transform: translateY(-7px) rotate(-5deg) scale(1.04); }
+  70% { transform: translateY(5px) rotate(3deg) scale(0.97); }
+}
+
+@keyframes mobile-float-c {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  30% { transform: translate(5px, -8px) rotate(6deg); }
+  60% { transform: translate(-4px, 3px) rotate(-4deg); }
+}
+
+@keyframes mobile-float-d {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+  50% { transform: translate(-6px, -10px) rotate(-7deg) scale(1.06); }
+}
+
+@keyframes mobile-orbit-slow {
+  from { transform: rotate(8deg) scale(1); }
+  to   { transform: rotate(14deg) scale(1.012) translate(4px, 3px); }
+}
+
+@keyframes mobile-orbit-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1) rotate(-4deg); }
+  50%       { opacity: 0.75; transform: scale(1.02) rotate(-2deg); }
+}
