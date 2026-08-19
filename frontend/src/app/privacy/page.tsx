@@ -10,7 +10,8 @@ import {
 export const metadata: Metadata = { title: "Privacy", alternates: { canonical: "/privacy" } };
 
 export default async function PrivacyPage() {
-  const policy = (await getStorefront()).policies.privacy;
+  const storefront = await getStorefront();
+  const policy = storefront.policies.privacy;
 
   return (
     <main id="main-content">
@@ -18,13 +19,19 @@ export default async function PrivacyPage() {
         eyebrow="Privacy"
         title="Care extends to your data."
         description={
-          policy
+          storefront.source === "shopify"
             ? "The current privacy policy maintained by NatureMist in Shopify."
             : "A concise pre-launch statement for this interactive storefront preview."
         }
       />
       {policy ? (
         <ShopifyPolicyContent html={policy.body} />
+      ) : storefront.source === "shopify" ? (
+        <PolicyContent>
+          <NoticeBox title="The current privacy policy is temporarily unavailable.">
+            Please return before submitting personal information or placing an order. The merchant must publish the Privacy Policy in Shopify Admin.
+          </NoticeBox>
+        </PolicyContent>
       ) : (
         <PolicyContent>
         <NoticeBox title="This preview does not submit personal data to a NatureMist backend.">

@@ -158,6 +158,6 @@ The storefront supports one-time purchases, Shopify's standard options/variants,
 - Confirm shipping profiles, taxes, payments, email receipts, fulfilment, returns, and legal policies in Shopify.
 - Add the production domain to the Headless storefront and Shopify checkout/domain configuration.
 - Register webhooks and verify that a product or poster edit appears on the live site.
-- Keep `SHOPIFY_STRICT_MODE=false` during setup to leave the shell available with an empty live catalog when Shopify catalog data fails, while optional content areas degrade independently. Set it to `true` only when any Shopify catalog, content, collection, or policy failure should throw. Preview products are served only when Shopify is completely unconfigured.
+- Keep `SHOPIFY_STRICT_MODE=false` during setup to leave the shell available with an empty live catalog when Shopify catalog data fails, while optional content areas degrade independently. Set it to `true` for launch: any Shopify catalog/content/collection/policy operation then throws, and all four Shopify policies are required. Preview products are served only when Shopify is completely unconfigured.
 
 Reference: [Shopify Storefront API setup](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/getting-started), [Cart API](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/cart), and [metaobjects](https://shopify.dev/docs/apps/build/metaobjects).

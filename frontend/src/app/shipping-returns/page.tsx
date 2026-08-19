@@ -25,12 +25,12 @@ export default async function ShippingReturnsPage() {
         eyebrow="Customer care"
         title="Shipping + returns."
         description={
-          policies.length
+          storefront.source === "shopify"
             ? "Current delivery and return terms, maintained by NatureMist in Shopify."
             : "Clear terms belong beside every order. Final service regions, timelines and eligibility will be confirmed before launch."
         }
       />
-      {policies.length ? (
+      {storefront.source === "shopify" ? (
         <PolicyContent>
           {policies.map((policy) => (
             <section key={policy.handle}>
@@ -38,6 +38,11 @@ export default async function ShippingReturnsPage() {
               <ShopifyPolicyBody html={policy.body} />
             </section>
           ))}
+          {!storefront.policies.shipping || !storefront.policies.refund ? (
+            <NoticeBox title="Part of this policy is temporarily unavailable.">
+              The merchant must publish both Shipping and Refund policies in Shopify Admin before accepting orders.
+            </NoticeBox>
+          ) : null}
         </PolicyContent>
       ) : (
         <PolicyContent>

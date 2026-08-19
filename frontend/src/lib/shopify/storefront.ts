@@ -889,6 +889,17 @@ async function loadStorefront(): Promise<StorefrontData> {
       ? mapContent(contentResult.value)
       : previewContent;
   const shop = shopResult.status === "fulfilled" ? shopResult.value.shop : null;
+  if (
+    strict &&
+    (!shop?.privacyPolicy ||
+      !shop.termsOfService ||
+      !shop.shippingPolicy ||
+      !shop.refundPolicy)
+  ) {
+    throw new Error(
+      "SHOPIFY_STRICT_MODE requires Privacy, Terms, Shipping, and Refund policies to be published.",
+    );
+  }
 
   if (catalogResult.status === "rejected") {
     warnStorefrontPart("catalog", catalogResult.reason);

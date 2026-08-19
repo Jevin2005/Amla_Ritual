@@ -10,7 +10,8 @@ import {
 export const metadata: Metadata = { title: "Terms", alternates: { canonical: "/terms" } };
 
 export default async function TermsPage() {
-  const policy = (await getStorefront()).policies.terms;
+  const storefront = await getStorefront();
+  const policy = storefront.policies.terms;
 
   return (
     <main id="main-content">
@@ -18,13 +19,19 @@ export default async function TermsPage() {
         eyebrow="Terms"
         title={<><span>Clear expectations,</span><br />from the beginning.</>}
         description={
-          policy
+          storefront.source === "shopify"
             ? "The current terms of service maintained by NatureMist in Shopify."
             : "Pre-launch terms for browsing the NatureMist website preview."
         }
       />
       {policy ? (
         <ShopifyPolicyContent html={policy.body} />
+      ) : storefront.source === "shopify" ? (
+        <PolicyContent>
+          <NoticeBox title="The current terms are temporarily unavailable.">
+            Please return before placing an order. The merchant must publish the Terms of Service in Shopify Admin.
+          </NoticeBox>
+        </PolicyContent>
       ) : (
         <PolicyContent>
         <NoticeBox title="This website is currently a product and commerce preview.">
