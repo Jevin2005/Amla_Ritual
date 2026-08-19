@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { products, type Product } from "@/domain/catalog/products";
+import { products } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { ProductJar } from "@/features/catalog/product-jar";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
@@ -157,22 +157,22 @@ export function HomePage() {
           className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(rgba(23,63,42,0.22)_0.55px,transparent_0.55px)] bg-size-[7px_7px] opacity-20 [mask-image:linear-gradient(115deg,transparent_8%,black_45%,transparent_88%)]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(310px,1.15fr)_minmax(360px,1.25fr)_minmax(240px,0.85fr)] gap-[clamp(20px,2vw,36px)] px-[clamp(24px,4vw,64px)] pt-[clamp(24px,2.5vw,38px)] pb-[clamp(24px,3vw,44px)] max-[1280px]:grid-cols-[minmax(280px,1.1fr)_minmax(340px,1.2fr)_minmax(220px,0.8fr)] max-[1180px]:grid-cols-[minmax(260px,1fr)_minmax(320px,1.15fr)_minmax(200px,0.85fr)] max-[1080px]:grid-cols-[minmax(270px,1fr)_minmax(320px,1.15fr)] max-[1080px]:gap-[32px_24px] max-[1080px]:px-[4vw] max-[900px]:grid-cols-1 max-[900px]:gap-8 max-[900px]:px-5 max-[900px]:pt-6 max-[900px]:pb-10 max-[680px]:gap-6 max-[680px]:px-4 max-[680px]:pt-4 max-[680px]:pb-8">
+        <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] items-center gap-[clamp(14px,2vw,36px)] px-[clamp(14px,3.5vw,64px)] pt-[clamp(16px,2.5vw,38px)] pb-[clamp(18px,3vw,44px)] max-[1080px]:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] max-[1080px]:gap-4 max-[680px]:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] max-[680px]:gap-2.5 max-[680px]:px-3.5 max-[680px]:pt-2.5 max-[680px]:pb-3">
           <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-            <p className={`${eyebrowClass} mb-3 max-[680px]:mb-1.5 max-[680px]:text-[0.55rem] max-[680px]:tracking-[0.12em]`}>
+            <p className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-[rgba(63,125,58,0.26)] bg-[rgba(63,125,58,0.08)] px-2.5 py-0.5 text-[0.62rem] font-bold tracking-[0.14em] text-[var(--botanical)] uppercase max-[680px]:mb-1 max-[680px]:px-2 max-[680px]:py-0.5 max-[680px]:text-[0.46rem]">
               {details.eyebrow}
             </p>
             <h1
-              className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(3.2rem,3.8vw,4.6rem)] leading-[0.9] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.9rem,4vw,3.8rem)] max-[1080px]:max-w-[480px] max-[1080px]:text-[clamp(2.6rem,4.8vw,3.5rem)] max-[900px]:text-[clamp(2.4rem,5.8vw,3.2rem)] max-[680px]:text-[clamp(1.75rem,6.8vw,2.1rem)] max-[680px]:leading-[0.94]"
+              className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(2.4rem,3.4vw,4.6rem)] leading-[0.92] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.2rem,3vw,3.6rem)] max-[900px]:text-[clamp(1.8rem,2.8vw,2.6rem)] max-[680px]:text-[clamp(1.28rem,5.2vw,1.65rem)] max-[680px]:leading-[0.96]"
               id="hero-title"
             >
               <span className="block [animation:hero-title-enter_900ms_var(--ease)_80ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineFirst}
               </span>
-              <span className="flex items-center gap-[clamp(10px,1.2vw,18px)] [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+              <span className="flex items-center gap-[clamp(6px,1vw,18px)] max-[680px]:gap-1.5 [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineMiddle}
                 <span
-                  className="relative inline-block h-[0.58em] w-[clamp(85px,8.5vw,135px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[680px]:w-[clamp(42px,12vw,62px)]"
+                  className="relative inline-block h-[0.56em] w-[clamp(48px,6.5vw,135px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.14)] shadow-[0_8px_20px_rgba(23,63,42,0.1)] max-[900px]:w-[clamp(44px,8vw,70px)] max-[680px]:w-[clamp(36px,10vw,48px)]"
                   aria-hidden="true"
                 >
                   <Image
@@ -184,11 +184,11 @@ export function HomePage() {
                   />
                 </span>
               </span>
-              <em className="mt-[0.05em] ml-[0.03em] block text-[0.9em] leading-[inherit] font-normal tracking-[-0.05em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:text-[0.85em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+              <em className="mt-[0.04em] ml-[0.02em] block text-[0.92em] leading-[inherit] font-normal tracking-[-0.05em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:text-[0.92em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineItalic}
               </em>
             </h1>
-            <p className="my-[clamp(14px,2vh,22px)_14px] max-w-[420px] text-[clamp(0.9rem,1vw,1.02rem)] leading-[1.65] text-[#4b5047] max-[900px]:max-w-[480px] max-[900px]:text-[0.85rem] max-[680px]:my-[8px_10px] max-[680px]:text-[0.72rem] max-[680px]:leading-[1.5]">
+            <p className="my-[clamp(8px,1.5vh,18px)_10px] max-w-[420px] text-[clamp(0.78rem,0.95vw,1rem)] leading-[1.55] text-[#4b5047] max-[900px]:text-[0.8rem] max-[680px]:my-1 max-[680px]:text-[0.62rem] max-[680px]:leading-[1.4] max-[680px]:line-clamp-2">
               {details.description}
             </p>
             <HeroPurchase
@@ -197,95 +197,66 @@ export function HomePage() {
               name={activeProduct.name}
               pricePaise={activeProduct.pricePaise}
             />
-            <ul
-              className="mt-4 flex max-w-[440px] list-none items-center gap-[14px] border-t border-[rgba(23,63,42,0.16)] pt-3.5 text-[var(--forest)] max-[1080px]:max-w-full max-[900px]:max-w-full max-[680px]:hidden"
+            <div
+              className="mt-3.5 grid max-w-[440px] grid-cols-3 gap-1.5 border-t border-[rgba(23,63,42,0.14)] pt-3 text-[var(--forest)] max-[1080px]:max-w-full max-[900px]:max-w-full max-[680px]:mt-2 max-[680px]:gap-1 max-[680px]:pt-1.5"
               aria-label="NatureMist principles"
             >
-              <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
-                <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
+              <div className="flex flex-col gap-0.5 rounded-[4px] border border-[rgba(23,63,42,0.13)] bg-[rgba(255,253,246,0.92)] p-1.5 shadow-[0_1px_3px_rgba(23,63,42,0.03)] text-[0.48rem] font-bold tracking-[0.05em] uppercase max-[680px]:p-1 max-[680px]:text-[0.38rem] max-[680px]:leading-[1.12]">
+                <span className="text-[0.76rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.58rem]">
                   01
                 </span>{" "}
                 Single botanical
-              </li>
-              <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
-                <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
+              </div>
+              <div className="flex flex-col gap-0.5 rounded-[4px] border border-[rgba(23,63,42,0.13)] bg-[rgba(255,253,246,0.92)] p-1.5 shadow-[0_1px_3px_rgba(23,63,42,0.03)] text-[0.48rem] font-bold tracking-[0.05em] uppercase max-[680px]:p-1 max-[680px]:text-[0.38rem] max-[680px]:leading-[1.12]">
+                <span className="text-[0.76rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.58rem]">
                   02
                 </span>{" "}
                 Clearly explained
-              </li>
-              <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
-                <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
+              </div>
+              <div className="flex flex-col gap-0.5 rounded-[4px] border border-[rgba(23,63,42,0.13)] bg-[rgba(255,253,246,0.92)] p-1.5 shadow-[0_1px_3px_rgba(23,63,42,0.03)] text-[0.48rem] font-bold tracking-[0.05em] uppercase max-[680px]:p-1 max-[680px]:text-[0.38rem] max-[680px]:leading-[1.12]">
+                <span className="text-[0.76rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.58rem]">
                   03
                 </span>{" "}
-                Made for home rituals
-              </li>
-            </ul>
+                Home rituals
+              </div>
+            </div>
           </div>
 
-          <div className="relative z-[2] h-[clamp(480px,60vh,640px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(440px,56vh,560px)] max-[1080px]:h-[clamp(400px,52vh,480px)] max-[900px]:h-[clamp(380px,50vh,450px)] max-[680px]:h-[clamp(320px,60vh,400px)] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+          <div className="relative z-[2] mx-auto h-[clamp(320px,46vh,640px)] w-full max-w-[560px] min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(440px,56vh,560px)] max-[1080px]:h-[clamp(400px,52vh,480px)] max-[900px]:h-[clamp(360px,48vh,430px)] max-[680px]:h-[clamp(280px,40vh,350px)] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
             <span
-              className="pointer-events-none absolute top-[1%] right-[-7%] bottom-[-3%] left-[-8%] z-0 rounded-[49%_51%_17%_83%/35%_38%_62%_65%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)] max-[1080px]:hidden"
+              className="pointer-events-none absolute top-[1%] right-[-5%] bottom-[-2%] left-[-5%] z-0 rounded-[50%_50%_12px_12px/32%_32%_2%_2%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)]"
               aria-hidden="true"
             />
             <span
-              className="pointer-events-none absolute top-[-3%] right-[-5%] bottom-[1%] left-[-6%] z-[1] rounded-[52%_48%_14%_86%/31%_39%_61%_69%] border border-[rgba(57,111,58,0.44)] [animation:hero-orbit-drift_11s_ease-in-out_infinite_alternate] [will-change:transform] max-[1080px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(15deg)]"
+              className="pointer-events-none absolute top-[-3%] right-[-3%] bottom-[1%] left-[-3%] z-[1] rounded-[50%_50%_16px_16px/30%_30%_2%_2%] border border-[rgba(57,111,58,0.44)] [animation:hero-orbit-drift_11s_ease-in-out_infinite_alternate] [will-change:transform] motion-reduce:animate-none motion-reduce:[transform:rotate(15deg)]"
               aria-hidden="true"
             />
-            {/* Layered Organic Line 2 - Outer poster frame orbit with different organic shape */}
+            {/* Layered Organic Line 2 - Outer poster frame orbit */}
             <span
-              className="pointer-events-none absolute top-[-7.5%] right-[-9.5%] bottom-[-5%] left-[-10.5%] z-[1] rounded-[45%_55%_52%_48%/54%_43%_57%_46%] border border-[rgba(111,143,47,0.36)] [animation:hero-orbit-drift_15s_ease-in-out_-4s_infinite_alternate] [will-change:transform] max-[1080px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(-9deg)]"
+              className="pointer-events-none absolute top-[-7.5%] right-[-9.5%] bottom-[-5%] left-[-10.5%] z-[1] rounded-[45%_55%_52%_48%/54%_43%_57%_46%] border border-[rgba(111,143,47,0.36)] [animation:hero-orbit-drift_15s_ease-in-out_-4s_infinite_alternate] [will-change:transform] motion-reduce:animate-none motion-reduce:[transform:rotate(-9deg)]"
               aria-hidden="true"
             />
             <span
-              className="pointer-events-none absolute top-[9%] right-[-9%] z-[4] rotate-[24deg] max-[1080px]:hidden"
+              className="pointer-events-none absolute top-[9%] right-[-6%] z-[4] rotate-[24deg] max-[680px]:right-[-2%]"
               aria-hidden="true"
             >
-              <i className="block h-[24px] w-[52px] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.82)] shadow-[0_8px_20px_rgba(23,63,42,0.12)] [animation:hero-arrow_4.8s_ease-in-out_infinite] [will-change:transform] motion-reduce:animate-none" />
+              <i className="block h-[20px] w-[44px] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.82)] shadow-[0_8px_20px_rgba(23,63,42,0.12)] [animation:hero-arrow_4.8s_ease-in-out_infinite] [will-change:transform] max-[680px]:h-[13px] max-[680px]:w-[28px]" />
             </span>
             <span
-              className="pointer-events-none absolute bottom-[15%] left-[-12%] z-[4] rotate-[-32deg] max-[1080px]:hidden"
+              className="pointer-events-none absolute bottom-[15%] left-[-8%] z-[4] rotate-[-32deg] max-[680px]:left-[-3%]"
               aria-hidden="true"
             >
-              <i className="block h-[20px] w-[44px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.7)] [animation:hero-arrow_5.4s_ease-in-out_-1.6s_infinite] [will-change:transform] motion-reduce:animate-none" />
+              <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.7)] [animation:hero-arrow_5.4s_ease-in-out_-1.6s_infinite] [will-change:transform] max-[680px]:h-[12px] max-[680px]:w-[24px]" />
             </span>
             <span
-              className="pointer-events-none absolute right-[5%] bottom-[-2%] z-[4] rotate-[138deg] max-[1080px]:hidden"
+              className="pointer-events-none absolute right-[5%] bottom-[-2%] z-[4] rotate-[138deg]"
               aria-hidden="true"
             >
-              <i className="block h-[17px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(143,159,78,0.68)] [animation:hero-arrow_4.2s_ease-in-out_-0.8s_infinite] [will-change:transform] motion-reduce:animate-none" />
+              <i className="block h-[17px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(143,159,78,0.68)] [animation:hero-arrow_4.2s_ease-in-out_-0.8s_infinite] [will-change:transform] max-[680px]:h-[11px] max-[680px]:w-[22px]" />
             </span>
 
-            {/* Mobile-only organic frame. */}
-            <span
-              className="pointer-events-none absolute top-[-6%] right-[-6%] bottom-[-6%] left-[-6%] z-0 hidden rounded-[50%] bg-[radial-gradient(ellipse_at_55%_42%,rgba(167,201,67,0.18),rgba(188,207,161,0.12)_48%,transparent_72%)] max-[680px]:block"
-              aria-hidden="true"
-            />
+            <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[50%_50%_8px_8px/28%_28%_1%_1%] border border-[rgba(23,63,42,0.11)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.2)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%]">
 
-            <span
-              className="pointer-events-none absolute top-[-4%] right-[-4%] bottom-[-4%] left-[-4%] z-[1] hidden rounded-[47%_53%_51%_49%/48%_44%_56%_52%] border border-[rgba(63,125,58,0.38)] [animation:mobile-orbit-slow_10s_ease-in-out_infinite_alternate] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none motion-reduce:[transform:rotate(8deg)]"
-              aria-hidden="true"
-            />
-
-            <span
-              className="pointer-events-none absolute top-[-1%] right-[-2%] bottom-[-1%] left-[-2%] z-[1] hidden rounded-[53%_47%_44%_56%/52%_56%_44%_48%] border border-[rgba(57,111,58,0.22)] [animation:mobile-orbit-pulse_13s_ease-in-out_infinite_alternate] max-[680px]:block motion-safe:[will-change:transform,opacity] motion-reduce:animate-none"
-              aria-hidden="true"
-            />
-
-            <span
-              className="pointer-events-none absolute top-[2%] left-[-3%] z-[5] hidden [animation:mobile-float-a_6.2s_ease-in-out_infinite] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none"
-              aria-hidden="true"
-            >
-              <i className="block h-[18px] w-[38px] rotate-[-28deg] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.8)] shadow-[0_4px_12px_rgba(23,63,42,0.14)]" />
-            </span>
-
-            <span
-              className="pointer-events-none absolute top-[6%] right-[-1%] z-[5] hidden [animation:mobile-float-b_7.8s_ease-in-out_-1.4s_infinite] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none"
-              aria-hidden="true"
-            >
-              <i className="block h-[14px] w-[28px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.72)] shadow-[0_3px_8px_rgba(23,63,42,0.1)] rotate-[42deg]" />
-            </span>
-
-            <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[52%_48%_9%_13%/29%_34%_5%_7%] border border-[rgba(23,63,42,0.11)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.2)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_12px_12px/26%_26%_2%_2%]">
               <Image
                 src={heroImage}
                 alt="A woman with long, dark natural hair in a sunlit botanical setting"
@@ -298,36 +269,36 @@ export function HomePage() {
                 aria-hidden="true"
               />
               <span
-                className="absolute right-4 bottom-3 text-[0.52rem] font-bold tracking-[0.14em] text-[rgba(255,255,255,0.85)] max-[680px]:right-3 max-[680px]:bottom-2.5 max-[680px]:text-[0.46rem]"
+                className="absolute right-4 bottom-3 text-[0.52rem] font-bold tracking-[0.14em] text-[rgba(255,255,255,0.85)] max-[680px]:right-2.5 max-[680px]:bottom-2 max-[680px]:text-[0.42rem]"
                 aria-hidden="true"
               >
                 0{activeProductIndex + 1} / 0{products.length}
               </span>
             </div>
             <Link
-              className="absolute bottom-[28%] left-[-68px] z-[5] grid min-h-[62px] w-[225px] grid-cols-[40px_1fr_8px] items-center gap-[10px] rounded-lg border border-[rgba(255,255,255,0.55)] bg-[rgba(248,245,234,0.87)] px-3 py-[9px] shadow-[0_18px_45px_rgba(28,46,31,0.16)] backdrop-blur-[14px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.96)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[205px] min-[901px]:max-[1080px]:left-[-38px] max-[900px]:left-[-38px] max-[680px]:bottom-[17%] max-[680px]:left-3 max-[680px]:w-[min(220px,67vw)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
+              className="absolute bottom-[26%] left-[-38px] z-[5] grid min-h-[52px] w-[205px] grid-cols-[34px_1fr_8px] items-center gap-2 rounded-lg border border-[rgba(255,255,255,0.8)] bg-[rgba(248,245,234,0.96)] px-2.5 py-[6px] shadow-[0_14px_35px_rgba(28,46,31,0.16)] backdrop-blur-[16px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.98)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[205px] min-[901px]:max-[1080px]:left-[-38px] max-[900px]:bottom-[18%] max-[900px]:left-1.5 max-[900px]:w-[min(205px,66vw)] max-[680px]:bottom-[12%] max-[680px]:left-1 max-[680px]:w-[min(175px,62vw)] max-[680px]:min-h-[44px] max-[680px]:p-1.5 max-[680px]:grid-cols-[26px_1fr_6px] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
               href={`/shop/${activeProduct.slug}`}
               aria-label={`View the ${activeProduct.name} ritual`}
             >
-              <span className="grid size-10 place-items-center rounded-full bg-[var(--forest)] text-[var(--paper)] [font-family:var(--font-display)]">
+              <span className="grid size-8 place-items-center rounded-full bg-[var(--forest)] text-[var(--paper)] [font-family:var(--font-display)] max-[680px]:size-6 max-[680px]:text-[0.68rem]">
                 {activeProduct.collectionNumber}
               </span>
-              <div className="grid leading-[1.2]">
-                <strong className="text-[0.88rem] font-semibold text-[var(--forest)] [font-family:var(--font-display)]">
+              <div className="grid leading-[1.15]">
+                <strong className="text-[0.78rem] font-semibold text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[0.66rem] max-[680px]:truncate">
                   {details.badgeText}
                 </strong>
-                <small className="mt-1 text-[0.48rem] text-[var(--muted)]">
+                <small className="mt-0.5 text-[0.44rem] text-[var(--muted)] max-[680px]:text-[0.38rem] max-[680px]:truncate">
                   {details.badgeSubtitle}
                 </small>
               </div>
               <i
-                className="size-[7px] rounded-full shadow-[0_0_0_5px_rgba(167,201,67,0.16)]"
+                className="size-[6px] rounded-full shadow-[0_0_0_4px_rgba(167,201,67,0.18)] max-[680px]:size-[5px]"
                 style={{ backgroundColor: activeProduct.accent }}
                 aria-hidden="true"
               />
             </Link>
             <a
-              className="absolute right-5 bottom-5 z-[6] grid size-[60px] place-items-center rounded-full border border-[rgba(255,255,255,0.7)] bg-[rgba(23,63,42,0.35)] text-[1.5rem] text-white shadow-[0_14px_32px_rgba(18,38,23,0.25)] backdrop-blur-[10px] [font-family:var(--font-display)] [transition:background_250ms_ease,transform_250ms_ease,border-color_250ms_ease] hover:border-white hover:bg-[rgba(23,63,42,0.7)] hover:[transform:translateY(3px)_scale(1.05)] max-[1080px]:right-4 max-[1080px]:bottom-4 max-[680px]:right-3 max-[680px]:bottom-[max(14px,env(safe-area-inset-bottom))] max-[680px]:size-12 max-[680px]:text-[1.2rem] motion-reduce:transition-none"
+              className="absolute right-3.5 bottom-3.5 z-[6] grid size-[48px] place-items-center rounded-full border border-[rgba(255,255,255,0.75)] bg-[rgba(23,63,42,0.5)] text-[1.3rem] text-white shadow-[0_12px_28px_rgba(18,38,23,0.25)] backdrop-blur-[12px] [font-family:var(--font-display)] [transition:background_250ms_ease,transform_250ms_ease,border-color_250ms_ease] hover:border-white hover:bg-[rgba(23,63,42,0.7)] hover:[transform:translateY(3px)_scale(1.05)] max-[1080px]:right-4 max-[1080px]:bottom-4 max-[680px]:right-2.5 max-[680px]:bottom-2.5 max-[680px]:size-9 max-[680px]:text-[1rem] motion-reduce:transition-none"
               href="#collection-title"
               aria-label="Scroll to the botanical collection"
             >
@@ -341,144 +312,180 @@ export function HomePage() {
           </div>
 
           <aside
-            className="relative z-[4] min-w-0 self-center scroll-mt-[calc(var(--header-height)+20px)] max-[1080px]:col-span-full max-[1080px]:grid max-[1080px]:grid-cols-[minmax(220px,0.75fr)_minmax(280px,1.25fr)] max-[1080px]:items-start max-[1080px]:gap-x-[26px] max-[1080px]:border-t max-[1080px]:border-[var(--line)] max-[1080px]:pt-7 max-[680px]:col-span-full max-[680px]:flex max-[680px]:flex-col max-[680px]:gap-y-4 max-[680px]:pt-6"
+            className="col-span-full relative z-[4] mt-3 border-t border-[var(--line)] pt-6 max-[680px]:mt-2 max-[680px]:pt-4"
             id="featured-ritual"
             aria-label={`Featured ${activeProduct.name} ritual`}
           >
             <nav
-              className="mb-[7px] grid grid-cols-[42px_1fr_42px] items-center gap-2 text-[var(--forest)] max-[1080px]:col-span-full max-[680px]:w-full max-[680px]:py-2"
+              className="mb-4 flex items-center justify-between gap-2 text-[var(--forest)] max-[680px]:mb-3"
               aria-label="Browse featured rituals"
             >
               <button
                 type="button"
                 onClick={handlePrevProduct}
-                className="grid size-[42px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
+                className="grid size-[38px] place-items-center rounded-full border border-[rgba(23,63,42,0.22)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] max-[680px]:size-8 max-[680px]:text-[0.95rem]"
                 aria-label="Previous featured ritual"
               >
                 ←
               </button>
-              <span className="text-center text-[0.56rem] font-bold tracking-[0.16em] text-[var(--muted)] uppercase">
+              <span className="text-center text-[0.62rem] font-bold tracking-[0.16em] text-[var(--muted)] uppercase max-[680px]:text-[0.5rem]">
                 Featured ritual ({activeProductIndex + 1} / {products.length})
               </span>
               <button
                 type="button"
                 onClick={handleNextProduct}
-                className="grid size-[42px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
+                className="grid size-[38px] place-items-center rounded-full border border-[rgba(23,63,42,0.22)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] max-[680px]:size-8 max-[680px]:text-[0.95rem]"
                 aria-label="Next featured ritual"
               >
                 →
               </button>
             </nav>
-            <div className="relative grid h-[clamp(245px,31vh,305px)] place-items-center overflow-hidden border-b border-[var(--line)] bg-[radial-gradient(circle_at_52%_54%,rgba(167,201,67,0.18),transparent_49%)] max-[1080px]:col-start-1 max-[1080px]:row-[2/4] max-[1080px]:h-[300px] max-[1080px]:border-b-0 max-[680px]:col-start-auto max-[680px]:row-auto max-[680px]:h-[260px] max-[680px]:w-full max-[680px]:rounded-lg max-[680px]:border border-[var(--line)]">
-              <span
-                className="pointer-events-none absolute inset-0"
-                aria-hidden="true"
-              >
-                <i className="absolute top-[20%] left-[6%] h-[18px] w-[38px] [transform:rotate(-18deg)_scale(1.1)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-                <i className="absolute top-[34%] right-[4%] h-[18px] w-[38px] rotate-[42deg] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-                <i className="absolute right-[19%] bottom-[12%] h-[18px] w-[38px] [transform:rotate(115deg)_scale(0.75)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-              </span>
-              <ProductJar
-                key={activeProduct.slug}
-                product={activeProduct}
-                size="medium"
-                className="z-[3] [--hero-jar-scale:0.9] [transform:scale(var(--hero-jar-scale))] [animation:hero-jar-float_5.5s_ease-in-out_infinite] max-[1180px]:[--hero-jar-scale:0.82] min-[901px]:max-[1080px]:[--hero-jar-scale:0.94] max-[900px]:[--hero-jar-scale:0.94] max-[680px]:[--hero-jar-scale:0.82] motion-reduce:animate-none motion-reduce:[transform:scale(var(--hero-jar-scale))]"
-              />
-              <span
-                className="absolute right-[5%] bottom-[21%] z-[4] h-[23px] w-[47px] rotate-[-9deg] rounded-[50%] border-[5px] border-[rgba(255,255,255,0.72)] shadow-[0_7px_17px_rgba(31,43,25,0.16)]"
-                style={{ backgroundColor: activeProduct.accent }}
-                aria-hidden="true"
-              />
-            </div>
-            <div className="py-[17px_11px] max-[1080px]:col-start-2 max-[1080px]:row-start-2 max-[1080px]:py-[14px] max-[680px]:col-start-auto max-[680px]:row-auto max-[680px]:pt-3 max-[680px]:pb-1">
-              <span className="text-[0.52rem] font-bold tracking-[0.13em] text-[var(--muted)] uppercase">
-                NatureMist / Ritual {activeProduct.collectionNumber}
-              </span>
-              <h2 className="my-[3px_1px] [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2rem,2.7vw,3.15rem)] leading-none font-normal tracking-[-0.045em] max-[1180px]:text-[clamp(1.85rem,2.5vw,2.6rem)] max-[680px]:text-[2.2rem]">
-                {activeProduct.name}
-              </h2>
-              <p className="m-0 text-[0.52rem] font-bold tracking-[0.13em] text-[var(--muted)] uppercase">
-                {activeProduct.subtitle} · packaging preview
-              </p>
-            </div>
-            <div className="border-t border-[var(--line)] max-[1080px]:col-start-2 max-[1080px]:row-start-3 max-[680px]:col-start-auto max-[680px]:row-auto max-[680px]:border-t-0">
-              <details className="group/fact border-b border-[var(--line)]">
-                <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
-                  Why you&apos;ll love it{" "}
-                  <span
-                    className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
-                    aria-hidden="true"
-                  >
-                    ＋
+
+            <div className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-4 max-[680px]:gap-3">
+              {/* Left column: Jar with floating leaves */}
+              <div className="relative grid h-[clamp(200px,26vh,280px)] place-items-center overflow-hidden rounded-lg bg-[radial-gradient(circle_at_52%_54%,rgba(167,201,67,0.18),transparent_49%)] max-[680px]:h-[clamp(170px,24vh,220px)]">
+                <span
+                  className="pointer-events-none absolute inset-0"
+                  aria-hidden="true"
+                >
+                  <i className="absolute top-[18%] left-[6%] h-[16px] w-[34px] [transform:rotate(-18deg)_scale(1.1)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] max-[680px]:h-[12px] max-[680px]:w-[26px]" />
+                  <i className="absolute top-[32%] right-[4%] h-[16px] w-[34px] rotate-[42deg] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] max-[680px]:h-[12px] max-[680px]:w-[26px]" />
+                  <i className="absolute right-[18%] bottom-[10%] h-[16px] w-[34px] [transform:rotate(115deg)_scale(0.75)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] max-[680px]:h-[12px] max-[680px]:w-[26px]" />
+                </span>
+                <ProductJar
+                  key={activeProduct.slug}
+                  product={activeProduct}
+                  size="medium"
+                  className="z-[3] [--hero-jar-scale:0.85] [transform:scale(var(--hero-jar-scale))] [animation:hero-jar-float_5.5s_ease-in-out_infinite] max-[680px]:[--hero-jar-scale:0.68] motion-reduce:animate-none motion-reduce:[transform:scale(var(--hero-jar-scale))]"
+                />
+                <span
+                  className="absolute right-[5%] bottom-[18%] z-[4] h-[20px] w-[40px] rotate-[-9deg] rounded-[50%] border-[4px] border-[rgba(255,255,255,0.72)] shadow-[0_6px_14px_rgba(31,43,25,0.16)] max-[680px]:h-[15px] max-[680px]:w-[30px]"
+                  style={{ backgroundColor: activeProduct.accent }}
+                  aria-hidden="true"
+                />
+              </div>
+
+              {/* Right column: Title & Accordions */}
+              <div className="flex flex-col justify-center">
+                <div className="pb-1.5 max-[680px]:pb-1">
+                  <span className="text-[0.52rem] font-bold tracking-[0.14em] text-[var(--muted)] uppercase max-[680px]:text-[0.44rem]">
+                    NatureMist / Ritual {activeProduct.collectionNumber}
                   </span>
-                </summary>
-                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.76rem]">
-                  {activeProduct.shortDescription}
-                </p>
-              </details>
-              <details className="group/fact border-b border-[var(--line)]">
-                <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
-                  How to prepare{" "}
-                  <span
-                    className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
-                    aria-hidden="true"
-                  >
-                    ＋
-                  </span>
-                </summary>
-                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.76rem]">
-                  {details.howToText}
-                </p>
-              </details>
-              <details className="group/fact border-b border-[var(--line)]" open>
-                <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
-                  Ingredient clarity{" "}
-                  <span
-                    className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
-                    aria-hidden="true"
-                  >
-                    ＋
-                  </span>
-                </summary>
-                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.76rem]">
-                  {activeProduct.ingredient}
-                </p>
-              </details>
+                  <h2 className="my-1 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.5rem,2.2vw,2.6rem)] leading-none font-normal tracking-[-0.045em] max-[680px]:my-0.5 max-[680px]:text-[1.15rem]">
+                    {activeProduct.name}
+                  </h2>
+                  <p className="m-0 text-[0.52rem] font-bold tracking-[0.12em] text-[var(--muted)] uppercase max-[680px]:text-[0.42rem]">
+                    {activeProduct.subtitle} · packaging preview
+                  </p>
+                </div>
+                <div className="border-t border-[var(--line)]">
+                  <details className="group/fact border-b border-[var(--line)]">
+                    <summary className="flex min-h-[38px] cursor-pointer list-none items-center justify-between text-[0.88rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[32px] max-[680px]:text-[0.74rem]">
+                      Why you&apos;ll love it{" "}
+                      <span
+                        className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)] text-[0.75rem]"
+                        aria-hidden="true"
+                      >
+                        ＋
+                      </span>
+                    </summary>
+                    <p className="mt-[-1px] mb-0 pb-2 text-[0.68rem] leading-[1.5] text-[var(--muted)] max-[680px]:pb-1.5 max-[680px]:text-[0.58rem]">
+                      {activeProduct.shortDescription}
+                    </p>
+                  </details>
+                  <details className="group/fact border-b border-[var(--line)]">
+                    <summary className="flex min-h-[38px] cursor-pointer list-none items-center justify-between text-[0.88rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[32px] max-[680px]:text-[0.74rem]">
+                      How to prepare{" "}
+                      <span
+                        className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)] text-[0.75rem]"
+                        aria-hidden="true"
+                      >
+                        ＋
+                      </span>
+                    </summary>
+                    <p className="mt-[-1px] mb-0 pb-2 text-[0.68rem] leading-[1.5] text-[var(--muted)] max-[680px]:pb-1.5 max-[680px]:text-[0.58rem]">
+                      {details.howToText}
+                    </p>
+                  </details>
+                  <details className="group/fact border-b border-[var(--line)]" open>
+                    <summary className="flex min-h-[38px] cursor-pointer list-none items-center justify-between text-[0.88rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[32px] max-[680px]:text-[0.74rem]">
+                      Ingredient clarity{" "}
+                      <span
+                        className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)] text-[0.75rem]"
+                        aria-hidden="true"
+                      >
+                        ＋
+                      </span>
+                    </summary>
+                    <p className="mt-[-1px] mb-0 pb-2 text-[0.68rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-1.5 max-[680px]:text-[0.58rem]">
+                      {activeProduct.ingredient}
+                    </p>
+                  </details>
+                </div>
+              </div>
             </div>
           </aside>
         </div>
+        {/* Bottom wave curve */}
+        <svg
+          className="pointer-events-none absolute right-0 bottom-0 left-0 z-[8] w-full text-[#f7f4e8] max-[680px]:hidden"
+          viewBox="0 0 1440 44"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path d="M0,0 Q720,48 1440,0 L1440,44 L0,44 Z" fill="currentColor" />
+        </svg>
       </section>
 
+
+
       <section
-        className={`${sectionClass} ${revealClass} overflow-hidden max-[680px]:py-12`}
+        className={`${sectionClass} ${revealClass} max-[680px]:py-12`}
         aria-labelledby="collection-title"
       >
-        <div className="grid grid-cols-[minmax(0,1.35fr)_minmax(260px,0.65fr)] items-end gap-[clamp(48px,6vw,88px)] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(210px,0.85fr)] max-[900px]:gap-8 max-[680px]:grid-cols-1 max-[680px]:gap-3">
+        {/* ── Section heading ── */}
+        <div className="mb-[clamp(48px,5vw,72px)] grid grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] items-end gap-x-[clamp(32px,5vw,72px)] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[900px]:gap-x-8 max-[680px]:mb-8 max-[680px]:grid-cols-1 max-[680px]:gap-y-4">
           <div>
             <p className={eyebrowClass}>The botanical cabinet</p>
-            <h2 className={sectionTitleClass} id="collection-title">
-              Shop the herbal collection.
+            <h2
+              className={sectionTitleClass}
+              id="collection-title"
+            >
+              Shop the herbal{" "}
+              <em className="not-italic text-[var(--botanical)]">collection.</em>
             </h2>
           </div>
-          <div className="max-w-[460px] pb-1 leading-[1.75] text-[var(--muted)] max-[900px]:p-0">
-            <p>Six single botanicals. Six distinct rituals. One calm, considered way to begin.</p>
-            <Link className={`${textLinkClass} mt-[15px] max-[680px]:mt-2`} href="/shop">
+          <div className="flex flex-col justify-end gap-4 max-[680px]:gap-3">
+            <p className="m-0 text-[0.86rem] leading-[1.72] text-[var(--muted)] max-[680px]:text-[0.8rem] max-[680px]:leading-[1.65]">
+              Six single botanicals. Six distinct rituals. One calm, considered way to begin.
+            </p>
+            <Link
+              className={`${textLinkClass} max-[680px]:min-h-[44px]`}
+              href="/shop"
+            >
               View all botanicals <span aria-hidden="true">↗</span>
             </Link>
           </div>
         </div>
+
+        {/* ── Product grid ── */}
         <div
-          className="grid grid-cols-3 gap-[clamp(18px,2vw,30px)] pt-[72px] max-[1180px]:grid-cols-2 max-[680px]:grid-cols-2 max-[680px]:gap-3 max-[680px]:pt-6"
+          className="grid grid-cols-3 gap-[clamp(16px,1.8vw,26px)] max-[860px]:grid-cols-2 max-[680px]:grid-cols-2 max-[680px]:gap-2.5"
           aria-label="NatureMist botanical collection"
         >
           {products.map((product) => (
             <ProductCard product={product} key={product.slug} />
           ))}
         </div>
-        <p className="mx-auto mt-6 max-w-[680px] text-center text-[0.7rem] leading-[1.6] text-[var(--muted)] max-[680px]:mt-5 max-[680px]:px-2 max-[680px]:text-[0.65rem]">
+
+        {/* Disclaimer */}
+        <p className="mx-auto mt-8 max-w-[680px] text-center text-[0.68rem] leading-[1.6] text-[var(--muted)] max-[680px]:mt-6 max-[680px]:px-1 max-[680px]:text-[0.62rem]">
           Product jars and prices are editable launch previews. Final labels, net weights, batch data and commercial terms will replace them before sale.
         </p>
       </section>
+
+
 
       <section
         className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] pt-2 pb-[clamp(80px,8vw,124px)] max-[680px]:px-4 max-[680px]:pt-2 max-[680px]:pb-12 ${revealClass}`}
@@ -561,57 +568,63 @@ export function HomePage() {
             Every powder has its own directions. The rhythm, however, stays beautifully simple.
           </p>
         </div>
-        <div className="mt-[72px] grid grid-cols-3 border-y border-[var(--line)] max-[680px]:mt-7 max-[680px]:grid-cols-3">
-          <article className="relative min-h-[360px] border-r border-[var(--line)] px-10 pt-7 pb-10 last:border-r-0 max-[900px]:px-[18px] max-[680px]:min-h-0 max-[680px]:px-1.5 max-[680px]:py-5">
-            <span className="text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+        <div className="mt-[72px] grid grid-cols-3 border-y border-[var(--line)] max-[900px]:mt-10 max-[680px]:mt-6 max-[680px]:border-none max-[680px]:grid-cols-1 max-[680px]:gap-3">
+          <article className="relative min-h-[360px] border-r border-[var(--line)] px-10 pt-7 pb-10 last:border-r-0 max-[900px]:px-[18px] max-[680px]:min-h-0 max-[680px]:border max-[680px]:border-[var(--line)] max-[680px]:rounded-lg max-[680px]:bg-[var(--paper)] max-[680px]:p-4 max-[680px]:flex max-[680px]:items-center max-[680px]:gap-4 max-[680px]:shadow-[0_2px_8px_rgba(23,63,42,0.04)]">
+            <span className="text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:size-8 max-[680px]:rounded-full max-[680px]:bg-[rgba(63,125,58,0.1)] max-[680px]:grid max-[680px]:place-items-center max-[680px]:text-[0.68rem] max-[680px]:shrink-0">
               01
             </span>
             <span
-              className="relative mx-auto mt-7 mb-[18px] block h-[135px] w-[110px] before:absolute before:top-[15px] before:left-[38px] before:h-12 before:w-[38px] before:rotate-[-12deg] before:rounded-[50%_50%_44%_44%] before:border-2 before:border-[var(--forest)] before:content-[''] after:absolute after:top-[59px] after:left-[54px] after:h-[70px] after:w-[7px] after:rotate-[-12deg] after:rounded-[9px] after:bg-[var(--forest)] after:content-[''] max-[680px]:my-2 max-[680px]:h-[70px] max-[680px]:w-[55px] max-[680px]:before:top-[5px] max-[680px]:before:left-[16px] max-[680px]:before:h-7 max-[680px]:before:w-[22px] max-[680px]:after:top-[30px] max-[680px]:after:left-[25px] max-[680px]:after:h-[35px] max-[680px]:after:w-[4px]"
+              className="relative mx-auto mt-7 mb-[18px] block h-[135px] w-[110px] before:absolute before:top-[15px] before:left-[38px] before:h-12 before:w-[38px] before:rotate-[-12deg] before:rounded-[50%_50%_44%_44%] before:border-2 before:border-[var(--forest)] before:content-[''] after:absolute after:top-[59px] after:left-[54px] after:h-[70px] after:w-[7px] after:rotate-[-12deg] after:rounded-[9px] after:bg-[var(--forest)] after:content-[''] max-[680px]:hidden"
               aria-hidden="true"
             >
               <i />
             </span>
-            <h3 className="m-0 text-center [color:var(--forest)] [font-family:var(--font-display)] text-[2rem] font-normal max-[680px]:text-[1.15rem]">
-              Scoop
-            </h3>
-            <p className="mx-auto mt-2 max-w-[290px] text-center text-[0.82rem] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.3] max-[680px]:line-clamp-2">
-              Begin with enough botanical powder for your hair length.
-            </p>
+            <div className="max-[680px]:flex-1">
+              <h3 className="m-0 text-center [color:var(--forest)] [font-family:var(--font-display)] text-[2rem] font-normal max-[680px]:text-left max-[680px]:text-[1.2rem]">
+                Scoop
+              </h3>
+              <p className="mx-auto mt-2 max-w-[290px] text-center text-[0.82rem] text-[var(--muted)] max-[680px]:mt-0.5 max-[680px]:text-left max-[680px]:text-[0.72rem] max-[680px]:leading-[1.4]">
+                Begin with enough botanical powder for your hair length.
+              </p>
+            </div>
           </article>
-          <article className="relative min-h-[360px] border-r border-[var(--line)] px-10 pt-7 pb-10 last:border-r-0 max-[900px]:px-[18px] max-[680px]:min-h-0 max-[680px]:px-1.5 max-[680px]:py-5">
-            <span className="text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+          <article className="relative min-h-[360px] border-r border-[var(--line)] px-10 pt-7 pb-10 last:border-r-0 max-[900px]:px-[18px] max-[680px]:min-h-0 max-[680px]:border max-[680px]:border-[var(--line)] max-[680px]:rounded-lg max-[680px]:bg-[var(--paper)] max-[680px]:p-4 max-[680px]:flex max-[680px]:items-center max-[680px]:gap-4 max-[680px]:shadow-[0_2px_8px_rgba(23,63,42,0.04)]">
+            <span className="text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:size-8 max-[680px]:rounded-full max-[680px]:bg-[rgba(63,125,58,0.1)] max-[680px]:grid max-[680px]:place-items-center max-[680px]:text-[0.68rem] max-[680px]:shrink-0">
               02
             </span>
             <span
-              className="relative mx-auto mt-7 mb-[18px] block h-[135px] w-[110px] before:absolute before:top-12 before:left-[5px] before:h-[52px] before:w-[100px] before:rounded-[0_0_60px_60px] before:border-2 before:border-[var(--forest)] before:content-[''] after:absolute after:top-[43px] after:left-[5px] after:h-3 after:w-[100px] after:rounded-[50%] after:border-2 after:border-[var(--forest)] after:bg-[var(--ivory)] after:content-[''] max-[680px]:my-2 max-[680px]:h-[70px] max-[680px]:w-[55px] max-[680px]:before:top-6 max-[680px]:before:left-[2px] max-[680px]:before:h-[28px] max-[680px]:before:w-[50px] max-[680px]:before:rounded-[0_0_30px_30px] max-[680px]:after:top-[22px] max-[680px]:after:left-[2px] max-[680px]:after:h-2 max-[680px]:after:w-[50px]"
+              className="relative mx-auto mt-7 mb-[18px] block h-[135px] w-[110px] before:absolute before:top-12 before:left-[5px] before:h-[52px] before:w-[100px] before:rounded-[0_0_60px_60px] before:border-2 before:border-[var(--forest)] before:content-[''] after:absolute after:top-[43px] after:left-[5px] after:h-3 after:w-[100px] after:rounded-[50%] after:border-2 after:border-[var(--forest)] after:bg-[var(--ivory)] after:content-[''] max-[680px]:hidden"
               aria-hidden="true"
             >
               <i />
             </span>
-            <h3 className="m-0 text-center [color:var(--forest)] [font-family:var(--font-display)] text-[2rem] font-normal max-[680px]:text-[1.15rem]">
-              Mix
-            </h3>
-            <p className="mx-auto mt-2 max-w-[290px] text-center text-[0.82rem] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.3] max-[680px]:line-clamp-2">
-              Add water gradually until the texture is smooth and spreadable.
-            </p>
+            <div className="max-[680px]:flex-1">
+              <h3 className="m-0 text-center [color:var(--forest)] [font-family:var(--font-display)] text-[2rem] font-normal max-[680px]:text-left max-[680px]:text-[1.2rem]">
+                Mix
+              </h3>
+              <p className="mx-auto mt-2 max-w-[290px] text-center text-[0.82rem] text-[var(--muted)] max-[680px]:mt-0.5 max-[680px]:text-left max-[680px]:text-[0.72rem] max-[680px]:leading-[1.4]">
+                Add water gradually until the texture is smooth and spreadable.
+              </p>
+            </div>
           </article>
-          <article className="relative min-h-[360px] border-r border-[var(--line)] px-10 pt-7 pb-10 last:border-r-0 max-[900px]:px-[18px] max-[680px]:min-h-0 max-[680px]:px-1.5 max-[680px]:py-5">
-            <span className="text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+          <article className="relative min-h-[360px] border-r border-[var(--line)] px-10 pt-7 pb-10 last:border-r-0 max-[900px]:px-[18px] max-[680px]:min-h-0 max-[680px]:border max-[680px]:border-[var(--line)] max-[680px]:rounded-lg max-[680px]:bg-[var(--paper)] max-[680px]:p-4 max-[680px]:flex max-[680px]:items-center max-[680px]:gap-4 max-[680px]:shadow-[0_2px_8px_rgba(23,63,42,0.04)]">
+            <span className="text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:size-8 max-[680px]:rounded-full max-[680px]:bg-[rgba(63,125,58,0.1)] max-[680px]:grid max-[680px]:place-items-center max-[680px]:text-[0.68rem] max-[680px]:shrink-0">
               03
             </span>
             <span
-              className="relative mx-auto mt-7 mb-[18px] block h-[135px] w-[110px] before:absolute before:top-[18px] before:left-10 before:h-[84px] before:w-[37px] before:rotate-[17deg] before:rounded-[55%_55%_44%_44%] before:border-2 before:border-[var(--forest)] before:content-[''] after:absolute after:right-[5px] after:bottom-[18px] after:left-[5px] after:h-px after:bg-[var(--line)] after:shadow-[0_7px_0_var(--line),0_14px_0_var(--line)] after:content-[''] max-[680px]:my-2 max-[680px]:h-[70px] max-[680px]:w-[55px] max-[680px]:before:top-2 max-[680px]:before:left-5 max-[680px]:before:h-[45px] max-[680px]:before:w-[20px] max-[680px]:after:bottom-[8px]"
+              className="relative mx-auto mt-7 mb-[18px] block h-[135px] w-[110px] before:absolute before:top-[18px] before:left-10 before:h-[84px] before:w-[37px] before:rotate-[17deg] before:rounded-[55%_55%_44%_44%] before:border-2 before:border-[var(--forest)] before:content-[''] after:absolute after:right-[5px] after:bottom-[18px] after:left-[5px] after:h-px after:bg-[var(--line)] after:shadow-[0_7px_0_var(--line),0_14px_0_var(--line)] after:content-[''] max-[680px]:hidden"
               aria-hidden="true"
             >
               <i />
             </span>
-            <h3 className="m-0 text-center [color:var(--forest)] [font-family:var(--font-display)] text-[2rem] font-normal max-[680px]:text-[1.15rem]">
-              Apply
-            </h3>
-            <p className="mx-auto mt-2 max-w-[290px] text-center text-[0.82rem] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.3] max-[680px]:line-clamp-2">
-              Follow the botanical directions, then rinse thoroughly.
-            </p>
+            <div className="max-[680px]:flex-1">
+              <h3 className="m-0 text-center [color:var(--forest)] [font-family:var(--font-display)] text-[2rem] font-normal max-[680px]:text-left max-[680px]:text-[1.2rem]">
+                Apply
+              </h3>
+              <p className="mx-auto mt-2 max-w-[290px] text-center text-[0.82rem] text-[var(--muted)] max-[680px]:mt-0.5 max-[680px]:text-left max-[680px]:text-[0.72rem] max-[680px]:leading-[1.4]">
+                Follow the botanical directions, then rinse thoroughly.
+              </p>
+            </div>
           </article>
         </div>
       </section>
