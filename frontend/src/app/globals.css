@@ -17,14 +17,47 @@
   --font-display: var(--font-serif);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --shadow-soft: 0 28px 70px rgb(37 48 30 / 12%);
+  --hero-jar-scale: 1;
 }
 
-@theme inline {
+@theme {
+  --color-ivory: var(--ivory);
+  --color-ivory-deep: var(--ivory-deep);
+  --color-forest: var(--forest);
+  --color-forest-dark: var(--forest-dark);
+  --color-botanical: var(--botanical);
+  --color-amla: var(--amla);
+  --color-charcoal: var(--charcoal);
+  --color-beige: var(--beige);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Baskerville, Georgia, serif;
+  --font-display: var(--font-serif);
+
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 28px 70px rgb(37 48 30 / 12%);
+
   --color-background: var(--ivory);
   --color-foreground: var(--charcoal);
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height, 88px) + 20px);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]) {
     cursor: pointer;
@@ -67,20 +100,20 @@
 @keyframes hero-jar-float {
   0%,
   100% {
-    transform: scale(var(--hero-jar-scale)) translateY(0);
+    transform: scale(var(--hero-jar-scale, 1)) translate3d(0, 0, 0);
   }
   50% {
-    transform: scale(var(--hero-jar-scale)) translateY(-6px);
+    transform: scale(var(--hero-jar-scale, 1)) translate3d(0, -6px, 0);
   }
 }
 
 @keyframes hero-arrow {
   0%,
   100% {
-    transform: translateY(-3px);
+    transform: translate3d(0, -3px, 0);
   }
   50% {
-    transform: translateY(5px);
+    transform: translate3d(0, 5px, 0);
   }
 }
 
@@ -96,64 +129,68 @@
 @keyframes jar-float {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translate3d(0, -6px, 0);
   }
 }
 
 @keyframes product-enter {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.97);
+    transform: translate3d(0, 18px, 0) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
 @keyframes loading-leaf {
   to {
-    transform: translateY(-5px) rotate(8deg);
+    transform: translate3d(0, -5px, 0) rotate(8deg);
   }
 }
 
 @keyframes section-reveal {
   from {
-    opacity: 0.2;
-    transform: translateY(28px);
+    opacity: 0.3;
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 /* Mobile hero animated shapes */
 @keyframes mobile-float-a {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-9px) rotate(4deg); }
-  66% { transform: translateY(4px) rotate(-3deg); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(0, -9px, 0) rotate(4deg); }
+  66% { transform: translate3d(0, 4px, 0) rotate(-3deg); }
 }
 
 @keyframes mobile-float-b {
-  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-  40% { transform: translateY(-7px) rotate(-5deg) scale(1.04); }
-  70% { transform: translateY(5px) rotate(3deg) scale(0.97); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  40% { transform: translate3d(0, -7px, 0) rotate(-5deg) scale(1.04); }
+  70% { transform: translate3d(0, 5px, 0) rotate(3deg) scale(0.97); }
 }
 
 @keyframes mobile-float-c {
-  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
-  30% { transform: translate(5px, -8px) rotate(6deg); }
-  60% { transform: translate(-4px, 3px) rotate(-4deg); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  30% { transform: translate3d(5px, -8px, 0) rotate(6deg); }
+  60% { transform: translate3d(-4px, 3px, 0) rotate(-4deg); }
 }
 
 @keyframes mobile-float-d {
-  0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
-  50% { transform: translate(-6px, -10px) rotate(-7deg) scale(1.06); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate3d(-6px, -10px, 0) rotate(-7deg) scale(1.06); }
 }
 
 @keyframes mobile-orbit-slow {
   from { transform: rotate(8deg) scale(1); }
-  to   { transform: rotate(14deg) scale(1.012) translate(4px, 3px); }
+  to   { transform: rotate(14deg) scale(1.012) translate3d(4px, 3px, 0); }
 }
 
 @keyframes mobile-orbit-pulse {

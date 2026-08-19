@@ -1,6 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/domain/catalog/products";
+import { products, type Product } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { ProductJar } from "@/features/catalog/product-jar";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
@@ -11,8 +14,6 @@ import { homeFaqs, ritualCards } from "./content";
 
 const heroImage = "/images/naturemist-hero.png";
 const ritualImage = "/images/naturemist-ritual.png";
-
-const amla = products[0];
 
 const eyebrowClass =
   "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
@@ -29,7 +30,7 @@ const centeredHeadingClass =
 const textLinkClass =
   "inline-flex items-center gap-[14px] border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase [transition:gap_260ms_var(--ease)] motion-reduce:transition-none hover:gap-[22px] max-[680px]:min-h-11";
 const revealClass =
-  "supports-[animation-timeline:view()]:[animation:section-reveal_1ms_linear_both] supports-[animation-timeline:view()]:[animation-range:entry_5%_cover_28%] supports-[animation-timeline:view()]:[animation-timeline:view()] motion-reduce:animate-none motion-reduce:opacity-100 motion-reduce:transform-none";
+  "[transition:opacity_500ms_var(--ease),transform_500ms_var(--ease)] [will-change:transform,opacity]";
 const buttonClass =
   "inline-flex min-h-[50px] items-center justify-center gap-[22px] border px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:[transform:translateY(-2px)]";
 const ritualColorClasses = [
@@ -45,7 +46,107 @@ const journalTitleClass =
 const journalCopyClass =
   "relative z-[2] mt-0 mb-4 text-[0.78rem] text-[var(--muted)] max-[680px]:mb-3 max-[680px]:line-clamp-2 max-[680px]:text-[0.7rem] max-[680px]:leading-[1.4]";
 
+const productHeroDetails: Record<
+  string,
+  {
+    eyebrow: string;
+    headlineFirst: string;
+    headlineMiddle: string;
+    headlineItalic: string;
+    description: string;
+    badgeText: string;
+    badgeSubtitle: string;
+    howToText: string;
+  }
+> = {
+  "amla-powder": {
+    eyebrow: "The Amla Ritual · No. 01",
+    headlineFirst: "Indulge in",
+    headlineMiddle: "Pure",
+    headlineItalic: "Botanical ritual.",
+    description:
+      "A storied Indian botanical, thoughtfully prepared for soft-feeling, luminous-looking hair—and an unhurried moment of care.",
+    badgeText: "Amla · pre-wash",
+    badgeSubtitle: "Softness + luminous-looking shine",
+    howToText:
+      "Mix gradually with water until smooth, apply in sections and follow the final pack timing before rinsing thoroughly.",
+  },
+  "reetha-powder": {
+    eyebrow: "The Reetha Ritual · No. 02",
+    headlineFirst: "Purify with",
+    headlineMiddle: "Fresh",
+    headlineItalic: "Saponin cleanse.",
+    description:
+      "A naturally saponin-containing fruit shell cleanser for a fresh-feeling scalp, removing everyday buildup gently.",
+    badgeText: "Reetha · wash",
+    badgeSubtitle: "Fresh-feeling scalp + gentle buildup removal",
+    howToText:
+      "Mix a small amount with warm water into a thin paste, apply carefully to roots, and rinse thoroughly away from eyes.",
+  },
+  "shikakai-powder": {
+    eyebrow: "The Shikakai Ritual · No. 03",
+    headlineFirst: "Soften with",
+    headlineMiddle: "Gentle",
+    headlineItalic: "Herbal acacia.",
+    description:
+      "A traditional low-lather fruit wash that supports soft, manageable-feeling hair with natural botanical slip.",
+    badgeText: "Shikakai · gentle wash",
+    badgeSubtitle: "Low-lather wash + smooth hair slip",
+    howToText:
+      "Mix with water into a smooth, pourable paste. Apply gently through roots and lengths, then rinse well.",
+  },
+  "bhringraj-powder": {
+    eyebrow: "The Bhringraj Ritual · No. 04",
+    headlineFirst: "Ground in",
+    headlineMiddle: "Forest",
+    headlineItalic: "Scalp ritual.",
+    description:
+      "A grounding deep-green botanical mask formulated for a conditioned, cared-for feeling across scalp and hair lengths.",
+    badgeText: "Bhringraj · scalp mask",
+    badgeSubtitle: "Scalp care + conditioned resilient lengths",
+    howToText:
+      "Mix into a smooth paste, section onto scalp and hair lengths, leave for the pack duration, then rinse clean.",
+  },
+  "hibiscus-powder": {
+    eyebrow: "The Hibiscus Ritual · No. 05",
+    headlineFirst: "Revitalize with",
+    headlineMiddle: "Vivid",
+    headlineItalic: "Floral luster.",
+    description:
+      "A vivid floral conditioning mask for soft-feeling, smooth and glossy-looking hair lengths.",
+    badgeText: "Hibiscus · floral mask",
+    badgeSubtitle: "Silky softness + vibrant glossy luster",
+    howToText:
+      "Mix into a silky paste, concentrate through mid-lengths and ends, follow pack timing and rinse thoroughly.",
+  },
+  "indigo-powder": {
+    eyebrow: "The Indigo Ritual · No. 06",
+    headlineFirst: "Enrich with",
+    headlineMiddle: "Pure",
+    headlineItalic: "Leaf color.",
+    description:
+      "A color-depositing leaf powder for informed, carefully strand-tested botanical color rituals.",
+    badgeText: "Indigo · leaf color",
+    badgeSubtitle: "Natural plant color + multi-step ritual",
+    howToText:
+      "Read pack directions in full, wear gloves, apply freshly mixed paste to hair sections and strand test first.",
+  },
+};
+
 export function HomePage() {
+  const [activeProductIndex, setActiveProductIndex] = useState(0);
+  const activeProduct = products[activeProductIndex] ?? products[0];
+  const details =
+    productHeroDetails[activeProduct.slug] ?? productHeroDetails["amla-powder"];
+
+  const handlePrevProduct = () => {
+    setActiveProductIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
+  };
+
+  const handleNextProduct = () => {
+    setActiveProductIndex((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+  };
+
   return (
     <main className="overflow-x-clip" id="main-content">
       <section
@@ -56,300 +157,295 @@ export function HomePage() {
           className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(rgba(23,63,42,0.22)_0.55px,transparent_0.55px)] bg-size-[7px_7px] opacity-20 [mask-image:linear-gradient(115deg,transparent_8%,black_45%,transparent_88%)]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto grid min-h-[max(780px,calc(100svh-var(--header-height)-29px))] w-full max-w-[1440px] grid-cols-[minmax(280px,0.78fr)_minmax(470px,1.52fr)_minmax(230px,0.62fr)] gap-[clamp(18px,1.8vw,28px)] px-[clamp(24px,5vw,72px)] pt-[clamp(42px,4vw,60px)] pb-[clamp(34px,3.5vw,52px)] max-[1180px]:min-h-[740px] max-[1180px]:grid-cols-[minmax(245px,0.8fr)_minmax(390px,1.35fr)_minmax(210px,0.65fr)] max-[1180px]:gap-[20px] max-[1080px]:min-h-0 max-[1080px]:grid-cols-[minmax(285px,0.84fr)_minmax(390px,1.16fr)] max-[1080px]:gap-[42px_32px] max-[1080px]:px-[5vw] max-[1080px]:pt-[52px] max-[1080px]:pb-[64px] max-[900px]:grid-cols-[minmax(230px,0.84fr)_minmax(300px,1.16fr)] max-[900px]:gap-[38px_26px] max-[900px]:px-[6vw] max-[900px]:pt-[46px] max-[900px]:pb-[60px] max-[680px]:grid max-[680px]:min-h-0 max-[680px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] max-[680px]:items-start max-[680px]:gap-x-2.5 max-[680px]:px-4 max-[680px]:pt-5 max-[680px]:pb-8">
-        <div
-          className="pointer-events-none absolute top-[3%] left-[30%] z-[1] h-[90%] w-[51%] rounded-[48%_52%_46%_54%/52%_45%_55%_48%] border border-[rgba(63,125,58,0.4)] opacity-75 [transform:rotate(16deg)] [animation:hero-orbit-drift_9s_ease-in-out_infinite_alternate] [will-change:transform] max-[1180px]:left-[29%] max-[1180px]:w-[53%] min-[901px]:max-[1080px]:top-[1%] min-[901px]:max-[1080px]:left-[39%] min-[901px]:max-[1080px]:h-[58%] min-[901px]:max-[1080px]:w-[60%] max-[900px]:top-[1%] max-[900px]:left-[39%] max-[900px]:h-[58%] max-[900px]:w-[60%] max-[680px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(16deg)]"
-          aria-hidden="true"
-        >
-          <span className="absolute top-[1%] left-[48%] rotate-[-58deg]">
-            <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] [animation:hero-arrow_4.6s_ease-in-out_infinite] [will-change:transform] motion-reduce:animate-none" />
-          </span>
-          <span className="absolute right-[-9px] bottom-[28%] rotate-[30deg] scale-75">
-            <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] [animation:hero-arrow_5.2s_ease-in-out_-1.2s_infinite] [will-change:transform] motion-reduce:animate-none" />
-          </span>
-          <span className="absolute bottom-[1%] left-[19%] rotate-[135deg] scale-[0.65]">
-            <i className="block h-[18px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)] [animation:hero-arrow_4.9s_ease-in-out_-2.1s_infinite] [will-change:transform] motion-reduce:animate-none" />
-          </span>
-        </div>
-        <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] max-[1180px]:w-[108%] max-[1080px]:w-[106%] max-[900px]:mt-[-22px] max-[900px]:w-[110%] max-[900px]:self-start max-[680px]:mt-0 max-[680px]:w-full max-[680px]:self-start max-[680px]:pt-1 max-[680px]:pr-0 max-[680px]:pb-0 max-[680px]:pl-0 motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-          <p className={`${eyebrowClass} max-[680px]:mb-1.5 max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.14em]`}>
-            The Amla Ritual · No. 01
-          </p>
-          <h1
-            className="relative z-[4] m-0 max-w-[580px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(4rem,4.8vw,5.4rem)] leading-[0.84] font-[620] tracking-[-0.065em] max-[1180px]:text-[clamp(3.55rem,5vw,4.8rem)] max-[1080px]:max-w-[510px] max-[1080px]:text-[clamp(3.25rem,6vw,4.5rem)] max-[900px]:text-[clamp(2.9rem,6.5vw,3.35rem)] max-[680px]:text-[clamp(1.45rem,5.6vw,1.9rem)] max-[680px]:leading-[0.9] max-[680px]:tracking-[-0.05em]"
-            id="hero-title"
-          >
-            <span className="block [animation:hero-title-enter_900ms_var(--ease)_80ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-              Indulge in
+        <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(310px,1.15fr)_minmax(360px,1.25fr)_minmax(240px,0.85fr)] gap-[clamp(20px,2vw,36px)] px-[clamp(24px,4vw,64px)] pt-[clamp(24px,2.5vw,38px)] pb-[clamp(24px,3vw,44px)] max-[1280px]:grid-cols-[minmax(280px,1.1fr)_minmax(340px,1.2fr)_minmax(220px,0.8fr)] max-[1180px]:grid-cols-[minmax(260px,1fr)_minmax(320px,1.15fr)_minmax(200px,0.85fr)] max-[1080px]:grid-cols-[minmax(270px,1fr)_minmax(320px,1.15fr)] max-[1080px]:gap-[32px_24px] max-[1080px]:px-[4vw] max-[900px]:grid-cols-1 max-[900px]:gap-8 max-[900px]:px-5 max-[900px]:pt-6 max-[900px]:pb-10 max-[680px]:gap-6 max-[680px]:px-4 max-[680px]:pt-4 max-[680px]:pb-8">
+          <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+            <p className={`${eyebrowClass} mb-3 max-[680px]:mb-1.5 max-[680px]:text-[0.55rem] max-[680px]:tracking-[0.12em]`}>
+              {details.eyebrow}
+            </p>
+            <h1
+              className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(3.2rem,3.8vw,4.6rem)] leading-[0.9] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.9rem,4vw,3.8rem)] max-[1080px]:max-w-[480px] max-[1080px]:text-[clamp(2.6rem,4.8vw,3.5rem)] max-[900px]:text-[clamp(2.4rem,5.8vw,3.2rem)] max-[680px]:text-[clamp(1.75rem,6.8vw,2.1rem)] max-[680px]:leading-[0.94]"
+              id="hero-title"
+            >
+              <span className="block [animation:hero-title-enter_900ms_var(--ease)_80ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+                {details.headlineFirst}
+              </span>
+              <span className="flex items-center gap-[clamp(10px,1.2vw,18px)] [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+                {details.headlineMiddle}
+                <span
+                  className="relative inline-block h-[0.58em] w-[clamp(85px,8.5vw,135px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[680px]:w-[clamp(42px,12vw,62px)]"
+                  aria-hidden="true"
+                >
+                  <Image
+                    src={heroImage}
+                    alt=""
+                    fill
+                    sizes="160px"
+                    className="scale-[1.38] object-cover object-[77%_27%]"
+                  />
+                </span>
+              </span>
+              <em className="mt-[0.05em] ml-[0.03em] block text-[0.9em] leading-[inherit] font-normal tracking-[-0.05em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:text-[0.85em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+                {details.headlineItalic}
+              </em>
+            </h1>
+            <p className="my-[clamp(14px,2vh,22px)_14px] max-w-[420px] text-[clamp(0.9rem,1vw,1.02rem)] leading-[1.65] text-[#4b5047] max-[900px]:max-w-[480px] max-[900px]:text-[0.85rem] max-[680px]:my-[8px_10px] max-[680px]:text-[0.72rem] max-[680px]:leading-[1.5]">
+              {details.description}
+            </p>
+            <HeroPurchase
+              key={activeProduct.slug}
+              slug={activeProduct.slug}
+              name={activeProduct.name}
+              pricePaise={activeProduct.pricePaise}
+            />
+            <ul
+              className="mt-4 flex max-w-[440px] list-none items-center gap-[14px] border-t border-[rgba(23,63,42,0.16)] pt-3.5 text-[var(--forest)] max-[1080px]:max-w-full max-[900px]:max-w-full max-[680px]:hidden"
+              aria-label="NatureMist principles"
+            >
+              <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
+                <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
+                  01
+                </span>{" "}
+                Single botanical
+              </li>
+              <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
+                <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
+                  02
+                </span>{" "}
+                Clearly explained
+              </li>
+              <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
+                <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
+                  03
+                </span>{" "}
+                Made for home rituals
+              </li>
+            </ul>
+          </div>
+
+          <div className="relative z-[2] h-[clamp(480px,60vh,640px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(440px,56vh,560px)] max-[1080px]:h-[clamp(400px,52vh,480px)] max-[900px]:h-[clamp(380px,50vh,450px)] max-[680px]:h-[clamp(320px,60vh,400px)] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+            <span
+              className="pointer-events-none absolute top-[1%] right-[-7%] bottom-[-3%] left-[-8%] z-0 rounded-[49%_51%_17%_83%/35%_38%_62%_65%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)] max-[1080px]:hidden"
+              aria-hidden="true"
+            />
+            <span
+              className="pointer-events-none absolute top-[-3%] right-[-5%] bottom-[1%] left-[-6%] z-[1] rounded-[52%_48%_14%_86%/31%_39%_61%_69%] border border-[rgba(57,111,58,0.44)] [animation:hero-orbit-drift_11s_ease-in-out_infinite_alternate] [will-change:transform] max-[1080px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(15deg)]"
+              aria-hidden="true"
+            />
+            {/* Layered Organic Line 2 - Outer poster frame orbit with different organic shape */}
+            <span
+              className="pointer-events-none absolute top-[-7.5%] right-[-9.5%] bottom-[-5%] left-[-10.5%] z-[1] rounded-[45%_55%_52%_48%/54%_43%_57%_46%] border border-[rgba(111,143,47,0.36)] [animation:hero-orbit-drift_15s_ease-in-out_-4s_infinite_alternate] [will-change:transform] max-[1080px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(-9deg)]"
+              aria-hidden="true"
+            />
+            <span
+              className="pointer-events-none absolute top-[9%] right-[-9%] z-[4] rotate-[24deg] max-[1080px]:hidden"
+              aria-hidden="true"
+            >
+              <i className="block h-[24px] w-[52px] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.82)] shadow-[0_8px_20px_rgba(23,63,42,0.12)] [animation:hero-arrow_4.8s_ease-in-out_infinite] [will-change:transform] motion-reduce:animate-none" />
             </span>
-            <span className="flex items-center gap-[clamp(13px,1.4vw,22px)] max-[680px]:gap-1.5 [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-              Pure
+            <span
+              className="pointer-events-none absolute bottom-[15%] left-[-12%] z-[4] rotate-[-32deg] max-[1080px]:hidden"
+              aria-hidden="true"
+            >
+              <i className="block h-[20px] w-[44px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.7)] [animation:hero-arrow_5.4s_ease-in-out_-1.6s_infinite] [will-change:transform] motion-reduce:animate-none" />
+            </span>
+            <span
+              className="pointer-events-none absolute right-[5%] bottom-[-2%] z-[4] rotate-[138deg] max-[1080px]:hidden"
+              aria-hidden="true"
+            >
+              <i className="block h-[17px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(143,159,78,0.68)] [animation:hero-arrow_4.2s_ease-in-out_-0.8s_infinite] [will-change:transform] motion-reduce:animate-none" />
+            </span>
+
+            {/* Mobile-only organic frame. */}
+            <span
+              className="pointer-events-none absolute top-[-6%] right-[-6%] bottom-[-6%] left-[-6%] z-0 hidden rounded-[50%] bg-[radial-gradient(ellipse_at_55%_42%,rgba(167,201,67,0.18),rgba(188,207,161,0.12)_48%,transparent_72%)] max-[680px]:block"
+              aria-hidden="true"
+            />
+
+            <span
+              className="pointer-events-none absolute top-[-4%] right-[-4%] bottom-[-4%] left-[-4%] z-[1] hidden rounded-[47%_53%_51%_49%/48%_44%_56%_52%] border border-[rgba(63,125,58,0.38)] [animation:mobile-orbit-slow_10s_ease-in-out_infinite_alternate] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none motion-reduce:[transform:rotate(8deg)]"
+              aria-hidden="true"
+            />
+
+            <span
+              className="pointer-events-none absolute top-[-1%] right-[-2%] bottom-[-1%] left-[-2%] z-[1] hidden rounded-[53%_47%_44%_56%/52%_56%_44%_48%] border border-[rgba(57,111,58,0.22)] [animation:mobile-orbit-pulse_13s_ease-in-out_infinite_alternate] max-[680px]:block motion-safe:[will-change:transform,opacity] motion-reduce:animate-none"
+              aria-hidden="true"
+            />
+
+            <span
+              className="pointer-events-none absolute top-[2%] left-[-3%] z-[5] hidden [animation:mobile-float-a_6.2s_ease-in-out_infinite] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none"
+              aria-hidden="true"
+            >
+              <i className="block h-[18px] w-[38px] rotate-[-28deg] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.8)] shadow-[0_4px_12px_rgba(23,63,42,0.14)]" />
+            </span>
+
+            <span
+              className="pointer-events-none absolute top-[6%] right-[-1%] z-[5] hidden [animation:mobile-float-b_7.8s_ease-in-out_-1.4s_infinite] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none"
+              aria-hidden="true"
+            >
+              <i className="block h-[14px] w-[28px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.72)] shadow-[0_3px_8px_rgba(23,63,42,0.1)] rotate-[42deg]" />
+            </span>
+
+            <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[52%_48%_9%_13%/29%_34%_5%_7%] border border-[rgba(23,63,42,0.11)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.2)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_12px_12px/26%_26%_2%_2%]">
+              <Image
+                src={heroImage}
+                alt="A woman with long, dark natural hair in a sunlit botanical setting"
+                fill
+                sizes="(max-width: 680px) 50vw, (max-width: 900px) 52vw, (max-width: 1080px) 55vw, (max-width: 1440px) 44vw, 600px"
+                className="object-cover object-[76%_center] [transform:scale(1.04)] [transition:transform_1.1s_var(--ease)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/portrait:[transform:scale(1.065)] max-[680px]:object-[74%_center] motion-reduce:transition-none motion-reduce:[transform:scale(1.04)]"
+              />
               <span
-                className="relative inline-block h-[0.58em] w-[clamp(105px,10.5vw,168px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[680px]:h-[0.55em] max-[680px]:w-[clamp(34px,9.5vw,52px)]"
+                className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(17,45,28,0.2)),linear-gradient(90deg,rgba(247,244,232,0.08),transparent_35%)]"
+                aria-hidden="true"
+              />
+              <span
+                className="absolute right-4 bottom-3 text-[0.52rem] font-bold tracking-[0.14em] text-[rgba(255,255,255,0.85)] max-[680px]:right-3 max-[680px]:bottom-2.5 max-[680px]:text-[0.46rem]"
                 aria-hidden="true"
               >
-                <Image
-                  src={heroImage}
-                  alt=""
-                  fill
-                  sizes="160px"
-                  className="scale-[1.38] object-cover object-[77%_27%]"
-                />
+                0{activeProductIndex + 1} / 0{products.length}
               </span>
-            </span>
-            <em className="mt-[0.05em] ml-[0.03em] block whitespace-nowrap text-[0.91em] leading-[inherit] font-normal tracking-[-0.055em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:whitespace-normal max-[680px]:text-[0.84em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-              Botanical ritual.
-            </em>
-          </h1>
-          <p className="my-[clamp(28px,3.2vh,42px)_22px] max-w-[440px] text-[clamp(0.95rem,1.05vw,1.08rem)] leading-[1.7] text-[#4b5047] max-[900px]:my-[24px_18px] max-[900px]:max-w-[430px] max-[900px]:text-[0.82rem] max-[900px]:leading-[1.65] max-[680px]:my-[7px_6px] max-[680px]:text-[0.67rem] max-[680px]:leading-[1.45] max-[680px]:line-clamp-3">
-            A storied Indian botanical, thoughtfully prepared for soft-feeling,
-            luminous-looking hair—and an unhurried moment of care.
-          </p>
-          <HeroPurchase
-            slug={amla.slug}
-            name={amla.name}
-            pricePaise={amla.pricePaise}
-          />
-          <ul
-            className="mt-[21px] flex max-w-[440px] list-none items-center gap-[14px] border-t border-[rgba(23,63,42,0.16)] pt-[18px] text-[var(--forest)] max-[1080px]:max-w-full max-[900px]:max-w-full max-[680px]:mt-2.5 max-[680px]:flex max-[680px]:flex-col max-[680px]:gap-1 max-[680px]:pt-2 max-[680px]:border-[rgba(23,63,42,0.12)]"
-            aria-label="NatureMist principles"
-          >
-            <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
-              <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
-                01
-              </span>{" "}
-              Single botanical
-            </li>
-            <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
-              <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
-                02
-              </span>{" "}
-              Clearly explained
-            </li>
-            <li className="flex items-center gap-1.5 text-[0.54rem] font-bold tracking-[0.05em] uppercase max-[680px]:text-[0.52rem] max-[680px]:tracking-[0.04em]">
-              <span className="text-[0.8rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[680px]:text-[0.68rem]">
-                03
-              </span>{" "}
-              Made for home rituals
-            </li>
-          </ul>
-        </div>
-
-        <div className="relative z-[2] h-[clamp(620px,72vh,760px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(560px,68vh,670px)] max-[1080px]:h-[clamp(460px,58vh,540px)] max-[900px]:mt-[-46px] max-[900px]:h-[clamp(450px,58vh,520px)] max-[900px]:self-start max-[680px]:relative max-[680px]:mt-0 max-[680px]:h-auto max-[680px]:aspect-[3/4.3] max-[680px]:max-h-[360px] max-[680px]:w-full max-[680px]:self-center motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-          <span
-            className="pointer-events-none absolute top-[1%] right-[-7%] bottom-[-3%] left-[-8%] z-0 rounded-[49%_51%_17%_83%/35%_38%_62%_65%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)] max-[1080px]:hidden"
-            aria-hidden="true"
-          />
-          <span
-            className="pointer-events-none absolute top-[-3%] right-[-5%] bottom-[1%] left-[-6%] z-[1] rounded-[52%_48%_14%_86%/31%_39%_61%_69%] border border-[rgba(57,111,58,0.44)] [animation:hero-orbit-drift_11s_ease-in-out_infinite_alternate] [will-change:transform] max-[1080px]:hidden motion-reduce:animate-none motion-reduce:[transform:rotate(15deg)]"
-            aria-hidden="true"
-          />
-          <span
-            className="pointer-events-none absolute top-[9%] right-[-9%] z-[4] rotate-[24deg] max-[1080px]:hidden"
-            aria-hidden="true"
-          >
-            <i className="block h-[24px] w-[52px] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.82)] shadow-[0_8px_20px_rgba(23,63,42,0.12)] [animation:hero-arrow_4.8s_ease-in-out_infinite] [will-change:transform] motion-reduce:animate-none" />
-          </span>
-          <span
-            className="pointer-events-none absolute bottom-[15%] left-[-12%] z-[4] rotate-[-32deg] max-[1080px]:hidden"
-            aria-hidden="true"
-          >
-            <i className="block h-[20px] w-[44px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.7)] [animation:hero-arrow_5.4s_ease-in-out_-1.6s_infinite] [will-change:transform] motion-reduce:animate-none" />
-          </span>
-          <span
-            className="pointer-events-none absolute right-[5%] bottom-[-2%] z-[4] rotate-[138deg] max-[1080px]:hidden"
-            aria-hidden="true"
-          >
-            <i className="block h-[17px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(143,159,78,0.68)] [animation:hero-arrow_4.2s_ease-in-out_-0.8s_infinite] [will-change:transform] motion-reduce:animate-none" />
-          </span>
-
-          {/* Mobile-only organic frame. */}
-          <span
-            className="pointer-events-none absolute top-[-6%] right-[-6%] bottom-[-6%] left-[-6%] z-0 hidden rounded-[50%] bg-[radial-gradient(ellipse_at_55%_42%,rgba(167,201,67,0.18),rgba(188,207,161,0.12)_48%,transparent_72%)] max-[680px]:block"
-            aria-hidden="true"
-          />
-
-          <span
-            className="pointer-events-none absolute top-[-4%] right-[-4%] bottom-[-4%] left-[-4%] z-[1] hidden rounded-[47%_53%_51%_49%/48%_44%_56%_52%] border border-[rgba(63,125,58,0.38)] [animation:mobile-orbit-slow_10s_ease-in-out_infinite_alternate] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none motion-reduce:[transform:rotate(8deg)]"
-            aria-hidden="true"
-          />
-
-          <span
-            className="pointer-events-none absolute top-[-1%] right-[-2%] bottom-[-1%] left-[-2%] z-[1] hidden rounded-[53%_47%_44%_56%/52%_56%_44%_48%] border border-[rgba(57,111,58,0.22)] [animation:mobile-orbit-pulse_13s_ease-in-out_infinite_alternate] max-[680px]:block motion-safe:[will-change:transform,opacity] motion-reduce:animate-none"
-            aria-hidden="true"
-          />
-
-          <span
-            className="pointer-events-none absolute top-[2%] left-[-3%] z-[5] hidden [animation:mobile-float-a_6.2s_ease-in-out_infinite] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none"
-            aria-hidden="true"
-          >
-            <i className="block h-[18px] w-[38px] rotate-[-28deg] rounded-[100%_0_100%_0] bg-[rgba(102,137,54,0.8)] shadow-[0_4px_12px_rgba(23,63,42,0.14)]" />
-          </span>
-
-          <span
-            className="pointer-events-none absolute top-[6%] right-[-1%] z-[5] hidden [animation:mobile-float-b_7.8s_ease-in-out_-1.4s_infinite] max-[680px]:block motion-safe:[will-change:transform] motion-reduce:animate-none"
-            aria-hidden="true"
-          >
-            <i className="block h-[14px] w-[28px] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.72)] shadow-[0_3px_8px_rgba(23,63,42,0.1)] rotate-[42deg]" />
-          </span>
-
-          <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[52%_48%_9%_13%/29%_34%_5%_7%] border border-[rgba(23,63,42,0.11)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.2)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_12px_12px/26%_26%_2%_2%]">
-            <Image
-              src={heroImage}
-              alt="A woman with long, dark natural hair in a sunlit botanical setting"
-              fill
-              sizes="(max-width: 680px) 50vw, (max-width: 900px) 52vw, (max-width: 1080px) 55vw, (max-width: 1440px) 44vw, 600px"
-              preload
-              className="object-cover object-[76%_center] [transform:scale(1.04)] [transition:transform_1.1s_var(--ease)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/portrait:[transform:scale(1.065)] max-[680px]:object-[74%_center] max-[680px]:[transform:scale(1)] motion-reduce:transition-none motion-reduce:[transform:scale(1.04)] max-[680px]:motion-reduce:[transform:scale(1)]"
-            />
-            <span
-              className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(17,45,28,0.2)),linear-gradient(90deg,rgba(247,244,232,0.08),transparent_35%)]"
-              aria-hidden="true"
-            />
-            <span
-              className="absolute right-4 bottom-3 text-[0.52rem] font-bold tracking-[0.14em] text-[rgba(255,255,255,0.85)] max-[680px]:right-3 max-[680px]:bottom-2.5 max-[680px]:text-[0.46rem]"
-              aria-hidden="true"
-            >
-              01 / 06
-            </span>
-          </div>
-          <Link
-            className="absolute bottom-[28%] left-[-68px] z-[5] grid min-h-[62px] w-[225px] grid-cols-[40px_1fr_8px] items-center gap-[10px] rounded-lg border border-[rgba(255,255,255,0.55)] bg-[rgba(248,245,234,0.87)] px-3 py-[9px] shadow-[0_18px_45px_rgba(28,46,31,0.16)] backdrop-blur-[14px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.96)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[205px] min-[901px]:max-[1080px]:left-[-38px] max-[900px]:left-[-38px] max-[680px]:bottom-3 max-[680px]:left-[-12px] max-[680px]:min-h-[48px] max-[680px]:w-[min(160px,52vw)] max-[680px]:grid-cols-[28px_1fr_6px] max-[680px]:gap-1.5 max-[680px]:px-2 max-[680px]:py-1.5 max-[680px]:rounded-md max-[680px]:bg-[rgba(248,245,234,0.94)] max-[680px]:shadow-md motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
-            href={`/shop/${amla.slug}`}
-            aria-label="View the Amla pre-wash ritual"
-          >
-            <span className="grid size-10 place-items-center rounded-full bg-[var(--forest)] text-[var(--paper)] [font-family:var(--font-display)] max-[680px]:size-7 max-[680px]:text-[0.65rem]">
-              01
-            </span>
-            <div className="grid leading-[1.2]">
-              <strong className="text-[0.88rem] font-semibold text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:whitespace-nowrap max-[680px]:text-[0.68rem]">
-                Amla · pre-wash
-              </strong>
-              <small className="mt-0.5 text-[0.48rem] text-[var(--muted)] max-[680px]:text-[0.42rem] max-[680px]:leading-none max-[680px]:truncate">
-                Softness + shine
-              </small>
             </div>
-            <i
-              className="size-[7px] rounded-full bg-[var(--amla)] shadow-[0_0_0_5px_rgba(167,201,67,0.16)] max-[680px]:size-1.5 max-[680px]:shadow-[0_0_0_3px_rgba(167,201,67,0.16)]"
-              aria-hidden="true"
-            />
-          </Link>
-          <a
-            className="absolute right-[-18px] bottom-[18px] z-[6] grid size-[76px] place-items-center rounded-full border border-[rgba(255,255,255,0.8)] bg-[rgba(23,63,42,0.14)] text-[1.75rem] text-white shadow-[0_14px_34px_rgba(18,38,23,0.12)] backdrop-blur-[8px] [font-family:var(--font-display)] [transition:background_250ms_ease,transform_250ms_ease] hover:bg-[rgba(23,63,42,0.5)] hover:[transform:translateY(4px)] max-[680px]:right-1.5 max-[680px]:bottom-1.5 max-[680px]:size-10 max-[680px]:text-[1rem] motion-reduce:transition-none"
-            href="#collection-title"
-            aria-label="Scroll to the botanical collection"
-          >
-            <span
-              className="[animation:hero-arrow_2.2s_ease-in-out_infinite] motion-reduce:animate-none"
-              aria-hidden="true"
+            <Link
+              className="absolute bottom-[28%] left-[-68px] z-[5] grid min-h-[62px] w-[225px] grid-cols-[40px_1fr_8px] items-center gap-[10px] rounded-lg border border-[rgba(255,255,255,0.55)] bg-[rgba(248,245,234,0.87)] px-3 py-[9px] shadow-[0_18px_45px_rgba(28,46,31,0.16)] backdrop-blur-[14px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.96)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[205px] min-[901px]:max-[1080px]:left-[-38px] max-[900px]:left-[-38px] max-[680px]:bottom-[17%] max-[680px]:left-3 max-[680px]:w-[min(220px,67vw)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
+              href={`/shop/${activeProduct.slug}`}
+              aria-label={`View the ${activeProduct.name} ritual`}
             >
-              ↓
-            </span>
-          </a>
-        </div>
+              <span className="grid size-10 place-items-center rounded-full bg-[var(--forest)] text-[var(--paper)] [font-family:var(--font-display)]">
+                {activeProduct.collectionNumber}
+              </span>
+              <div className="grid leading-[1.2]">
+                <strong className="text-[0.88rem] font-semibold text-[var(--forest)] [font-family:var(--font-display)]">
+                  {details.badgeText}
+                </strong>
+                <small className="mt-1 text-[0.48rem] text-[var(--muted)]">
+                  {details.badgeSubtitle}
+                </small>
+              </div>
+              <i
+                className="size-[7px] rounded-full shadow-[0_0_0_5px_rgba(167,201,67,0.16)]"
+                style={{ backgroundColor: activeProduct.accent }}
+                aria-hidden="true"
+              />
+            </Link>
+            <a
+              className="absolute right-5 bottom-5 z-[6] grid size-[60px] place-items-center rounded-full border border-[rgba(255,255,255,0.7)] bg-[rgba(23,63,42,0.35)] text-[1.5rem] text-white shadow-[0_14px_32px_rgba(18,38,23,0.25)] backdrop-blur-[10px] [font-family:var(--font-display)] [transition:background_250ms_ease,transform_250ms_ease,border-color_250ms_ease] hover:border-white hover:bg-[rgba(23,63,42,0.7)] hover:[transform:translateY(3px)_scale(1.05)] max-[1080px]:right-4 max-[1080px]:bottom-4 max-[680px]:right-3 max-[680px]:bottom-[max(14px,env(safe-area-inset-bottom))] max-[680px]:size-12 max-[680px]:text-[1.2rem] motion-reduce:transition-none"
+              href="#collection-title"
+              aria-label="Scroll to the botanical collection"
+            >
+              <span
+                className="[animation:hero-arrow_2.2s_ease-in-out_infinite] motion-reduce:animate-none"
+                aria-hidden="true"
+              >
+                ↓
+              </span>
+            </a>
+          </div>
 
-        <aside
-          className="relative z-[4] min-w-0 self-center scroll-mt-[calc(var(--header-height)+20px)] min-[901px]:max-[1080px]:col-span-full min-[901px]:max-[1080px]:grid min-[901px]:max-[1080px]:grid-cols-[minmax(280px,0.75fr)_minmax(380px,1.25fr)] min-[901px]:max-[1080px]:items-start min-[901px]:max-[1080px]:gap-x-9 min-[901px]:max-[1080px]:border-t min-[901px]:max-[1080px]:border-[var(--line)] min-[901px]:max-[1080px]:pt-[30px] max-[900px]:col-span-full max-[900px]:grid max-[900px]:grid-cols-[minmax(210px,0.75fr)_minmax(280px,1.25fr)] max-[900px]:items-start max-[900px]:gap-x-[26px] max-[900px]:border-t max-[900px]:border-[var(--line)] max-[900px]:pt-[30px] max-[680px]:col-span-full max-[680px]:grid max-[680px]:grid-cols-1 max-[680px]:gap-5 max-[680px]:border-t max-[680px]:border-[var(--line)] max-[680px]:pt-8 max-[680px]:mt-6"
-          id="amla-ritual"
-          aria-label="Featured Amla ritual"
-        >
-          <nav
-            className="mb-[7px] grid grid-cols-[42px_1fr_42px] items-center gap-2 text-[var(--forest)] min-[901px]:max-[1080px]:col-span-full max-[900px]:col-span-full max-[680px]:col-span-1 max-[680px]:mb-1"
-            aria-label="Browse featured rituals"
+          <aside
+            className="relative z-[4] min-w-0 self-center scroll-mt-[calc(var(--header-height)+20px)] max-[1080px]:col-span-full max-[1080px]:grid max-[1080px]:grid-cols-[minmax(220px,0.75fr)_minmax(280px,1.25fr)] max-[1080px]:items-start max-[1080px]:gap-x-[26px] max-[1080px]:border-t max-[1080px]:border-[var(--line)] max-[1080px]:pt-7 max-[680px]:col-span-full max-[680px]:flex max-[680px]:flex-col max-[680px]:gap-y-4 max-[680px]:pt-6"
+            id="featured-ritual"
+            aria-label={`Featured ${activeProduct.name} ritual`}
           >
-            <Link
-              className="grid size-[42px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] max-[680px]:size-9 max-[680px]:text-sm"
-              href="/shop/indigo-powder"
-              aria-label="Previous featured ritual, Indigo"
+            <nav
+              className="mb-[7px] grid grid-cols-[42px_1fr_42px] items-center gap-2 text-[var(--forest)] max-[1080px]:col-span-full max-[680px]:w-full max-[680px]:py-2"
+              aria-label="Browse featured rituals"
             >
-              ←
-            </Link>
-            <span className="text-center text-[0.56rem] font-bold tracking-[0.16em] text-[var(--muted)] uppercase max-[680px]:text-[0.52rem]">
-              Featured ritual
-            </span>
-            <Link
-              className="grid size-[42px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] max-[680px]:size-9 max-[680px]:text-sm"
-              href="/shop/reetha-powder"
-              aria-label="Next featured ritual, Reetha"
-            >
-              →
-            </Link>
-          </nav>
-          <div className="relative grid h-[clamp(245px,31vh,305px)] place-items-center overflow-hidden border-b border-[var(--line)] bg-[radial-gradient(circle_at_52%_54%,rgba(167,201,67,0.18),transparent_49%)] min-[901px]:max-[1080px]:col-start-1 min-[901px]:max-[1080px]:row-[2/4] min-[901px]:max-[1080px]:h-[325px] min-[901px]:max-[1080px]:border-b-0 max-[900px]:col-start-1 max-[900px]:row-[2/4] max-[900px]:h-[315px] max-[900px]:border-b-0 max-[680px]:col-start-1 max-[680px]:row-auto max-[680px]:h-[240px] max-[680px]:rounded-lg max-[680px]:border max-[680px]:border-[var(--line)]">
-            <span
-              className="pointer-events-none absolute inset-0"
-              aria-hidden="true"
-            >
-              <i className="absolute top-[20%] left-[6%] h-[18px] w-[38px] [transform:rotate(-18deg)_scale(1.1)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-              <i className="absolute top-[34%] right-[4%] h-[18px] w-[38px] rotate-[42deg] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-              <i className="absolute right-[19%] bottom-[12%] h-[18px] w-[38px] [transform:rotate(115deg)_scale(0.75)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
-            </span>
-            <ProductJar
-              product={amla}
-              size="medium"
-              className="z-[3] [--hero-jar-scale:0.9] [transform:scale(var(--hero-jar-scale))] [animation:hero-jar-float_5.5s_ease-in-out_infinite] max-[1180px]:[--hero-jar-scale:0.82] min-[901px]:max-[1080px]:[--hero-jar-scale:0.94] max-[900px]:[--hero-jar-scale:0.94] max-[680px]:[--hero-jar-scale:0.82] motion-reduce:animate-none motion-reduce:[transform:scale(var(--hero-jar-scale))]"
-            />
-            <span
-              className="absolute right-[5%] bottom-[21%] z-[4] h-[23px] w-[47px] rotate-[-9deg] rounded-[50%] border-[5px] border-[rgba(255,255,255,0.72)] bg-[#92a14f] shadow-[0_7px_17px_rgba(31,43,25,0.16)] max-[680px]:h-[18px] max-[680px]:w-[38px] max-[680px]:border-[3px]"
-              aria-hidden="true"
-            />
-          </div>
-          <div className="py-[17px_11px] min-[901px]:max-[1080px]:col-start-2 min-[901px]:max-[1080px]:row-start-2 min-[901px]:max-[1080px]:py-[25px_14px] max-[900px]:col-start-2 max-[900px]:row-start-2 max-[900px]:py-[25px_14px] max-[680px]:col-start-1 max-[680px]:row-auto max-[680px]:py-2">
-            <span className="text-[0.52rem] font-bold tracking-[0.13em] text-[var(--muted)] uppercase">
-              NatureMist / Ritual 01
-            </span>
-            <h2 className="my-[3px_1px] [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2rem,2.7vw,3.15rem)] leading-none font-normal tracking-[-0.045em] max-[1180px]:text-[clamp(1.85rem,2.5vw,2.6rem)] max-[680px]:text-[2.1rem]">
-              Amla powder
-            </h2>
-            <p className="m-0 text-[0.52rem] font-bold tracking-[0.13em] text-[var(--muted)] uppercase">
-              Condition + shine · packaging preview
-            </p>
-          </div>
-          <div className="border-t border-[var(--line)] min-[901px]:max-[1080px]:col-start-2 min-[901px]:max-[1080px]:row-start-3 max-[900px]:col-start-2 max-[900px]:row-start-3 max-[680px]:col-start-1 max-[680px]:row-auto">
-            <details className="group/fact border-b border-[var(--line)]">
-              <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
-                Why you&apos;ll love it{" "}
-                <span
-                  className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
-                  aria-hidden="true"
-                >
-                  ＋
-                </span>
-              </summary>
-              <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.72rem] max-[680px]:pb-3">
-                {amla.shortDescription}
+              <button
+                type="button"
+                onClick={handlePrevProduct}
+                className="grid size-[42px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
+                aria-label="Previous featured ritual"
+              >
+                ←
+              </button>
+              <span className="text-center text-[0.56rem] font-bold tracking-[0.16em] text-[var(--muted)] uppercase">
+                Featured ritual ({activeProductIndex + 1} / {products.length})
+              </span>
+              <button
+                type="button"
+                onClick={handleNextProduct}
+                className="grid size-[42px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.1rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
+                aria-label="Next featured ritual"
+              >
+                →
+              </button>
+            </nav>
+            <div className="relative grid h-[clamp(245px,31vh,305px)] place-items-center overflow-hidden border-b border-[var(--line)] bg-[radial-gradient(circle_at_52%_54%,rgba(167,201,67,0.18),transparent_49%)] max-[1080px]:col-start-1 max-[1080px]:row-[2/4] max-[1080px]:h-[300px] max-[1080px]:border-b-0 max-[680px]:col-start-auto max-[680px]:row-auto max-[680px]:h-[260px] max-[680px]:w-full max-[680px]:rounded-lg max-[680px]:border border-[var(--line)]">
+              <span
+                className="pointer-events-none absolute inset-0"
+                aria-hidden="true"
+              >
+                <i className="absolute top-[20%] left-[6%] h-[18px] w-[38px] [transform:rotate(-18deg)_scale(1.1)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
+                <i className="absolute top-[34%] right-[4%] h-[18px] w-[38px] rotate-[42deg] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
+                <i className="absolute right-[19%] bottom-[12%] h-[18px] w-[38px] [transform:rotate(115deg)_scale(0.75)] rounded-[100%_0_100%_0] bg-[rgba(111,143,47,0.78)]" />
+              </span>
+              <ProductJar
+                key={activeProduct.slug}
+                product={activeProduct}
+                size="medium"
+                className="z-[3] [--hero-jar-scale:0.9] [transform:scale(var(--hero-jar-scale))] [animation:hero-jar-float_5.5s_ease-in-out_infinite] max-[1180px]:[--hero-jar-scale:0.82] min-[901px]:max-[1080px]:[--hero-jar-scale:0.94] max-[900px]:[--hero-jar-scale:0.94] max-[680px]:[--hero-jar-scale:0.82] motion-reduce:animate-none motion-reduce:[transform:scale(var(--hero-jar-scale))]"
+              />
+              <span
+                className="absolute right-[5%] bottom-[21%] z-[4] h-[23px] w-[47px] rotate-[-9deg] rounded-[50%] border-[5px] border-[rgba(255,255,255,0.72)] shadow-[0_7px_17px_rgba(31,43,25,0.16)]"
+                style={{ backgroundColor: activeProduct.accent }}
+                aria-hidden="true"
+              />
+            </div>
+            <div className="py-[17px_11px] max-[1080px]:col-start-2 max-[1080px]:row-start-2 max-[1080px]:py-[14px] max-[680px]:col-start-auto max-[680px]:row-auto max-[680px]:pt-3 max-[680px]:pb-1">
+              <span className="text-[0.52rem] font-bold tracking-[0.13em] text-[var(--muted)] uppercase">
+                NatureMist / Ritual {activeProduct.collectionNumber}
+              </span>
+              <h2 className="my-[3px_1px] [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2rem,2.7vw,3.15rem)] leading-none font-normal tracking-[-0.045em] max-[1180px]:text-[clamp(1.85rem,2.5vw,2.6rem)] max-[680px]:text-[2.2rem]">
+                {activeProduct.name}
+              </h2>
+              <p className="m-0 text-[0.52rem] font-bold tracking-[0.13em] text-[var(--muted)] uppercase">
+                {activeProduct.subtitle} · packaging preview
               </p>
-            </details>
-            <details className="group/fact border-b border-[var(--line)]">
-              <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
-                How to prepare{" "}
-                <span
-                  className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
-                  aria-hidden="true"
-                >
-                  ＋
-                </span>
-              </summary>
-              <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.72rem] max-[680px]:pb-3">
-                Mix gradually with water until smooth, apply in sections and follow the final pack timing before rinsing thoroughly.
-              </p>
-            </details>
-            <details className="group/fact border-b border-[var(--line)]" open>
-              <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
-                Ingredient clarity{" "}
-                <span
-                  className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
-                  aria-hidden="true"
-                >
-                  ＋
-                </span>
-              </summary>
-              <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.72rem] max-[680px]:pb-3">
-                {amla.ingredient}
-              </p>
-            </details>
-          </div>
-        </aside>
+            </div>
+            <div className="border-t border-[var(--line)] max-[1080px]:col-start-2 max-[1080px]:row-start-3 max-[680px]:col-start-auto max-[680px]:row-auto max-[680px]:border-t-0">
+              <details className="group/fact border-b border-[var(--line)]">
+                <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
+                  Why you&apos;ll love it{" "}
+                  <span
+                    className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
+                    aria-hidden="true"
+                  >
+                    ＋
+                  </span>
+                </summary>
+                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.76rem]">
+                  {activeProduct.shortDescription}
+                </p>
+              </details>
+              <details className="group/fact border-b border-[var(--line)]">
+                <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
+                  How to prepare{" "}
+                  <span
+                    className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
+                    aria-hidden="true"
+                  >
+                    ＋
+                  </span>
+                </summary>
+                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.76rem]">
+                  {details.howToText}
+                </p>
+              </details>
+              <details className="group/fact border-b border-[var(--line)]" open>
+                <summary className="flex min-h-[49px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[46px] max-[680px]:text-[0.95rem]">
+                  Ingredient clarity{" "}
+                  <span
+                    className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)]"
+                    aria-hidden="true"
+                  >
+                    ＋
+                  </span>
+                </summary>
+                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.68rem] leading-[1.58] text-[var(--muted)] max-[680px]:text-[0.76rem]">
+                  {activeProduct.ingredient}
+                </p>
+              </details>
+            </div>
+          </aside>
         </div>
       </section>
 
