@@ -1,8 +1,4 @@
-import {
-  getProduct,
-  type Product,
-  type RitualGoal,
-} from "@/domain/catalog/products";
+import type { Product, RitualGoal } from "@/domain/catalog/products";
 
 export const goalOptions: Array<{
   goal: RitualGoal;
@@ -31,35 +27,77 @@ export type RitualRecommendation = {
 };
 
 function recommendation(
-  slug: string,
+  product: Product,
   options: Omit<RitualRecommendation, "product"> = {
     requiresColourReview: false,
   },
 ): RitualRecommendation {
-  return { product: getProduct(slug)!, ...options };
+  return { product, ...options };
+}
+
+function selectProduct(
+  products: readonly Product[],
+  preferredSlug: string,
+  matches: (product: Product) => boolean,
+) {
+  return (
+    products.find(
+      (product) =>
+        product.slug === preferredSlug && product.availableForSale !== false,
+    ) ??
+    products.find(
+      (product) => matches(product) && product.availableForSale !== false,
+    ) ??
+    products.find((product) => product.slug === preferredSlug) ??
+    products.find(matches) ??
+    products[0] ??
+    null
+  );
 }
 
 export function recommendRitual(
+  products: readonly Product[],
   goal: RitualGoal,
   hairFeel: HairFeel,
-): RitualRecommendation {
+): RitualRecommendation | null {
   if (goal === "Botanical Colour") {
     const requiresColourReview = hairFeel === "Very light / coloured";
+    const product = selectProduct(
+      products,
+      "indigo-powder",
+      (item) =>
+        item.ritualStep === "Colour" ||
+        item.concerns.includes("Botanical Colour"),
+    );
+    if (!product) return null;
 
-    return recommendation("indigo-powder", {
+    return recommendation(product, {
       requiresColourReview,
       guidance: requiresColourReview
         ? "Because you selected very light or coloured hair, begin with the Indigo guidance instead of adding it straight to your bag. Botanical colour can shift differently on grey, blonde, bleached, porous or previously coloured hair, so read the final pack directions and complete a strand test before deciding."
         : undefined,
     });
   }
-  if (goal === "Scalp Ritual") return recommendation("bhringraj-powder");
-  if (goal === "Cleanse") {
-    return hairFeel === "Oily"
-      ? recommendation("reetha-powder")
-      : recommendation("shikakai-powder");
+  if (goal === "Scalp Ritual") {
+    const product = selectProduct(
+      products,
+      "bhringraj-powder",
+      (item) => item.concerns.includes("Scalp Ritual"),
+    );
+    return product ? recommendation(product) : null;
   }
-  return hairFeel === "Dry / textured"
-    ? recommendation("hibiscus-powder")
-    : recommendation("amla-powder");
+  if (goal === "Cleanse") {
+    const product = selectProduct(
+      products,
+      hairFeel === "Oily" ? "reetha-powder" : "shikakai-powder",
+      (item) => item.ritualStep === "Cleanse",
+    );
+    return product ? recommendation(product) : null;
+  }
+  const product = selectProduct(
+    products,
+    hairFeel === "Dry / textured" ? "hibiscus-powder" : "amla-powder",
+    (item) => item.concerns.includes("Softness + Shine"),
+  );
+  return product ? recommendation(product) : null;
 }

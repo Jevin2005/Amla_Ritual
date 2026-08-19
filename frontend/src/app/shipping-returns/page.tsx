@@ -1,22 +1,46 @@
 import type { Metadata } from "next";
+import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
-import { NoticeBox, PolicyContent } from "@/shared/ui/policy-content";
+import {
+  NoticeBox,
+  PolicyContent,
+  ShopifyPolicyBody,
+} from "@/shared/ui/policy-content";
 
 export const metadata: Metadata = {
   title: "Shipping & Returns",
-  description: "NatureMist shipping and returns information for the pre-launch storefront.",
+  description: "Current NatureMist shipping and returns information.",
   alternates: { canonical: "/shipping-returns" },
 };
 
-export default function ShippingReturnsPage() {
+export default async function ShippingReturnsPage() {
+  const storefront = await getStorefront();
+  const policies = [storefront.policies.shipping, storefront.policies.refund].filter(
+    (policy): policy is NonNullable<typeof policy> => Boolean(policy),
+  );
+
   return (
     <main id="main-content">
       <PageHero
         eyebrow="Customer care"
         title="Shipping + returns."
-        description="Clear terms belong beside every order. Final service regions, timelines and eligibility will be confirmed before launch."
+        description={
+          policies.length
+            ? "Current delivery and return terms, maintained by NatureMist in Shopify."
+            : "Clear terms belong beside every order. Final service regions, timelines and eligibility will be confirmed before launch."
+        }
       />
-      <PolicyContent>
+      {policies.length ? (
+        <PolicyContent>
+          {policies.map((policy) => (
+            <section key={policy.handle}>
+              <h2>{policy.title}</h2>
+              <ShopifyPolicyBody html={policy.body} />
+            </section>
+          ))}
+        </PolicyContent>
+      ) : (
+        <PolicyContent>
         <NoticeBox title="Pre-launch policy preview.">
           No live orders are being accepted, so no shipping or return promise is presented as final.
         </NoticeBox>
@@ -28,8 +52,8 @@ export default function ShippingReturnsPage() {
         <p>The launch policy will provide a real support channel and evidence process for damaged, missing or incorrect items.</p>
         <h2>Botanical colour products</h2>
         <p>Indigo packaging will include prominent safety and strand-test guidance. A personal colour outcome is not a product defect because results vary with starting colour, porosity, preparation and prior treatments.</p>
-      </PolicyContent>
+        </PolicyContent>
+      )}
     </main>
   );
 }
-

@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useState, type CSSProperties } from "react";
-import { getProduct, products } from "@/domain/catalog/products";
 import { ProductJar } from "@/features/catalog/product-jar";
 import { useStore } from "@/features/store/store-provider";
 
 export function FeaturedProductSwitcher() {
-  const [activeSlug, setActiveSlug] = useState(products[0].slug);
-  const { addToCart } = useStore();
-  const product = getProduct(activeSlug) ?? products[0];
+  const { products, addToCart } = useStore();
+  const [activeSlug, setActiveSlug] = useState(products[0]?.slug ?? "");
+  const product =
+    products.find((item) => item.slug === activeSlug) ?? products[0];
+
+  if (!product) return null;
 
   return (
     <div
@@ -89,11 +91,16 @@ export function FeaturedProductSwitcher() {
             View the ritual <span aria-hidden="true">↗</span>
           </Link>
           <button
-            className="grid size-12 shrink-0 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.3rem] text-[var(--paper)] shadow-[0_10px_24px_rgba(21,59,45,0.18)] [--product-accent:var(--forest)] [transition:background_260ms_ease,color_260ms_ease,transform_260ms_ease] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:text-[var(--paper)] hover:[transform:rotate(90deg)]"
+            className="grid size-12 shrink-0 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.3rem] text-[var(--paper)] shadow-[0_10px_24px_rgba(21,59,45,0.18)] [--product-accent:var(--forest)] [transition:background_260ms_ease,color_260ms_ease,transform_260ms_ease] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:text-[var(--paper)] hover:[transform:rotate(90deg)] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:transform-none"
             type="button"
             onClick={() => addToCart(product.slug)}
+            disabled={product.availableForSale === false}
           >
-            <span className="sr-only">Add {product.name} to bag</span>
+            <span className="sr-only">
+              {product.availableForSale === false
+                ? `${product.name} is sold out`
+                : `Add ${product.name} to bag`}
+            </span>
             <span aria-hidden="true">＋</span>
           </button>
         </div>

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { products } from "@/domain/catalog/products";
 import { ProductJar } from "@/features/catalog/product-jar";
 import { useStore } from "@/features/store/store-provider";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
@@ -11,7 +10,7 @@ const emptyStateTextLinkClass =
   "inline-flex items-center gap-[14px] border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px]";
 
 export function SearchDialog() {
-  const { isSearchOpen, closeSearch, track } = useStore();
+  const { products, isSearchOpen, closeSearch, track } = useStore();
   const [query, setQuery] = useState("");
   const dialogRef = useRef<HTMLElement>(null);
   const closeDialog = useCallback(() => {
@@ -29,7 +28,7 @@ export function SearchDialog() {
         .toLowerCase()
         .includes(normalized),
     );
-  }, [query]);
+  }, [products, query]);
 
   return (
     <div

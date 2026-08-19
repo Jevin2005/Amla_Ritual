@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { products, ritualGoals, type RitualGoal } from "@/domain/catalog/products";
+import { ritualGoals, type RitualGoal } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
 
@@ -12,8 +12,9 @@ export function ShopExplorer() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { track } = useStore();
+  const { products, track } = useStore();
   const goalParam = searchParams.get("goal");
+  const collection = searchParams.get("collection")?.trim().toLowerCase() || null;
   const goal: RitualGoal | "All" = ritualGoals.includes(goalParam as RitualGoal)
     ? (goalParam as RitualGoal)
     : "All";
@@ -34,6 +35,11 @@ export function ShopExplorer() {
     const normalized = query.trim().toLowerCase();
     const list = products.filter((product) => {
       const matchesGoal = goal === "All" || product.concerns.includes(goal);
+      const matchesCollection =
+        !collection ||
+        (product.collections ?? []).some(
+          (membership) => membership.handle.toLowerCase() === collection,
+        );
       const matchesStep = step === "All" || product.ritualStep === step;
       const matchesQuery =
         !normalized ||
@@ -41,7 +47,7 @@ export function ShopExplorer() {
           .join(" ")
           .toLowerCase()
           .includes(normalized);
-      return matchesGoal && matchesStep && matchesQuery;
+      return matchesGoal && matchesCollection && matchesStep && matchesQuery;
     });
 
     return [...list].sort((a, b) => {
@@ -49,7 +55,13 @@ export function ShopExplorer() {
       if (sort === "price-high") return b.pricePaise - a.pricePaise;
       return a.collectionNumber.localeCompare(b.collectionNumber);
     });
-  }, [goal, query, sort, step]);
+  }, [collection, goal, products, query, sort, step]);
+
+  const collectionTitle = collection
+    ? products
+        .flatMap((product) => product.collections ?? [])
+        .find((membership) => membership.handle.toLowerCase() === collection)?.title
+    : null;
 
   const clear = () => {
     setStep("All");
@@ -129,14 +141,14 @@ export function ShopExplorer() {
               onChange={(event) => setSort(event.target.value as typeof sort)}
             >
               <option value="collection">Collection order</option>
-              <option value="price-low">Preview price: low to high</option>
-              <option value="price-high">Preview price: high to low</option>
+              <option value="price-low">Price: low to high</option>
+              <option value="price-high">Price: high to low</option>
             </select>
           </div>
         </div>
         <div className="flex items-center justify-between px-1 pt-[34px] pb-[22px] max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-1" aria-live="polite">
           <h2 className="m-0 font-serif text-[1.7rem] font-normal text-[var(--forest)]" id="results-title">{filtered.length} botanical{filtered.length === 1 ? "" : "s"}</h2>
-          <span className="text-[0.61rem] tracking-[0.1em] text-[var(--muted)] uppercase">{goal === "All" ? "The complete collection" : goal}</span>
+          <span className="text-[0.61rem] tracking-[0.1em] text-[var(--muted)] uppercase">{collectionTitle || (goal === "All" ? "The complete collection" : goal)}</span>
         </div>
         {filtered.length ? (
           <div className="grid grid-cols-3 gap-[clamp(14px,2vw,22px)] max-[1240px]:grid-cols-2 max-[680px]:grid-cols-1 [&>article>div:first-child]:h-[clamp(330px,28vw,430px)] max-[680px]:[&>article>div:first-child]:h-[clamp(360px,70vw,430px)] max-[520px]:[&>article>div:first-child]:h-[360px]">

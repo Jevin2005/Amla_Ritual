@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
-import { formatCurrency, getProduct } from "@/domain/catalog/products";
+import { formatCurrency } from "@/domain/catalog/products";
 import { ProductJar } from "@/features/catalog/product-jar";
 import { useStore } from "@/features/store/store-provider";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
@@ -14,25 +14,41 @@ const textLinkClass =
 
 export function CartDrawer() {
   const {
+    products,
+    source,
     cart,
     subtotalPaise,
+    totalPaise,
+    discountAmountPaise,
+    currencyCode,
+    totalsEstimated,
+    discountCodes,
+    checkoutUrl,
+    cartError,
+    cartWarnings,
+    isCartBusy,
     isCartOpen,
     closeCart,
     updateQuantity,
     removeFromCart,
+    applyDiscountCode,
+    removeDiscountCode,
+    clearCartError,
+    track,
   } = useStore();
   const [discount, setDiscount] = useState("");
   const [discountMessage, setDiscountMessage] = useState("");
   const drawerRef = useRef<HTMLElement>(null);
   useModalFocus(isCartOpen, drawerRef, closeCart);
 
-  const applyDiscount = (event: FormEvent) => {
+  const applyDiscount = async (event: FormEvent) => {
     event.preventDefault();
-    setDiscountMessage(
-      discount.trim()
-        ? "Discount codes will activate when launch terms are confirmed."
-        : "Enter a code to check it.",
-    );
+    setDiscountMessage("");
+    const applied = await applyDiscountCode(discount);
+    if (applied) {
+      setDiscountMessage(`${discount.trim()} was applied by Shopify.`);
+      setDiscount("");
+    }
   };
 
   return (
@@ -59,11 +75,12 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="bag-title"
+        aria-busy={isCartBusy}
       >
         <div className="sticky top-0 z-10 flex min-h-[105px] items-center justify-between border-b border-[var(--line)] bg-[rgba(255,252,245,0.92)] px-[30px] py-[22px] backdrop-blur-xl max-[680px]:min-h-[88px] max-[680px]:px-5 max-[680px]:py-[17px]">
           <div>
             <p className="m-0 mb-1 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">
-              Your selection
+              {source === "shopify" ? "Synced with Shopify" : "Your selection"}
             </p>
             <h2
               className="m-0 font-serif text-[2.2rem] leading-none font-normal text-[var(--forest)]"
@@ -94,8 +111,16 @@ export function CartDrawer() {
               Your ritual begins here.
             </p>
             <p className="max-w-[360px] text-[var(--muted)]">
-              Explore six single botanicals, each with a clearly explained purpose.
+              Explore the botanical collection and build your wash-day ritual.
             </p>
+            {cartError && (
+              <p
+                className="max-w-[360px] rounded-[var(--radius-sm)] bg-[#f7e9e4] px-4 py-3 text-[0.72rem] text-[#813c2f]"
+                role="alert"
+              >
+                {cartError}
+              </p>
+            )}
             <Link
               className={`${darkButtonClass} mt-[15px]`}
               href="/shop"
@@ -108,42 +133,65 @@ export function CartDrawer() {
           <>
             <div className="px-[30px] max-[680px]:px-5">
               {cart.map((item) => {
-                const product = getProduct(item.slug);
-                if (!product) return null;
+                const product = products.find((entry) => entry.slug === item.slug);
+                const maxQuantity = Math.min(
+                  12,
+                  item.quantityAvailable ?? 12,
+                );
+                const variantLabel = item.selectedOptions
+                  .map((option) => option.value)
+                  .filter((value) => value !== "Default Title")
+                  .join(" · ");
                 return (
                   <article
                     className="grid grid-cols-[115px_1fr] gap-5 border-b border-[var(--line)] py-[26px] max-[680px]:grid-cols-[96px_1fr]"
-                    key={item.slug}
+                    key={item.lineId}
                   >
                     <div
                       className="flex h-[150px] items-end justify-center overflow-hidden rounded-[var(--radius-sm)] pb-[5px] ring-1 ring-[var(--line)]"
-                      style={{ backgroundColor: product.accentSoft }}
+                      style={{
+                        backgroundColor: product?.accentSoft || "var(--ivory-deep)",
+                      }}
                     >
-                      <ProductJar product={product} size="small" decorative />
+                      {product ? (
+                        <ProductJar product={product} size="small" decorative />
+                      ) : (
+                        <span className="self-center text-[0.62rem] text-[var(--muted)]">
+                          Product image
+                        </span>
+                      )}
                     </div>
                     <div className="flex min-w-0 flex-col justify-between">
                       <div>
                         <Link
                           className="font-serif text-[1.35rem] text-[var(--forest)]"
-                          href={`/shop/${product.slug}`}
+                          href={`/shop/${item.slug}`}
                           onClick={closeCart}
                         >
-                          {product.name}
+                          {product?.name || item.productName}
                         </Link>
                         <p className="mt-0.5 text-[0.68rem] text-[var(--muted)]">
-                          {product.subtitle}
+                          {variantLabel || product?.subtitle || item.variantTitle}
                         </p>
+                        {!item.availableForSale && (
+                          <p className="my-1 text-[0.62rem] font-bold tracking-[0.06em] text-[#9a3d2b] uppercase">
+                            Currently unavailable
+                          </p>
+                        )}
                       </div>
                       <div className="flex items-center justify-between gap-3">
                         <div
-                            className="inline-grid h-[40px] grid-cols-[38px_32px_38px] items-center overflow-hidden rounded-full border border-[var(--line)] bg-[var(--ivory)]"
-                          aria-label={`Quantity for ${product.name}`}
+                          className="inline-grid h-[40px] grid-cols-[38px_32px_38px] items-center overflow-hidden rounded-full border border-[var(--line)] bg-[var(--ivory)]"
+                          aria-label={`Quantity for ${item.productName}`}
                         >
                           <button
                             className="h-9 bg-transparent"
                             type="button"
-                            onClick={() => updateQuantity(product.slug, item.quantity - 1)}
-                            aria-label={`Decrease ${product.name} quantity`}
+                            onClick={() =>
+                              void updateQuantity(item.lineId, item.quantity - 1)
+                            }
+                            aria-label={`Decrease ${item.productName} quantity`}
+                            disabled={isCartBusy}
                           >
                             −
                           </button>
@@ -153,20 +201,33 @@ export function CartDrawer() {
                           <button
                             className="h-9 bg-transparent"
                             type="button"
-                            onClick={() => updateQuantity(product.slug, item.quantity + 1)}
-                            aria-label={`Increase ${product.name} quantity`}
+                            onClick={() =>
+                              void updateQuantity(item.lineId, item.quantity + 1)
+                            }
+                            aria-label={`Increase ${item.productName} quantity`}
+                            disabled={
+                              isCartBusy ||
+                              !item.availableForSale ||
+                              item.quantity >= maxQuantity
+                            }
                           >
                             +
                           </button>
                         </div>
                         <strong className="font-serif text-[1.05rem] font-normal text-[var(--forest)]">
-                          {formatCurrency(product.pricePaise * item.quantity)}
+                          {formatCurrency(item.lineTotalPaise, item.currencyCode)}
                         </strong>
                       </div>
+                      {item.discountAmountPaise > 0 && (
+                        <span className="text-right text-[0.6rem] text-[var(--botanical)]">
+                          Includes {formatCurrency(item.discountAmountPaise, item.currencyCode)} savings
+                        </span>
+                      )}
                       <button
                         className="self-start border-b border-[var(--line)] bg-transparent pb-0.5 text-[0.6rem] tracking-[0.08em] text-[var(--muted)] uppercase"
                         type="button"
-                        onClick={() => removeFromCart(product.slug)}
+                        onClick={() => void removeFromCart(item.lineId)}
+                        disabled={isCartBusy}
                       >
                         Remove
                       </button>
@@ -176,7 +237,7 @@ export function CartDrawer() {
               })}
             </div>
             <div className="bg-[var(--ivory)] px-[30px] pt-[26px] pb-[35px] max-[680px]:px-5">
-              <form onSubmit={applyDiscount}>
+              <form onSubmit={(event) => void applyDiscount(event)}>
                 <label
                   className="mb-[7px] block text-[0.62rem] font-bold tracking-[0.09em] text-[var(--forest)] uppercase"
                   htmlFor="discount-code"
@@ -185,41 +246,149 @@ export function CartDrawer() {
                 </label>
                 <div className="grid grid-cols-[1fr_auto] overflow-hidden rounded-[var(--radius-sm)] ring-1 ring-[var(--line)] focus-within:ring-[var(--botanical)]">
                   <input
-                    className="h-[52px] min-w-0 rounded-none border-0 bg-[var(--paper)] px-4 outline-none focus:shadow-none"
+                    className="h-[52px] min-w-0 rounded-none border-0 bg-[var(--paper)] px-4 outline-none focus:shadow-none disabled:bg-[var(--ivory-deep)]"
                     id="discount-code"
                     value={discount}
-                    onChange={(event) => setDiscount(event.target.value)}
+                    onChange={(event) => {
+                      setDiscount(event.target.value);
+                      setDiscountMessage("");
+                      clearCartError();
+                    }}
                     placeholder="Enter code"
+                    autoComplete="off"
+                    disabled={source !== "shopify" || isCartBusy}
                   />
                   <button
                     className="bg-[var(--forest)] px-5 text-[0.66rem] font-bold tracking-[0.08em] text-[var(--paper)] uppercase transition-colors hover:bg-[var(--forest-dark)]"
                     type="submit"
+                    disabled={source !== "shopify" || isCartBusy || !discount.trim()}
                   >
-                    Apply
+                    {isCartBusy ? "Checking…" : "Apply"}
                   </button>
                 </div>
+                {source === "preview" && (
+                  <p className="mt-[7px] text-[0.65rem] text-[var(--muted)]">
+                    Shopify will validate discount codes when the live store is connected.
+                  </p>
+                )}
                 {discountMessage && (
-                  <p className="mt-[7px] text-[0.65rem] text-[var(--muted)]" role="status">
+                  <p
+                    className="mt-[7px] text-[0.65rem] text-[var(--botanical)]"
+                    role="status"
+                  >
                     {discountMessage}
                   </p>
                 )}
               </form>
-              <div className="mt-[22px] flex items-center justify-between border-t border-[var(--line)] px-0 pt-[22px] pb-2.5 text-[var(--forest)]">
-                <span>Subtotal</span>
-                <strong className="font-serif text-[1.4rem] font-normal">
-                  {formatCurrency(subtotalPaise)}
-                </strong>
-              </div>
+
+              {discountCodes.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2" aria-label="Discount codes">
+                  {discountCodes.map((discountCode) => (
+                    <span
+                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[0.62rem] font-bold tracking-[0.05em] uppercase ring-1 ${
+                        discountCode.applicable
+                          ? "bg-[#edf3dd] text-[var(--forest)] ring-[#b8c88f]"
+                          : "bg-[#f7e9e4] text-[#813c2f] ring-[#d9aaa0]"
+                      }`}
+                      key={discountCode.code}
+                    >
+                      {discountCode.code}
+                      <button
+                        type="button"
+                        className="grid size-5 place-items-center rounded-full bg-transparent text-[0.85rem]"
+                        aria-label={`Remove discount code ${discountCode.code}`}
+                        onClick={() => void removeDiscountCode(discountCode.code)}
+                        disabled={isCartBusy}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {cartError && (
+                <div
+                  className="mt-4 flex items-start justify-between gap-3 rounded-[var(--radius-sm)] bg-[#f7e9e4] px-4 py-3 text-[0.7rem] leading-[1.55] text-[#813c2f]"
+                  role="alert"
+                >
+                  <span>{cartError}</span>
+                  <button
+                    className="shrink-0 bg-transparent text-base"
+                    type="button"
+                    onClick={clearCartError}
+                    aria-label="Dismiss bag error"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              {cartWarnings.map((warning, index) => (
+                <p
+                  className="mt-3 rounded-[var(--radius-sm)] bg-[#f5edd8] px-4 py-3 text-[0.68rem] text-[#715b24]"
+                  role="status"
+                  key={`${warning.code || "warning"}-${index}`}
+                >
+                  {warning.message}
+                </p>
+              ))}
+
+              <dl className="mt-[22px] border-t border-[var(--line)] pt-[18px] text-[0.76rem] text-[var(--muted)]">
+                <div className="flex items-center justify-between py-1">
+                  <dt>Subtotal</dt>
+                  <dd className="m-0">{formatCurrency(subtotalPaise, currencyCode)}</dd>
+                </div>
+                {discountAmountPaise > 0 && (
+                  <div className="flex items-center justify-between py-1 text-[var(--botanical)]">
+                    <dt>Discount savings</dt>
+                    <dd className="m-0">−{formatCurrency(discountAmountPaise, currencyCode)}</dd>
+                  </div>
+                )}
+                <div className="mt-2 flex items-center justify-between border-t border-[var(--line)] pt-4 text-[var(--forest)]">
+                  <dt>{source === "shopify" && totalsEstimated ? "Estimated total" : "Total"}</dt>
+                  <dd className="m-0 font-serif text-[1.4rem]">
+                    {formatCurrency(totalPaise, currencyCode)}
+                  </dd>
+                </div>
+              </dl>
               <p className="mt-3 text-[0.7rem] leading-[1.6] text-[var(--muted)]">
-                Preview pricing only. Final prices, shipping and taxes will be confirmed before launch.
+                {source === "shopify"
+                  ? "Shopify keeps prices and availability current. Shipping and taxes are finalized in secure checkout."
+                  : "Preview pricing only. No order or payment is created in preview mode."}
               </p>
-              <Link
-                className={`${darkButtonClass} mt-5 w-full`}
-                href="/checkout"
-                onClick={closeCart}
-              >
-                Continue to checkout <span aria-hidden="true">↗</span>
-              </Link>
+
+              {source === "shopify" && checkoutUrl && !isCartBusy ? (
+                <a
+                  className={`${darkButtonClass} mt-5 w-full`}
+                  href={checkoutUrl}
+                  onClick={() => {
+                    track("begin_checkout", {
+                      value: totalPaise / 100,
+                      currency: currencyCode,
+                      mode: "shopify_hosted",
+                    });
+                    closeCart();
+                  }}
+                >
+                  Checkout securely with Shopify <span aria-hidden="true">↗</span>
+                </a>
+              ) : source === "preview" ? (
+                <Link
+                  className={`${darkButtonClass} mt-5 w-full`}
+                  href="/checkout"
+                  onClick={closeCart}
+                >
+                  Review preview checkout <span aria-hidden="true">↗</span>
+                </Link>
+              ) : (
+                <button
+                  className={`${darkButtonClass} mt-5 w-full`}
+                  type="button"
+                  disabled
+                >
+                  Checkout is temporarily unavailable
+                </button>
+              )}
               <Link
                 className={`mx-auto mt-[18px] flex w-max justify-center ${textLinkClass}`}
                 href="/shop"

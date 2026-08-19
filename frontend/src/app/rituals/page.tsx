@@ -2,9 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
+import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
 
-const ritualImage = "/images/naturemist-ritual.png";
 const ritualPathClass =
   "group flex min-h-[340px] flex-col bg-[var(--paper)] p-[26px] transition-[background-color,color] duration-[350ms] hover:bg-[var(--forest)] hover:text-[var(--paper)] max-[680px]:min-h-[290px]";
 const ritualPathTitleClass =
@@ -21,7 +21,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/rituals" },
 };
 
-export default function RitualsPage() {
+export default async function RitualsPage() {
+  const { content } = await getStorefront();
+
   return (
     <main id="main-content">
       <PageHero
@@ -43,7 +45,7 @@ export default function RitualsPage() {
 
       <section className="mx-auto grid w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] grid-cols-[0.86fr_1.14fr] items-center gap-[clamp(50px,7vw,100px)] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[75px]" id="foundational-rhythm">
         <div className="relative min-h-[clamp(560px,50vw,660px)] overflow-hidden rounded-[50%_50%_0_0/16%_16%_0_0] max-[900px]:min-h-[560px] max-[680px]:min-h-[440px]">
-          <Image src={ritualImage} alt="A fresh amla paste being mixed in a ceramic bowl" fill sizes="(max-width: 800px) 90vw, 42vw" className="object-cover" />
+          <Image src={content.ritualPoster.url} alt={content.ritualPoster.altText} fill sizes="(max-width: 800px) 90vw, 42vw" className="object-cover" />
         </div>
         <div>
           <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">The foundational rhythm</p>

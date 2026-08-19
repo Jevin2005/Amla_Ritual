@@ -3,8 +3,8 @@ import { CheckoutPreview } from "@/features/checkout/checkout-preview";
 import { PageHero } from "@/shared/ui/page-hero";
 
 export const metadata: Metadata = {
-  title: "Checkout Preview",
-  description: "NatureMist secure checkout integration handoff.",
+  title: "Secure Checkout",
+  description: "Review your NatureMist bag and continue to Shopify hosted checkout.",
   robots: { index: false, follow: false },
 };
 
@@ -13,8 +13,8 @@ export default function CheckoutPage() {
     <main id="main-content">
       <PageHero
         eyebrow="Your ritual bag"
-        title={<><span>Checkout,</span><br />without shortcuts.</>}
-        description="Commercial data and a verified hosted payment provider come before real orders."
+        title={<><span>Checkout,</span><br />handled securely.</>}
+        description="Review the latest bag totals, then continue to Shopify's hosted checkout for delivery and payment."
       />
       <CheckoutPreview />
     </main>

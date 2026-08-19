@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { products } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
 
 export function WishlistPage() {
-  const { isHydrated, wishlist } = useStore();
+  const { products, isHydrated, wishlist } = useStore();
   const savedProducts = products.filter((product) => wishlist.includes(product.slug));
 
   if (!isHydrated) {

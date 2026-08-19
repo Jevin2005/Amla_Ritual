@@ -1,67 +1,76 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProduct, globalSafety, products } from "@/domain/catalog/products";
+import { globalSafety } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { ProductDetailActions } from "@/features/catalog/product-detail-actions";
 import { ProductJar } from "@/features/catalog/product-jar";
+import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
 
 const revealClass =
   "supports-[animation-timeline:view()]:[animation:section-reveal_1ms_linear_both] supports-[animation-timeline:view()]:[animation-range:entry_5%_cover_28%] supports-[animation-timeline:view()]:[animation-timeline:view()] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100";
 
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
-}
+export const dynamicParams = true;
 
 export async function generateMetadata(
   props: PageProps<"/shop/[slug]">,
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const product = getProduct(slug);
+  const product = await getStorefrontProduct(slug);
   if (!product) notFound();
 
+  const image = product.featuredImage;
+
   return {
-    title: product.name,
+    title: product.seoTitle || product.name,
     description: product.metaDescription,
     alternates: { canonical: `/shop/${slug}` },
     openGraph: {
       type: "website",
       siteName: "NatureMist",
-      title: `${product.name} | NatureMist`,
+      title: product.seoTitle || `${product.name} | NatureMist`,
       description: product.metaDescription,
       url: `/shop/${slug}`,
-      images: [
-        {
-          url: "/exec-2be6204a-8260-412a-adf6-d34d47c234b6.png",
-          width: 1731,
-          height: 909,
-          alt: "NatureMist botanical rituals",
-        },
-      ],
+      images: image
+        ? [
+            {
+              url: image.url,
+              width: image.width,
+              height: image.height,
+              alt: image.altText || product.name,
+            },
+          ]
+        : undefined,
     },
   };
 }
 
 export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
   const { slug } = await props.params;
-  const product = getProduct(slug);
+  const [storefront, product] = await Promise.all([
+    getStorefront(),
+    getStorefrontProduct(slug),
+  ]);
   if (!product) notFound();
 
-  const concernMatches = products.filter(
+  const concernMatches = storefront.products.filter(
     (item) =>
       item.slug !== product.slug &&
       item.concerns.some((concern) => product.concerns.includes(concern)),
   );
   const related = [
     ...concernMatches,
-    ...products.filter(
+    ...storefront.products.filter(
       (item) =>
         item.slug !== product.slug &&
         !concernMatches.some((match) => match.slug === item.slug),
     ),
   ].slice(0, 3);
+  const productMedia = (product.images || []).filter(
+    (image, index, images) =>
+      images.findIndex((candidate) => candidate.url === image.url) === index,
+  );
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -70,6 +79,16 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
     description: product.metaDescription,
     brand: { "@type": "Brand", name: "NatureMist" },
     category: "Botanical hair care powder",
+    image: product.featuredImage?.url,
+    offers: {
+      "@type": "Offer",
+      price: (product.pricePaise / 100).toFixed(2),
+      priceCurrency: product.currencyCode || "INR",
+      availability: product.availableForSale
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: `/shop/${product.slug}`,
+    },
     additionalProperty: [
       { "@type": "PropertyValue", name: "Botanical", value: product.botanical },
       { "@type": "PropertyValue", name: "Plant part", value: product.plantPart },
@@ -98,8 +117,33 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
             <span className="absolute top-[9%] h-[68%] w-[62%] rounded-t-[50%] border border-[color-mix(in_srgb,var(--pdp-accent)_35%,transparent)]" aria-hidden="true" />
             <span className="absolute top-[10%] right-[10%] z-[2] h-[250px] w-[130px] rotate-[28deg] before:absolute before:left-1/2 before:h-full before:w-px before:bg-[color-mix(in_srgb,var(--pdp-accent)_45%,transparent)] before:content-[''] [&>i]:absolute [&>i]:h-[27px] [&>i]:w-[58px] [&>i]:rounded-[100%_0_100%_0] [&>i]:bg-[color-mix(in_srgb,var(--pdp-accent)_23%,transparent)] [&>i:nth-child(1)]:top-[30px] [&>i:nth-child(1)]:left-[7px] [&>i:nth-child(2)]:top-[87px] [&>i:nth-child(2)]:right-[5px] [&>i:nth-child(2)]:scale-x-[-1] [&>i:nth-child(3)]:top-[145px] [&>i:nth-child(3)]:left-[5px] [&>i:nth-child(4)]:top-[198px] [&>i:nth-child(4)]:right-[7px] [&>i:nth-child(4)]:scale-x-[-1]" aria-hidden="true"><i /><i /><i /><i /></span>
             <ProductJar product={product} size="large" className="z-[3] scale-[1.08] max-[680px]:origin-bottom max-[680px]:scale-[0.82]" />
-            <p className="absolute right-[25px] bottom-[18px] left-[25px] z-[4] m-0 text-center text-[0.52rem] tracking-[0.1em] text-[color-mix(in_srgb,var(--pdp-accent)_55%,var(--muted))] uppercase">Final product photography and label artwork will replace this packaging preview.</p>
+            {!product.featuredImage && (
+              <p className="absolute right-[25px] bottom-[18px] left-[25px] z-[4] m-0 text-center text-[0.52rem] tracking-[0.1em] text-[color-mix(in_srgb,var(--pdp-accent)_55%,var(--muted))] uppercase">
+                Product photography will appear here when it is added in Shopify.
+              </p>
+            )}
           </div>
+          {productMedia.length > 1 ? (
+            <div className="mt-4 grid grid-cols-4 gap-3 max-[680px]:grid-cols-3" aria-label={`${product.name} media gallery`}>
+              {productMedia.map((image) => (
+                <a
+                  className="relative aspect-square overflow-hidden rounded-[var(--radius-sm)] bg-[var(--paper)] ring-1 ring-[var(--line)] transition-transform hover:-translate-y-0.5"
+                  href={image.url}
+                  key={image.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.altText || `${product.name} product view`}
+                    fill
+                    sizes="(max-width: 680px) 28vw, 11vw"
+                    className="object-cover"
+                  />
+                </a>
+              ))}
+            </div>
+          ) : null}
           <div className="mt-4 grid grid-cols-2 gap-4 max-[680px]:grid-cols-1">
             <article className="flex min-h-[200px] flex-col items-center justify-center rounded-[var(--radius-md)] bg-[var(--paper)] p-6 text-center shadow-[0_12px_34px_rgba(21,59,45,0.06)] ring-1 ring-[var(--line)]">
               <span className="mb-[18px] h-12 w-[76px] rounded-[50%] [background:radial-gradient(circle_at_20%_35%,rgba(255,255,255,0.16)_0_1px,transparent_1.5px)_0_0/6px_6px,var(--pdp-accent)] shadow-[inset_0_8px_15px_rgba(0,0,0,0.12),0_5px_14px_rgba(0,0,0,0.12)]" aria-hidden="true" />
@@ -187,7 +231,7 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
       <section className="mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px]" aria-labelledby="related-title">
         <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(260px,0.6fr)] items-end gap-[8vw] max-[900px]:grid-cols-1 max-[900px]:gap-[35px]">
           <div><p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Continue the ritual</p><h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]" id="related-title">Botanicals in good company.</h2></div>
-          <Link className="mt-[15px] inline-flex items-center gap-3.5 border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px]" href="/shop">Explore all six <span aria-hidden="true">↗</span></Link>
+          <Link className="mt-[15px] inline-flex items-center gap-3.5 border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px]" href="/shop">Explore the collection <span aria-hidden="true">↗</span></Link>
         </div>
         <div className="mt-[65px] grid grid-cols-3 gap-[22px] max-[900px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:[&>article]:w-full">
           {related.map((item) => <ProductCard key={item.slug} product={item} />)}

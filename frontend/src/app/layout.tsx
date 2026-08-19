@@ -1,37 +1,45 @@
 import type { Metadata, Viewport } from "next";
-import { headers } from "next/headers";
+import { getDefaultVariant, type Product } from "@/domain/catalog/products";
 import { StoreProvider } from "@/features/store/store-provider";
+import { getPublicSiteUrl } from "@/lib/site-url";
+import { getStorefront } from "@/lib/shopify/storefront";
 import { SiteChrome } from "@/widgets/site-chrome/site-chrome";
 import "./globals.css";
 
-async function requestBaseUrl() {
-  const requestHeaders = await headers();
-  const forwardedHost = requestHeaders.get("x-forwarded-host")?.split(",")[0]?.trim();
-  const host = forwardedHost || requestHeaders.get("host") || "localhost:3000";
-  const forwardedProtocol = requestHeaders.get("x-forwarded-proto")?.split(",")[0]?.trim();
-  const protocol = forwardedProtocol || (host.startsWith("localhost") ? "http" : "https");
-
-  try {
-    return new URL(`${protocol}://${host}`);
-  } catch {
-    return new URL("http://localhost:3000");
-  }
+function productForGlobalStore(product: Product): Product {
+  const defaultVariant = getDefaultVariant(product);
+  return {
+    ...product,
+    images: product.featuredImage ? [product.featuredImage] : [],
+    variants: defaultVariant ? [defaultVariant] : [],
+  };
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const metadataBase = await requestBaseUrl();
-  const title = "NatureMist — Pure Botanicals, Powerful Rituals";
+  const storefront = await getStorefront();
+  const metadataBase = new URL(getPublicSiteUrl());
+  const brandName = storefront.shopName || "NatureMist";
+  const title = `${brandName} — Pure Botanicals, Powerful Rituals`;
   const description =
     "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.";
+  const socialImage =
+    storefront.source === "shopify"
+      ? storefront.content.homeHeroPoster
+      : {
+          url: "/og-shopify.jpg",
+          width: 1200,
+          height: 630,
+          altText: "NatureMist — Pure botanicals. Powerful rituals.",
+        };
 
   return {
     metadataBase,
     title: {
       default: title,
-      template: "%s | NatureMist",
+      template: `%s | ${brandName}`,
     },
     description,
-    applicationName: "NatureMist",
+    applicationName: brandName,
     keywords: [
       "NatureMist",
       "Ayurvedic hair rituals",
@@ -41,16 +49,16 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     openGraph: {
       type: "website",
-      siteName: "NatureMist",
+      siteName: brandName,
       title,
       description,
       url: "/",
       images: [
         {
-          url: "/exec-2be6204a-8260-412a-adf6-d34d47c234b6.png",
-          width: 1731,
-          height: 909,
-          alt: "NatureMist — Pure botanicals. Powerful rituals.",
+          url: socialImage.url,
+          width: socialImage.width,
+          height: socialImage.height,
+          alt: socialImage.altText || `${brandName} botanical rituals`,
         },
       ],
     },
@@ -58,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/exec-2be6204a-8260-412a-adf6-d34d47c234b6.png"],
+      images: [socialImage.url],
     },
     robots: {
       index: true,
@@ -74,7 +82,10 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const storefront = await getStorefront();
+  const globalProducts = storefront.products.map(productForGlobalStore);
+
   return (
     <html
       lang="en-IN"
@@ -82,7 +93,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-scroll-behavior="smooth"
     >
       <body className="m-0 min-h-screen overflow-x-hidden bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
-        <StoreProvider>
+        <StoreProvider
+          initialProducts={globalProducts}
+          initialBundles={storefront.bundles}
+          content={storefront.content}
+          source={storefront.source}
+        >
           <SiteChrome>{children}</SiteChrome>
         </StoreProvider>
       </body>

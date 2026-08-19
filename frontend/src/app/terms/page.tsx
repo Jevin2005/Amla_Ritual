@@ -1,18 +1,32 @@
 import type { Metadata } from "next";
+import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
-import { NoticeBox, PolicyContent } from "@/shared/ui/policy-content";
+import {
+  NoticeBox,
+  PolicyContent,
+  ShopifyPolicyContent,
+} from "@/shared/ui/policy-content";
 
 export const metadata: Metadata = { title: "Terms", alternates: { canonical: "/terms" } };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const policy = (await getStorefront()).policies.terms;
+
   return (
     <main id="main-content">
       <PageHero
         eyebrow="Terms"
         title={<><span>Clear expectations,</span><br />from the beginning.</>}
-        description="Pre-launch terms for browsing the NatureMist website preview."
+        description={
+          policy
+            ? "The current terms of service maintained by NatureMist in Shopify."
+            : "Pre-launch terms for browsing the NatureMist website preview."
+        }
       />
-      <PolicyContent>
+      {policy ? (
+        <ShopifyPolicyContent html={policy.body} />
+      ) : (
+        <PolicyContent>
         <NoticeBox title="This website is currently a product and commerce preview.">
           Prices, inventory, discounts, shipping terms and checkout are not final offers for sale.
         </NoticeBox>
@@ -24,8 +38,8 @@ export default function TermsPage() {
         <p>Botanical colour results vary. NatureMist does not guarantee a particular tone from Indigo or any pigmented powder.</p>
         <h2>Live commerce</h2>
         <p>Complete operator details, payment terms, cancellation rights, warranty language and governing law will be added before checkout is activated.</p>
-      </PolicyContent>
+        </PolicyContent>
+      )}
     </main>
   );
 }
-
