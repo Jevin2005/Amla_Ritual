@@ -47,9 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
       url: "/",
       images: [
         {
-          url: "/naturemist-social-redesign.png",
-          width: 1536,
-          height: 1024,
+          url: "/exec-2be6204a-8260-412a-adf6-d34d47c234b6.png",
+          width: 1731,
+          height: 909,
           alt: "NatureMist — Pure botanicals. Powerful rituals.",
         },
       ],
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/naturemist-social-redesign.png"],
+      images: ["/exec-2be6204a-8260-412a-adf6-d34d47c234b6.png"],
     },
     robots: {
       index: true,
@@ -70,7 +70,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#173f2a",
+  themeColor: "#153b2d",
   colorScheme: "light",
 };
 

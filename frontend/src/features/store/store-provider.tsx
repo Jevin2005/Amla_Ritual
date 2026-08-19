@@ -23,6 +23,7 @@ type StoreContextValue = {
   cartCount: number;
   subtotalPaise: number;
   wishlist: string[];
+  isHydrated: boolean;
   isCartOpen: boolean;
   isSearchOpen: boolean;
   announcement: string;
@@ -44,6 +45,7 @@ const StoreContext = createContext<StoreContextValue | null>(null);
 
 const CART_KEY = "naturemist-cart-v1";
 const WISHLIST_KEY = "naturemist-wishlist-v1";
+const MAX_CART_QUANTITY = 12;
 
 function readStoredArray<T>(key: string): T[] {
   try {
@@ -56,6 +58,40 @@ function readStoredArray<T>(key: string): T[] {
   }
 }
 
+function normalizeQuantity(quantity: number) {
+  if (!Number.isFinite(quantity)) return 1;
+  return Math.max(1, Math.min(MAX_CART_QUANTITY, Math.floor(quantity)));
+}
+
+function readStoredCart(): CartItem[] {
+  const quantitiesBySlug = new Map<string, number>();
+
+  for (const value of readStoredArray<unknown>(CART_KEY)) {
+    if (!value || typeof value !== "object") continue;
+    const item = value as Partial<CartItem>;
+    if (
+      typeof item.slug !== "string" ||
+      typeof item.quantity !== "number" ||
+      !Number.isFinite(item.quantity) ||
+      item.quantity <= 0 ||
+      !getProduct(item.slug)
+    ) {
+      continue;
+    }
+
+    const currentQuantity = quantitiesBySlug.get(item.slug) ?? 0;
+    quantitiesBySlug.set(
+      item.slug,
+      Math.min(
+        MAX_CART_QUANTITY,
+        currentQuantity + normalizeQuantity(item.quantity),
+      ),
+    );
+  }
+
+  return Array.from(quantitiesBySlug, ([slug, quantity]) => ({ slug, quantity }));
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
@@ -66,13 +102,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      const savedCart = readStoredArray<CartItem>(CART_KEY).filter(
-        (item) =>
-          typeof item?.slug === "string" &&
-          Number.isFinite(item?.quantity) &&
-          item.quantity > 0 &&
-          Boolean(getProduct(item.slug)),
-      );
+      const savedCart = readStoredCart();
       const savedWishlist = readStoredArray<string>(WISHLIST_KEY).filter(
         (slug) => typeof slug === "string" && Boolean(getProduct(slug)),
       );
@@ -111,17 +141,38 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     analyticsWindow.dataLayer?.push(detail);
   }, []);
 
+  const openCart = useCallback(() => {
+    setIsSearchOpen(false);
+    setIsCartOpen(true);
+    track("view_cart");
+  }, [track]);
+
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
+
+  const openSearch = useCallback(() => {
+    setIsCartOpen(false);
+    setIsSearchOpen(true);
+  }, []);
+
+  const closeSearch = useCallback(() => setIsSearchOpen(false), []);
+
   const addToCart = useCallback(
     (slug: string, quantity = 1, openDrawer = true) => {
       const product = getProduct(slug);
       if (!product) return;
-      const safeQuantity = Math.max(1, Math.min(12, Math.floor(quantity)));
+      const safeQuantity = normalizeQuantity(quantity);
       setCart((current) => {
         const existing = current.find((item) => item.slug === slug);
         if (existing) {
           return current.map((item) =>
             item.slug === slug
-              ? { ...item, quantity: Math.min(12, item.quantity + safeQuantity) }
+              ? {
+                  ...item,
+                  quantity: Math.min(
+                    MAX_CART_QUANTITY,
+                    item.quantity + safeQuantity,
+                  ),
+                }
               : item,
           );
         }
@@ -157,7 +208,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         track("remove_from_cart", { item_id: slug });
         return;
       }
-      const safeQuantity = Math.max(1, Math.min(12, Math.floor(quantity)));
+      const safeQuantity = normalizeQuantity(quantity);
       setCart((current) =>
         current.map((item) =>
           item.slug === slug ? { ...item, quantity: safeQuantity } : item,
@@ -212,6 +263,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       cartCount: cart.reduce((total, item) => total + item.quantity, 0),
       subtotalPaise,
       wishlist,
+      isHydrated: hydrated,
       isCartOpen,
       isSearchOpen,
       announcement,
@@ -222,17 +274,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       clearCart,
       toggleWishlist,
       isWishlisted: (slug) => wishlist.includes(slug),
-      openCart: () => {
-        setIsSearchOpen(false);
-        setIsCartOpen(true);
-        track("view_cart");
-      },
-      closeCart: () => setIsCartOpen(false),
-      openSearch: () => {
-        setIsCartOpen(false);
-        setIsSearchOpen(true);
-      },
-      closeSearch: () => setIsSearchOpen(false),
+      openCart,
+      closeCart,
+      openSearch,
+      closeSearch,
       track,
     }),
     [
@@ -241,8 +286,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       announcement,
       cart,
       clearCart,
+      closeCart,
+      closeSearch,
+      hydrated,
       isCartOpen,
       isSearchOpen,
+      openCart,
+      openSearch,
       removeFromCart,
       subtotalPaise,
       toggleWishlist,

@@ -5,6 +5,10 @@ import { useEffect, type RefObject } from "react";
 const focusableSelector =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+function getFocusableElements(node: HTMLElement) {
+  return Array.from(node.querySelectorAll<HTMLElement>(focusableSelector));
+}
+
 export function useModalFocus(
   active: boolean,
   ref: RefObject<HTMLElement | null>,
@@ -14,9 +18,9 @@ export function useModalFocus(
     if (!active) return;
     const previousFocus = document.activeElement as HTMLElement | null;
     const node = ref.current;
-    const focusables = node?.querySelectorAll<HTMLElement>(focusableSelector);
     const preferredFocus = node?.querySelector<HTMLElement>("[data-autofocus]");
-    (preferredFocus || focusables?.[0])?.focus();
+    const initialFocusables = node ? getFocusableElements(node) : [];
+    (preferredFocus || initialFocusables[0])?.focus();
 
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -24,13 +28,21 @@ export function useModalFocus(
         onClose();
         return;
       }
-      if (event.key !== "Tab" || !focusables?.length) return;
+      if (event.key !== "Tab" || !node) return;
+      const focusables = getFocusableElements(node);
+      if (!focusables.length) {
+        event.preventDefault();
+        return;
+      }
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
+      const focusedElement = document.activeElement;
+      const focusIsOutside = !node.contains(focusedElement);
+
+      if (event.shiftKey && (focusedElement === first || focusIsOutside)) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && (focusedElement === last || focusIsOutside)) {
         event.preventDefault();
         first.focus();
       }

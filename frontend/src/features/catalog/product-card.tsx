@@ -22,18 +22,18 @@ export function ProductCard({
 
   return (
     <article
-      className="group/card @container relative flex h-full flex-col bg-[var(--paper)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow] duration-[400ms] ease-[var(--ease)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(23,63,42,0.12)]"
+      className="group/card @container relative flex h-full flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow,ring-color] duration-[420ms] ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] hover:ring-[color-mix(in_srgb,var(--product-accent)_34%,transparent)]"
       style={style}
     >
       {/* Jar image area */}
-      <div className="relative flex h-[clamp(260px,24vw,380px)] flex-none items-center justify-center overflow-hidden [background:linear-gradient(160deg,color-mix(in_srgb,var(--product-soft)_60%,white),color-mix(in_srgb,var(--product-soft)_85%,var(--paper)))] max-[680px]:h-[clamp(170px,46vw,230px)]">
+      <div className="relative flex h-[clamp(260px,24vw,380px)] flex-none items-center justify-center overflow-hidden [background:radial-gradient(circle_at_50%_42%,rgba(255,255,255,0.82)_0_18%,transparent_19%),linear-gradient(155deg,color-mix(in_srgb,var(--product-soft)_48%,white),color-mix(in_srgb,var(--product-soft)_90%,var(--paper)))] before:absolute before:inset-[12%] before:rounded-full before:border before:border-[color-mix(in_srgb,var(--product-accent)_18%,transparent)] before:content-[''] after:absolute after:inset-[22%] after:rounded-full after:border after:border-[color-mix(in_srgb,var(--product-accent)_12%,transparent)] after:content-[''] max-[680px]:h-[clamp(250px,70vw,340px)]">
 
         {/* Wishlist */}
         <button
-          className={`absolute top-2.5 right-2.5 z-[3] grid size-9 place-items-center rounded-full border text-[1.05rem] transition-[background,color] duration-200 max-[680px]:size-8 max-[680px]:text-[0.95rem] ${
+          className={`absolute top-3 right-3 z-[3] grid size-11 place-items-center rounded-full border text-[1.05rem] shadow-[0_8px_24px_rgba(21,59,45,0.08)] backdrop-blur-md transition-[background,color,transform,border-color] duration-200 hover:scale-105 active:scale-95 ${
             wished
               ? "border-[var(--product-accent)] bg-[var(--paper)] text-[var(--product-accent)]"
-              : "border-[rgba(23,63,42,0.15)] bg-[rgba(255,255,255,0.72)] text-[var(--muted)]"
+              : "border-white/70 bg-[rgba(255,252,245,0.78)] text-[var(--forest)] hover:border-[var(--product-accent)] hover:text-[var(--product-accent)]"
           }`}
           type="button"
           onClick={() => toggleWishlist(product.slug)}
@@ -46,7 +46,7 @@ export function ProductCard({
         {/* Jar — centered listing image */}
         <Link
           href={`/shop/${product.slug}`}
-          className="relative z-[2] flex items-center justify-center transition-transform duration-[400ms] ease-[var(--ease)] group-hover/card:-translate-y-1.5"
+          className="relative z-[2] flex items-center justify-center transition-transform duration-[520ms] ease-[var(--ease)] group-hover/card:-translate-y-2 group-hover/card:scale-[1.025]"
           onClick={() => track("select_item", { item_id: product.slug, placement: "product_card" })}
           aria-label={`View ${product.name}`}
         >
@@ -60,36 +60,36 @@ export function ProductCard({
       </div>
 
       {/* Info area */}
-      <div className="flex flex-1 flex-col border-t border-[rgba(23,63,42,0.1)] px-5 pb-5 pt-4 max-[680px]:px-3 max-[680px]:pb-4 max-[680px]:pt-3">
-        <p className="mb-1.5 text-[0.58rem] font-bold tracking-[0.18em] text-[var(--product-accent)] uppercase max-[680px]:text-[0.52rem]">
+      <div className="flex flex-1 flex-col border-t border-[var(--line)] px-6 pt-5 pb-6 max-[680px]:px-5 max-[680px]:pt-5 max-[680px]:pb-5">
+        <p className="mb-2 text-[0.65rem] font-bold tracking-[0.16em] text-[var(--product-accent)] uppercase">
           Ritual {product.collectionNumber}
         </p>
 
         <Link
           href={`/shop/${product.slug}`}
-          className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,2rem)] leading-[1.04] tracking-[-0.035em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:text-[1.05rem] max-[680px]:leading-[1.1]"
+          className="mb-1.5 block [font-family:var(--font-display)] text-[clamp(1.65rem,1.85vw,2.15rem)] leading-[1.02] tracking-[-0.035em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:text-[1.65rem]"
           onClick={() => track("select_item", { item_id: product.slug, placement: "product_title" })}
         >
           {product.name}
         </Link>
 
-        <p className="mb-0 text-[0.7rem] leading-[1.5] text-[var(--muted)] max-[680px]:text-[0.62rem] max-[680px]:leading-[1.45] max-[680px]:line-clamp-2">
+        <p className="mb-0 text-[0.78rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.76rem] max-[680px]:line-clamp-2">
           {product.subtitle}
         </p>
 
-        <div className="mt-auto pt-4 max-[680px]:pt-3">
-          <div className="flex items-center justify-between gap-2 border-t border-[rgba(23,63,42,0.1)] pt-3.5 max-[680px]:pt-2.5">
+        <div className="mt-auto pt-5">
+          <div className="flex items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
             <div>
-              <span className="block [font-family:var(--font-display)] text-[1.1rem] leading-none text-[var(--forest)] max-[680px]:text-[0.96rem]">
+              <span className="block [font-family:var(--font-display)] text-[1.3rem] leading-none text-[var(--forest)]">
                 {formatCurrency(product.pricePaise)}
               </span>
-              <span className="mt-0.5 block text-[0.44rem] tracking-[0.1em] text-[var(--muted)] uppercase max-[680px]:hidden">
+              <span className="mt-1 block text-[0.58rem] tracking-[0.1em] text-[var(--muted)] uppercase max-[680px]:hidden">
                 Preview price
               </span>
             </div>
             <button
               type="button"
-              className="grid size-[42px] place-items-center rounded-full border border-[var(--product-accent)] text-[1.25rem] text-[var(--product-accent)] transition-[background,color,transform] duration-[240ms] ease-[ease] hover:bg-[var(--product-accent)] hover:text-white hover:[transform:scale(1.05)] active:scale-95 max-[680px]:size-[38px] max-[680px]:text-[1.1rem]"
+              className="grid size-12 place-items-center rounded-full border border-[var(--product-accent)] bg-[var(--product-accent)] text-[1.3rem] text-white shadow-[0_8px_22px_color-mix(in_srgb,var(--product-accent)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95"
               onClick={() => addToCart(product.slug)}
               aria-label={`Add ${product.name} to bag`}
             >

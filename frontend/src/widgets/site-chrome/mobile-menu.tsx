@@ -20,9 +20,9 @@ export function MobileMenu({
   onSearch,
 }: MobileMenuProps) {
   const mobileLinkClass =
-    "flex min-h-[68px] items-center justify-between gap-5 border-b border-[var(--line)] font-serif text-[clamp(1.45rem,7vw,1.75rem)] text-[var(--forest)] transition-[padding,color] duration-300 ease-[var(--ease)] hover:pl-1 hover:text-[var(--botanical)] aria-[current=page]:text-[var(--botanical)]";
+    "flex min-h-[72px] items-center justify-between gap-5 border-b border-[var(--line)] px-1 font-serif text-[clamp(1.5rem,5vw,1.85rem)] text-[var(--forest)] transition-[padding,color,background-color] duration-300 ease-[var(--ease)] hover:bg-[color-mix(in_srgb,var(--botanical)_5%,transparent)] hover:pl-3 hover:pr-3 hover:text-[var(--botanical)] aria-[current=page]:text-[var(--botanical)]";
   const utilityLinkClass =
-    "inline-flex min-h-11 items-center border-b border-[var(--line)] text-[0.66rem] font-bold tracking-[0.1em] text-[var(--forest)] uppercase transition-colors hover:text-[var(--botanical)] aria-[current=page]:text-[var(--botanical)]";
+    "inline-flex min-h-12 items-center border-b border-[var(--line)] text-[0.7rem] font-bold tracking-[0.09em] text-[var(--forest)] uppercase transition-colors hover:text-[var(--botanical)] aria-[current=page]:text-[var(--botanical)]";
 
   const handleSearch = () => {
     onClose();
@@ -37,7 +37,7 @@ export function MobileMenu({
       aria-hidden={!open}
     >
       <button
-        className={`absolute inset-0 bg-[rgba(11,29,18,0.56)] backdrop-blur-[4px] transition-opacity duration-[380ms] ease-[ease] ${
+        className={`absolute inset-0 rounded-none bg-[rgba(8,31,22,0.62)] backdrop-blur-[6px] transition-opacity duration-[380ms] ease-[ease] ${
           open ? "opacity-100" : "opacity-0"
         }`}
         type="button"
@@ -46,7 +46,7 @@ export function MobileMenu({
         tabIndex={-1}
       />
       <aside
-        className={`absolute inset-y-0 right-0 hidden w-[min(440px,100%)] overflow-y-auto overscroll-contain bg-[var(--paper)] pb-[calc(28px+env(safe-area-inset-bottom))] shadow-[-30px_0_70px_rgba(0,0,0,0.15)] transition-[transform] duration-[520ms] ease-[var(--ease)] max-[680px]:block ${
+        className={`absolute inset-y-0 right-0 hidden w-[min(470px,100%)] overflow-y-auto overscroll-contain rounded-l-[var(--radius-lg)] border-l border-[var(--line)] bg-[var(--paper)] pb-[calc(28px+env(safe-area-inset-bottom))] shadow-[-30px_0_70px_rgba(8,31,22,0.22)] transition-[transform] duration-[520ms] ease-[var(--ease)] max-[900px]:block max-[680px]:rounded-none ${
           open ? "[transform:translateX(0)]" : "[transform:translateX(102%)]"
         }`}
         ref={menuRef}
@@ -55,13 +55,13 @@ export function MobileMenu({
         aria-modal="true"
         aria-label="Mobile navigation"
       >
-        <div className="flex min-h-[88px] items-center justify-between border-b border-[var(--line)] pr-[max(20px,env(safe-area-inset-right))] pb-[17px] pl-[max(20px,env(safe-area-inset-left))] pt-[calc(17px+env(safe-area-inset-top))]">
+        <div className="flex min-h-[92px] items-center justify-between border-b border-[var(--line)] bg-[linear-gradient(135deg,var(--paper),var(--surface-warm))] pr-[max(24px,env(safe-area-inset-right))] pb-[17px] pl-[max(24px,env(safe-area-inset-left))] pt-[calc(17px+env(safe-area-inset-top))] max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]">
           <Link href="/" aria-label="NatureMist home" onClick={onClose}>
             <BrandMark />
           </Link>
           <button
             type="button"
-            className="grid h-11 w-11 place-items-center rounded-full border border-[var(--line)] bg-transparent text-[1.5rem] text-[var(--forest)] transition-[transform,background] duration-[280ms] ease-[ease] hover:bg-[var(--ivory)] hover:[transform:rotate(90deg)]"
+            className="grid h-11 w-11 place-items-center rounded-full border border-[var(--line-strong)] bg-[rgba(255,252,245,0.72)] text-[1.45rem] text-[var(--forest)] transition-[transform,background] duration-[280ms] ease-[ease] hover:bg-[var(--ivory)] hover:[transform:rotate(90deg)]"
             onClick={onClose}
             data-autofocus
           >
@@ -70,7 +70,7 @@ export function MobileMenu({
           </button>
         </div>
         <nav
-          className="grid pr-[max(20px,env(safe-area-inset-right))] pb-8 pl-[max(20px,env(safe-area-inset-left))] pt-4"
+          className="grid pr-[max(24px,env(safe-area-inset-right))] pb-8 pl-[max(24px,env(safe-area-inset-left))] pt-4 max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]"
           aria-label="Mobile primary navigation"
         >
           <Link
@@ -115,17 +115,17 @@ export function MobileMenu({
             </span>
           </Link>
         </nav>
-        <div className="pr-[max(20px,env(safe-area-inset-right))] pl-[max(20px,env(safe-area-inset-left))]">
+        <div className="pr-[max(24px,env(safe-area-inset-right))] pl-[max(24px,env(safe-area-inset-left))] max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]">
           <button
             type="button"
-            className="inline-flex min-h-[50px] w-full items-center justify-center gap-[22px] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--forest)] uppercase transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
+            className="inline-flex min-h-[52px] w-full items-center justify-center gap-[18px] rounded-[var(--radius-pill)] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.74rem] font-bold uppercase leading-none tracking-[0.11em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)]"
             onClick={handleSearch}
           >
             Search botanicals <span aria-hidden="true">↗</span>
           </button>
         </div>
         <nav
-          className="mt-6 grid grid-cols-2 gap-x-5 pr-[max(20px,env(safe-area-inset-right))] pl-[max(20px,env(safe-area-inset-left))]"
+          className="mt-6 grid grid-cols-2 gap-x-6 pr-[max(24px,env(safe-area-inset-right))] pl-[max(24px,env(safe-area-inset-left))] max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]"
           aria-label="Customer care"
         >
           <Link
@@ -163,7 +163,7 @@ export function MobileMenu({
             Terms
           </Link>
         </nav>
-        <p className="mt-[26px] pr-[max(20px,env(safe-area-inset-right))] pl-[max(20px,env(safe-area-inset-left))] text-center text-[0.65rem] tracking-[0.12em] text-[var(--muted)] uppercase">
+        <p className="mt-[30px] pr-[max(24px,env(safe-area-inset-right))] pl-[max(24px,env(safe-area-inset-left))] text-center text-[0.7rem] tracking-[0.11em] text-[var(--muted)] uppercase max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]">
           One ingredient. Clearly explained.
         </p>
       </aside>

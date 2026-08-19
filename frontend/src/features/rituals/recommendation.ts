@@ -1,4 +1,8 @@
-import { getProduct, type RitualGoal } from "@/domain/catalog/products";
+import {
+  getProduct,
+  type Product,
+  type RitualGoal,
+} from "@/domain/catalog/products";
 
 export const goalOptions: Array<{
   goal: RitualGoal;
@@ -20,15 +24,42 @@ export const hairFeels = [
 
 export type HairFeel = (typeof hairFeels)[number];
 
-export function recommendRitual(goal: RitualGoal, hairFeel: HairFeel) {
-  if (goal === "Botanical Colour") return getProduct("indigo-powder")!;
-  if (goal === "Scalp Ritual") return getProduct("bhringraj-powder")!;
+export type RitualRecommendation = {
+  product: Product;
+  requiresColourReview: boolean;
+  guidance?: string;
+};
+
+function recommendation(
+  slug: string,
+  options: Omit<RitualRecommendation, "product"> = {
+    requiresColourReview: false,
+  },
+): RitualRecommendation {
+  return { product: getProduct(slug)!, ...options };
+}
+
+export function recommendRitual(
+  goal: RitualGoal,
+  hairFeel: HairFeel,
+): RitualRecommendation {
+  if (goal === "Botanical Colour") {
+    const requiresColourReview = hairFeel === "Very light / coloured";
+
+    return recommendation("indigo-powder", {
+      requiresColourReview,
+      guidance: requiresColourReview
+        ? "Because you selected very light or coloured hair, begin with the Indigo guidance instead of adding it straight to your bag. Botanical colour can shift differently on grey, blonde, bleached, porous or previously coloured hair, so read the final pack directions and complete a strand test before deciding."
+        : undefined,
+    });
+  }
+  if (goal === "Scalp Ritual") return recommendation("bhringraj-powder");
   if (goal === "Cleanse") {
     return hairFeel === "Oily"
-      ? getProduct("reetha-powder")!
-      : getProduct("shikakai-powder")!;
+      ? recommendation("reetha-powder")
+      : recommendation("shikakai-powder");
   }
   return hairFeel === "Dry / textured"
-    ? getProduct("hibiscus-powder")!
-    : getProduct("amla-powder")!;
+    ? recommendation("hibiscus-powder")
+    : recommendation("amla-powder");
 }

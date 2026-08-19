@@ -28,6 +28,21 @@ export default function TrackOrderPage() {
           <p className="max-w-[620px] leading-[1.75] text-[var(--muted)]">
             Tracking data is never invented. Until a fulfilment provider is connected, this preview keeps every reference on your device only.
           </p>
+          <ol className="mt-8 grid list-none gap-3 p-0" aria-label="Future order journey">
+            {[
+              ["01", "Order confirmed", "Your reference and receipt will be issued together."],
+              ["02", "Packed with care", "Dispatch details will appear after the carrier scans the parcel."],
+              ["03", "On its way", "Live milestones will come directly from the fulfilment provider."],
+            ].map(([number, title, copy]) => (
+              <li className="grid grid-cols-[38px_1fr] gap-3 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--paper)] p-4" key={number}>
+                <span className="text-[0.65rem] font-bold text-[var(--botanical)]">{number}</span>
+                <span>
+                  <strong className="block font-serif text-[1.1rem] font-normal text-[var(--forest)]">{title}</strong>
+                  <small className="mt-1 block text-[0.72rem] leading-[1.55] text-[var(--muted)]">{copy}</small>
+                </span>
+              </li>
+            ))}
+          </ol>
         </div>
         <TrackingForm />
       </section>

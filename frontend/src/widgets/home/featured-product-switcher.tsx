@@ -13,7 +13,7 @@ export function FeaturedProductSwitcher() {
 
   return (
     <div
-      className="grid min-h-[580px] min-w-0 grid-cols-[0.42fr_0.78fr_0.8fr] overflow-hidden border-y border-[color-mix(in_srgb,var(--family-accent)_22%,transparent)] bg-[color-mix(in_srgb,var(--family-soft)_75%,var(--ivory))] [--family-accent:var(--botanical)] [--family-soft:var(--beige)] [transition:background-color_600ms_var(--ease)] motion-reduce:transition-none max-[1180px]:grid-cols-[minmax(145px,0.36fr)_minmax(220px,0.64fr)_minmax(220px,0.8fr)] max-[900px]:min-h-[520px] max-[900px]:grid-cols-[minmax(130px,0.35fr)_minmax(190px,0.62fr)_minmax(205px,0.82fr)] max-[680px]:min-h-0 max-[680px]:grid-cols-1"
+      className="grid min-h-[580px] min-w-0 grid-cols-[0.42fr_0.78fr_0.8fr] overflow-hidden rounded-[var(--radius-lg)] border border-[color-mix(in_srgb,var(--family-accent)_22%,transparent)] bg-[color-mix(in_srgb,var(--family-soft)_75%,var(--ivory))] shadow-[var(--shadow-soft)] [--family-accent:var(--botanical)] [--family-soft:var(--beige)] [transition:background-color_600ms_var(--ease),border-color_600ms_var(--ease)] motion-reduce:transition-none max-[1180px]:grid-cols-[minmax(145px,0.36fr)_minmax(220px,0.64fr)_minmax(220px,0.8fr)] max-[900px]:min-h-[520px] max-[900px]:grid-cols-[minmax(130px,0.35fr)_minmax(190px,0.62fr)_minmax(205px,0.82fr)] max-[680px]:min-h-0 max-[680px]:grid-cols-1 max-[680px]:rounded-[var(--radius-md)]"
       style={{
         "--family-accent": product.accent,
         "--family-soft": product.accentSoft,
@@ -29,7 +29,7 @@ export function FeaturedProductSwitcher() {
             key={item.slug}
             type="button"
             aria-pressed={item.slug === product.slug}
-            className={`flex min-h-[62px] items-center gap-[18px] border-b border-[color-mix(in_srgb,var(--family-accent)_17%,transparent)] bg-transparent pr-3 text-left [font-family:var(--font-display)] text-[1.15rem] [transition:color_250ms_ease,padding_250ms_ease] motion-reduce:transition-none hover:pl-[22px] hover:text-[var(--family-accent)] max-[900px]:min-h-[58px] max-[900px]:gap-3 max-[900px]:text-[1rem] max-[900px]:hover:pl-4 max-[680px]:min-w-[140px] max-[680px]:pr-4 max-[680px]:text-[1.1rem] max-[680px]:[scroll-snap-align:start] max-[680px]:hover:pl-4 ${
+            className={`flex min-h-[62px] items-center gap-[18px] border-b border-[color-mix(in_srgb,var(--family-accent)_17%,transparent)] bg-transparent pr-3 text-left [font-family:var(--font-display)] text-[1.15rem] [transition:color_250ms_ease,padding_250ms_ease,background-color_250ms_ease] motion-reduce:transition-none hover:bg-white/35 hover:pl-[22px] hover:text-[var(--family-accent)] max-[900px]:min-h-[58px] max-[900px]:gap-3 max-[900px]:text-[1rem] max-[900px]:hover:pl-4 max-[680px]:min-w-[140px] max-[680px]:pr-4 max-[680px]:text-[1.1rem] max-[680px]:[scroll-snap-align:start] max-[680px]:hover:pl-4 ${
               item.slug === product.slug
                 ? "pl-[22px] text-[var(--family-accent)] max-[900px]:pl-3 max-[680px]:pl-4"
                 : "pl-3 [color:color-mix(in_srgb,var(--family-accent)_50%,var(--muted))] max-[680px]:pl-4"
@@ -47,7 +47,7 @@ export function FeaturedProductSwitcher() {
         className="relative flex min-w-0 items-center justify-center overflow-hidden max-[900px]:min-h-[520px] max-[680px]:min-h-[380px]"
       >
         <span
-          className="absolute aspect-square w-[min(82%,400px)] rounded-full border border-[color-mix(in_srgb,var(--family-accent)_28%,transparent)] before:absolute before:inset-[11%] before:rounded-full before:border before:border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] before:content-[''] after:absolute after:inset-[24%] after:rounded-full after:border after:border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] after:content-['']"
+          className="absolute aspect-square w-[min(82%,400px)] rounded-full border border-[color-mix(in_srgb,var(--family-accent)_28%,transparent)] bg-[radial-gradient(circle,rgba(255,255,255,0.52),transparent_64%)] before:absolute before:inset-[11%] before:rounded-full before:border before:border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] before:content-[''] after:absolute after:inset-[24%] after:rounded-full after:border after:border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] after:content-['']"
           aria-hidden="true"
         />
         <div
@@ -89,7 +89,7 @@ export function FeaturedProductSwitcher() {
             View the ritual <span aria-hidden="true">↗</span>
           </Link>
           <button
-            className="grid size-[46px] shrink-0 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.3rem] text-[var(--paper)] [--product-accent:var(--forest)] [transition:background_260ms_ease,color_260ms_ease,transform_260ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:rotate(90deg)]"
+            className="grid size-12 shrink-0 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.3rem] text-[var(--paper)] shadow-[0_10px_24px_rgba(21,59,45,0.18)] [--product-accent:var(--forest)] [transition:background_260ms_ease,color_260ms_ease,transform_260ms_ease] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:text-[var(--paper)] hover:[transform:rotate(90deg)]"
             type="button"
             onClick={() => addToCart(product.slug)}
           >

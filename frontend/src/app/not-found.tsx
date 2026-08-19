@@ -7,7 +7,7 @@ export default function NotFound() {
       <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">This path has gone quiet</p>
       <h1 className="my-[15px] max-w-[12ch] font-serif text-[clamp(3.5rem,6vw,6.5rem)] font-normal leading-[0.9] tracking-[-0.06em] text-[var(--forest)] text-balance">The ritual isn’t here.</h1>
       <p className="max-w-[460px] leading-[1.7] text-[var(--muted)]">Return to the botanical cabinet and begin again.</p>
-      <Link className="mt-[15px] inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--paper)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)]" href="/shop">Explore the collection</Link>
+      <Link className="mt-[15px] inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--paper)] shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,color,border-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)]" href="/shop">Explore the collection</Link>
     </main>
   );
 }

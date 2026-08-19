@@ -41,7 +41,7 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
       </div>
       <div className="flex items-center gap-2.5 max-[680px]:mt-1 max-[680px]:gap-2">
         <button
-          className="inline-flex min-h-[48px] min-w-[min(245px,calc(100%_-_62px))] items-center justify-center gap-3 rounded-[2px] border border-transparent bg-[var(--botanical)] px-6 py-3 text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase shadow-[0_4px_14px_rgba(63,125,58,0.22)] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease),box-shadow_300ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)] active:[transform:scale(0.98)] max-[900px]:min-h-[46px] max-[900px]:px-4 max-[680px]:min-h-[46px] max-[680px]:min-w-0 max-[680px]:flex-1 max-[680px]:gap-2 max-[680px]:px-3 max-[680px]:text-[0.65rem] max-[680px]:tracking-[0.1em]"
+          className="inline-flex min-h-[52px] min-w-[min(245px,calc(100%_-_62px))] items-center justify-center gap-3 rounded-full border border-transparent bg-[var(--forest)] px-6 py-3 text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.2)] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease),box-shadow_300ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.24)] hover:[transform:translateY(-2px)] active:[transform:scale(0.98)] max-[900px]:min-h-[48px] max-[900px]:px-4 max-[680px]:min-w-0 max-[680px]:flex-1 max-[680px]:gap-2 max-[680px]:px-3 max-[680px]:text-[0.65rem] max-[680px]:tracking-[0.1em]"
           type="button"
           onClick={add}
         >

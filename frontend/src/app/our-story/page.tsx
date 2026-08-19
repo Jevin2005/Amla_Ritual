@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const heroImage = "/images/naturemist-hero.png";
 const storyPillarClass =
-  "min-h-[440px] bg-[var(--paper)] p-[38px] max-[900px]:min-h-[310px] max-[680px]:px-5 max-[680px]:py-7";
+  "min-h-[440px] bg-[var(--paper)] p-[38px] transition-[transform,background-color] duration-500 ease-[var(--ease)] hover:-translate-y-1 hover:bg-white max-[900px]:min-h-[310px] max-[680px]:px-5 max-[680px]:py-7";
 const storyPillarTitleClass =
   "mb-5 mt-[180px] font-serif text-[2.8rem] font-normal leading-[0.95] tracking-[-0.05em] text-[var(--forest)] max-[900px]:mt-[100px]";
 
@@ -24,6 +24,7 @@ export default function OurStoryPage() {
             src={heroImage}
             alt="Indian woman with naturally long dark hair in a sunlit botanical setting"
             fill
+            loading="eager"
             sizes="100vw"
             fetchPriority="high"
             className="object-cover max-[680px]:object-[64%_center]"
@@ -57,25 +58,25 @@ export default function OurStoryPage() {
       </section>
 
       <section className="mb-[130px] px-[clamp(24px,5vw,72px)] max-[680px]:mb-20 max-[680px]:px-5">
-        <div className="mx-auto grid w-full max-w-[1296px] grid-cols-3 gap-px bg-[var(--line)] max-[900px]:grid-cols-1">
+        <div className="mx-auto grid w-full max-w-[1296px] grid-cols-3 gap-px overflow-hidden rounded-[var(--radius-lg)] bg-[var(--line)] shadow-[var(--shadow-soft)] ring-1 ring-[var(--line)] max-[900px]:grid-cols-1 max-[680px]:rounded-[var(--radius-md)]">
           <article className={storyPillarClass}>
           <span className="text-[0.62rem] text-[var(--botanical)]">01</span>
           <h2 className={storyPillarTitleClass}>Name what is inside.</h2>
-          <p className="text-[0.8rem] leading-[1.7] text-[var(--muted)]">
+          <p className="text-[0.84rem] leading-[1.75] text-[var(--muted)]">
             The botanical, the plant part, the batch and the way to use it belong in plain sight—not behind inflated language.
           </p>
           </article>
           <article className={storyPillarClass}>
           <span className="text-[0.62rem] text-[var(--botanical)]">02</span>
           <h2 className={storyPillarTitleClass}>Teach before selling.</h2>
-          <p className="text-[0.8rem] leading-[1.7] text-[var(--muted)]">
+          <p className="text-[0.84rem] leading-[1.75] text-[var(--muted)]">
             Beginners deserve practical preparation and safety guidance. Familiar users deserve the same precision.
           </p>
           </article>
           <article className={storyPillarClass}>
           <span className="text-[0.62rem] text-[var(--botanical)]">03</span>
           <h2 className={storyPillarTitleClass}>Let the ritual stay beautiful.</h2>
-          <p className="text-[0.8rem] leading-[1.7] text-[var(--muted)]">
+          <p className="text-[0.84rem] leading-[1.75] text-[var(--muted)]">
             Care can be effective, tactile and deeply desirable without becoming loud, rushed or excessive.
           </p>
           </article>
@@ -93,7 +94,7 @@ export default function OurStoryPage() {
             Final sourcing, processing and certification details will be published only when verified for each batch and pack. That standard of restraint is part of the brand.
           </p>
           <Link
-            className="mt-[18px] inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)]"
+            className="mt-[18px] inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] shadow-[0_10px_26px_rgba(0,0,0,0.18)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)]"
             href="/shop"
           >
             Meet the botanicals ↗
