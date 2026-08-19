@@ -27,9 +27,9 @@ export function NewsletterForm() {
       >
         Email address
       </label>
-      <div className="grid grid-cols-[1fr_48px] border-b border-[rgba(255,255,255,0.65)]">
+      <div className="grid grid-cols-[1fr_52px] overflow-hidden rounded-full border border-[rgba(255,255,255,0.3)] bg-white/6 p-1 focus-within:border-[var(--amla)] focus-within:ring-4 focus-within:ring-[rgba(183,212,90,0.12)]">
         <input
-          className="h-[58px] border-0 bg-transparent text-[var(--paper)] outline-none placeholder:text-[rgba(255,255,255,0.36)]"
+          className="h-[54px] rounded-full border-0 bg-transparent px-4 text-[var(--paper)] outline-none shadow-none placeholder:text-[rgba(255,255,255,0.5)] focus:shadow-none"
           id="newsletter-email"
           type="email"
           value={email}
@@ -39,7 +39,7 @@ export function NewsletterForm() {
           required
         />
         <button
-          className="bg-transparent text-[1.4rem] text-[var(--amla)]"
+          className="grid size-[52px] place-items-center rounded-full bg-[var(--amla)] text-[1.3rem] text-[var(--forest-dark)] transition-[transform,background-color] hover:scale-[1.03] hover:bg-[var(--paper)]"
           type="submit"
           aria-label="Join the NatureMist newsletter"
         >
@@ -47,7 +47,7 @@ export function NewsletterForm() {
         </button>
       </div>
       <p
-        className="mt-2 min-h-5 text-[0.64rem] text-[rgba(255,255,255,0.48)]"
+        className="mt-2 min-h-5 text-[0.68rem] text-[rgba(255,255,255,0.7)]"
         id="newsletter-note"
         role="status"
       >

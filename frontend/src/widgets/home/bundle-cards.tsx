@@ -19,11 +19,11 @@ export function BundleCards() {
         const total = bundleProducts.reduce((sum, product) => sum + product.pricePaise, 0);
         return (
           <article
-            className="flex h-full flex-col overflow-hidden bg-[var(--paper)] ring-1 ring-[var(--line)]"
+            className="group/bundle flex h-full flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] transition-[transform,box-shadow] duration-500 ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)]"
             key={bundle.id}
           >
             <div
-              className={`relative flex h-[320px] items-end justify-center pb-[30px] ${bundleBackgrounds[index]} max-[520px]:h-[290px] max-[520px]:pb-6`}
+              className={`relative flex h-[320px] items-end justify-center overflow-hidden pb-[30px] ${bundleBackgrounds[index]} before:absolute before:inset-[12%] before:rounded-full before:border before:border-[rgba(21,59,45,0.13)] before:content-[''] after:absolute after:inset-[22%] after:rounded-full after:border after:border-[rgba(21,59,45,0.09)] after:content-[''] max-[520px]:h-[290px] max-[520px]:pb-6`}
               aria-hidden="true"
             >
               {bundleProducts.slice(0, 4).map((product, productIndex) => (
@@ -32,7 +32,7 @@ export function BundleCards() {
                   product={product}
                   size="small"
                   decorative
-                  className={`mx-[-9px] max-[1180px]:mx-[-15px] max-[380px]:mx-[-20px] ${
+                  className={`z-[2] mx-[-9px] transition-transform duration-500 ease-[var(--ease)] group-hover/bundle:-translate-y-1 max-[1180px]:mx-[-15px] max-[380px]:mx-[-20px] ${
                     productIndex % 2 === 1
                       ? "[transform:translateY(-14px)] max-[1180px]:[transform:translateY(-12px)_scale(0.88)] max-[380px]:[transform:translateY(-10px)_scale(0.74)]"
                       : "max-[1180px]:[transform:scale(0.88)] max-[380px]:[transform:scale(0.74)]"
@@ -46,13 +46,13 @@ export function BundleCards() {
               )}
             </div>
             <div className="flex flex-1 flex-col px-[30px] pt-7 pb-8 max-[680px]:px-6 max-[680px]:pt-[26px] max-[680px]:pb-[30px]">
-              <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">
+              <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.18em] text-[var(--botanical)] uppercase">
                 Ritual set {String(index + 1).padStart(2, "0")}
               </p>
               <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2rem,3vw,3.1rem)] leading-[0.98] font-normal tracking-[-0.045em]">
                 {bundle.name}
               </h3>
-              <p className="min-h-[50px] text-[0.78rem] [color:var(--muted)]">
+              <p className="min-h-[50px] text-[0.82rem] leading-[1.65] [color:var(--muted)]">
                 {bundle.description}
               </p>
               <div className="my-[22px] grid">
@@ -64,7 +64,7 @@ export function BundleCards() {
                 </small>
               </div>
               <button
-                className="mt-auto inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)]"
+                className="mt-auto inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase shadow-[0_10px_24px_rgba(21,59,45,0.14)] [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),box-shadow_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.2)] hover:[transform:translateY(-2px)]"
                 type="button"
                 onClick={() => addManyToCart(bundle.slugs)}
               >

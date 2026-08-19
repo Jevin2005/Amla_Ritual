@@ -8,7 +8,7 @@ import { useStore } from "@/features/store/store-provider";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
 
 const darkButtonClass =
-  "inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:bg-[var(--forest-dark)] hover:[transform:translateY(-2px)]";
+  "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,color,border-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)] hover:[transform:translateY(-2px)]";
 const textLinkClass =
   "items-center gap-[14px] border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px]";
 
@@ -52,7 +52,7 @@ export function CartDrawer() {
         tabIndex={isCartOpen ? 0 : -1}
       />
       <aside
-        className={`absolute inset-y-0 right-0 w-[min(500px,100%)] overflow-y-auto bg-[var(--paper)] shadow-[-30px_0_70px_rgba(0,0,0,0.15)] transition-[transform] duration-[520ms] ease-[var(--ease)] ${
+        className={`absolute inset-y-0 right-0 w-[min(500px,100%)] overflow-y-auto rounded-l-[var(--radius-lg)] bg-[var(--paper)] shadow-[-30px_0_70px_rgba(0,0,0,0.15)] transition-[transform] duration-[520ms] ease-[var(--ease)] max-[680px]:rounded-none ${
           isCartOpen ? "[transform:translateX(0)]" : "[transform:translateX(102%)]"
         }`}
         ref={drawerRef}
@@ -60,7 +60,7 @@ export function CartDrawer() {
         aria-modal="true"
         aria-labelledby="bag-title"
       >
-        <div className="flex min-h-[105px] items-center justify-between border-b border-[var(--line)] px-[30px] py-[22px] max-[680px]:min-h-[88px] max-[680px]:px-5 max-[680px]:py-[17px]">
+        <div className="sticky top-0 z-10 flex min-h-[105px] items-center justify-between border-b border-[var(--line)] bg-[rgba(255,252,245,0.92)] px-[30px] py-[22px] backdrop-blur-xl max-[680px]:min-h-[88px] max-[680px]:px-5 max-[680px]:py-[17px]">
           <div>
             <p className="m-0 mb-1 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">
               Your selection
@@ -116,7 +116,7 @@ export function CartDrawer() {
                     key={item.slug}
                   >
                     <div
-                      className="flex h-[150px] items-end justify-center overflow-hidden pb-[5px]"
+                      className="flex h-[150px] items-end justify-center overflow-hidden rounded-[var(--radius-sm)] pb-[5px] ring-1 ring-[var(--line)]"
                       style={{ backgroundColor: product.accentSoft }}
                     >
                       <ProductJar product={product} size="small" decorative />
@@ -136,7 +136,7 @@ export function CartDrawer() {
                       </div>
                       <div className="flex items-center justify-between gap-3">
                         <div
-                          className="inline-grid h-[38px] grid-cols-[36px_32px_36px] items-center border border-[var(--line)]"
+                            className="inline-grid h-[40px] grid-cols-[38px_32px_38px] items-center overflow-hidden rounded-full border border-[var(--line)] bg-[var(--ivory)]"
                           aria-label={`Quantity for ${product.name}`}
                         >
                           <button
@@ -183,16 +183,16 @@ export function CartDrawer() {
                 >
                   Discount code
                 </label>
-                <div className="grid grid-cols-[1fr_auto]">
+                <div className="grid grid-cols-[1fr_auto] overflow-hidden rounded-[var(--radius-sm)] ring-1 ring-[var(--line)] focus-within:ring-[var(--botanical)]">
                   <input
-                    className="h-[47px] min-w-0 border border-[var(--line)] bg-[var(--paper)] px-3.5 outline-none"
+                    className="h-[52px] min-w-0 rounded-none border-0 bg-[var(--paper)] px-4 outline-none focus:shadow-none"
                     id="discount-code"
                     value={discount}
                     onChange={(event) => setDiscount(event.target.value)}
                     placeholder="Enter code"
                   />
                   <button
-                    className="bg-[var(--forest)] px-[18px] text-[0.62rem] tracking-[0.08em] text-[var(--paper)] uppercase"
+                    className="bg-[var(--forest)] px-5 text-[0.66rem] font-bold tracking-[0.08em] text-[var(--paper)] uppercase transition-colors hover:bg-[var(--forest-dark)]"
                     type="submit"
                   >
                     Apply

@@ -22,66 +22,80 @@ export function ProductCard({
 
   return (
     <article
-      className="relative flex h-full min-w-0 flex-col bg-[var(--paper)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow] duration-[480ms] ease-[var(--ease)] hover:z-[2] hover:-translate-y-1.5 hover:shadow-[var(--shadow-soft)]"
+      className="group/card @container relative flex h-full flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow,ring-color] duration-[420ms] ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] hover:ring-[color-mix(in_srgb,var(--product-accent)_34%,transparent)]"
       style={style}
     >
-      <div className="relative flex h-[clamp(330px,28vw,430px)] flex-none items-end justify-center overflow-hidden pb-[35px] [background:radial-gradient(circle_at_50%_78%,rgba(255,255,255,0.95)_0,rgba(255,255,255,0.28)_28%,transparent_55%),linear-gradient(145deg,color-mix(in_srgb,var(--product-soft)_72%,white),var(--product-soft))] before:absolute before:top-[14%] before:h-[65%] before:w-[65%] before:rounded-t-[50%] before:border before:border-[color-mix(in_srgb,var(--product-accent)_35%,transparent)] before:content-[''] max-[800px]:pb-7 max-[680px]:h-[clamp(360px,70vw,430px)] max-[520px]:h-[360px]">
-        <span className="absolute top-[14%] right-[7%] h-40 w-[100px] rotate-24 before:absolute before:left-1/2 before:h-full before:w-px before:bg-[color-mix(in_srgb,var(--product-accent)_45%,transparent)] before:content-[''] [&>i]:absolute [&>i]:h-[18px] [&>i]:w-[37px] [&>i]:rounded-[100%_0_100%_0] [&>i]:bg-[color-mix(in_srgb,var(--product-accent)_25%,transparent)] [&>i:nth-child(1)]:top-5 [&>i:nth-child(1)]:left-4 [&>i:nth-child(2)]:top-[65px] [&>i:nth-child(2)]:right-[15px] [&>i:nth-child(2)]:-scale-x-100 [&>i:nth-child(3)]:top-[108px] [&>i:nth-child(3)]:left-[15px]" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
+      {/* Jar image area */}
+      <div className="relative flex h-[clamp(260px,24vw,380px)] flex-none items-center justify-center overflow-hidden [background:radial-gradient(circle_at_50%_42%,rgba(255,255,255,0.82)_0_18%,transparent_19%),linear-gradient(155deg,color-mix(in_srgb,var(--product-soft)_48%,white),color-mix(in_srgb,var(--product-soft)_90%,var(--paper)))] before:absolute before:inset-[12%] before:rounded-full before:border before:border-[color-mix(in_srgb,var(--product-accent)_18%,transparent)] before:content-[''] after:absolute after:inset-[22%] after:rounded-full after:border after:border-[color-mix(in_srgb,var(--product-accent)_12%,transparent)] after:content-[''] max-[680px]:h-[clamp(250px,70vw,340px)]">
+
+        {/* Wishlist */}
         <button
-          className={`absolute top-[17px] right-[17px] z-[4] grid size-11 place-items-center rounded-full border border-[color-mix(in_srgb,var(--product-accent)_30%,transparent)] text-[1.28rem] text-[var(--product-accent)] transition-[background,transform] duration-250 ease-[ease] hover:scale-[1.06] hover:bg-[var(--paper)] ${
+          className={`absolute top-3 right-3 z-[3] grid size-11 place-items-center rounded-full border text-[1.05rem] shadow-[0_8px_24px_rgba(21,59,45,0.08)] backdrop-blur-md transition-[background,color,transform,border-color] duration-200 hover:scale-105 active:scale-95 ${
             wished
-              ? "scale-[1.06] bg-[var(--paper)]"
-              : "bg-[rgba(255,255,255,0.58)]"
+              ? "border-[var(--product-accent)] bg-[var(--paper)] text-[var(--product-accent)]"
+              : "border-white/70 bg-[rgba(255,252,245,0.78)] text-[var(--forest)] hover:border-[var(--product-accent)] hover:text-[var(--product-accent)]"
           }`}
           type="button"
           onClick={() => toggleWishlist(product.slug)}
-          aria-label={`${wished ? "Remove" : "Save"} ${product.name} ${
-            wished ? "from" : "to"
-          } wishlist`}
+          aria-label={`${wished ? "Remove" : "Save"} ${product.name} ${wished ? "from" : "to"} wishlist`}
           aria-pressed={wished}
         >
           <span aria-hidden="true">{wished ? "♥" : "♡"}</span>
         </button>
+
+        {/* Jar — centered listing image */}
         <Link
           href={`/shop/${product.slug}`}
-          className="relative z-[2] flex min-h-[270px] min-w-[180px] items-end justify-center"
-          onClick={() =>
-            track("select_item", { item_id: product.slug, placement: "product_card" })
-          }
+          className="relative z-[2] flex items-center justify-center transition-transform duration-[520ms] ease-[var(--ease)] group-hover/card:-translate-y-2 group-hover/card:scale-[1.025]"
+          onClick={() => track("select_item", { item_id: product.slug, placement: "product_card" })}
           aria-label={`View ${product.name}`}
         >
-          <ProductJar product={product} size={compact ? "small" : "medium"} decorative />
+          <ProductJar
+            product={product}
+            size={compact ? "small" : "medium"}
+            className="max-[680px]:scale-[0.78] max-[680px]:origin-center"
+            decorative
+          />
         </Link>
       </div>
-      <div className="flex flex-1 flex-col px-[30px] pb-[30px] pt-7 max-[800px]:px-6 max-[680px]:pb-6">
-        <p className="mb-2 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--product-accent)] uppercase">Ritual {product.collectionNumber}</p>
+
+      {/* Info area */}
+      <div className="flex flex-1 flex-col border-t border-[var(--line)] px-6 pt-5 pb-6 max-[680px]:px-5 max-[680px]:pt-5 max-[680px]:pb-5">
+        <p className="mb-2 text-[0.65rem] font-bold tracking-[0.16em] text-[var(--product-accent)] uppercase">
+          Ritual {product.collectionNumber}
+        </p>
+
         <Link
           href={`/shop/${product.slug}`}
-          className="inline-block font-serif text-[clamp(1.8rem,2.2vw,2.5rem)] leading-none tracking-[-0.04em] text-[var(--forest)]"
-          onClick={() =>
-            track("select_item", { item_id: product.slug, placement: "product_title" })
-          }
+          className="mb-1.5 block [font-family:var(--font-display)] text-[clamp(1.65rem,1.85vw,2.15rem)] leading-[1.02] tracking-[-0.035em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:text-[1.65rem]"
+          onClick={() => track("select_item", { item_id: product.slug, placement: "product_title" })}
         >
           {product.name}
         </Link>
-        <p className="mb-6 mt-2.5 min-h-[2.5em] text-[0.78rem] leading-[1.5] tracking-[0.04em] text-[var(--muted)]">{product.subtitle}</p>
-        <div className="mt-auto flex items-end justify-between gap-[15px] border-t border-[var(--line)] pt-5">
-          <div className="grid">
-            <span className="font-serif text-xl text-[var(--forest)]">{formatCurrency(product.pricePaise)}</span>
-            <span className="text-[0.52rem] tracking-[0.11em] text-[var(--muted)] uppercase">Preview price</span>
+
+        <p className="mb-0 text-[0.78rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.76rem] max-[680px]:line-clamp-2">
+          {product.subtitle}
+        </p>
+
+        <div className="mt-auto pt-5">
+          <div className="flex items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
+            <div>
+              <span className="block [font-family:var(--font-display)] text-[1.3rem] leading-none text-[var(--forest)]">
+                {formatCurrency(product.pricePaise)}
+              </span>
+              <span className="mt-1 block text-[0.58rem] tracking-[0.1em] text-[var(--muted)] uppercase max-[680px]:hidden">
+                Preview price
+              </span>
+            </div>
+            <button
+              type="button"
+              className="grid size-12 place-items-center rounded-full border border-[var(--product-accent)] bg-[var(--product-accent)] text-[1.3rem] text-white shadow-[0_8px_22px_color-mix(in_srgb,var(--product-accent)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95"
+              onClick={() => addToCart(product.slug)}
+              aria-label={`Add ${product.name} to bag`}
+            >
+              <span aria-hidden="true">＋</span>
+            </button>
           </div>
-          <button
-            type="button"
-            className="grid size-[46px] flex-none place-items-center rounded-full border border-[var(--product-accent,var(--forest))] bg-transparent text-[1.3rem] text-[var(--product-accent,var(--forest))] transition-[background,color,transform] duration-[260ms] ease-[ease] hover:rotate-90 hover:bg-[var(--product-accent,var(--forest))] hover:text-[var(--paper)]"
-            onClick={() => addToCart(product.slug)}
-            aria-label={`Add ${product.name} to bag`}
-          >
-            <span aria-hidden="true">＋</span>
-          </button>
         </div>
       </div>
     </article>

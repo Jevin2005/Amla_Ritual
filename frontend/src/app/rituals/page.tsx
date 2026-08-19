@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
+import { PageHero } from "@/shared/ui/page-hero";
 
 const ritualImage = "/images/naturemist-ritual.png";
 const ritualPathClass =
@@ -23,15 +24,11 @@ export const metadata: Metadata = {
 export default function RitualsPage() {
   return (
     <main id="main-content">
-      <section className="grid min-h-[430px] items-end bg-[linear-gradient(90deg,rgba(247,244,232,0.97),rgba(247,244,232,0.55)),repeating-radial-gradient(ellipse_at_82%_45%,rgba(63,125,58,0.12)_0_12px,transparent_13px_32px),var(--ivory-deep)] pb-[70px] pt-[95px] max-[680px]:min-h-[350px] max-[680px]:pb-[52px] max-[680px]:pt-[72px]">
-        <div className="mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] max-[680px]:px-5">
-          <div className="max-w-[820px]">
-            <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">The ritual room</p>
-            <h1 className="m-0 max-w-[14ch] font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]">Ancient care,<br />made clear.</h1>
-            <p className="mb-0 mt-7 max-w-[620px] text-base leading-[1.7] text-[var(--muted)] max-[680px]:mt-5 max-[680px]:text-[0.94rem]">A calm guide to choosing, preparing and understanding single-botanical powders.</p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="The ritual room"
+        title={<><span>Ancient care,</span><br />made clear.</>}
+        description="A calm guide to choosing, preparing and understanding single-botanical powders."
+      />
 
       <section className="bg-[var(--forest)] text-[var(--paper)]" aria-labelledby="page-builder-title">
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[0.72fr_1.28fr] gap-[clamp(50px,7vw,100px)] px-[clamp(24px,5vw,72px)] py-[clamp(80px,9vw,130px)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[72px]">
@@ -44,7 +41,7 @@ export default function RitualsPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-[1440px] grid-cols-[0.86fr_1.14fr] items-center gap-[clamp(50px,7vw,100px)] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[75px]">
+      <section className="mx-auto grid w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] grid-cols-[0.86fr_1.14fr] items-center gap-[clamp(50px,7vw,100px)] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[75px]" id="foundational-rhythm">
         <div className="relative min-h-[clamp(560px,50vw,660px)] overflow-hidden rounded-[50%_50%_0_0/16%_16%_0_0] max-[900px]:min-h-[560px] max-[680px]:min-h-[440px]">
           <Image src={ritualImage} alt="A fresh amla paste being mixed in a ceramic bowl" fill sizes="(max-width: 800px) 90vw, 42vw" className="object-cover" />
         </div>
@@ -60,19 +57,19 @@ export default function RitualsPage() {
         </div>
       </section>
 
-      <section className="bg-[#26345c] text-[var(--paper)]">
+      <section className="bg-[linear-gradient(135deg,#24304f,#19233f)] text-[var(--paper)]">
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[1fr_0.8fr] gap-[clamp(48px,7vw,96px)] px-[clamp(24px,5vw,72px)] py-[75px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[65px]">
           <div><p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[#c8d88e]">Care before colour</p><h2 className="m-0 max-w-[700px] font-serif text-[clamp(3rem,4.5vw,5rem)] font-normal leading-[0.95] tracking-[-0.05em] text-balance">Patch test. Strand test. Read every direction.</h2></div>
           <p className="mb-0 max-w-[600px] self-end leading-[1.75] text-white/68">Natural does not mean risk-free. Avoid eyes, inhalation and broken skin; stop use if irritation occurs. Indigo and pigmented botanicals require extra care on grey, blonde, bleached, porous or colour-treated hair.</p>
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px]">
+      <section className="mx-auto w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px]" id="ritual-paths">
         <div className="mx-auto mb-[clamp(50px,6vw,85px)] max-w-[840px] text-center max-[680px]:mb-[45px]">
           <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Explore by purpose</p>
           <h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.5rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] max-[680px]:text-[clamp(3rem,15vw,4.8rem)]">Choose a path through the cabinet.</h2>
         </div>
-        <div className="grid grid-cols-4 gap-px bg-[var(--line)] max-[900px]:grid-cols-2 max-[680px]:grid-cols-1">
+        <div className="grid grid-cols-4 gap-px overflow-hidden rounded-[var(--radius-md)] bg-[var(--line)] shadow-[var(--shadow-soft)] ring-1 ring-[var(--line)] max-[900px]:grid-cols-2 max-[680px]:grid-cols-1">
           <Link className={ritualPathClass} href="/shop?goal=Cleanse"><span className="text-[0.6rem] text-[var(--botanical)]">01</span><h3 className={ritualPathTitleClass}>Cleanse</h3><p className={ritualPathCopyClass}>Reetha and Shikakai, compared with care.</p><i className={ritualPathLinkClass}>Explore &#8599;</i></Link>
           <Link className={ritualPathClass} href="/shop?goal=Softness+%2B+Shine"><span className="text-[0.6rem] text-[var(--botanical)]">02</span><h3 className={ritualPathTitleClass}>Condition</h3><p className={ritualPathCopyClass}>Amla and Hibiscus for softness-focused masks.</p><i className={ritualPathLinkClass}>Explore &#8599;</i></Link>
           <Link className={ritualPathClass} href="/shop?goal=Scalp+Ritual"><span className="text-[0.6rem] text-[var(--botanical)]">03</span><h3 className={ritualPathTitleClass}>Ground</h3><p className={ritualPathCopyClass}>Bhringraj and Amla for scalp-to-length rituals.</p><i className={ritualPathLinkClass}>Explore &#8599;</i></Link>

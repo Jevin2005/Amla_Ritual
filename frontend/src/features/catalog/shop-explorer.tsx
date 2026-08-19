@@ -58,18 +58,18 @@ export function ShopExplorer() {
   };
 
   return (
-    <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[220px_minmax(0,1fr)] gap-[clamp(36px,4.5vw,64px)] px-[clamp(24px,5vw,72px)] pb-[140px] pt-[72px] max-[900px]:grid-cols-1 max-[900px]:gap-10 max-[680px]:px-5 max-[680px]:pb-[95px] max-[680px]:pt-[50px]">
-      <aside className="self-start min-[901px]:sticky min-[901px]:top-[calc(var(--header-height)+24px)] max-[900px]:grid max-[900px]:grid-cols-2 max-[900px]:gap-5 max-[680px]:grid-cols-1 max-[680px]:gap-3" aria-label="Collection filters">
-        <div className="border-t border-[var(--line)] py-[25px] max-[900px]:border max-[900px]:p-5">
-          <h2 className="mt-0 mb-4 text-[0.63rem] tracking-[0.13em] text-[var(--forest)] uppercase">Ritual goal</h2>
+    <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[240px_minmax(0,1fr)] gap-[clamp(36px,4.5vw,64px)] px-[clamp(24px,5vw,72px)] pt-[72px] pb-[140px] max-[900px]:grid-cols-1 max-[900px]:gap-10 max-[680px]:px-5 max-[680px]:pt-[50px] max-[680px]:pb-[95px]">
+      <aside className="self-start rounded-[var(--radius-md)] bg-[var(--paper)] p-5 shadow-[0_12px_38px_rgba(21,59,45,0.07)] ring-1 ring-[var(--line)] min-[901px]:sticky min-[901px]:top-[calc(var(--header-height)+24px)] max-[900px]:grid max-[900px]:grid-cols-2 max-[900px]:gap-5 max-[680px]:grid-cols-1 max-[680px]:gap-3" aria-label="Collection filters">
+        <div className="border-b border-[var(--line)] pb-[22px] max-[900px]:border-b-0 max-[900px]:border-r max-[900px]:pr-5 max-[680px]:border-r-0 max-[680px]:border-b max-[680px]:pr-0">
+          <h2 className="mt-0 mb-4 text-[0.68rem] font-bold tracking-[0.13em] text-[var(--forest)] uppercase">Ritual goal</h2>
           <div className="flex flex-col items-start gap-[3px] max-[900px]:flex-row max-[900px]:flex-wrap max-[900px]:items-center">
             {["All", ...ritualGoals].map((option) => (
               <button
                 type="button"
                 key={option}
-                className={`relative min-h-9 bg-transparent py-[3px] pr-0 pl-[22px] text-left text-[0.76rem] before:absolute before:top-1/2 before:left-0 before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] max-[900px]:min-h-10 max-[900px]:py-1.5 max-[900px]:pr-3 max-[900px]:pl-[30px] max-[900px]:before:left-[9px] ${
+                className={`relative min-h-10 rounded-full bg-transparent py-[6px] pr-3 pl-[26px] text-left text-[0.78rem] before:absolute before:top-1/2 before:left-[9px] before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] transition-colors hover:bg-[var(--ivory)] max-[680px]:min-h-11 ${
                   goal === option
-                    ? "font-bold text-[var(--forest)] before:border-[3px] before:border-[var(--ivory)] before:bg-[var(--botanical)] before:shadow-[0_0_0_1px_var(--botanical)]"
+                    ? "bg-[var(--ivory)] font-bold text-[var(--forest)] before:border-[3px] before:border-[var(--ivory)] before:bg-[var(--botanical)] before:shadow-[0_0_0_1px_var(--botanical)]"
                     : "text-[var(--muted)] before:border before:border-[var(--line)]"
                 }`}
                 aria-pressed={goal === option}
@@ -80,16 +80,16 @@ export function ShopExplorer() {
             ))}
           </div>
         </div>
-        <div className="border-t border-[var(--line)] py-[25px] max-[900px]:border max-[900px]:p-5">
-          <h2 className="mt-0 mb-4 text-[0.63rem] tracking-[0.13em] text-[var(--forest)] uppercase">Ritual step</h2>
+        <div className="pt-[22px] max-[900px]:pt-0">
+          <h2 className="mt-0 mb-4 text-[0.68rem] font-bold tracking-[0.13em] text-[var(--forest)] uppercase">Ritual step</h2>
           <div className="flex flex-col items-start gap-[3px] max-[900px]:flex-row max-[900px]:flex-wrap max-[900px]:items-center">
             {(["All", "Cleanse", "Condition", "Colour"] as StepFilter[]).map((option) => (
               <button
                 type="button"
                 key={option}
-                className={`relative min-h-9 bg-transparent py-[3px] pr-0 pl-[22px] text-left text-[0.76rem] before:absolute before:top-1/2 before:left-0 before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] max-[900px]:min-h-10 max-[900px]:py-1.5 max-[900px]:pr-3 max-[900px]:pl-[30px] max-[900px]:before:left-[9px] ${
+                className={`relative min-h-10 rounded-full bg-transparent py-[6px] pr-3 pl-[26px] text-left text-[0.78rem] before:absolute before:top-1/2 before:left-[9px] before:size-2.5 before:-translate-y-1/2 before:rounded-full before:content-[''] transition-colors hover:bg-[var(--ivory)] max-[680px]:min-h-11 ${
                   step === option
-                    ? "font-bold text-[var(--forest)] before:border-[3px] before:border-[var(--ivory)] before:bg-[var(--botanical)] before:shadow-[0_0_0_1px_var(--botanical)]"
+                    ? "bg-[var(--ivory)] font-bold text-[var(--forest)] before:border-[3px] before:border-[var(--ivory)] before:bg-[var(--botanical)] before:shadow-[0_0_0_1px_var(--botanical)]"
                     : "text-[var(--muted)] before:border before:border-[var(--line)]"
                 }`}
                 aria-pressed={step === option}
@@ -103,16 +103,16 @@ export function ShopExplorer() {
             ))}
           </div>
         </div>
-        <button className="border-b border-[var(--forest)] bg-transparent pb-[3px] text-[0.63rem] tracking-[0.08em] text-[var(--forest)] uppercase max-[900px]:col-span-full max-[900px]:justify-self-start" type="button" onClick={clear}>
+        <button className="mt-5 inline-flex min-h-11 items-center border-b border-[var(--forest)] bg-transparent pb-[3px] text-[0.66rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase max-[900px]:col-span-full max-[900px]:justify-self-start" type="button" onClick={clear}>
           Clear all filters
         </button>
       </aside>
       <section className="min-w-0" aria-labelledby="results-title">
-        <div className="grid grid-cols-[1fr_240px] items-end gap-5 max-[680px]:grid-cols-1">
+        <div className="grid grid-cols-[1fr_240px] items-end gap-4 rounded-[var(--radius-md)] bg-[var(--paper)] p-4 shadow-[0_12px_38px_rgba(21,59,45,0.06)] ring-1 ring-[var(--line)] max-[680px]:grid-cols-1">
           <div>
-            <label className="mb-[7px] block text-[0.58rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase" htmlFor="collection-search">Search this collection</label>
+            <label className="mb-[7px] block text-[0.66rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase" htmlFor="collection-search">Search this collection</label>
             <input
-              className="h-[50px] w-full rounded-none border border-[var(--line)] bg-[var(--paper)] px-[15px] outline-none transition-colors focus:border-[var(--botanical)]"
+              className="h-[52px] w-full rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--ivory)] px-4 outline-none transition-colors focus:border-[var(--botanical)]"
               id="collection-search"
               type="search"
               value={query}
@@ -121,9 +121,9 @@ export function ShopExplorer() {
             />
           </div>
           <div>
-            <label className="mb-[7px] block text-[0.58rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase" htmlFor="collection-sort">Sort by</label>
+            <label className="mb-[7px] block text-[0.66rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase" htmlFor="collection-sort">Sort by</label>
             <select
-              className="h-[50px] w-full rounded-none border border-[var(--line)] bg-[var(--paper)] px-[15px] outline-none transition-colors focus:border-[var(--botanical)]"
+              className="h-[52px] w-full rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--ivory)] px-4 outline-none transition-colors focus:border-[var(--botanical)]"
               id="collection-sort"
               value={sort}
               onChange={(event) => setSort(event.target.value as typeof sort)}
@@ -134,7 +134,7 @@ export function ShopExplorer() {
             </select>
           </div>
         </div>
-        <div className="flex items-center justify-between px-0 pt-[30px] pb-[22px] max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-1" aria-live="polite">
+        <div className="flex items-center justify-between px-1 pt-[34px] pb-[22px] max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-1" aria-live="polite">
           <h2 className="m-0 font-serif text-[1.7rem] font-normal text-[var(--forest)]" id="results-title">{filtered.length} botanical{filtered.length === 1 ? "" : "s"}</h2>
           <span className="text-[0.61rem] tracking-[0.1em] text-[var(--muted)] uppercase">{goal === "All" ? "The complete collection" : goal}</span>
         </div>
@@ -145,7 +145,7 @@ export function ShopExplorer() {
             ))}
           </div>
         ) : (
-          <div className="min-h-[420px] bg-[var(--paper)] px-[25px] py-[100px] text-center">
+          <div className="min-h-[420px] rounded-[var(--radius-md)] bg-[var(--paper)] px-[25px] py-[100px] text-center shadow-[var(--shadow-soft)] ring-1 ring-[var(--line)]">
             <p className="m-0 font-serif text-[clamp(2rem,3vw,3rem)] leading-[1.04]">No botanical matches those filters.</p>
             <p className="max-w-[360px] text-[var(--muted)]">Clear the selection or try a broader ritual goal.</p>
             <button type="button" className="mt-[15px] inline-flex min-h-[50px] items-center justify-center gap-[22px] border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--forest)] uppercase transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:text-[var(--paper)]" onClick={clear}>

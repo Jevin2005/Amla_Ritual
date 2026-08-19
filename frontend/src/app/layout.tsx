@@ -47,9 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
       url: "/",
       images: [
         {
-          url: "/naturemist-social-redesign.png",
-          width: 1536,
-          height: 1024,
+          url: "/exec-2be6204a-8260-412a-adf6-d34d47c234b6.png",
+          width: 1731,
+          height: 909,
           alt: "NatureMist — Pure botanicals. Powerful rituals.",
         },
       ],
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/naturemist-social-redesign.png"],
+      images: ["/exec-2be6204a-8260-412a-adf6-d34d47c234b6.png"],
     },
     robots: {
       index: true,
@@ -70,7 +70,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#173f2a",
+  themeColor: "#153b2d",
   colorScheme: "light",
 };
 
@@ -78,7 +78,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-IN"
-      className="scroll-smooth scroll-pt-[calc(var(--header-height)+20px)] bg-[var(--ivory)] [--header-height:88px] max-[1180px]:[--header-height:76px] max-[680px]:[--header-height:68px] motion-reduce:scroll-auto"
+      className="scroll-smooth scroll-pt-[calc(var(--header-height)+20px)] bg-[var(--ivory)] [--header-height:88px] max-[1180px]:[--header-height:76px] max-[680px]:[--header-height:60px] motion-reduce:scroll-auto"
       data-scroll-behavior="smooth"
     >
       <body className="m-0 min-h-screen overflow-x-hidden bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
