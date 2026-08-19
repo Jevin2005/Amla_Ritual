@@ -17,9 +17,29 @@
   --font-display: var(--font-serif);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --shadow-soft: 0 28px 70px rgb(37 48 30 / 12%);
+  --hero-jar-scale: 1;
 }
 
-@theme inline {
+@theme {
+  --color-ivory: var(--ivory);
+  --color-ivory-deep: var(--ivory-deep);
+  --color-forest: var(--forest);
+  --color-forest-dark: var(--forest-dark);
+  --color-botanical: var(--botanical);
+  --color-amla: var(--amla);
+  --color-charcoal: var(--charcoal);
+  --color-beige: var(--beige);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Baskerville, Georgia, serif;
+  --font-display: var(--font-serif);
+
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 28px 70px rgb(37 48 30 / 12%);
+
   --color-background: var(--ivory);
   --color-foreground: var(--charcoal);
 }
@@ -80,10 +100,10 @@
 @keyframes hero-jar-float {
   0%,
   100% {
-    transform: scale(var(--hero-jar-scale)) translate3d(0, 0, 0);
+    transform: scale(var(--hero-jar-scale, 1)) translate3d(0, 0, 0);
   }
   50% {
-    transform: scale(var(--hero-jar-scale)) translate3d(0, -6px, 0);
+    transform: scale(var(--hero-jar-scale, 1)) translate3d(0, -6px, 0);
   }
 }
 
