@@ -6,7 +6,7 @@ import { PageHero } from "@/shared/ui/page-hero";
 export const metadata: Metadata = {
   title: "Shop Botanical Powders",
   description:
-    "Explore six NatureMist botanical powders by ritual goal, from gentle cleansing and conditioning to informed botanical colour.",
+    "Explore NatureMist botanical powders by ritual goal, from gentle cleansing and conditioning to informed botanical colour.",
   alternates: { canonical: "/shop" },
 };
 

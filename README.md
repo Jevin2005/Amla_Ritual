@@ -2,20 +2,24 @@
 
 > Pure botanicals. Powerful rituals.
 
-NatureMist is a premium, responsive, pre-launch storefront for traditional Indian botanical hair-care powders. It combines editorial storytelling, product education, ritual guidance, local shopping interactions, and a deployment-ready Next.js frontend without pretending that unfinished commerce services are live.
+NatureMist is a premium, responsive headless Shopify storefront for traditional Indian botanical hair-care powders. The existing editorial experience is preserved while Shopify Admin supplies the live catalogue, product media, variants, prices, inventory, collections, promotional posters, navigation, policies, cart, discounts, and hosted checkout.
 
-![NatureMist social preview](public/naturemist-social-redesign.png)
+![NatureMist social preview](frontend/public/og-shopify.jpg)
 
 ## Project status
 
-This repository contains a polished **frontend commerce preview**, not a live online store.
+This repository now contains a **Shopify-ready headless storefront** with a safe preview fallback.
 
-- The full catalogue, search, filters, ritual finder, wishlist, bag, bundles, quantity controls, and preview checkout journey work in the browser.
-- Prices, packaging, net weights, availability, shipping, discounts, tax, and product claims are placeholders until verified for launch.
-- Payments, orders, inventory, customer accounts, fulfilment, tracking, newsletters, reviews, and a commerce backend are not connected.
-- Forms do not submit personal or payment information to a NatureMist server.
+- Shopify is the source of truth for live products, variants, media, prices, availability, collections, cart totals, discount codes, and checkout.
+- Shopify Files and the `storefront_content/main` metaobject control the active homepage, ritual, and story posters plus the announcement bar.
+- Shopify Navigation and Policies feed the corresponding website surfaces.
+- The full Shopify cart ID stays in a secure HTTP-only cookie and payment details are collected only by Shopify's hosted checkout.
+- When credentials are absent, the original six-product catalogue remains available as clearly isolated fallback data so builds and design review continue to work.
+- Wishlist remains device-local. Customer accounts, order tracking, newsletter delivery, and reviews require the merchant's chosen Shopify/customer apps if those features are needed.
 
-The application is a single-package project rooted directly in this repository.
+The Next.js application lives in the `frontend` workspace. Follow [the Shopify setup and merchant handoff](docs/shopify-setup.md) before launch.
+
+The detailed experience notes below also document the built-in fallback catalogue used before Shopify credentials are supplied.
 
 ## Website experience
 
@@ -24,13 +28,13 @@ The application is a single-package project rooted directly in this repository.
 The homepage is an editorial introduction to the NatureMist brand and collection. It contains:
 
 1. An Amla-led hero with preview pricing, add-to-bag, wishlist, and featured ritual guidance.
-2. A horizontally browsable collection of all six botanicals.
+2. A horizontally browsable collection of all products published through Shopify.
 3. Goal-based entry points for cleansing, nourishment, softness and shine, and botanical colour.
 4. A two-question ritual finder that recommends a simple starting product.
 5. A three-step scoop, mix, and apply preparation guide.
 6. Ingredient-clarity standards and the NatureMist brand philosophy.
-7. An interactive six-product switcher.
-8. Three predefined ritual bundles.
+7. An interactive Shopify product switcher.
+8. Merchant-defined ritual sets sourced from Shopify collections.
 9. A product comparison table.
 10. Journal-style educational links and six frequently asked questions.
 
@@ -38,7 +42,7 @@ The journal cards are curated links into existing ritual and product content; th
 
 ### Collection and product discovery
 
-The shop presents all six products and supports:
+The shop presents every published Shopify product and supports:
 
 - ritual-goal filtering through the `?goal=` URL parameter;
 - ritual-step filtering by Cleanse, Condition, or Colour;
@@ -47,11 +51,11 @@ The shop presents all six products and supports:
 - result counts, empty states, wishlisting, and add-to-bag actions;
 - a global product search dialog available from the site header.
 
-Search is intentionally limited to the six-product catalogue. It is not a full-site or server-backed search engine.
+Search is intentionally limited to the loaded Shopify product catalogue. It is not a full-site search engine.
 
 ### Product detail pages
 
-Every catalogue item has a product page constrained to the catalogue's generated slug list. Each page contains:
+Every published catalogue item has a dynamic product page at its Shopify handle. Each page contains:
 
 - breadcrumbs and a CSS-rendered packaging mockup;
 - botanical identity, plant part, texture, preview price, and catalogue status;
@@ -83,7 +87,7 @@ The result is cosmetic guidance only. It is not a diagnosis, medical recommendat
 | Route | Purpose | Search indexing |
 | --- | --- | --- |
 | `/` | Editorial homepage and complete brand introduction | Allowed |
-| `/shop` | Searchable, filterable six-product collection | Allowed |
+| `/shop` | Searchable, filterable Shopify collection | Allowed |
 | `/shop/amla-powder` | Amla product and ritual guide | Allowed |
 | `/shop/reetha-powder` | Reetha product and ritual guide | Allowed |
 | `/shop/shikakai-powder` | Shikakai product and ritual guide | Allowed |
@@ -93,7 +97,7 @@ The result is cosmetic guidance only. It is not a diagnosis, medical recommendat
 | `/rituals` | Ritual finder, preparation guide, and safety education | Allowed |
 | `/our-story` | Brand philosophy and ingredient-clarity principles | Allowed |
 | `/wishlist` | Products saved in the current browser | No index |
-| `/checkout` | Bag summary and future hosted-checkout integration boundary | No index |
+| `/checkout` | Shopify bag summary and hosted-checkout handoff | No index |
 | `/track-order` | Future fulfilment-provider entry point | No index |
 | `/shipping-returns` | Pre-launch shipping and returns policy preview | Allowed |
 | `/privacy` | Pre-launch privacy statement | Allowed |
@@ -101,7 +105,7 @@ The result is cosmetic guidance only. It is not a diagnosis, medical recommendat
 
 The app also generates `/robots.txt`, `/sitemap.xml`, a web app manifest, social metadata, a favicon, a dynamic app icon, and branded loading, error, and not-found states.
 
-## Botanical collection
+## Built-in preview botanical collection
 
 All prices below are editable INR previews. Every product currently has `Net weight to be confirmed` and `Preview catalogue` status.
 
@@ -128,16 +132,16 @@ Bundle totals are the sum of the individual preview prices. No bundle discount i
 
 | Capability | Current implementation |
 | --- | --- |
-| Bag | Browser-only cart with add, remove, quantity, subtotal, bundles, and a 12-unit per-product limit |
+| Bag | Shopify Cart API when connected; device-local preview cart only when unconfigured |
 | Wishlist | Browser-only saved product list |
-| Persistence | `localStorage` on the current browser and device; no account sync |
-| Discount code | UI preview only; codes are not validated or applied |
-| Checkout | Order summary and integration explanation only; no payment or order creation |
+| Persistence | Shopify cart ID in a secure HTTP-only cookie; preview cart/wishlist use device storage |
+| Discount code | Validated and priced by Shopify when connected |
+| Checkout | Secure handoff to Shopify hosted checkout |
 | Order tracking | Session-only input and an integration notice; the reference is not sent or stored |
 | Newsletter | Lightweight client-side preview validation; the email is cleared and not submitted |
-| Inventory and tax | Not implemented |
+| Inventory and tax | Shopify-authoritative when connected |
 | Accounts and order history | Not implemented |
-| CMS, API, and database | Not implemented; catalogue data is committed TypeScript |
+| CMS and API | Shopify products, collections, Files, metaobjects, menus, and policies |
 
 The browser storage keys are:
 

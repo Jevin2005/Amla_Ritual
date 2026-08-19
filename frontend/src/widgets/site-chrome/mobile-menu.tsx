@@ -2,8 +2,15 @@ import Link from "next/link";
 import type { RefObject } from "react";
 import { BrandMark } from "./brand-mark";
 
+type NavigationItem = {
+  id: string;
+  title: string;
+  url: string;
+};
+
 type MobileMenuProps = {
   open: boolean;
+  navigationItems: readonly NavigationItem[];
   wishlistCount: number;
   currentPath: string;
   menuRef: RefObject<HTMLElement | null>;
@@ -13,6 +20,7 @@ type MobileMenuProps = {
 
 export function MobileMenu({
   open,
+  navigationItems,
   wishlistCount,
   currentPath,
   menuRef,
@@ -73,33 +81,25 @@ export function MobileMenu({
           className="grid pr-[max(24px,env(safe-area-inset-right))] pb-8 pl-[max(24px,env(safe-area-inset-left))] pt-4 max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]"
           aria-label="Mobile primary navigation"
         >
-          <Link
-            className={mobileLinkClass}
-            href="/shop"
-            onClick={onClose}
-            aria-current={currentPath.startsWith("/shop") ? "page" : undefined}
-          >
-            Shop the botanicals{" "}
-            <span className="font-sans text-[0.57rem] text-[var(--botanical)]">01</span>
-          </Link>
-          <Link
-            className={mobileLinkClass}
-            href="/rituals"
-            onClick={onClose}
-            aria-current={currentPath === "/rituals" ? "page" : undefined}
-          >
-            Choose your ritual{" "}
-            <span className="font-sans text-[0.57rem] text-[var(--botanical)]">02</span>
-          </Link>
-          <Link
-            className={mobileLinkClass}
-            href="/our-story"
-            onClick={onClose}
-            aria-current={currentPath === "/our-story" ? "page" : undefined}
-          >
-            Our story{" "}
-            <span className="font-sans text-[0.57rem] text-[var(--botanical)]">03</span>
-          </Link>
+          {navigationItems.map((item, index) => (
+            <Link
+              className={mobileLinkClass}
+              href={item.url}
+              onClick={onClose}
+              aria-current={
+                currentPath === item.url ||
+                (item.url !== "/" && currentPath.startsWith(`${item.url}/`))
+                  ? "page"
+                  : undefined
+              }
+              key={item.id}
+            >
+              {item.title}{" "}
+              <span className="font-sans text-[0.57rem] text-[var(--botanical)]">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            </Link>
+          ))}
           <Link
             className={mobileLinkClass}
             href="/wishlist"

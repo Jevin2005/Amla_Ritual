@@ -3,7 +3,45 @@ export type ProductFaq = {
   answer: string;
 };
 
+export type StoreImage = {
+  url: string;
+  altText: string;
+  width: number;
+  height: number;
+};
+
+export type ProductVariant = {
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  quantityAvailable: number | null;
+  sku: string | null;
+  pricePaise: number;
+  compareAtPricePaise: number | null;
+  currencyCode: string;
+  selectedOptions: Array<{ name: string; value: string }>;
+  image: StoreImage | null;
+};
+
+export type ProductCollection = {
+  id: string;
+  handle: string;
+  title: string;
+};
+
+export type ProductHeroContent = {
+  eyebrow: string;
+  headlineFirst: string;
+  headlineMiddle: string;
+  headlineItalic: string;
+  description: string;
+  badgeText: string;
+  badgeSubtitle: string;
+  howToText: string;
+};
+
 export type Product = {
+  id?: string;
   slug: string;
   name: string;
   botanical: string;
@@ -17,6 +55,7 @@ export type Product = {
   availability: string;
   shortDescription: string;
   metaDescription: string;
+  seoTitle?: string;
   ingredient: string;
   benefits: string[];
   howTo: string[];
@@ -31,6 +70,15 @@ export type Product = {
   colorConsiderations: string[];
   searchTerms: string[];
   faqs: ProductFaq[];
+  currencyCode?: string;
+  compareAtPricePaise?: number | null;
+  availableForSale?: boolean;
+  featuredImage?: StoreImage | null;
+  images?: StoreImage[];
+  variants?: ProductVariant[];
+  collections?: ProductCollection[];
+  tags?: string[];
+  hero?: ProductHeroContent;
 };
 
 export const products: Product[] = [
@@ -370,7 +418,15 @@ export const ritualGoals = [
 
 export type RitualGoal = (typeof ritualGoals)[number];
 
-export const bundles = [
+export type ProductBundle = {
+  id: string;
+  handle?: string;
+  name: string;
+  description: string;
+  slugs: readonly string[];
+};
+
+export const bundles: ProductBundle[] = [
   {
     id: "essential-wash-day",
     name: "Essential Wash Day",
@@ -389,10 +445,22 @@ export const bundles = [
     description: "All six powders, with dedicated Indigo colour-safety guidance.",
     slugs: products.map((product) => product.slug),
   },
-] as const;
+];
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
+}
+
+export function findProduct(catalog: readonly Product[], slug: string) {
+  return catalog.find((product) => product.slug === slug);
+}
+
+export function getDefaultVariant(product: Product) {
+  return (
+    product.variants?.find((variant) => variant.availableForSale) ??
+    product.variants?.[0] ??
+    null
+  );
 }
 
 export function getBundleProducts(slugs: readonly string[]) {
@@ -401,14 +469,13 @@ export function getBundleProducts(slugs: readonly string[]) {
     .filter((product): product is Product => Boolean(product));
 }
 
-export function formatCurrency(pricePaise: number) {
+export function formatCurrency(pricePaise: number, currencyCode = "INR") {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "INR",
+    currency: currencyCode,
     maximumFractionDigits: 0,
   }).format(pricePaise / 100);
 }
 
 export const globalSafety =
   "For external use only. Pour slowly to minimise airborne powder. Patch test as directed. Stop use if irritation occurs. Avoid eyes and broken skin. Keep away from children. Prepare fresh and discard leftover paste.";
-

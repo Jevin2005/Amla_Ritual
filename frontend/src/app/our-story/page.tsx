@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getStorefront } from "@/lib/shopify/storefront";
 
-const heroImage = "/images/naturemist-hero.png";
 const storyPillarClass =
   "min-h-[440px] bg-[var(--paper)] p-[38px] transition-[transform,background-color] duration-500 ease-[var(--ease)] hover:-translate-y-1 hover:bg-white max-[900px]:min-h-[310px] max-[680px]:px-5 max-[680px]:py-7";
 const storyPillarTitleClass =
@@ -15,14 +15,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/our-story" },
 };
 
-export default function OurStoryPage() {
+export default async function OurStoryPage() {
+  const { content } = await getStorefront();
+
   return (
     <main id="main-content">
       <section className="relative min-h-[min(820px,calc(100svh-40px))] overflow-hidden max-[680px]:min-h-[700px]">
         <div className="absolute inset-0 after:absolute after:inset-0 after:bg-[linear-gradient(90deg,rgba(11,38,23,0.78),rgba(11,38,23,0.12)_65%)] after:content-['']">
           <Image
-            src={heroImage}
-            alt="Indian woman with naturally long dark hair in a sunlit botanical setting"
+            src={content.storyPoster.url}
+            alt={content.storyPoster.altText}
             fill
             loading="eager"
             sizes="100vw"

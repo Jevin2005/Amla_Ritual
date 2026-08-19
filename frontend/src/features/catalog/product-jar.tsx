@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { CSSProperties } from "react";
 import type { Product } from "@/domain/catalog/products";
 
@@ -32,6 +33,33 @@ export function ProductJar({
     large: "text-[20px]",
     hero: "text-[18px]",
   }[size];
+
+  const imageSizes = {
+    small: "88px",
+    medium: "160px",
+    large: "225px",
+    hero: "195px",
+  }[size];
+
+  if (product.featuredImage?.url) {
+    const image = product.featuredImage;
+
+    return (
+      <div
+        className={`relative flex-none [filter:drop-shadow(0_26px_22px_rgba(21,59,45,0.18))] ${sizeClasses} ${className}`}
+        aria-hidden={decorative ? true : undefined}
+      >
+        <Image
+          src={image.url}
+          alt={decorative ? "" : image.altText || `${product.name} product`}
+          width={image.width}
+          height={image.height}
+          sizes={imageSizes}
+          className="h-full w-full object-contain"
+        />
+      </div>
+    );
+  }
 
   return (
     <div

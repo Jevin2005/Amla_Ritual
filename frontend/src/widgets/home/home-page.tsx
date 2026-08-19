@@ -3,17 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { ProductJar } from "@/features/catalog/product-jar";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
+import { useStore } from "@/features/store/store-provider";
 import { BundleCards } from "./bundle-cards";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { HeroPurchase } from "./hero-purchase";
 import { homeFaqs, ritualCards } from "./content";
-
-const heroImage = "/images/naturemist-hero.png";
-const ritualImage = "/images/naturemist-ritual.png";
 
 const eyebrowClass =
   "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
@@ -46,98 +43,52 @@ const journalTitleClass =
 const journalCopyClass =
   "relative z-[2] mt-0 mb-4 text-[0.8rem] leading-[1.55] text-[var(--muted)] max-[680px]:mb-3 max-[680px]:line-clamp-2 max-[680px]:text-[0.76rem]";
 
-const productHeroDetails: Record<
-  string,
-  {
-    eyebrow: string;
-    headlineFirst: string;
-    headlineMiddle: string;
-    headlineItalic: string;
-    description: string;
-    badgeText: string;
-    badgeSubtitle: string;
-    howToText: string;
-  }
-> = {
-  "amla-powder": {
-    eyebrow: "The Amla Ritual · No. 01",
-    headlineFirst: "Indulge in",
-    headlineMiddle: "Pure",
-    headlineItalic: "Botanical ritual.",
-    description:
-      "A storied Indian botanical, thoughtfully prepared for soft-feeling, luminous-looking hair—and an unhurried moment of care.",
-    badgeText: "Amla · pre-wash",
-    badgeSubtitle: "Softness + luminous-looking shine",
-    howToText:
-      "Mix gradually with water until smooth, apply in sections and follow the final pack timing before rinsing thoroughly.",
-  },
-  "reetha-powder": {
-    eyebrow: "The Reetha Ritual · No. 02",
-    headlineFirst: "Purify with",
-    headlineMiddle: "Fresh",
-    headlineItalic: "Saponin cleanse.",
-    description:
-      "A naturally saponin-containing fruit shell cleanser for a fresh-feeling scalp, removing everyday buildup gently.",
-    badgeText: "Reetha · wash",
-    badgeSubtitle: "Fresh-feeling scalp + gentle buildup removal",
-    howToText:
-      "Mix a small amount with warm water into a thin paste, apply carefully to roots, and rinse thoroughly away from eyes.",
-  },
-  "shikakai-powder": {
-    eyebrow: "The Shikakai Ritual · No. 03",
-    headlineFirst: "Soften with",
-    headlineMiddle: "Gentle",
-    headlineItalic: "Herbal acacia.",
-    description:
-      "A traditional low-lather fruit wash that supports soft, manageable-feeling hair with natural botanical slip.",
-    badgeText: "Shikakai · gentle wash",
-    badgeSubtitle: "Low-lather wash + smooth hair slip",
-    howToText:
-      "Mix with water into a smooth, pourable paste. Apply gently through roots and lengths, then rinse well.",
-  },
-  "bhringraj-powder": {
-    eyebrow: "The Bhringraj Ritual · No. 04",
-    headlineFirst: "Ground in",
-    headlineMiddle: "Forest",
-    headlineItalic: "Scalp ritual.",
-    description:
-      "A grounding deep-green botanical mask formulated for a conditioned, cared-for feeling across scalp and hair lengths.",
-    badgeText: "Bhringraj · scalp mask",
-    badgeSubtitle: "Scalp care + conditioned resilient lengths",
-    howToText:
-      "Mix into a smooth paste, section onto scalp and hair lengths, leave for the pack duration, then rinse clean.",
-  },
-  "hibiscus-powder": {
-    eyebrow: "The Hibiscus Ritual · No. 05",
-    headlineFirst: "Revitalize with",
-    headlineMiddle: "Vivid",
-    headlineItalic: "Floral luster.",
-    description:
-      "A vivid floral conditioning mask for soft-feeling, smooth and glossy-looking hair lengths.",
-    badgeText: "Hibiscus · floral mask",
-    badgeSubtitle: "Silky softness + vibrant glossy luster",
-    howToText:
-      "Mix into a silky paste, concentrate through mid-lengths and ends, follow pack timing and rinse thoroughly.",
-  },
-  "indigo-powder": {
-    eyebrow: "The Indigo Ritual · No. 06",
-    headlineFirst: "Enrich with",
-    headlineMiddle: "Pure",
-    headlineItalic: "Leaf color.",
-    description:
-      "A color-depositing leaf powder for informed, carefully strand-tested botanical color rituals.",
-    badgeText: "Indigo · leaf color",
-    badgeSubtitle: "Natural plant color + multi-step ritual",
-    howToText:
-      "Read pack directions in full, wear gloves, apply freshly mixed paste to hair sections and strand test first.",
-  },
-};
-
 export function HomePage() {
+  const { products, content } = useStore();
   const [activeProductIndex, setActiveProductIndex] = useState(0);
+
+  if (!products.length) {
+    return (
+      <main className="grid min-h-[70vh] place-items-center px-[var(--page-pad)] py-24 text-center" id="main-content">
+        <div className="max-w-[660px]">
+          <p className={eyebrowClass}>Shopify catalog</p>
+          <h1 className="m-0 font-serif text-[clamp(3rem,7vw,6rem)] font-normal leading-[0.92] tracking-[-0.05em] text-[var(--forest)]">
+            The next ritual is being prepared.
+          </h1>
+          <p className="mx-auto mt-7 max-w-[540px] text-[var(--muted)]">
+            Products will appear here as soon as they are active and published to the Headless sales channel in Shopify.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   const activeProduct = products[activeProductIndex] ?? products[0];
-  const details =
-    productHeroDetails[activeProduct.slug] ?? productHeroDetails["amla-powder"];
+  const productName = activeProduct.name.replace(/ Powder$/i, "");
+  const details = {
+    eyebrow:
+      activeProduct.hero?.eyebrow ||
+      `The ${productName} Ritual · No. ${activeProduct.collectionNumber}`,
+    headlineFirst: activeProduct.hero?.headlineFirst || "Discover",
+    headlineMiddle: activeProduct.hero?.headlineMiddle || productName,
+    headlineItalic:
+      activeProduct.hero?.headlineItalic || "Botanical ritual.",
+    description:
+      activeProduct.hero?.description || activeProduct.shortDescription,
+    badgeText:
+      activeProduct.hero?.badgeText ||
+      `${productName} · ${activeProduct.ritualStep.toLowerCase()}`,
+    badgeSubtitle:
+      activeProduct.hero?.badgeSubtitle || activeProduct.subtitle,
+    howToText:
+      activeProduct.hero?.howToText ||
+      activeProduct.howTo[0] ||
+      "Follow the directions on the product pack.",
+  };
+  const heroPoster = content.homeHeroPoster;
+  const ritualPoster = content.ritualPoster;
+  const colourProduct =
+    products.find((product) => product.ritualStep === "Colour") ?? products[0];
 
   const handlePrevProduct = () => {
     setActiveProductIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
@@ -176,7 +127,7 @@ export function HomePage() {
                   aria-hidden="true"
                 >
                   <Image
-                    src={heroImage}
+                    src={heroPoster.url}
                     alt=""
                     fill
                     sizes="160px"
@@ -257,8 +208,8 @@ export function HomePage() {
 
             <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[50%_50%_8px_8px/28%_28%_1%_1%] border border-[rgba(23,63,42,0.11)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.2)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_12px_12px/26%_26%_2%_2%]">
               <Image
-                src={heroImage}
-                alt="A woman with long, dark natural hair in a sunlit botanical setting"
+                src={heroPoster.url}
+                alt={heroPoster.altText || "NatureMist botanical hair ritual"}
                 fill
                 loading="eager"
                 fetchPriority="high"
@@ -451,7 +402,9 @@ export function HomePage() {
           </div>
           <div className="flex flex-col justify-end gap-4 max-[680px]:gap-3">
             <p className="m-0 text-[0.86rem] leading-[1.72] text-[var(--muted)] max-[680px]:text-[0.8rem] max-[680px]:leading-[1.65]">
-              Six single botanicals. Six distinct rituals. One calm, considered way to begin.
+              {products.length} single botanical{products.length === 1 ? "" : "s"}.{" "}
+              {products.length} distinct ritual{products.length === 1 ? "" : "s"}. One calm,
+              considered way to begin.
             </p>
             <Link
               className={`${textLinkClass} max-[680px]:min-h-[44px]`}
@@ -474,7 +427,8 @@ export function HomePage() {
 
         {/* Disclaimer */}
         <p className="mx-auto mt-8 max-w-[680px] text-center text-[0.72rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-6 max-[680px]:px-1 max-[680px]:text-[0.68rem]">
-          Product jars and prices are editable launch previews. Final labels, net weights, batch data and commercial terms will replace them before sale.
+          Product imagery, availability and pricing are managed through the
+          NatureMist Shopify catalogue.
         </p>
       </section>
 
@@ -630,15 +584,18 @@ export function HomePage() {
         <div className="relative">
           <div className="relative aspect-[0.72] w-full overflow-hidden rounded-[50%_50%_4px_4px/22%_22%_4px_4px] bg-[var(--beige)] max-[680px]:aspect-[1.1] max-[680px]:rounded-lg">
             <Image
-              src={ritualImage}
-              alt="A hand slowly mixing a fresh green amla paste in a ceramic bowl beside amla fruit"
+              src={ritualPoster.url}
+              alt={
+                ritualPoster.altText ||
+                "A botanical hair ritual being prepared in a bowl"
+              }
               fill
               sizes="(max-width: 680px) 92vw, (max-width: 800px) 90vw, 45vw"
               className="object-cover"
             />
           </div>
           <span className="mt-[13px] block text-[0.55rem] tracking-[0.15em] text-[var(--muted)] uppercase max-[680px]:mt-2 max-[680px]:text-[0.5rem]">
-            Amla ritual · prepared fresh
+            Botanical ritual · prepared fresh
           </span>
         </div>
         <div>
@@ -698,7 +655,7 @@ export function HomePage() {
         aria-labelledby="family-title"
       >
         <div className={centeredHeadingClass}>
-          <p className={eyebrowClass}>A family of six</p>
+          <p className={eyebrowClass}>A family of {products.length}</p>
           <h2 className={sectionTitleClass} id="family-title">
             Same ritual language. A different botanical note.
           </h2>
@@ -852,11 +809,15 @@ export function HomePage() {
             <i className="relative z-[2] text-[0.6rem] font-bold not-italic tracking-[0.13em] text-[var(--botanical)] uppercase">Read guide ↗</i>
           </Link>
           <Link
-            href="/shop/indigo-powder"
+            href={colourProduct ? `/shop/${colourProduct.slug}` : "/shop"}
             className={`${journalCardClass} bg-[#c9cedc] max-[680px]:col-span-2 max-[680px]:pr-[44%] max-[680px]:before:left-[78%] max-[680px]:after:left-[78%]`}
           >
             <span className="relative z-[2] text-[0.6rem] font-bold tracking-[0.13em] text-[var(--botanical)] uppercase">Safety note</span>
-            <h3 className={journalTitleClass}>Indigo starts with a strand test</h3>
+            <h3 className={journalTitleClass}>
+              {colourProduct
+                ? `${colourProduct.name.replace(/ Powder$/i, "")} starts with a strand test`
+                : "Botanical colour starts with a strand test"}
+            </h3>
             <p className={journalCopyClass}>Understand the variables before you colour.</p>
             <i className="relative z-[2] text-[0.6rem] font-bold not-italic tracking-[0.13em] text-[var(--botanical)] uppercase">Read note ↗</i>
           </Link>

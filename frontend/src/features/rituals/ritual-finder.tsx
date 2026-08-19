@@ -16,15 +16,17 @@ export function RitualFinder() {
   const [step, setStep] = useState(1);
   const [goal, setGoal] = useState<RitualGoal | null>(null);
   const [hairFeel, setHairFeel] = useState<HairFeel | null>(null);
-  const { addToCart, track } = useStore();
+  const { products, addToCart, track } = useStore();
   const result = useMemo(
-    () => (goal && hairFeel ? recommendRitual(goal, hairFeel) : null),
-    [goal, hairFeel],
+    () =>
+      goal && hairFeel ? recommendRitual(products, goal, hairFeel) : null,
+    [goal, hairFeel, products],
   );
 
   const finish = () => {
     if (!goal || !hairFeel) return;
-    const recommendation = recommendRitual(goal, hairFeel);
+    const recommendation = recommendRitual(products, goal, hairFeel);
+    if (!recommendation) return;
     setStep(3);
     track("quiz_completed", {
       recommendation: recommendation.product.slug,
@@ -172,8 +174,16 @@ export function RitualFinder() {
                 </Link>
               ) : (
                 <>
-                  <button className="inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)]" type="button" onClick={() => addToCart(result.product.slug)}>
-                    Add to bag <span aria-hidden="true">↗</span>
+                  <button
+                    className="inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-y-0"
+                    type="button"
+                    onClick={() => addToCart(result.product.slug)}
+                    disabled={result.product.availableForSale === false}
+                  >
+                    {result.product.availableForSale === false
+                      ? "Sold out"
+                      : "Add to bag"}{" "}
+                    <span aria-hidden="true">↗</span>
                   </button>
                   <Link className="inline-flex items-center gap-3.5 border-b border-[var(--paper)] pb-[5px] text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--paper)] transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px] max-[680px]:min-h-11" href={`/shop/${result.product.slug}`}>
                     Read the ritual

@@ -15,6 +15,16 @@ export function ProductCard({
 }) {
   const { addToCart, toggleWishlist, isWishlisted, track } = useStore();
   const wished = isWishlisted(product.slug);
+  const currencyCode = product.currencyCode || "INR";
+  const isAvailable = product.availableForSale !== false;
+  const compareAtPrice =
+    product.compareAtPricePaise &&
+    product.compareAtPricePaise > product.pricePaise
+      ? product.compareAtPricePaise
+      : null;
+  const stockLabel = isAvailable
+    ? product.availability || "In stock"
+    : "Sold out";
   const style = {
     "--product-accent": product.accent,
     "--product-soft": product.accentSoft,
@@ -80,18 +90,37 @@ export function ProductCard({
         <div className="mt-auto pt-5">
           <div className="flex items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
             <div>
-              <span className="block [font-family:var(--font-display)] text-[1.3rem] leading-none text-[var(--forest)]">
-                {formatCurrency(product.pricePaise)}
+              <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <span className="[font-family:var(--font-display)] text-[1.3rem] leading-none text-[var(--forest)]">
+                  {formatCurrency(product.pricePaise, currencyCode)}
+                </span>
+                {compareAtPrice && (
+                  <span
+                    className="text-[0.72rem] text-[var(--muted)] line-through"
+                    aria-label={`Previously ${formatCurrency(compareAtPrice, currencyCode)}`}
+                  >
+                    {formatCurrency(compareAtPrice, currencyCode)}
+                  </span>
+                )}
               </span>
-              <span className="mt-1 block text-[0.58rem] tracking-[0.1em] text-[var(--muted)] uppercase max-[680px]:hidden">
-                Preview price
+              <span
+                className={`mt-1 block text-[0.58rem] font-bold tracking-[0.1em] uppercase ${
+                  isAvailable ? "text-[var(--muted)]" : "text-[#9a3f3f]"
+                }`}
+              >
+                {stockLabel}
               </span>
             </div>
             <button
               type="button"
-              className="grid size-12 place-items-center rounded-full border border-[var(--product-accent)] bg-[var(--product-accent)] text-[1.3rem] text-white shadow-[0_8px_22px_color-mix(in_srgb,var(--product-accent)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95"
+              className="grid size-12 place-items-center rounded-full border border-[var(--product-accent)] bg-[var(--product-accent)] text-[1.3rem] text-white shadow-[0_8px_22px_color-mix(in_srgb,var(--product-accent)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:border-[var(--line-strong)] disabled:bg-[var(--line-strong)] disabled:text-[var(--muted)] disabled:shadow-none disabled:hover:translate-y-0"
               onClick={() => addToCart(product.slug)}
-              aria-label={`Add ${product.name} to bag`}
+              disabled={!isAvailable}
+              aria-label={
+                isAvailable
+                  ? `Add ${product.name} to bag`
+                  : `${product.name} is sold out`
+              }
             >
               <span aria-hidden="true">＋</span>
             </button>

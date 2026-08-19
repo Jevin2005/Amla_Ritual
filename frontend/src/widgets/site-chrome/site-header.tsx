@@ -11,18 +11,12 @@ import { MobileMenu } from "./mobile-menu";
 const interactiveNavClass =
   "relative inline-flex min-h-11 items-center justify-center whitespace-nowrap bg-transparent px-0.5 py-0 text-[0.7rem] font-bold tracking-[0.115em] text-[var(--forest)] uppercase after:absolute after:inset-x-0.5 after:bottom-1.5 after:h-px after:bg-[var(--forest)] after:transition-[transform] after:duration-[350ms] after:ease-[var(--ease)] after:content-[''] after:[transform:scaleX(0)] after:[transform-origin:right] hover:after:[transform:scaleX(1)] hover:after:[transform-origin:left] focus-visible:after:[transform:scaleX(1)] focus-visible:after:[transform-origin:left] aria-[current=page]:after:[transform:scaleX(1)] aria-[current=page]:after:[transform-origin:left]";
 
-const primaryNavigation = [
-  { href: "/shop", label: "Shop" },
-  { href: "/rituals", label: "Rituals" },
-  { href: "/our-story", label: "Our Story" },
-] as const;
-
 function isCurrentPath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export function SiteHeader() {
-  const { cartCount, wishlist, openCart, openSearch } = useStore();
+  const { content, cartCount, wishlist, openCart, openSearch } = useStore();
   const pathname = usePathname();
   const wishlistCount = wishlist.length;
   const [compact, setCompact] = useState(false);
@@ -61,17 +55,13 @@ export function SiteHeader() {
       <div className="bg-[linear-gradient(90deg,var(--forest-dark),var(--forest))] text-white/84 max-[680px]:pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex min-h-9 w-full max-w-[1440px] items-center justify-between gap-8 px-[clamp(20px,3.35vw,48px)] py-1.5 text-[0.66rem] font-[650] tracking-[0.14em] uppercase max-[900px]:justify-center max-[680px]:min-h-[32px] max-[680px]:pr-[max(12px,env(safe-area-inset-right))] max-[680px]:pl-[max(12px,env(safe-area-inset-left))] max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.075em]">
           <p className="m-0 text-center">
-            Rooted in Ayurveda{" "}
-            <span className="mx-2 text-[var(--amla)]" aria-hidden="true">
-              •
-            </span>{" "}
-            Made for modern rituals
+            {content.announcementText}
           </p>
           <Link
             className="shrink-0 border-b border-[rgba(255,255,255,0.5)] transition-colors hover:border-white hover:text-white max-[900px]:hidden"
-            href="/rituals"
+            href={content.announcementLinkUrl}
           >
-            Find your ritual <span aria-hidden="true">↗</span>
+            {content.announcementLinkLabel} <span aria-hidden="true">↗</span>
           </Link>
         </div>
       </div>
@@ -87,14 +77,14 @@ export function SiteHeader() {
           aria-label="Primary navigation"
         >
           <div className="flex min-w-0 items-center gap-[clamp(20px,2.5vw,42px)] max-[1180px]:gap-[18px] max-[900px]:hidden">
-            {primaryNavigation.map((item) => (
+            {content.primaryNavigation.map((item) => (
               <Link
                 className={interactiveNavClass}
-                href={item.href}
-                aria-current={isCurrentPath(pathname, item.href) ? "page" : undefined}
-                key={item.href}
+                href={item.url}
+                aria-current={isCurrentPath(pathname, item.url) ? "page" : undefined}
+                key={item.id}
               >
-                {item.label}
+                {item.title}
               </Link>
             ))}
           </div>
@@ -165,6 +155,7 @@ export function SiteHeader() {
 
       <MobileMenu
         open={mobileOpen}
+        navigationItems={content.primaryNavigation}
         wishlistCount={wishlistCount}
         currentPath={pathname}
         menuRef={mobileRef}

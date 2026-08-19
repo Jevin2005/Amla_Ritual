@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { NewsletterForm } from "@/features/newsletter/newsletter-form";
+import { useStore } from "@/features/store/store-provider";
 import { BrandMark } from "./brand-mark";
 
 const footerHeadingClass =
@@ -7,7 +10,48 @@ const footerHeadingClass =
 const footerLinkClass =
   "inline-flex min-h-11 w-fit max-w-full items-center text-[0.82rem] leading-[1.35] text-white/72 transition-[color,transform] duration-200 ease-[ease] hover:text-[var(--paper)] hover:[transform:translateX(4px)]";
 
+const fallbackNavigation = [
+  {
+    id: "footer-shop",
+    title: "Shop",
+    url: "/shop",
+    items: [
+      { id: "all", title: "All botanicals", url: "/shop", items: [] },
+      { id: "cleanse", title: "Cleansing rituals", url: "/shop?goal=Cleanse", items: [] },
+      { id: "softness", title: "Softness + shine", url: "/shop?goal=Softness+%2B+Shine", items: [] },
+      { id: "colour", title: "Botanical colour", url: "/shop?goal=Botanical+Colour", items: [] },
+    ],
+  },
+  {
+    id: "footer-discover",
+    title: "Discover",
+    url: "/rituals",
+    items: [
+      { id: "finder", title: "Build your ritual", url: "/rituals", items: [] },
+      { id: "story", title: "Our story", url: "/our-story", items: [] },
+      { id: "standards", title: "Ingredient standards", url: "/#ingredient-standards", items: [] },
+      { id: "faq", title: "Frequently asked", url: "/#faq", items: [] },
+    ],
+  },
+  {
+    id: "footer-care",
+    title: "Care",
+    url: "/shipping-returns",
+    items: [
+      { id: "tracking", title: "Track an order", url: "/track-order", items: [] },
+      { id: "shipping", title: "Shipping + returns", url: "/shipping-returns", items: [] },
+      { id: "privacy", title: "Privacy", url: "/privacy", items: [] },
+      { id: "terms", title: "Terms", url: "/terms", items: [] },
+    ],
+  },
+];
+
 export function SiteFooter() {
+  const { content } = useStore();
+  const navigation = content.footerNavigation.length
+    ? content.footerNavigation
+    : fallbackNavigation;
+
   return (
     <footer
       className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_10%_0%,rgba(183,212,90,0.12),transparent_28%),linear-gradient(145deg,var(--forest),var(--forest-dark))] px-[clamp(25px,6vw,96px)] pb-[25px] pt-[clamp(75px,8vw,120px)] text-white/76 before:pointer-events-none before:absolute before:inset-0 before:-z-[1] before:bg-[radial-gradient(rgba(255,255,255,0.16)_0.5px,transparent_0.5px)] before:bg-size-[9px_9px] before:opacity-15 before:[mask-image:linear-gradient(115deg,black,transparent_66%)] before:content-[''] max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pb-[calc(25px+env(safe-area-inset-bottom))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]"
@@ -42,51 +86,16 @@ export function SiteFooter() {
             Traditional Indian botanicals, translated into clear and considered care.
           </p>
         </div>
-        <nav className="flex flex-col" aria-label="Shop links">
-          <h3 className={footerHeadingClass}>Shop</h3>
-          <Link className={footerLinkClass} href="/shop">
-            All botanicals
-          </Link>
-          <Link className={footerLinkClass} href="/shop?goal=Cleanse">
-            Cleansing rituals
-          </Link>
-          <Link className={footerLinkClass} href="/shop?goal=Softness+%2B+Shine">
-            Softness + shine
-          </Link>
-          <Link className={footerLinkClass} href="/shop?goal=Botanical+Colour">
-            Botanical colour
-          </Link>
-        </nav>
-        <nav className="flex flex-col" aria-label="Discover links">
-          <h3 className={footerHeadingClass}>Discover</h3>
-          <Link className={footerLinkClass} href="/rituals">
-            Build your ritual
-          </Link>
-          <Link className={footerLinkClass} href="/our-story">
-            Our story
-          </Link>
-          <Link className={footerLinkClass} href="/#ingredient-standards">
-            Ingredient standards
-          </Link>
-          <Link className={footerLinkClass} href="/#faq">
-            Frequently asked
-          </Link>
-        </nav>
-        <nav className="flex flex-col" aria-label="Customer care links">
-          <h3 className={footerHeadingClass}>Care</h3>
-          <Link className={footerLinkClass} href="/track-order">
-            Track an order
-          </Link>
-          <Link className={footerLinkClass} href="/shipping-returns">
-            Shipping + returns
-          </Link>
-          <Link className={footerLinkClass} href="/privacy">
-            Privacy
-          </Link>
-          <Link className={footerLinkClass} href="/terms">
-            Terms
-          </Link>
-        </nav>
+        {navigation.slice(0, 3).map((group) => (
+          <nav className="flex flex-col" aria-label={`${group.title} links`} key={group.id}>
+            <h3 className={footerHeadingClass}>{group.title}</h3>
+            {(group.items.length ? group.items : [group]).map((item) => (
+              <Link className={footerLinkClass} href={item.url} key={item.id}>
+                {item.title}
+              </Link>
+            ))}
+          </nav>
+        ))}
       </div>
       <div className="mx-auto flex max-w-[1440px] justify-between border-t border-white/16 pt-[22px] text-[0.62rem] tracking-[0.1em] text-white/68 uppercase max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-2">
         <span>© {new Date().getFullYear()} NatureMist</span>
