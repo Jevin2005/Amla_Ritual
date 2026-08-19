@@ -29,37 +29,19 @@ export function MotionObserver() {
     const body = document.body;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let shouldReduceMotion = reducedMotion.matches;
-
-    body.dataset.motionReady = "true";
-
-    if (reducedMotion.matches || !("IntersectionObserver" in window)) {
-      revealImmediately();
-
-      return () => {
-        delete body.dataset.motionReady;
-      };
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-
-          const element = entry.target as HTMLElement;
-          element.dataset.reveal = "revealed";
-          observer.unobserve(element);
-        }
-      },
-      {
-        rootMargin: "0px 0px -8% 0px",
-        threshold: 0.08,
-      },
-    );
+    let observer: IntersectionObserver | null = null;
+    let mutations: MutationObserver | null = null;
+    let hydrationFrame = 0;
+    let paintFrame = 0;
+    let registerFrame = 0;
+    let registerPaintFrame = 0;
+    let disposed = false;
+    const queuedRoots = new Set<ParentNode>();
 
     const register = (root: ParentNode) => {
       const candidates = collectRevealElements(root);
 
-      if (shouldReduceMotion) {
+      if (shouldReduceMotion || !observer) {
         revealImmediately(root);
         return;
       }
@@ -83,30 +65,98 @@ export function MotionObserver() {
       }
     };
 
-    register(document);
+    const scheduleRegister = (root: ParentNode) => {
+      queuedRoots.add(root);
+      if (registerFrame || registerPaintFrame) return;
 
-    const mutations = new MutationObserver((records) => {
-      for (const record of records) {
-        for (const node of record.addedNodes) {
-          if (node instanceof HTMLElement) register(node);
-        }
+      registerFrame = window.requestAnimationFrame(() => {
+        registerFrame = 0;
+        registerPaintFrame = window.requestAnimationFrame(() => {
+          registerPaintFrame = 0;
+          if (disposed) return;
+
+          const roots = Array.from(queuedRoots);
+          queuedRoots.clear();
+          for (const queuedRoot of roots) register(queuedRoot);
+        });
+      });
+    };
+
+    const start = () => {
+      if (disposed) return;
+
+      body.dataset.motionReady = "true";
+
+      if (shouldReduceMotion || !("IntersectionObserver" in window)) {
+        revealImmediately();
+        return;
       }
-    });
 
-    mutations.observe(body, { childList: true, subtree: true });
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+
+            const element = entry.target as HTMLElement;
+            element.dataset.reveal = "revealed";
+            observer?.unobserve(element);
+          }
+        },
+        {
+          rootMargin: "0px 0px -8% 0px",
+          threshold: 0.08,
+        },
+      );
+
+      register(document);
+
+      mutations = new MutationObserver((records) => {
+        for (const record of records) {
+          for (const node of record.addedNodes) {
+            if (node instanceof HTMLElement) scheduleRegister(node);
+          }
+        }
+      });
+
+      mutations.observe(body, { childList: true, subtree: true });
+    };
+
+    const startAfterHydration = () => {
+      hydrationFrame = window.requestAnimationFrame(() => {
+        hydrationFrame = 0;
+        paintFrame = window.requestAnimationFrame(() => {
+          paintFrame = 0;
+          start();
+        });
+      });
+    };
 
     const handleMotionPreference = (event: MediaQueryListEvent) => {
       if (!event.matches) return;
       shouldReduceMotion = true;
+      if (body.dataset.motionReady !== "true") return;
       revealImmediately();
-      observer.disconnect();
+      observer?.disconnect();
     };
+
+    if (document.readyState === "complete") {
+      startAfterHydration();
+    } else {
+      window.addEventListener("load", startAfterHydration, { once: true });
+    }
 
     reducedMotion.addEventListener("change", handleMotionPreference);
 
     return () => {
-      mutations.disconnect();
-      observer.disconnect();
+      disposed = true;
+      window.removeEventListener("load", startAfterHydration);
+      window.cancelAnimationFrame(hydrationFrame);
+      window.cancelAnimationFrame(paintFrame);
+      window.cancelAnimationFrame(registerFrame);
+      window.cancelAnimationFrame(registerPaintFrame);
+      queuedRoots.clear();
+      mutations?.disconnect();
+      observer?.disconnect();
       reducedMotion.removeEventListener("change", handleMotionPreference);
       delete body.dataset.motionReady;
     };
