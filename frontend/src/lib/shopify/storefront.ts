@@ -352,20 +352,20 @@ export const previewContent: StorefrontContent = {
   homeHeroPoster: {
     url: "/images/naturemist-hero.png",
     altText: "NatureMist botanical hair ritual",
-    width: 1600,
-    height: 2000,
+    width: 1692,
+    height: 930,
   },
   ritualPoster: {
     url: "/images/naturemist-ritual.png",
     altText: "Preparing a NatureMist botanical ritual",
-    width: 1600,
-    height: 2000,
+    width: 1024,
+    height: 1536,
   },
   storyPoster: {
     url: "/images/naturemist-hero.png",
     altText: "NatureMist botanical hair care",
-    width: 1600,
-    height: 2000,
+    width: 1692,
+    height: 930,
   },
   primaryNavigation: [
     { id: "shop", title: "Shop", url: "/shop", items: [] },
