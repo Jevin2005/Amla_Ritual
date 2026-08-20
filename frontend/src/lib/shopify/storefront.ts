@@ -878,7 +878,12 @@ async function loadStorefront(): Promise<StorefrontData> {
       ),
     ]);
 
-  const strict = process.env.SHOPIFY_STRICT_MODE === "true";
+  // A production build can prerender this loader without Shopify being reachable.
+  // Keep deployments deterministic; strict validation still applies when the
+  // deployed server loads or revalidates storefront data.
+  const strict =
+    process.env.SHOPIFY_STRICT_MODE === "true" &&
+    process.env.NEXT_PHASE !== "phase-production-build";
   const rejected = [catalogResult, collectionsResult, contentResult, shopResult].find(
     (result) => result.status === "rejected",
   );
