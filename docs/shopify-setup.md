@@ -4,6 +4,12 @@ The website is a headless Shopify storefront: the existing Next.js design stays 
 
 Until Shopify credentials are configured, the site intentionally serves the original six-product preview catalog. No secret is committed to the repository.
 
+## Frontend-only Vercel preview (no keys)
+
+No custom environment variables are required to deploy the frontend preview. In Vercel, set the project Root Directory to `frontend`, leave the Output Directory empty, and remove any incomplete `SHOPIFY_*` variables. The application will use its bundled preview catalog and browser-local preview cart. Vercel's system-provided production domain is used for canonical metadata and the sitemap when `SITE_URL` is absent.
+
+Add Shopify variables only when both `SHOPIFY_STORE_DOMAIN` and either `SHOPIFY_STOREFRONT_PRIVATE_TOKEN` or `SHOPIFY_STOREFRONT_ACCESS_TOKEN` are ready. Keep `SHOPIFY_STRICT_MODE=false` during setup.
+
 ## 1. Create the Storefront API connection
 
 1. In Shopify Admin, install/open the **Headless** sales channel.
