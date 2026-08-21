@@ -157,7 +157,7 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
         </div>
 
         <div className="min-w-0 pt-[30px] max-[960px]:pt-0">
-          <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--pdp-accent)] uppercase">NatureMist · Ritual {product.collectionNumber}</p>
+          <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--pdp-accent)] uppercase">NatureMist · {product.ritualStep} Ritual</p>
           <h1 className="m-0 max-w-[10ch] font-serif text-[clamp(3.6rem,5.5vw,6.75rem)] font-normal leading-[0.86] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(3.15rem,15vw,5rem)]">{product.name}</h1>
           <p className="mt-[23px] mb-0 font-serif text-2xl text-[var(--pdp-accent)] italic">{product.subtitle}</p>
           <p className="mb-[30px] mt-6 max-w-[550px] text-[1.02rem] leading-[1.75] text-[var(--muted)] max-[960px]:max-w-[720px]">{product.shortDescription}</p>

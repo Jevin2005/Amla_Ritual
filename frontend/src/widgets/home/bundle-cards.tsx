@@ -1,81 +1,136 @@
 "use client";
 
+import Image from "next/image";
+import type { CSSProperties } from "react";
 import { formatCurrency } from "@/domain/catalog/products";
-import { ProductJar } from "@/features/catalog/product-jar";
 import { useStore } from "@/features/store/store-provider";
 
 export function BundleCards() {
   const { products, bundles, addManyToCart } = useStore();
-  const bundleBackgrounds = ["bg-[#d9dfc7]", "bg-[#e2ccc4]", "bg-[#c8d0c2]"];
+  const bundleAccents = [
+    { accent: "#3a6946", soft: "#dde5cc", bg: "bg-[#e8eee0]" },
+    { accent: "#8c564b", soft: "#ebdcd3", bg: "bg-[#f4ebe6]" },
+    { accent: "#2d5a43", soft: "#d7dfd6", bg: "bg-[#e4ede6]" },
+  ];
 
   return (
-    <div className="mt-[clamp(52px,5vw,68px)] grid grid-cols-3 gap-[clamp(14px,1.6vw,22px)] max-[1080px]:grid-cols-2 max-[680px]:grid-cols-1">
+    <div className="mt-8 grid grid-cols-3 gap-[clamp(16px,1.8vw,26px)] max-[860px]:grid-cols-2 max-[680px]:grid-cols-2 max-[680px]:gap-2.5 max-[420px]:gap-2">
       {bundles.map((bundle, index) => {
         const bundleProducts = bundle.slugs
           .map((slug) => products.find((product) => product.slug === slug))
           .filter((product) => product !== undefined);
-        const total = bundleProducts.reduce((sum, product) => sum + product.pricePaise, 0);
+        const total = bundleProducts.reduce(
+          (sum, product) => sum + product.pricePaise,
+          0
+        );
         const currencyCode = bundleProducts[0]?.currencyCode || "INR";
         const isAvailable =
           bundleProducts.length > 0 &&
           bundleProducts.every((product) => product.availableForSale !== false);
+
+        const accentConfig = bundleAccents[index % bundleAccents.length];
+        const style = {
+          "--product-accent": accentConfig.accent,
+          "--product-soft": accentConfig.soft,
+        } as CSSProperties;
+
         return (
           <article
-            className="group/bundle flex h-full flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] transition-[transform,box-shadow] duration-500 ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)]"
             key={bundle.id}
+            className="group/card @container relative flex h-full flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] transition-[transform,box-shadow,ring-color] duration-[420ms] ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] hover:ring-[color-mix(in_srgb,var(--product-accent)_34%,transparent)] max-[680px]:rounded-lg"
+            style={style}
           >
+            {/* ── Photo Stage (Exact aspect-square as ProductCard) ── */}
             <div
-              className={`relative flex h-[320px] items-end justify-center overflow-hidden pb-[30px] ${bundleBackgrounds[index % bundleBackgrounds.length]} before:absolute before:inset-[12%] before:rounded-full before:border before:border-[rgba(21,59,45,0.13)] before:content-[''] after:absolute after:inset-[22%] after:rounded-full after:border after:border-[rgba(21,59,45,0.09)] after:content-[''] max-[520px]:h-[290px] max-[520px]:pb-6`}
-              aria-hidden="true"
+              className={`relative aspect-square w-full flex-none overflow-hidden ${accentConfig.bg} flex items-center justify-center p-3 max-[680px]:p-2`}
             >
-              {bundleProducts.slice(0, 4).map((product, productIndex) => (
-                <ProductJar
-                  key={product.slug}
-                  product={product}
-                  size="small"
-                  decorative
-                  className={`z-[2] mx-[-9px] transition-transform duration-500 ease-[var(--ease)] group-hover/bundle:-translate-y-1 max-[1180px]:mx-[-15px] max-[380px]:mx-[-20px] ${
-                    productIndex % 2 === 1
-                      ? "[transform:translateY(-14px)] max-[1180px]:[transform:translateY(-12px)_scale(0.88)] max-[380px]:[transform:translateY(-10px)_scale(0.74)]"
-                      : "max-[1180px]:[transform:scale(0.88)] max-[380px]:[transform:scale(0.74)]"
-                  }`}
-                />
-              ))}
-              {bundleProducts.length > 4 && (
-                <span className="ml-[5px] grid size-[46px] flex-none self-center rounded-full bg-[var(--forest)] text-[0.72rem] text-[var(--paper)] [place-items:center] max-[380px]:ml-0 max-[380px]:size-10">
-                  +{bundleProducts.length - 4}
-                </span>
-              )}
+              {/* Top-Right Set Badge */}
+              <span className="absolute top-3 right-3 z-10 rounded-full border border-black/5 bg-white/90 px-2 py-0.5 text-[0.52rem] font-bold uppercase tracking-wider text-[var(--forest)] shadow-xs backdrop-blur-xs max-[680px]:top-2 max-[680px]:right-2 max-[680px]:text-[0.42rem] max-[680px]:px-1.5">
+                Set of {bundleProducts.length}
+              </span>
+
+              {/* Overlapping Combo Photo Arrangement */}
+              <div className="relative flex size-full items-center justify-center">
+                {bundleProducts.slice(0, 3).map((product, productIndex) => {
+                  const offsets = [
+                    "z-10 -mr-4 max-[680px]:-mr-3",
+                    "z-20 -translate-y-2 scale-105 shadow-md",
+                    "z-10 -ml-4 max-[680px]:-ml-3",
+                  ];
+                  return (
+                    <div
+                      key={product.slug}
+                      className={`relative size-[58%] overflow-hidden rounded-xl border border-white/80 bg-white/70 shadow-sm transition-transform duration-300 group-hover/card:scale-105 max-[680px]:rounded-lg ${
+                        offsets[productIndex % offsets.length]
+                      }`}
+                    >
+                      <Image
+                        src={
+                          product.featuredImage?.url ||
+                          "/images/amla-powder.jpg"
+                        }
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 680px) 35vw, (max-width: 900px) 30vw, 22vw"
+                        className="size-full object-cover object-center"
+                      />
+                    </div>
+                  );
+                })}
+
+                {/* Extra badge if more than 3 products */}
+                {bundleProducts.length > 3 && (
+                  <span className="absolute right-1 bottom-1 z-30 grid size-6 place-items-center rounded-full bg-[var(--forest)] text-[0.52rem] font-bold text-white shadow-md max-[680px]:size-5 max-[680px]:text-[0.46rem]">
+                    +{bundleProducts.length - 3}
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="flex flex-1 flex-col px-[30px] pt-7 pb-8 max-[680px]:px-6 max-[680px]:pt-[26px] max-[680px]:pb-[30px]">
-              <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.18em] text-[var(--botanical)] uppercase">
-                Ritual set {String(index + 1).padStart(2, "0")}
+
+            {/* ── Info Area (Identical typography and padding to ProductCard) ── */}
+            <div className="flex flex-1 flex-col border-t border-[var(--line)] px-5 pt-4 pb-5 max-[680px]:px-3 max-[680px]:pt-2.5 max-[680px]:pb-3 max-[420px]:px-2.5 max-[420px]:py-2">
+              <p className="mb-1 text-[0.62rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.46rem] max-[680px]:tracking-[0.08em]">
+                Curated Ritual Set
               </p>
-              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2rem,3vw,3.1rem)] leading-[0.98] font-normal tracking-[-0.045em]">
+
+              <h3 className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,1.95rem)] leading-[1.05] tracking-[-0.03em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:mb-0.5 max-[680px]:text-[1.02rem] max-[420px]:text-[0.92rem]">
                 {bundle.name}
               </h3>
-              <p className="min-h-[50px] text-[0.82rem] leading-[1.65] [color:var(--muted)]">
-                {bundle.description}
+
+              <p className="mb-0 text-[0.74rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-1 max-[680px]:text-[0.56rem] max-[680px]:leading-[1.25] max-[420px]:text-[0.5rem]">
+                {bundleProducts
+                  .map((product) => product.name.replace(" Powder", ""))
+                  .join(" · ")}
               </p>
-              <div className="my-[22px] grid">
-                <span className="[color:var(--forest)] [font-family:var(--font-display)] text-[1.3rem]">
-                  {formatCurrency(total, currencyCode)}
-                </span>
-                <small className="text-[0.55rem] tracking-[0.08em] text-[var(--muted)] uppercase">
-                  {isAvailable ? "Combined price" : "Currently unavailable"}
-                </small>
+
+              <div className="mt-auto pt-4 max-[680px]:pt-2">
+                <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2">
+                  <div>
+                    <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+                      <span className="[font-family:var(--font-display)] text-[1.22rem] leading-none text-[var(--forest)] max-[680px]:text-[0.95rem] max-[420px]:text-[0.88rem]">
+                        {formatCurrency(total, currencyCode)}
+                      </span>
+                    </span>
+                    <span className="mt-0.5 block text-[0.55rem] font-bold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.44rem]">
+                      {isAvailable ? "Complete Set" : "Sold out"}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="grid size-10 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.15rem] text-white shadow-[0_6px_18px_color-mix(in_srgb,var(--forest)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 max-[680px]:size-7 max-[680px]:text-[0.85rem] max-[420px]:size-6.5 max-[420px]:text-[0.75rem]"
+                    onClick={() =>
+                      addManyToCart(
+                        bundleProducts.map((product) => product.slug)
+                      )
+                    }
+                    disabled={!isAvailable}
+                    aria-label={`Add ${bundle.name} to bag`}
+                  >
+                    <span aria-hidden="true">＋</span>
+                  </button>
+                </div>
               </div>
-              <button
-                className="mt-auto inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase shadow-[0_10px_24px_rgba(21,59,45,0.14)] [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),box-shadow_350ms_var(--ease)] motion-reduce:transition-none hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.2)] hover:[transform:translateY(-2px)] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:transform-none disabled:hover:shadow-none"
-                type="button"
-                onClick={() =>
-                  addManyToCart(bundleProducts.map((product) => product.slug))
-                }
-                disabled={!isAvailable}
-              >
-                {isAvailable ? "Add the ritual" : "Sold out"}{" "}
-                <span aria-hidden="true">↗</span>
-              </button>
             </div>
           </article>
         );
@@ -83,3 +138,5 @@ export function BundleCards() {
     </div>
   );
 }
+
+

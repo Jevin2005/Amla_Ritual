@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { RitualGoal } from "@/domain/catalog/products";
-import { ProductJar } from "@/features/catalog/product-jar";
+import { formatCurrency, type RitualGoal } from "@/domain/catalog/products";
 import { useStore } from "@/features/store/store-provider";
 import {
   goalOptions,
@@ -13,17 +13,17 @@ import {
 } from "@/features/rituals/recommendation";
 
 export function RitualFinder() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [goal, setGoal] = useState<RitualGoal | null>(null);
   const [hairFeel, setHairFeel] = useState<HairFeel | null>(null);
   const { products, addToCart, track } = useStore();
+
   const result = useMemo(
-    () =>
-      goal && hairFeel ? recommendRitual(products, goal, hairFeel) : null,
+    () => (goal && hairFeel ? recommendRitual(products, goal, hairFeel) : null),
     [goal, hairFeel, products],
   );
 
-  const finish = () => {
+  const handleFinish = () => {
     if (!goal || !hairFeel) return;
     const recommendation = recommendRitual(products, goal, hairFeel);
     if (!recommendation) return;
@@ -41,159 +41,201 @@ export function RitualFinder() {
   };
 
   return (
-    <div className="min-w-0 rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.045] p-[clamp(22px,3vw,38px)] shadow-[0_24px_70px_rgba(0,0,0,0.12)] backdrop-blur-sm max-[680px]:rounded-[var(--radius-md)]">
-      <div className="mb-10 grid grid-cols-3 gap-2" aria-label={`Step ${step} of 3`}>
-        {[1, 2, 3].map((number) => (
+    <div className="w-full min-w-0 rounded-2xl border border-white/12 bg-white/[0.045] p-5 shadow-[0_16px_48px_rgba(0,0,0,0.18)] backdrop-blur-md max-[680px]:p-3.5">
+      {/* Top Header / Step indicator */}
+      <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#c8d88e]">
+            {step === 3 ? "Recommendation" : `Step 0${step} / 02`}
+          </span>
+          <span className="text-[0.6rem] text-white/40">·</span>
+          <span className="text-[0.65rem] text-white/70">
+            {step === 1
+              ? "Ritual Goal"
+              : step === 2
+                ? "Hair Feel"
+                : "Your Match"}
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5" aria-label={`Step ${step} of 2`}>
           <span
-            key={number}
-            className={`h-1 rounded-full transition-colors duration-[350ms] ${
-              step >= number ? "bg-[var(--amla)]" : "bg-white/15"
+            className={`h-1.5 w-6 rounded-full transition-all duration-300 ${
+              step >= 1 ? "bg-[#c8d88e]" : "bg-white/15"
             }`}
           />
-        ))}
+          <span
+            className={`h-1.5 w-6 rounded-full transition-all duration-300 ${
+              step >= 2 ? "bg-[#c8d88e]" : "bg-white/15"
+            }`}
+          />
+        </div>
       </div>
 
+      {/* Step 1: Goal Selection */}
       {step === 1 && (
         <fieldset className="m-0 border-0 p-0">
-          <legend className="mb-[30px] grid max-w-[660px] font-serif text-[clamp(1.8rem,3vw,3.3rem)] leading-[1.08] tracking-[-0.035em]">
-            <span className="mb-2 font-sans text-[0.65rem] font-bold tracking-[0.14em] text-[var(--amla)]">01</span>
-            What would you like your ritual to focus on?
+          <legend className="mb-3 text-[0.88rem] font-medium text-white max-[680px]:text-[0.82rem]">
+            What is your primary ritual focus today?
           </legend>
-          <div className="mb-[26px] grid grid-cols-2 gap-3 max-[620px]:grid-cols-1">
-            {goalOptions.map((option) => (
-              <label
-                key={option.goal}
-                className={`relative grid min-h-[145px] cursor-pointer rounded-[var(--radius-md)] border border-white/12 bg-white/[0.035] p-6 transition-[background-color,border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[var(--amla)] hover:bg-white/8 [&:has(input:focus-visible)]:-outline-offset-3 [&:has(input:focus-visible)]:outline-2 [&:has(input:focus-visible)]:outline-[var(--amla)] max-[620px]:min-h-[125px] max-[620px]:p-5 ${
-                  goal === option.goal ? "border-[var(--amla)] bg-white/10" : ""
-                }`}
-              >
-                <input
-                  className="pointer-events-none absolute opacity-0"
-                  type="radio"
-                  name="ritual-goal"
-                  value={option.goal}
-                  checked={goal === option.goal}
-                  onChange={() => setGoal(option.goal)}
-                />
-                <span className="text-[0.6rem] text-[var(--amla)]">{option.number}</span>
-                <strong className="self-end font-serif text-[1.45rem] font-normal">{option.goal}</strong>
-                <small className="text-[0.72rem] leading-[1.5] text-white/68">{option.copy}</small>
-                <span
-                  className={`absolute right-5 top-5 grid size-[25px] place-items-center rounded-full border text-xs ${
-                    goal === option.goal
-                      ? "border-[var(--amla)] bg-[var(--amla)] text-[var(--forest)]"
-                      : "border-white/30 text-transparent"
+          <div className="mb-4 grid grid-cols-2 gap-2.5 max-[680px]:grid-cols-2 max-[440px]:grid-cols-1">
+            {goalOptions.map((option) => {
+              const isSelected = goal === option.goal;
+              return (
+                <button
+                  key={option.goal}
+                  type="button"
+                  onClick={() => setGoal(option.goal)}
+                  className={`group flex items-start gap-2.5 rounded-xl border p-3 text-left transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.99] max-[680px]:p-2.5 ${
+                    isSelected
+                      ? "border-[#c8d88e] bg-white/10 shadow-[0_4px_14px_rgba(200,216,142,0.15)]"
+                      : "border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]"
                   }`}
-                  aria-hidden="true"
                 >
-                  ✓
-                </span>
-              </label>
-            ))}
+                  <span
+                    className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border text-[0.55rem] font-bold ${
+                      isSelected
+                        ? "border-[#c8d88e] bg-[#c8d88e] text-[#122b1e]"
+                        : "border-white/30 text-transparent"
+                    }`}
+                  >
+                    ✓
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="m-0 text-[0.82rem] font-semibold text-white group-hover:text-[#c8d88e] max-[680px]:text-[0.76rem]">
+                      {option.goal}
+                    </p>
+                    <p className="m-0 line-clamp-1 text-[0.66rem] text-white/60 max-[680px]:text-[0.62rem]">
+                      {option.copy}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
-          <button
-            type="button"
-            className="inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] shadow-[0_10px_26px_rgba(0,0,0,0.14)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)] disabled:cursor-not-allowed disabled:opacity-45"
-            disabled={!goal}
-            onClick={() => setStep(2)}
-          >
-            Continue <span aria-hidden="true">→</span>
-          </button>
+          <div className="flex items-center justify-end">
+            <button
+              type="button"
+              className="inline-flex min-h-[38px] items-center justify-center gap-2 rounded-lg bg-[#c8d88e] px-5 py-2 text-[0.74rem] font-bold uppercase tracking-[0.08em] text-[#122b1e] shadow-sm transition-all hover:bg-[#d8e8a0] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+              disabled={!goal}
+              onClick={() => setStep(2)}
+            >
+              Continue <span>→</span>
+            </button>
+          </div>
         </fieldset>
       )}
 
+      {/* Step 2: Hair Feel Selection */}
       {step === 2 && (
         <fieldset className="m-0 border-0 p-0">
-          <legend className="mb-[30px] grid max-w-[660px] font-serif text-[clamp(1.8rem,3vw,3.3rem)] leading-[1.08] tracking-[-0.035em]">
-            <span className="mb-2 font-sans text-[0.65rem] font-bold tracking-[0.14em] text-[var(--amla)]">02</span>
-            How do your hair and lengths feel today?
+          <legend className="mb-3 text-[0.88rem] font-medium text-white max-[680px]:text-[0.82rem]">
+            How do your scalp and hair feel?
           </legend>
-          <div className="mb-[35px] grid grid-cols-2 gap-3 max-[620px]:grid-cols-1">
-            {hairFeels.map((option) => (
-              <label
-                key={option}
-                className={`relative min-h-[70px] cursor-pointer rounded-[var(--radius-sm)] border border-white/20 bg-white/[0.025] p-[22px] transition-[border-color,background-color,transform] duration-250 hover:-translate-y-0.5 hover:border-[var(--amla)] hover:bg-[rgba(183,212,90,0.08)] [&:has(input:focus-visible)]:-outline-offset-3 [&:has(input:focus-visible)]:outline-2 [&:has(input:focus-visible)]:outline-[var(--amla)] ${
-                  hairFeel === option
-                    ? "border-[var(--amla)] bg-[rgba(183,212,90,0.1)]"
-                    : ""
-                }`}
-              >
-                <input
-                  className="pointer-events-none absolute opacity-0"
-                  type="radio"
-                  name="hair-feel"
-                  value={option}
-                  checked={hairFeel === option}
-                  onChange={() => setHairFeel(option)}
-                />
-                <span>{option}</span>
-              </label>
-            ))}
+          <div className="mb-4 grid grid-cols-2 gap-2.5 max-[680px]:grid-cols-2 max-[440px]:grid-cols-1">
+            {hairFeels.map((option) => {
+              const isSelected = hairFeel === option;
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setHairFeel(option)}
+                  className={`flex items-center gap-2.5 rounded-xl border p-3 text-left transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.99] max-[680px]:p-2.5 ${
+                    isSelected
+                      ? "border-[#c8d88e] bg-white/10 shadow-[0_4px_14px_rgba(200,216,142,0.15)]"
+                      : "border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]"
+                  }`}
+                >
+                  <span
+                    className={`grid size-4 shrink-0 place-items-center rounded-full border text-[0.55rem] font-bold ${
+                      isSelected
+                        ? "border-[#c8d88e] bg-[#c8d88e] text-[#122b1e]"
+                        : "border-white/30 text-transparent"
+                    }`}
+                  >
+                    ✓
+                  </span>
+                  <span className="text-[0.8rem] font-medium text-white max-[680px]:text-[0.74rem]">
+                    {option}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-          <div className="flex gap-3 max-[680px]:flex-col-reverse max-[680px]:[&>button]:w-full">
+          <div className="flex items-center justify-between gap-3">
             <button
               type="button"
-              className="inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-white/28 bg-transparent px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--paper)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-white/8"
+              className="inline-flex min-h-[38px] items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-[0.72rem] font-semibold text-white/80 transition-all hover:bg-white/10"
               onClick={() => setStep(1)}
             >
-              Back
+              ← Back
             </button>
             <button
               type="button"
-              className="inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] shadow-[0_10px_26px_rgba(0,0,0,0.14)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)] disabled:cursor-not-allowed disabled:opacity-45"
+              className="inline-flex min-h-[38px] items-center justify-center gap-2 rounded-lg bg-[#c8d88e] px-5 py-2 text-[0.74rem] font-bold uppercase tracking-[0.08em] text-[#122b1e] shadow-sm transition-all hover:bg-[#d8e8a0] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
               disabled={!hairFeel}
-              onClick={finish}
+              onClick={handleFinish}
             >
-              Reveal my ritual <span aria-hidden="true">→</span>
+              Reveal Ritual <span>→</span>
             </button>
           </div>
         </fieldset>
       )}
 
+      {/* Step 3: Match Result Card */}
       {step === 3 && result && (
-        <div className="grid grid-cols-[0.68fr_1fr] items-center gap-[clamp(32px,5vw,56px)] max-[780px]:grid-cols-1" aria-live="polite">
-          <div className="flex min-h-[390px] items-end justify-center overflow-hidden rounded-[var(--radius-md)] bg-white/8 ring-1 ring-white/10 max-[780px]:min-h-[340px]">
-            <ProductJar product={result.product} size="large" className="max-[780px]:origin-bottom max-[780px]:scale-[0.82]" decorative />
+        <div className="flex items-center gap-4 max-[680px]:flex-col max-[680px]:items-start" aria-live="polite">
+          {/* Result image */}
+          <div className="relative size-[105px] shrink-0 overflow-hidden rounded-xl border border-white/15 bg-white/5 shadow-md max-[680px]:size-[80px]">
+            <Image
+              src={result.product.featuredImage?.url || "/images/amla-powder.jpg"}
+              alt={result.product.name}
+              fill
+              sizes="120px"
+              className="size-full object-cover object-center"
+            />
           </div>
-          <div>
-            <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[#c8d88e]">
-              {result.requiresColourReview ? "A careful next step" : "Your starting ritual"}
-            </p>
-            <h3 className="mb-[18px] font-serif text-[clamp(3rem,4vw,5rem)] font-normal leading-[0.95] tracking-[-0.05em]">{result.product.name}</h3>
-            <p className="max-w-[520px] text-white/70">{result.product.shortDescription}</p>
-            <p className="max-w-[520px] border-l-2 border-[var(--amla)] pl-4 text-[0.78rem] text-white/70">
-              {result.guidance || "This is cosmetic guidance, not a diagnosis. Always read the final pack directions and patch test."}
-            </p>
-            <div className="flex gap-3 max-[680px]:items-stretch max-[680px]:flex-col">
-              {result.requiresColourReview ? (
-                <Link
-                  className="inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)]"
-                  href={`/shop/${result.product.slug}`}
-                >
-                  Read colour guidance <span aria-hidden="true">↗</span>
-                </Link>
-              ) : (
-                <>
-                  <button
-                    className="inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--paper)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--forest)] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--amla)] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-y-0"
-                    type="button"
-                    onClick={() => addToCart(result.product.slug)}
-                    disabled={result.product.availableForSale === false}
-                  >
-                    {result.product.availableForSale === false
-                      ? "Sold out"
-                      : "Add to bag"}{" "}
-                    <span aria-hidden="true">↗</span>
-                  </button>
-                  <Link className="inline-flex items-center gap-3.5 border-b border-[var(--paper)] pb-[5px] text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--paper)] transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px] max-[680px]:min-h-11" href={`/shop/${result.product.slug}`}>
-                    Read the ritual
-                  </Link>
-                </>
-              )}
+
+          {/* Result details */}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[0.56rem] font-bold uppercase tracking-[0.14em] text-[#c8d88e]">
+                Ritual {result.product.collectionNumber} Match
+              </span>
+              <span className="text-[0.6rem] text-white/40">·</span>
+              <span className="text-[0.7rem] font-bold text-white">
+                {formatCurrency(result.product.pricePaise, result.product.currencyCode || "INR")}
+              </span>
             </div>
-            <button className="mt-[25px] border-b border-white/50 bg-transparent pb-[3px] text-[0.66rem] uppercase tracking-[0.1em] text-white/70 max-[680px]:inline-flex max-[680px]:min-h-11 max-[680px]:items-center" type="button" onClick={reset}>
-              Start again
-            </button>
+            <h3 className="my-0.5 [font-family:var(--font-display)] text-[1.45rem] font-normal leading-tight text-white max-[680px]:text-[1.25rem]">
+              {result.product.name}
+            </h3>
+            <p className="mb-3 line-clamp-2 text-[0.72rem] leading-[1.4] text-white/70 max-[680px]:mb-2.5 max-[680px]:text-[0.66rem]">
+              {result.guidance || result.product.shortDescription}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                className="inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-lg bg-[#c8d88e] px-4 py-1.5 text-[0.72rem] font-bold uppercase tracking-[0.08em] text-[#122b1e] shadow-sm transition-all hover:bg-[#d8e8a0] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                onClick={() => addToCart(result.product.slug)}
+                disabled={result.product.availableForSale === false}
+              >
+                {result.product.availableForSale === false ? "Sold out" : "Add to Bag"} <span>+</span>
+              </button>
+              <Link
+                href={`/shop/${result.product.slug}`}
+                className="inline-flex min-h-[36px] items-center justify-center rounded-lg border border-white/20 px-3.5 py-1.5 text-[0.72rem] font-medium text-white transition-all hover:bg-white/10"
+              >
+                View Ritual ↗
+              </Link>
+              <button
+                type="button"
+                onClick={reset}
+                className="ml-auto text-[0.62rem] text-white/50 underline-offset-2 hover:text-white hover:underline"
+              >
+                ↻ Restart
+              </button>
+            </div>
           </div>
         </div>
       )}

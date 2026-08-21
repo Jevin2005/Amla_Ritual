@@ -123,6 +123,12 @@ export const products: Product[] = [
     experience: "Beginner",
     colorConsiderations: ["Grey", "Blonde/Bleached", "Chemically Coloured"],
     searchTerms: ["amla", "indian gooseberry", "shine", "conditioning", "mask"],
+    featuredImage: {
+      url: "/images/amla-powder.jpg",
+      altText: "NatureMist Amla Powder 100% Pure Herbal Powder 250g Jar",
+      width: 1000,
+      height: 1000,
+    },
     faqs: [
       {
         question: "Is Amla a good first botanical ritual?",
@@ -153,6 +159,12 @@ export const products: Product[] = [
     metaDescription:
       "Explore the NatureMist Reetha wash ritual, with careful preparation, pairing and eye-safety guidance.",
     ingredient: "Reetha fruit shell powder. Exact plant part and batch details are confirmed on the final pack.",
+    featuredImage: {
+      url: "/images/reetha-powder.jpg",
+      altText: "NatureMist Reetha Powder 100% Pure Herbal Powder 250g Jar",
+      width: 1000,
+      height: 1000,
+    },
     benefits: [
       "Helps lift excess oil and everyday buildup",
       "Creates a naturally low-foam cleansing ritual",
@@ -207,6 +219,12 @@ export const products: Product[] = [
     metaDescription:
       "Meet the NatureMist Shikakai ritual, a thoughtful low-lather botanical wash for soft, manageable-feeling hair.",
     ingredient: "Shikakai fruit powder. Botanical identity and plant part are confirmed on the final pack.",
+    featuredImage: {
+      url: "/images/shikakai-powder.jpg",
+      altText: "NatureMist Shikakai Powder 100% Pure Herbal Powder 250g Jar",
+      width: 1000,
+      height: 1000,
+    },
     benefits: [
       "Supports a gentle, low-foam cleanse",
       "Helps hair feel soft and manageable",
@@ -261,6 +279,12 @@ export const products: Product[] = [
     metaDescription:
       "Discover NatureMist Bhringraj, a grounding scalp-and-length botanical ritual explained without exaggerated claims.",
     ingredient: "Bhringraj whole plant powder. Botanical species and plant part are verified on the final pack.",
+    featuredImage: {
+      url: "/images/bhringraj-powder.jpg",
+      altText: "NatureMist Bhringraj Powder 100% Pure Herbal Powder 250g Jar",
+      width: 1000,
+      height: 1000,
+    },
     benefits: [
       "Creates a grounding scalp-and-length ritual",
       "Supports conditioned, cared-for hair",
@@ -315,6 +339,12 @@ export const products: Product[] = [
     metaDescription:
       "Explore NatureMist Hibiscus, a vivid floral powder for softness-focused, glossy-looking hair rituals.",
     ingredient: "Hibiscus flower powder. Species, plant part and cosmetic use are confirmed on the final pack.",
+    featuredImage: {
+      url: "/images/hibiscus-powder.jpg",
+      altText: "NatureMist Hibiscus Powder 100% Pure Herbal Powder 250g Jar",
+      width: 1000,
+      height: 1000,
+    },
     benefits: [
       "Supports soft-feeling, smooth lengths",
       "Encourages a glossy-looking finish",
@@ -369,6 +399,12 @@ export const products: Product[] = [
     metaDescription:
       "Learn the NatureMist Indigo colour ritual, including honest result variables, strand testing and essential safety guidance.",
     ingredient: "Indigo leaf powder. Batch identity and colour-use directions are confirmed on the final pack.",
+    featuredImage: {
+      url: "/images/indigo-powder.jpg",
+      altText: "NatureMist Indigo Powder 100% Pure Herbal Powder 250g Jar",
+      width: 1000,
+      height: 1000,
+    },
     benefits: [
       "Deposits botanical colour when prepared correctly",
       "Supports traditional multi-step colour rituals",
