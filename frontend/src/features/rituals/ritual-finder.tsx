@@ -199,7 +199,7 @@ export function RitualFinder() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <span className="text-[0.56rem] font-bold uppercase tracking-[0.14em] text-[#c8d88e]">
-                Ritual {result.product.collectionNumber} Match
+                {result.product.ritualStep} Ritual Match
               </span>
               <span className="text-[0.6rem] text-white/40">·</span>
               <span className="text-[0.7rem] font-bold text-white">
