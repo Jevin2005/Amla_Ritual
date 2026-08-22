@@ -2,16 +2,22 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { globalSafety } from "@/domain/catalog/products";
-import { ProductCard } from "@/features/catalog/product-card";
-import { ProductDetailActions } from "@/features/catalog/product-detail-actions";
-import { ProductGallery } from "@/features/catalog/product-gallery";
-import { ProductReviewsSection } from "@/features/catalog/product-reviews";
+import {
+  ProductCard,
+  ProductDetailActions,
+  ProductGallery,
+  ProductReviewsSection,
+} from "@/features/catalog";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
 
 export const dynamicParams = true;
 
+type ProductPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateMetadata(
-  props: PageProps<"/shop/[slug]">,
+  props: ProductPageProps,
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const product = await getStorefrontProduct(slug);
@@ -43,7 +49,7 @@ export async function generateMetadata(
   };
 }
 
-export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
+export default async function ProductPage(props: ProductPageProps) {
   const { slug } = await props.params;
   const [storefront, product] = await Promise.all([
     getStorefront(),

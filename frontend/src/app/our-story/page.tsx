@@ -242,9 +242,8 @@ export default async function OurStoryPage() {
             {chapters.map((chapter, i) => (
               <article
                 key={chapter.number}
-                className={`grid items-center gap-[clamp(40px,6vw,90px)] max-[800px]:grid-cols-1 max-[800px]:gap-8 max-[680px]:gap-6 ${
-                  chapter.imageSide === "right" ? "grid-cols-[1.1fr_0.9fr]" : "grid-cols-[0.9fr_1.1fr]"
-                }`}
+                className={`grid items-center gap-[clamp(40px,6vw,90px)] max-[800px]:grid-cols-1 max-[800px]:gap-8 max-[680px]:gap-6 ${chapter.imageSide === "right" ? "grid-cols-[1.1fr_0.9fr]" : "grid-cols-[0.9fr_1.1fr]"
+                  }`}
               >
                 {/* Text block */}
                 <div className={chapter.imageSide === "left" ? "order-2 max-[800px]:order-1" : ""}>
@@ -519,9 +518,8 @@ export default async function OurStoryPage() {
             {standards.map((s, index) => (
               <article
                 key={s.number}
-                className={`flex min-h-[320px] flex-col p-[clamp(22px,3vw,38px)] max-[680px]:min-h-[220px] max-[680px]:p-5 ${
-                  index === 2 ? "bg-white/10 backdrop-blur-sm" : "bg-[var(--forest-dark)]"
-                }`}
+                className={`flex min-h-[320px] flex-col p-[clamp(22px,3vw,38px)] max-[680px]:min-h-[220px] max-[680px]:p-5 ${index === 2 ? "bg-white/10 backdrop-blur-sm" : "bg-[var(--forest-dark)]"
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[0.64rem] font-bold tracking-[0.18em] text-[var(--amla)] max-[680px]:text-[0.54rem]">{s.number}</span>

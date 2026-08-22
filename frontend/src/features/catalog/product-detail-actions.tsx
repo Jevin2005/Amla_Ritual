@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   formatCurrency,
   getDefaultVariant,
@@ -28,6 +29,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const resetTimer = useRef<number | null>(null);
   const wished = isWishlisted(product.slug);
   const variants = product.variants || [];
@@ -50,6 +52,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
     (variants.length === 1 && variants[0].title !== "Default Title");
 
   useEffect(() => {
+    setMounted(true);
     return () => {
       if (resetTimer.current) window.clearTimeout(resetTimer.current);
     };
@@ -92,10 +95,11 @@ export function ProductDetailActions({ product }: { product: Product }) {
   };
 
   return (
-    <>
-      <div className="grid pt-[27px] pb-3.5">
-        <div className="flex flex-wrap items-baseline gap-3">
-          <span className="font-serif text-[2rem] text-[var(--forest)]">
+    <div className="flex flex-col gap-3">
+      {/* Price & Stock Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-y border-[var(--line)] py-2.5">
+        <div className="flex items-baseline gap-2">
+          <span className="[font-family:var(--font-display)] text-[1.85rem] font-semibold text-[var(--forest)] max-[680px]:text-[1.55rem]">
             {formatCurrency(pricePaise, currencyCode)}
           </span>
           {compareAtPricePaise && compareAtPricePaise > pricePaise ? (
@@ -104,21 +108,35 @@ export function ProductDetailActions({ product }: { product: Product }) {
             </del>
           ) : null}
         </div>
-        <small className="text-[0.57rem] tracking-[0.1em] text-[var(--muted)] uppercase">
-          {source === "shopify" ? "Live Shopify price" : "Preview price"}
-        </small>
+
+        {/* Stock status indicator */}
+        <div className="flex items-center gap-1.5 text-[0.66rem] font-bold uppercase tracking-wider max-[680px]:text-[0.6rem]">
+          <span
+            className={`size-2 rounded-full ${
+              available ? "bg-[#529d38] ring-2 ring-[#529d38]/30 animate-pulse" : "bg-red-500"
+            }`}
+          />
+          <span className={available ? "text-[var(--forest)]" : "text-red-600"}>
+            {available
+              ? selectedVariant?.quantityAvailable && selectedVariant.quantityAvailable <= 5
+                ? `Only ${selectedVariant.quantityAvailable} left`
+                : "In Stock · Ready to ship"
+              : "Sold Out"}
+          </span>
+        </div>
       </div>
 
+      {/* Variant Choice If Applicable */}
       {hasVariantChoice && (
-        <div className="mb-[18px] grid gap-2">
+        <div className="grid gap-1">
           <label
-            className="text-[0.62rem] font-bold tracking-[0.09em] text-[var(--forest)] uppercase"
+            className="text-[0.62rem] font-bold tracking-[0.1em] text-[var(--forest)] uppercase"
             htmlFor={`variant-${product.slug}`}
           >
-            Choose an option
+            Select Option
           </label>
           <select
-            className="h-[52px] w-full rounded-full border border-[var(--line)] bg-[var(--paper)] px-5 text-[0.76rem] text-[var(--forest)] outline-none focus:border-[var(--pdp-accent)]"
+            className="h-10 w-full rounded-xl border border-[var(--line)] bg-[var(--paper)] px-3 text-[0.76rem] text-[var(--forest)] outline-none focus:border-[var(--botanical)] cursor-pointer"
             id={`variant-${product.slug}`}
             value={selectedVariant?.id || ""}
             onChange={(event) => {
@@ -150,136 +168,179 @@ export function ProductDetailActions({ product }: { product: Product }) {
               </option>
             ))}
           </select>
-          {selectedVariant?.selectedOptions.length ? (
-            <p className="m-0 text-[0.64rem] text-[var(--muted)]">
-              {selectedVariant.selectedOptions
-                .map((option) => `${option.name}: ${option.value}`)
-                .join(" · ")}
-            </p>
-          ) : null}
         </div>
       )}
 
-      <p className="mb-[18px] flex items-center gap-[9px] text-[0.68rem] tracking-[0.08em] text-[var(--muted)] uppercase">
-        <i
-          className={`size-[7px] rounded-full shadow-[0_0_0_4px_color-mix(in_srgb,var(--pdp-accent)_14%,transparent)] ${available ? "bg-[var(--pdp-accent)]" : "bg-[#9a3d2b]"
-            }`}
-        />
-        {available
-          ? selectedVariant?.quantityAvailable && selectedVariant.quantityAvailable <= 5
-            ? `Only ${selectedVariant.quantityAvailable} available`
-            : product.availability
-          : "Sold out"}
-      </p>
+      {/* Desktop Inline Actions (Only shown in Desktop 2-column view min-width 961px) */}
+      <div className="flex flex-col gap-2.5 max-[960px]:hidden">
+        {/* Main Action Buttons Grid */}
+        <div className="grid grid-cols-[105px_minmax(0,1fr)] gap-2.5">
+          {/* Quantity Stepper */}
+          <div
+            className="inline-grid h-11 grid-cols-3 items-center overflow-hidden rounded-full border border-[var(--line)] bg-[var(--paper)] shadow-2xs"
+            aria-label={`Quantity for ${product.name}`}
+          >
+            <button
+              type="button"
+              className="h-full bg-transparent text-sm text-[var(--forest)] transition-colors hover:bg-[var(--ivory)] disabled:opacity-40 cursor-pointer"
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              aria-label="Decrease quantity"
+              disabled={isCartBusy || quantity <= 1}
+            >
+              −
+            </button>
+            <span className="text-center text-[0.82rem] font-bold text-[var(--forest)]" aria-live="polite">
+              {quantity}
+            </span>
+            <button
+              type="button"
+              className="h-full bg-transparent text-sm text-[var(--forest)] transition-colors hover:bg-[var(--ivory)] disabled:opacity-40 cursor-pointer"
+              onClick={() => setQuantity(Math.min(maximumQuantity, quantity + 1))}
+              aria-label="Increase quantity"
+              disabled={isCartBusy || !available || quantity >= maximumQuantity}
+            >
+              +
+            </button>
+          </div>
 
-      <div className="grid grid-cols-[130px_minmax(0,1fr)] gap-3 max-[680px]:grid-cols-[104px_minmax(0,1fr)] max-[420px]:grid-cols-1">
-        <div
-          className="inline-grid h-[52px] grid-cols-3 items-center overflow-hidden rounded-full border border-[var(--line)] bg-[var(--paper)] [&>button]:h-[50px] [&>button]:bg-transparent [&>button]:transition-colors [&>button:hover]:bg-[var(--ivory)] [&>span]:text-center"
-          aria-label={`Quantity for ${product.name}`}
-        >
+          {/* Add to Bag Button */}
           <button
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#529d38] px-6 text-[0.74rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_20px_rgba(82,157,56,0.22)] transition-all hover:bg-[#43852d] active:scale-98 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            aria-label="Decrease quantity"
-            disabled={isCartBusy || quantity <= 1}
+            onClick={() => void add(true)}
+            disabled={isCartBusy || !available || maximumQuantity < 1}
           >
-            −
-          </button>
-          <span aria-live="polite">{quantity}</span>
-          <button
-            type="button"
-            onClick={() => setQuantity(Math.min(maximumQuantity, quantity + 1))}
-            aria-label="Increase quantity"
-            disabled={isCartBusy || !available || quantity >= maximumQuantity}
-          >
-            +
+            <span>{isCartBusy ? "Updating…" : added ? "Added to Ritual" : "Add to Bag"}</span>
+            <span aria-hidden="true">{added ? "✓" : "＋"}</span>
           </button>
         </div>
-        <button
-          className="inline-flex min-h-[52px] w-full items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,color,border-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)]"
-          type="button"
-          onClick={() => void add(true)}
-          disabled={isCartBusy || !available || maximumQuantity < 1}
-        >
-          {isCartBusy ? "Updating bag…" : added ? "Added to your ritual" : "Add to Bag"}
-          <span aria-hidden="true">{added ? "✓" : "↗"}</span>
-        </button>
-      </div>
-      <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-3 max-[680px]:grid-cols-1">
-        <button
-          className="inline-flex min-h-[52px] w-full items-center justify-center gap-[14px] rounded-full border border-[var(--forest)] bg-transparent px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] text-[var(--forest)] uppercase transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:text-[var(--paper)]"
-          type="button"
-          onClick={() => void buyNow()}
-          disabled={isCartBusy || isBuyingNow || !available || maximumQuantity < 1}
-        >
-          {isBuyingNow
-            ? "Preparing checkout…"
-            : source === "shopify"
-              ? "Buy now with Shopify"
-              : "Continue to checkout preview"}
-        </button>
-        <button
-          className={`flex min-h-[50px] min-w-[150px] items-center justify-center gap-2 rounded-full bg-[var(--paper)] px-4 text-[0.66rem] font-bold tracking-[0.07em] uppercase ring-1 ring-[var(--line)] transition-[transform,ring-color] hover:-translate-y-0.5 hover:ring-[var(--pdp-accent)] max-[680px]:min-h-11 ${wished ? "text-[var(--pdp-accent)]" : "text-[var(--forest)]"
+
+        {/* Secondary Action Row: Buy Now + Wishlist */}
+        <div className="grid grid-cols-[1fr_auto] gap-2.5">
+          <button
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full border border-[var(--forest)] bg-transparent px-5 text-[0.68rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] transition-all hover:bg-[var(--forest)] hover:text-white active:scale-98 cursor-pointer disabled:opacity-50"
+            type="button"
+            onClick={() => void buyNow()}
+            disabled={isCartBusy || isBuyingNow || !available || maximumQuantity < 1}
+          >
+            {isBuyingNow
+              ? "Preparing checkout…"
+              : source === "shopify"
+                ? "Buy Now ↗"
+                : "Direct Checkout Preview ↗"}
+          </button>
+
+          <button
+            className={`inline-flex h-10 items-center justify-center gap-1.5 rounded-full border px-4 text-[0.66rem] font-bold tracking-[0.06em] uppercase transition-all cursor-pointer ${
+              wished
+                ? "border-red-300 bg-red-50 text-red-500"
+                : "border-[var(--line)] bg-[var(--paper)] text-[var(--forest)] hover:bg-[var(--beige)]"
             }`}
-          type="button"
-          onClick={() => toggleWishlist(product.slug)}
-          aria-pressed={wished}
-        >
-          <span className="text-[1.2rem]" aria-hidden="true">
-            {wished ? "♥" : "♡"}
-          </span>
-          {wished ? "Saved to wishlist" : "Save to wishlist"}
-        </button>
+            type="button"
+            onClick={() => toggleWishlist(product.slug)}
+            aria-pressed={wished}
+          >
+            <span className="text-sm" aria-hidden="true">
+              {wished ? "♥" : "♡"}
+            </span>
+            <span>{wished ? "Saved" : "Save"}</span>
+          </button>
+        </div>
       </div>
 
+      {/* Error Message */}
       {cartError && (
         <div
-          className="mt-3 flex items-start justify-between gap-3 rounded-[var(--radius-sm)] bg-[#f7e9e4] px-[15px] py-3 text-[0.72rem] leading-[1.65] text-[#813c2f] ring-1 ring-[#dfb7ad]"
+          className="flex items-start justify-between gap-3 rounded-xl bg-[#f7e9e4] p-3 text-[0.72rem] text-[#813c2f] ring-1 ring-[#dfb7ad]"
           role="alert"
         >
           <span>{cartError}</span>
           <button
             type="button"
-            className="shrink-0 bg-transparent text-base"
+            className="shrink-0 text-base font-bold cursor-pointer"
             onClick={clearCartError}
-            aria-label="Dismiss product error"
+            aria-label="Dismiss error"
           >
             ×
           </button>
         </div>
       )}
-      <p className="mt-3 rounded-[var(--radius-sm)] bg-[var(--paper)] px-[15px] py-3 text-[0.72rem] leading-[1.65] text-[var(--muted)] ring-1 ring-[var(--line)]">
-        {source === "shopify"
-          ? "Payment, delivery, taxes and the final inventory check are handled by Shopify’s secure hosted checkout."
-          : "Preview mode keeps this bag on your device and never collects payment details."}
-      </p>
 
-      <div className="hidden max-[680px]:fixed max-[680px]:right-0 max-[680px]:bottom-0 max-[680px]:left-0 max-[680px]:z-[90] max-[680px]:grid max-[680px]:grid-cols-[1fr_auto] max-[680px]:items-center max-[680px]:gap-3 max-[680px]:bg-[var(--paper)] max-[680px]:px-3 max-[680px]:pt-2.5 max-[680px]:pb-[calc(10px+env(safe-area-inset-bottom))] max-[680px]:shadow-[0_-12px_35px_rgba(23,63,42,0.14)]">
-        <div className="grid leading-[1.2]">
-          <strong className="overflow-hidden text-ellipsis whitespace-nowrap font-serif text-base font-normal text-[var(--forest)]">
-            {product.name}
-          </strong>
-          <span className="text-[0.65rem] text-[var(--muted)]">
-            {formatCurrency(pricePaise, currencyCode)}
-          </span>
-        </div>
-        <button
-          className="min-h-[46px] rounded-full bg-[var(--forest)] px-[19px] text-[0.64rem] font-bold tracking-[0.08em] text-[var(--paper)] uppercase shadow-[0_8px_20px_rgba(21,59,45,0.18)]"
-          type="button"
-          onClick={() => void add(true)}
-          disabled={isCartBusy || !available || maximumQuantity < 1}
-        >
-          {available ? "Add to Bag" : "Sold out"}
-        </button>
-      </div>
-    </>
-  );
-}
-              </button >
-            </div >
-          </div >,
-  document.body,
+      {/* ── React Portal: Mobile Fixed Sticky Bottom Bar (Permanently docked to screen viewport on phone/tablet) ── */}
+      {mounted &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="fixed inset-x-0 bottom-0 z-[9999] hidden max-[960px]:flex items-center justify-between gap-1.5 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(8px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
+            role="region"
+            aria-label="Sticky Purchase Footer"
+          >
+            {/* Left Price & Stock Info (Compact, no wrapping) */}
+            <div className="flex flex-col shrink-0 min-w-0 pr-1 max-[360px]:pr-0.5">
+              <span className="[font-family:var(--font-display)] text-[1.15rem] font-bold leading-tight text-[var(--forest)] whitespace-nowrap max-[380px]:text-[1.05rem]">
+                {formatCurrency(pricePaise, currencyCode)}
+              </span>
+              <div className="flex items-center gap-1 text-[0.52rem] font-bold text-[#529d38] uppercase tracking-wider whitespace-nowrap max-[380px]:text-[0.48rem]">
+                <span className="size-1.5 rounded-full bg-[#529d38] animate-pulse shrink-0" />
+                <span>{available ? "In Stock" : "Sold Out"}</span>
+              </div>
+            </div>
+
+            {/* Right Actions Group: Stepper + Add to Bag + Wishlist (Aligned & Proportional) */}
+            <div className="flex items-center gap-1 shrink-0">
+              {/* Stepper (Compact on small phones) */}
+              <div className="inline-flex h-8.5 items-center rounded-full border border-[var(--line)] bg-white px-0.5 shadow-2xs max-[380px]:h-8">
+                <button
+                  type="button"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  disabled={isCartBusy || quantity <= 1}
+                  className="size-6 text-xs font-bold text-[var(--forest)] disabled:opacity-40 cursor-pointer flex items-center justify-center"
+                  aria-label="Decrease quantity"
+                >
+                  −
+                </button>
+                <span className="w-4 text-center text-[0.7rem] font-bold text-[var(--forest)] select-none">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setQuantity(Math.min(maximumQuantity, quantity + 1))}
+                  disabled={isCartBusy || !available || quantity >= maximumQuantity}
+                  className="size-6 text-xs font-bold text-[var(--forest)] disabled:opacity-40 cursor-pointer flex items-center justify-center"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Add to Bag Button */}
+              <button
+                type="button"
+                onClick={() => void add(true)}
+                disabled={isCartBusy || !available || maximumQuantity < 1}
+                className="inline-flex h-8.5 items-center justify-center gap-1 rounded-full bg-[#529d38] px-3.5 text-[0.68rem] font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-[#43852d] active:scale-95 cursor-pointer disabled:opacity-50 whitespace-nowrap max-[380px]:h-8 max-[380px]:px-2.5 max-[380px]:text-[0.62rem]"
+              >
+                <span>{isCartBusy ? "..." : added ? "Added ✓" : "Add to Bag"}</span>
+                <span aria-hidden="true">{added ? "" : "＋"}</span>
+              </button>
+
+              {/* Wishlist Button */}
+              <button
+                type="button"
+                onClick={() => toggleWishlist(product.slug)}
+                className={`grid size-8.5 place-items-center rounded-full border text-xs transition-colors cursor-pointer shrink-0 max-[380px]:size-8 ${
+                  wished
+                    ? "border-red-300 bg-red-50 text-red-500"
+                    : "border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--beige)]"
+                }`}
+                aria-label="Wishlist"
+              >
+                {wished ? "♥" : "♡"}
+              </button>
+            </div>
+          </div>,
+          document.body,
         )}
-    </div >
+    </div>
   );
 }
