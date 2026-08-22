@@ -17,7 +17,7 @@ This repository now contains a **Shopify-ready headless storefront** with a safe
 - When credentials are absent, the original six-product catalogue remains available as clearly isolated fallback data so builds and design review continue to work.
 - Wishlist remains device-local. Customer accounts, order tracking, newsletter delivery, and reviews require the merchant's chosen Shopify/customer apps if those features are needed.
 
-The Next.js application lives in the `frontend` workspace. Follow [the Shopify setup and merchant handoff](docs/shopify-setup.md) before launch.
+The Next.js application lives in the `frontend` workspace. Follow [the Shopify setup and merchant handoff](docs/shopify-setup.md) before launch, and use the [Shopify product entry form](docs/product-entry-form.md) for every new product.
 
 The detailed experience notes below also document the built-in fallback catalogue used before Shopify credentials are supplied.
 

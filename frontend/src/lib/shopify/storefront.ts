@@ -352,20 +352,20 @@ export const previewContent: StorefrontContent = {
   homeHeroPoster: {
     url: "/images/naturemist-hero.png",
     altText: "NatureMist botanical hair ritual",
-    width: 1600,
-    height: 2000,
+    width: 1692,
+    height: 930,
   },
   ritualPoster: {
     url: "/images/naturemist-ritual.png",
     altText: "Preparing a NatureMist botanical ritual",
-    width: 1600,
-    height: 2000,
+    width: 1024,
+    height: 1536,
   },
   storyPoster: {
     url: "/images/naturemist-hero.png",
     altText: "NatureMist botanical hair care",
-    width: 1600,
-    height: 2000,
+    width: 1692,
+    height: 930,
   },
   primaryNavigation: [
     { id: "shop", title: "Shop", url: "/shop", items: [] },
@@ -878,7 +878,12 @@ async function loadStorefront(): Promise<StorefrontData> {
       ),
     ]);
 
-  const strict = process.env.SHOPIFY_STRICT_MODE === "true";
+  // A production build can prerender this loader without Shopify being reachable.
+  // Keep deployments deterministic; strict validation still applies when the
+  // deployed server loads or revalidates storefront data.
+  const strict =
+    process.env.SHOPIFY_STRICT_MODE === "true" &&
+    process.env.NEXT_PHASE !== "phase-production-build";
   const rejected = [catalogResult, collectionsResult, contentResult, shopResult].find(
     (result) => result.status === "rejected",
   );

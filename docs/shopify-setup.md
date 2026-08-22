@@ -4,6 +4,12 @@ The website is a headless Shopify storefront: the existing Next.js design stays 
 
 Until Shopify credentials are configured, the site intentionally serves the original six-product preview catalog. No secret is committed to the repository.
 
+## Frontend-only Vercel preview (no keys)
+
+No custom environment variables are required to deploy the frontend preview. In Vercel, set the project Root Directory to `frontend`, leave the Output Directory empty, and remove any incomplete `SHOPIFY_*` variables. The application will use its bundled preview catalog and browser-local preview cart. Vercel's system-provided production domain is used for canonical metadata and the sitemap when `SITE_URL` is absent.
+
+Add Shopify variables only when both `SHOPIFY_STORE_DOMAIN` and either `SHOPIFY_STOREFRONT_PRIVATE_TOKEN` or `SHOPIFY_STOREFRONT_ACCESS_TOKEN` are ready. Keep `SHOPIFY_STRICT_MODE=false` during setup.
+
 ## 1. Create the Storefront API connection
 
 1. In Shopify Admin, install/open the **Headless** sales channel.
@@ -48,6 +54,8 @@ The first available variant is used for quick-add buttons. The product page pres
 ## 3. NatureMist product metafields
 
 Create the following **Product** metafield definitions in namespace `custom`. Give the definitions Storefront read access.
+
+Use the [product entry form](product-entry-form.md) as the merchant-facing checklist. Pin the definitions in the listed order so Shopify's product editor becomes the exact content form used by the website layout.
 
 | Key | Suggested type | Purpose |
 | --- | --- | --- |
@@ -158,6 +166,20 @@ The storefront supports one-time purchases, Shopify's standard options/variants,
 - Confirm shipping profiles, taxes, payments, email receipts, fulfilment, returns, and legal policies in Shopify.
 - Add the production domain to the Headless storefront and Shopify checkout/domain configuration.
 - Register webhooks and verify that a product or poster edit appears on the live site.
-- Keep `SHOPIFY_STRICT_MODE=false` during setup to leave the shell available with an empty live catalog when Shopify catalog data fails, while optional content areas degrade independently. Set it to `true` for launch: any Shopify catalog/content/collection/policy operation then throws, and all four Shopify policies are required. Preview products are served only when Shopify is completely unconfigured.
+- Keep `SHOPIFY_STRICT_MODE=false` during setup to leave the shell available with an empty live catalog when Shopify catalog data fails, while optional content areas degrade independently. Set it to `true` for launch: runtime Shopify catalog/content/collection/policy failures then throw, and all four Shopify policies are required. Production builds use the safe fallback so a temporary Shopify outage or unpublished policy cannot block deployment. Preview products are served only when Shopify is completely unconfigured.
 
 Reference: [Shopify Storefront API setup](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/getting-started), [Cart API](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/cart), and [metaobjects](https://shopify.dev/docs/apps/build/metaobjects).
+
+## 10. Everyday store management
+
+- **Add or edit a product:** Shopify Admin → Products. Use the pinned NatureMist fields and the [product entry form](product-entry-form.md).
+- **Change a homepage/ritual/story poster:** Shopify Admin → Content → Metaobjects → Storefront content → `main`. Choose a new image from Shopify Files and save.
+- **Change the announcement:** edit the same `main` metaobject entry.
+- **Change header/footer links:** Shopify Admin → Content → Menus; edit `main-menu` or `footer`.
+- **Create a ritual set:** create/reorder a collection, enable its `custom.display_as_bundle` value, and publish its products to Headless.
+- **Run a promotion:** create the discount in Shopify. The website sends the code to Shopify and shows Shopify's calculated total.
+- **Hide a product:** unpublish it from Headless or change it to Draft. Do not delete it simply to hide it.
+- **Process orders, refunds, inventory, fulfillment, taxes, shipping, and payments:** use Shopify Admin; these are never managed in the website code.
+- **Check an update:** allow two minutes for posters/menus and five minutes for catalogue changes if immediate webhook refresh is unavailable.
+
+Reviews are intentionally not invented or stored by this storefront. Install and connect a Shopify-compatible review provider before publishing customer ratings, review counts, or review structured data.
