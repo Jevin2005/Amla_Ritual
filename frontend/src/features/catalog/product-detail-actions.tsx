@@ -162,9 +162,8 @@ export function ProductDetailActions({ product }: { product: Product }) {
 
       <p className="mb-[18px] flex items-center gap-[9px] text-[0.68rem] tracking-[0.08em] text-[var(--muted)] uppercase">
         <i
-          className={`size-[7px] rounded-full shadow-[0_0_0_4px_color-mix(in_srgb,var(--pdp-accent)_14%,transparent)] ${
-            available ? "bg-[var(--pdp-accent)]" : "bg-[#9a3d2b]"
-          }`}
+          className={`size-[7px] rounded-full shadow-[0_0_0_4px_color-mix(in_srgb,var(--pdp-accent)_14%,transparent)] ${available ? "bg-[var(--pdp-accent)]" : "bg-[#9a3d2b]"
+            }`}
         />
         {available
           ? selectedVariant?.quantityAvailable && selectedVariant.quantityAvailable <= 5
@@ -220,9 +219,8 @@ export function ProductDetailActions({ product }: { product: Product }) {
               : "Continue to checkout preview"}
         </button>
         <button
-          className={`flex min-h-[50px] min-w-[150px] items-center justify-center gap-2 rounded-full bg-[var(--paper)] px-4 text-[0.66rem] font-bold tracking-[0.07em] uppercase ring-1 ring-[var(--line)] transition-[transform,ring-color] hover:-translate-y-0.5 hover:ring-[var(--pdp-accent)] max-[680px]:min-h-11 ${
-            wished ? "text-[var(--pdp-accent)]" : "text-[var(--forest)]"
-          }`}
+          className={`flex min-h-[50px] min-w-[150px] items-center justify-center gap-2 rounded-full bg-[var(--paper)] px-4 text-[0.66rem] font-bold tracking-[0.07em] uppercase ring-1 ring-[var(--line)] transition-[transform,ring-color] hover:-translate-y-0.5 hover:ring-[var(--pdp-accent)] max-[680px]:min-h-11 ${wished ? "text-[var(--pdp-accent)]" : "text-[var(--forest)]"
+            }`}
           type="button"
           onClick={() => toggleWishlist(product.slug)}
           aria-pressed={wished}
@@ -275,5 +273,13 @@ export function ProductDetailActions({ product }: { product: Product }) {
         </button>
       </div>
     </>
+  );
+}
+              </button >
+            </div >
+          </div >,
+  document.body,
+        )}
+    </div >
   );
 }

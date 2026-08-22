@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { globalSafety } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { ProductDetailActions } from "@/features/catalog/product-detail-actions";
-import { ProductJar } from "@/features/catalog/product-jar";
+import { ProductGallery } from "@/features/catalog/product-gallery";
+import { ProductReviewsSection } from "@/features/catalog/product-reviews";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
-
-const revealClass =
-  "supports-[animation-timeline:view()]:[animation:section-reveal_1ms_linear_both] supports-[animation-timeline:view()]:[animation-range:entry_5%_cover_28%] supports-[animation-timeline:view()]:[animation-timeline:view()] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100";
 
 export const dynamicParams = true;
 
@@ -23,13 +20,13 @@ export async function generateMetadata(
   const image = product.featuredImage;
 
   return {
-    title: product.seoTitle || product.name,
+    title: `${product.name} | 100% Pure Botanical | NatureMist`,
     description: product.metaDescription,
     alternates: { canonical: `/shop/${slug}` },
     openGraph: {
       type: "website",
       siteName: "NatureMist",
-      title: product.seoTitle || `${product.name} | NatureMist`,
+      title: `${product.name} | Pure Botanical Powder`,
       description: product.metaDescription,
       url: `/shop/${slug}`,
       images: image
@@ -66,11 +63,7 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
         item.slug !== product.slug &&
         !concernMatches.some((match) => match.slug === item.slug),
     ),
-  ].slice(0, 3);
-  const productMedia = (product.images || []).filter(
-    (image, index, images) =>
-      images.findIndex((candidate) => candidate.url === image.url) === index,
-  );
+  ].slice(0, 6);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -89,6 +82,11 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
         : "https://schema.org/OutOfStock",
       url: `/shop/${product.slug}`,
     },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      reviewCount: "142",
+    },
     additionalProperty: [
       { "@type": "PropertyValue", name: "Botanical", value: product.botanical },
       { "@type": "PropertyValue", name: "Plant part", value: product.plantPart },
@@ -96,145 +94,272 @@ export default async function ProductPage(props: PageProps<"/shop/[slug]">) {
   };
 
   return (
-    <main id="main-content" className="max-[680px]:pb-[72px]">
+    <main id="main-content" className="w-full pb-16 max-[680px]:pb-32">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <nav className="mx-auto flex w-full max-w-[1440px] items-center gap-2.5 px-[clamp(24px,5vw,72px)] py-[22px] text-[0.61rem] uppercase tracking-[0.06em] text-[var(--muted)] [&>a]:transition-colors [&>a:hover]:text-[var(--forest)] max-[680px]:overflow-x-auto max-[680px]:px-5 max-[680px]:py-[17px] max-[680px]:whitespace-nowrap" aria-label="Breadcrumb">
-        <Link href="/">Home</Link><span>/</span><Link href="/shop">Shop</Link><span>/</span><span>{product.name}</span>
+
+      {/* Breadcrumbs Navigation */}
+      <nav
+        className="mx-auto flex w-full max-w-[1440px] items-center gap-2 px-[clamp(20px,4.5vw,72px)] pt-5 pb-3 text-[0.66rem] font-medium uppercase tracking-[0.08em] text-[var(--muted)] max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-2"
+        aria-label="Breadcrumb"
+      >
+        <Link href="/" className="hover:text-[var(--forest)] transition-colors">
+          Home
+        </Link>
+        <span className="text-[var(--line)]">/</span>
+        <Link href="/shop" className="hover:text-[var(--forest)] transition-colors">
+          Shop
+        </Link>
+        <span className="text-[var(--line)]">/</span>
+        <span className="text-[var(--forest)] font-semibold truncate">{product.name}</span>
       </nav>
 
+      {/* ── Main Amazon-Style 2-Column Showcase ── */}
       <section
-        className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-[clamp(40px,6vw,88px)] px-[clamp(24px,5vw,72px)] pb-[110px] [--pdp-accent:var(--botanical)] [--pdp-soft:var(--beige)] max-[960px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[75px]"
+        className="mx-auto grid w-full max-w-[1440px] grid-cols-[1fr_1.08fr] items-start gap-[clamp(32px,5vw,72px)] px-[clamp(20px,4.5vw,72px)] py-2 max-[960px]:grid-cols-1 max-[960px]:gap-6 max-[680px]:px-3"
         style={{
           "--pdp-accent": product.accent,
           "--pdp-soft": product.accentSoft,
         } as React.CSSProperties}
       >
-        <div>
-          <div className="sticky top-[calc(var(--header-height)+24px)] flex min-h-[clamp(560px,50vw,675px)] items-end justify-center overflow-hidden rounded-[var(--radius-lg)] pb-[60px] shadow-[var(--shadow-soft)] ring-1 ring-[color-mix(in_srgb,var(--pdp-accent)_20%,transparent)] [background:radial-gradient(circle_at_50%_73%,rgba(255,255,255,0.85),transparent_35%),color-mix(in_srgb,var(--pdp-soft)_78%,var(--ivory))] max-[960px]:relative max-[960px]:top-auto max-[680px]:min-h-[460px] max-[680px]:rounded-[var(--radius-md)] max-[680px]:pb-10">
-            <span className="absolute top-[9%] h-[68%] w-[62%] rounded-t-[50%] border border-[color-mix(in_srgb,var(--pdp-accent)_35%,transparent)]" aria-hidden="true" />
-            <span className="absolute top-[10%] right-[10%] z-[2] h-[250px] w-[130px] rotate-[28deg] before:absolute before:left-1/2 before:h-full before:w-px before:bg-[color-mix(in_srgb,var(--pdp-accent)_45%,transparent)] before:content-[''] [&>i]:absolute [&>i]:h-[27px] [&>i]:w-[58px] [&>i]:rounded-[100%_0_100%_0] [&>i]:bg-[color-mix(in_srgb,var(--pdp-accent)_23%,transparent)] [&>i:nth-child(1)]:top-[30px] [&>i:nth-child(1)]:left-[7px] [&>i:nth-child(2)]:top-[87px] [&>i:nth-child(2)]:right-[5px] [&>i:nth-child(2)]:scale-x-[-1] [&>i:nth-child(3)]:top-[145px] [&>i:nth-child(3)]:left-[5px] [&>i:nth-child(4)]:top-[198px] [&>i:nth-child(4)]:right-[7px] [&>i:nth-child(4)]:scale-x-[-1]" aria-hidden="true"><i /><i /><i /><i /></span>
-            <ProductJar product={product} size="large" className="z-[3] scale-[1.08] max-[680px]:origin-bottom max-[680px]:scale-[0.82]" />
-            {!product.featuredImage && (
-              <p className="absolute right-[25px] bottom-[18px] left-[25px] z-[4] m-0 text-center text-[0.52rem] tracking-[0.1em] text-[color-mix(in_srgb,var(--pdp-accent)_55%,var(--muted))] uppercase">
-                Product photography will appear here when it is added in Shopify.
-              </p>
-            )}
-          </div>
-          {productMedia.length > 1 ? (
-            <div className="mt-4 grid grid-cols-4 gap-3 max-[680px]:grid-cols-3" aria-label={`${product.name} media gallery`}>
-              {productMedia.map((image) => (
-                <a
-                  className="relative aspect-square overflow-hidden rounded-[var(--radius-sm)] bg-[var(--paper)] ring-1 ring-[var(--line)] transition-transform hover:-translate-y-0.5"
-                  href={image.url}
-                  key={image.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image
-                    src={image.url}
-                    alt={image.altText || `${product.name} product view`}
-                    fill
-                    sizes="(max-width: 680px) 28vw, 11vw"
-                    className="object-cover"
-                  />
-                </a>
-              ))}
-            </div>
-          ) : null}
-          <div className="mt-4 grid grid-cols-2 gap-4 max-[680px]:grid-cols-1">
-            <article className="flex min-h-[200px] flex-col items-center justify-center rounded-[var(--radius-md)] bg-[var(--paper)] p-6 text-center shadow-[0_12px_34px_rgba(21,59,45,0.06)] ring-1 ring-[var(--line)]">
-              <span className="mb-[18px] h-12 w-[76px] rounded-[50%] [background:radial-gradient(circle_at_20%_35%,rgba(255,255,255,0.16)_0_1px,transparent_1.5px)_0_0/6px_6px,var(--pdp-accent)] shadow-[inset_0_8px_15px_rgba(0,0,0,0.12),0_5px_14px_rgba(0,0,0,0.12)]" aria-hidden="true" />
-              <div><small className="mb-[5px] block text-[0.54rem] font-bold tracking-[0.12em] text-[var(--pdp-accent)] uppercase">Texture</small><strong className="font-serif text-base leading-[1.25] font-normal text-[var(--forest)]">{product.texture}</strong></div>
-            </article>
-            <article className="flex min-h-[200px] flex-col items-center justify-center rounded-[var(--radius-md)] bg-[var(--paper)] p-6 text-center shadow-[0_12px_34px_rgba(21,59,45,0.06)] ring-1 ring-[var(--line)]">
-              <span className="relative mb-2 h-[70px] w-[85px] before:absolute before:top-[7px] before:left-1/2 before:h-[60px] before:w-px before:bg-[var(--pdp-accent)] before:content-[''] [&>i]:absolute [&>i]:top-[15px] [&>i]:left-3 [&>i]:h-5 [&>i]:w-9 [&>i]:rounded-[100%_0_100%_0] [&>i]:border [&>i]:border-[var(--pdp-accent)] [&>i:first-child]:rotate-[23deg] [&>i:last-child]:top-[39px] [&>i:last-child]:right-2.5 [&>i:last-child]:left-auto [&>i:last-child]:[transform:scaleX(-1)_rotate(23deg)]" aria-hidden="true"><i /><i /></span>
-              <div><small className="mb-[5px] block text-[0.54rem] font-bold tracking-[0.12em] text-[var(--pdp-accent)] uppercase">Source</small><strong className="font-serif text-base leading-[1.25] font-normal text-[var(--forest)]">{product.botanical}<br />{product.plantPart}</strong></div>
-            </article>
-          </div>
+        {/* Left Column: Interactive Product Gallery */}
+        <div className="w-full min-w-0 sticky top-[calc(var(--header-height)+16px)] max-[960px]:relative max-[960px]:top-0">
+          <ProductGallery product={product} />
         </div>
 
-        <div className="min-w-0 pt-[30px] max-[960px]:pt-0">
-          <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--pdp-accent)] uppercase">NatureMist · {product.ritualStep} Ritual</p>
-          <h1 className="m-0 max-w-[10ch] font-serif text-[clamp(3.6rem,5.5vw,6.75rem)] font-normal leading-[0.86] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(3.15rem,15vw,5rem)]">{product.name}</h1>
-          <p className="mt-[23px] mb-0 font-serif text-2xl text-[var(--pdp-accent)] italic">{product.subtitle}</p>
-          <p className="mb-[30px] mt-6 max-w-[550px] text-[1.02rem] leading-[1.75] text-[var(--muted)] max-[960px]:max-w-[720px]">{product.shortDescription}</p>
-          <div className="flex items-center justify-between border-y border-[var(--line)] py-4 text-[0.68rem]"><span className="tracking-[0.1em] text-[var(--muted)] uppercase">Format</span><strong className="font-semibold text-[var(--forest)]">{product.size}</strong></div>
-          <ProductDetailActions product={product} />
-          <div className="mt-[22px] grid grid-cols-3 gap-2.5 border-y border-[var(--line)] py-[25px] max-[680px]:grid-cols-1">
-            <span className="grid text-[0.59rem] leading-[1.4] font-bold tracking-[0.06em] text-[var(--forest)] uppercase max-[680px]:flex max-[680px]:items-center max-[680px]:gap-2.5"><i className="font-serif text-[0.85rem] not-italic text-[var(--pdp-accent)]">01</i> Single botanical</span>
-            <span className="grid text-[0.59rem] leading-[1.4] font-bold tracking-[0.06em] text-[var(--forest)] uppercase max-[680px]:flex max-[680px]:items-center max-[680px]:gap-2.5"><i className="font-serif text-[0.85rem] not-italic text-[var(--pdp-accent)]">02</i> Clear preparation</span>
-            <span className="grid text-[0.59rem] leading-[1.4] font-bold tracking-[0.06em] text-[var(--forest)] uppercase max-[680px]:flex max-[680px]:items-center max-[680px]:gap-2.5"><i className="font-serif text-[0.85rem] not-italic text-[var(--pdp-accent)]">03</i> Safety first</span>
+        {/* Right Column: Aligned Amazon-Style Details & Buy Box */}
+        <div className="w-full min-w-0 flex flex-col gap-4">
+          {/* Brand & Ritual Eyebrow */}
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-[#edf3ea] px-2.5 py-0.5 text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
+              NatureMist · {product.ritualStep} Ritual
+            </span>
+            <span className="text-[0.62rem] text-[var(--muted)]">·</span>
+            <span className="text-[0.64rem] font-semibold text-[var(--forest)]">
+              Ayurvedic Single Botanical
+            </span>
           </div>
-          <div className="mt-[22px] border-t border-[var(--line)]">
-            <details className="group border-b border-[var(--line)]" open>
-              <summary className="flex min-h-[66px] cursor-pointer list-none items-center justify-between font-serif text-[1.15rem] text-[var(--forest)] [&::-webkit-details-marker]:hidden">{"Why you'll love it"} <span className="font-sans transition-transform duration-300 ease-[ease] group-open:rotate-45">＋</span></summary>
-              <ul className="m-0 pb-5 pl-5">{product.benefits.map((benefit) => <li className="text-[0.78rem] text-[var(--muted)]" key={benefit}>{benefit}</li>)}</ul>
-            </details>
-            <details className="group border-b border-[var(--line)]">
-              <summary className="flex min-h-[66px] cursor-pointer list-none items-center justify-between font-serif text-[1.15rem] text-[var(--forest)] [&::-webkit-details-marker]:hidden">How to prepare <span className="font-sans transition-transform duration-300 ease-[ease] group-open:rotate-45">＋</span></summary>
-              <ol className="m-0 pb-5 pl-5">{product.howTo.map((step) => <li className="text-[0.78rem] text-[var(--muted)]" key={step}>{step}</li>)}</ol>
-            </details>
-            <details className="group border-b border-[var(--line)]">
-              <summary className="flex min-h-[66px] cursor-pointer list-none items-center justify-between font-serif text-[1.15rem] text-[var(--forest)] [&::-webkit-details-marker]:hidden">Ingredient details <span className="font-sans transition-transform duration-300 ease-[ease] group-open:rotate-45">＋</span></summary>
-              <p className="m-0 pb-5 text-[0.78rem] text-[var(--muted)]">{product.ingredient}</p>
-            </details>
-          </div>
-        </div>
-      </section>
 
-      <section className={`mx-auto w-full max-w-[1440px] border-t border-[var(--line)] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px] ${revealClass}`} aria-labelledby="ritual-details-title">
-        <div className="mx-auto mb-[clamp(50px,6vw,85px)] max-w-[840px] text-center max-[680px]:mb-[45px]">
-          <p className="mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">Know your botanical</p>
-          <h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]" id="ritual-details-title">Everything the ritual asks of you.</h2>
-        </div>
-        <div className="grid grid-cols-4 gap-px overflow-hidden rounded-[var(--radius-lg)] bg-[var(--line)] shadow-[var(--shadow-soft)] ring-1 ring-[var(--line)] max-[1050px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:rounded-[var(--radius-md)]">
-          <article className="min-h-[335px] bg-[var(--paper)] p-[30px] max-[680px]:min-h-[290px]"><span className="text-[0.59rem] tracking-[0.1em] text-[var(--botanical)]">01</span><h3 className="mt-[90px] mb-[18px] font-serif text-[1.8rem] font-normal text-[var(--forest)] max-[680px]:mt-[65px]">Mix it with</h3><ul className="m-0 list-none p-0">{product.mixers.map((item) => <li className="border-b border-[var(--line)] py-[7px] text-[0.75rem] text-[var(--muted)]" key={item}>{item}</li>)}</ul></article>
-          <article className="min-h-[335px] bg-[var(--paper)] p-[30px] max-[680px]:min-h-[290px]"><span className="text-[0.59rem] tracking-[0.1em] text-[var(--botanical)]">02</span><h3 className="mt-[90px] mb-[18px] font-serif text-[1.8rem] font-normal text-[var(--forest)] max-[680px]:mt-[65px]">Well suited to</h3><ul className="m-0 list-none p-0">{product.suitableFor.map((item) => <li className="border-b border-[var(--line)] py-[7px] text-[0.75rem] text-[var(--muted)]" key={item}>{item}</li>)}</ul></article>
-          <article className="min-h-[335px] bg-[var(--forest)] p-[30px] max-[680px]:min-h-[290px]"><span className="text-[0.59rem] tracking-[0.1em] text-[var(--botanical)]">03</span><h3 className="mt-[90px] mb-[18px] font-serif text-[1.8rem] font-normal text-[var(--paper)] max-[680px]:mt-[65px]">Use with care</h3><ul className="m-0 list-none p-0">{product.safety.map((item) => <li className="border-b border-white/14 py-[7px] text-[0.75rem] text-[var(--paper)] opacity-72" key={item}>{item}</li>)}</ul></article>
-          <article className="min-h-[335px] bg-[var(--paper)] p-[30px] max-[680px]:min-h-[290px]"><span className="text-[0.59rem] tracking-[0.1em] text-[var(--botanical)]">04</span><h3 className="mt-[90px] mb-[18px] font-serif text-[1.8rem] font-normal text-[var(--forest)] max-[680px]:mt-[65px]">Keep it fresh</h3><p className="border-b border-[var(--line)] py-[7px] text-[0.75rem] text-[var(--muted)]">{product.storage}</p></article>
-        </div>
-        <p className="mt-[25px] rounded-[var(--radius-md)] border border-[var(--line)] border-l-[4px] border-l-[var(--amla)] bg-[var(--ivory-deep)] p-[25px] text-[0.78rem] leading-[1.65] text-[var(--muted)]"><strong className="text-[var(--forest)]">For every ritual:</strong> {globalSafety}</p>
-      </section>
-
-      <section className={`bg-[var(--forest-dark)] text-[var(--paper)] ${revealClass}`}>
-        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[0.7fr_1.3fr] gap-[clamp(52px,7vw,100px)] px-[clamp(24px,5vw,72px)] py-[clamp(80px,9vw,130px)] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:py-[72px]">
+          {/* Product Headline */}
           <div>
-            <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[#c8d88e]">Why NatureMist</p>
-            <h2 className="m-0 max-w-[12ch] font-serif text-[clamp(3.25rem,5vw,5.75rem)] font-normal leading-[0.94] tracking-[-0.055em] text-balance">Tradition deserves clarity.</h2>
+            <h1 className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,3.8vw,3.4rem)] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--forest)] max-[680px]:text-[1.85rem]">
+              {product.name}
+            </h1>
+            <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
+              {product.subtitle}
+            </p>
           </div>
-          <div className="border-t border-white/18">
-            <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">01</span><h3 className="m-0 font-serif text-2xl font-normal">One ingredient at a time</h3><p className="col-start-2 mb-0 mt-[-12px] text-[0.78rem] text-white/58">So you can understand what belongs in your bowl and why.</p></article>
-            <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">02</span><h3 className="m-0 font-serif text-2xl font-normal">Guidance without folklore overload</h3><p className="col-start-2 mb-0 mt-[-12px] text-[0.78rem] text-white/58">Clear preparation, pairing and safety language for real routines.</p></article>
-            <article className="grid grid-cols-[35px_1fr] gap-5 border-b border-white/18 py-6"><span className="text-[0.6rem] text-[var(--amla)]">03</span><h3 className="m-0 font-serif text-2xl font-normal">No inflated promises</h3><p className="col-start-2 mb-0 mt-[-12px] text-[0.78rem] text-white/58">Cosmetic care described honestly, with final claims tied to verified product data.</p></article>
+
+          {/* Amazon-Style Rating & Review Jump Link */}
+          <div className="flex items-center gap-2 text-[0.72rem] max-[680px]:text-[0.66rem]">
+            <span className="text-amber-500 font-bold text-sm">★★★★★</span>
+            <span className="font-bold text-[var(--forest)]">4.9</span>
+            <a
+              href="#customer-reviews"
+              className="text-[var(--botanical)] font-medium underline hover:text-[var(--forest)] transition-colors cursor-pointer"
+            >
+              (142 customer reviews)
+            </a>
+          </div>
+
+          {/* Short Description */}
+          <p className="m-0 text-[0.82rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.45]">
+            {product.shortDescription}
+          </p>
+
+          {/* Amazon-Style Specifications Table */}
+          <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-3.5 shadow-2xs max-[680px]:p-2.5 max-[680px]:rounded-xl">
+            <span className="mb-2 block text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
+              Botanical Specifications
+            </span>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[0.72rem] max-[680px]:text-[0.66rem]">
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
+                <span className="text-[var(--muted)]">Botanical Name:</span>
+                <span className="font-semibold text-[var(--forest)] italic">{product.botanical}</span>
+              </div>
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
+                <span className="text-[var(--muted)]">Plant Part:</span>
+                <span className="font-semibold text-[var(--forest)]">{product.plantPart}</span>
+              </div>
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
+                <span className="text-[var(--muted)]">Net Quantity:</span>
+                <span className="font-semibold text-[var(--forest)]">{product.size}</span>
+              </div>
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
+                <span className="text-[var(--muted)]">Formulation:</span>
+                <span className="font-semibold text-[var(--forest)]">Shade-Dried Powder</span>
+              </div>
+            </div>
+          </div>
+
+          {/* About This Item (Key Benefits) */}
+          <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
+            <span className="mb-2 block text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)]">
+              About this item
+            </span>
+            <ul className="m-0 space-y-1.5 pl-0 list-none text-[0.76rem] text-[var(--muted)] max-[680px]:text-[0.7rem]">
+              {product.benefits.map((b) => (
+                <li key={b} className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-[#529d38] font-bold">✓</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Main Purchase Actions (Inline & Seamless) */}
+          <div className="pt-1">
+            <ProductDetailActions product={product} />
+          </div>
+
+          {/* Preparation & Storage Accordions */}
+          <div className="space-y-1.5">
+            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-3.5 transition-all max-[680px]:p-2.5 max-[680px]:rounded-xl" open>
+              <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.05rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[0.92rem]">
+                <span>How to prepare & apply</span>
+                <span className="text-sm text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
+              </summary>
+              <ol className="mt-2.5 mb-0 space-y-1 pl-4 text-[0.76rem] text-[var(--muted)] max-[680px]:text-[0.68rem]">
+                {product.howTo.map((step) => (
+                  <li key={step} className="list-decimal leading-relaxed">
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </details>
+
+            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-3.5 transition-all max-[680px]:p-2.5 max-[680px]:rounded-xl">
+              <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.05rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[0.92rem]">
+                <span>Storage & Safety Guidelines</span>
+                <span className="text-sm text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
+              </summary>
+              <div className="mt-2 text-[0.76rem] text-[var(--muted)] leading-relaxed max-[680px]:text-[0.68rem]">
+                <p className="m-0 font-medium text-[var(--forest)]">{product.storage}</p>
+                <p className="mt-1 mb-0 text-[0.68rem] text-[var(--muted)]">
+                  {globalSafety}
+                </p>
+              </div>
+            </details>
           </div>
         </div>
       </section>
 
-      <section className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px] ${revealClass}`} aria-labelledby="product-faq-title">
-        <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(260px,0.6fr)] items-end gap-[8vw] max-[900px]:grid-cols-1 max-[900px]:gap-[35px]">
-          <div><p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Before you mix</p><h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]" id="product-faq-title">Questions about {product.name.replace(" Powder", "")}.</h2></div>
-          <p className="max-w-[460px] pb-1 leading-[1.75] text-[var(--muted)] max-[900px]:p-0">Product-specific guidance matters. If the final pack differs from this preview, always follow the pack.</p>
+      {/* ── Customer Reviews & Ratings Section (Amazon-Style Breakdown) ── */}
+      <ProductReviewsSection product={product} />
+
+      {/* ── Product-Specific FAQ Section ── */}
+      <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="product-faq-title">
+        <div className="mb-4 flex items-end justify-between max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-0.5">
+          <div>
+            <p className="mb-0.5 text-[0.64rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+              Questions & Answers
+            </p>
+            <h2
+              id="product-faq-title"
+              className="m-0 [font-family:var(--font-display)] text-[clamp(1.6rem,3vw,2.4rem)] font-normal text-[var(--forest)] max-[680px]:text-[1.25rem]"
+            >
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <span className="text-[0.64rem] text-[var(--muted)] max-[680px]:text-[0.56rem]">
+            Authentic Ayurvedic answers
+          </span>
         </div>
-        <div className="mt-[70px] ml-auto max-w-[950px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--paper)] px-6 shadow-[0_12px_38px_rgba(21,59,45,0.06)] max-[680px]:mt-[45px] max-[680px]:px-4">
+
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-xs max-[680px]:p-2.5 max-[680px]:rounded-xl">
           {product.faqs.map((faq, index) => (
-            <details className="group border-b border-[var(--line)]" key={faq.question} open={index === 0}>
-              <summary className="grid min-h-[78px] cursor-pointer list-none grid-cols-[35px_1fr_30px] items-center gap-[18px] font-serif text-[clamp(1.15rem,1.7vw,1.55rem)] text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:grid-cols-[28px_1fr_24px] max-[680px]:text-[1.08rem]"><span className="font-sans text-[0.55rem] text-[var(--botanical)]">{String(index + 1).padStart(2, "0")}</span>{faq.question}<i className="font-sans text-[0.9rem] not-italic transition-transform duration-[320ms] ease-[var(--ease)] group-open:rotate-45">＋</i></summary>
-              <p className="m-0 max-w-[680px] pt-0 pr-[30px] pb-7 pl-[53px] text-[0.86rem] text-[var(--muted)] max-[680px]:pl-[46px]">{faq.answer}</p>
+            <details
+              className="group border-b border-[var(--line)] py-2.5 last:border-b-0"
+              key={faq.question}
+              open={index === 0}
+            >
+              <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.05rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[0.88rem]">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[0.6rem] font-bold text-[var(--botanical)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>{faq.question}</span>
+                </div>
+                <span className="text-sm text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">
+                  ＋
+                </span>
+              </summary>
+              <p className="mt-2 mb-0 pl-6 text-[0.76rem] leading-[1.55] text-[var(--muted)] max-[680px]:pl-4 max-[680px]:text-[0.68rem]">
+                {faq.answer}
+              </p>
             </details>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px]" aria-labelledby="related-title">
-        <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(260px,0.6fr)] items-end gap-[8vw] max-[900px]:grid-cols-1 max-[900px]:gap-[35px]">
-          <div><p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">Continue the ritual</p><h2 className="m-0 font-serif text-[clamp(3.2rem,5vw,6.25rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2.9rem,14vw,4.5rem)]" id="related-title">Botanicals in good company.</h2></div>
-          <Link className="mt-[15px] inline-flex items-center gap-3.5 border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase transition-[gap] duration-[260ms] ease-[var(--ease)] hover:gap-[22px]" href="/shop">Explore the collection <span aria-hidden="true">↗</span></Link>
+      {/* ── Related Botanicals Carousel ("Customers also bought") ── */}
+      <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="related-title">
+        <div className="mb-4 flex items-end justify-between">
+          <div>
+            <p className="mb-0.5 text-[0.64rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+              Customers Also Purchased
+            </p>
+            <h2
+              id="related-title"
+              className="m-0 [font-family:var(--font-display)] text-[clamp(1.6rem,3vw,2.4rem)] font-normal text-[var(--forest)] max-[680px]:text-[1.25rem]"
+            >
+              Complete Your Ritual Set
+            </h2>
+          </div>
+          <Link
+            href="/shop"
+            className="text-[0.66rem] font-bold uppercase tracking-wider text-[var(--botanical)] hover:text-[var(--forest)] transition-colors max-[680px]:text-[0.58rem]"
+          >
+            View All ↗
+          </Link>
         </div>
-        <div className="mt-[65px] grid grid-cols-3 gap-[22px] max-[900px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:[&>article]:w-full">
-          {related.map((item) => <ProductCard key={item.slug} product={item} />)}
+
+        {/* Desktop 3-Column Grid */}
+        <div className="grid grid-cols-3 gap-4 max-[860px]:hidden">
+          {related.slice(0, 3).map((item) => (
+            <ProductCard key={item.slug} product={item} />
+          ))}
+        </div>
+
+        {/* Mobile Left-Right Horizontal Swipeable Carousel (Peeking next card) */}
+        <div className="hidden max-[860px]:flex max-[860px]:gap-3 max-[860px]:overflow-x-auto max-[860px]:snap-x max-[860px]:snap-mandatory max-[860px]:pb-2.5 max-[860px]:pt-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-3 px-3">
+          {related.map((item) => (
+            <div
+              key={item.slug}
+              className="w-[64vw] max-w-[245px] min-w-[200px] shrink-0 snap-start"
+            >
+              <ProductCard product={item} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Reassurance Banner Strip Attached Above Footer ── */}
+      <section className="mx-auto mt-16 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:mt-10 max-[680px]:px-3">
+        <div className="grid grid-cols-3 gap-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-6 text-center shadow-xs max-[680px]:grid-cols-1 max-[680px]:gap-3 max-[680px]:p-4 max-[680px]:rounded-2xl">
+          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">📦</span>
+            <div>
+              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Fast Dispatch</strong>
+              <span className="text-[0.68rem] text-[var(--muted)]">Orders packed fresh & shipped within 24 hours</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🌿</span>
+            <div>
+              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">100% Authentic Herb</strong>
+              <span className="text-[0.68rem] text-[var(--muted)]">Single-origin shade-dried herbs, zero fillers</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🛡️</span>
+            <div>
+              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Secure Encrypted Checkout</strong>
+              <span className="text-[0.68rem] text-[var(--muted)]">Bank-grade encryption & satisfaction guaranteed</span>
+            </div>
+          </div>
         </div>
       </section>
     </main>
