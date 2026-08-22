@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { formatCurrency } from "@/domain/catalog/products";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
 import { useStore } from "@/features/store/store-provider";
 
@@ -199,7 +198,7 @@ const RITUAL_FAQS = [
 export function RitualsHub() {
   const [activeRecipeId, setActiveRecipeId] = useState("foundation-cleanse");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const { products, addToCart } = useStore();
+  const { addToCart } = useStore();
 
   const activeRecipe =
     MIXING_RECIPES.find((r) => r.id === activeRecipeId) ?? MIXING_RECIPES[0];

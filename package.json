@@ -17,6 +17,9 @@
     "frontend",
     "backend"
   ],
+  "devDependencies": {
+    "@vitejs/plugin-rsc": "0.5.34"
+  },
   "overrides": {
     "vite": "^8.2.1",
     "vinext": "1.0.0-beta.6",

@@ -194,7 +194,7 @@ export default async function OurStoryPage() {
 
           {/* Pull-quote */}
           <div className="mx-auto max-w-[860px] text-center">
-            <span className="mb-6 block font-serif text-[4rem] leading-none text-[var(--botanical)] max-[680px]:mb-4 max-[680px]:text-[2.8rem]">"</span>
+            <span className="mb-6 block font-serif text-[4rem] leading-none text-[var(--botanical)] max-[680px]:mb-4 max-[680px]:text-[2.8rem]">&ldquo;</span>
             <blockquote className="m-0 font-serif text-[clamp(2rem,3.8vw,4.2rem)] font-normal leading-[1.08] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(1.42rem,6.5vw,2.1rem)] max-[680px]:leading-[1.14]">
               True luxury lies in transparency. We honour the plant, the soil, and the centuries of knowledge that bring them together.
             </blockquote>

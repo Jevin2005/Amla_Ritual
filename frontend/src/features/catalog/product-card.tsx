@@ -8,10 +8,8 @@ import { useStore } from "@/features/store/store-provider";
 
 export function ProductCard({
   product,
-  compact = false,
 }: {
   product: Product;
-  compact?: boolean;
 }) {
   const { addToCart, toggleWishlist, isWishlisted, track } = useStore();
   const wished = isWishlisted(product.slug);

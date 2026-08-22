@@ -4,19 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/features/catalog/product-card";
-import { ProductJar } from "@/features/catalog/product-jar";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
 import { useStore } from "@/features/store/store-provider";
 import { BundleCards } from "./bundle-cards";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { HeroPurchase } from "./hero-purchase";
-import { VideoReviewsSection } from "./video-reviews-section";
-import { homeFaqs, ritualCards } from "./content";
+import { homeFaqs } from "./content";
 
 const eyebrowClass =
   "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
-const lightEyebrowClass =
-  "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[#c8d88e] uppercase";
 const sectionTitleClass =
   "m-0 scroll-mt-[calc(var(--header-height)+24px)] text-[clamp(3rem,4.5vw,5rem)] leading-[0.96] font-normal tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(2.45rem,11vw,3.15rem)]";
 const sectionClass =
@@ -29,14 +25,6 @@ const textLinkClass =
   "inline-flex items-center gap-[14px] border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase [transition:gap_260ms_var(--ease)] motion-reduce:transition-none hover:gap-[22px] max-[680px]:min-h-11";
 const revealClass =
   "[transition:opacity_650ms_var(--ease),transform_650ms_var(--ease)]";
-const buttonClass =
-  "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border px-6 py-[13px] text-[0.72rem] leading-none font-bold tracking-[0.12em] uppercase shadow-[0_10px_24px_rgba(21,59,45,0.1)] [transition:transform_350ms_var(--ease),background-color_350ms_var(--ease),color_350ms_var(--ease),border-color_350ms_var(--ease),box-shadow_350ms_var(--ease)] motion-reduce:transition-none hover:shadow-[0_14px_30px_rgba(21,59,45,0.16)] hover:[transform:translateY(-2px)]";
-const ritualColorClasses = [
-  "[--ritual-color:#b7c7a9]",
-  "[--ritual-color:#d5b990]",
-  "[--ritual-color:#d8c8b1]",
-  "[--ritual-color:#aeb6d0]",
-] as const;
 
 export function HomePage() {
   const { products, content } = useStore();
@@ -82,8 +70,6 @@ export function HomePage() {
   };
   const heroPoster = content.homeHeroPoster;
   const ritualPoster = content.ritualPoster;
-  const colourProduct =
-    products.find((product) => product.ritualStep === "Colour") ?? products[0];
 
   const handlePrevProduct = () => {
     setActiveProductIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
@@ -879,9 +865,6 @@ export function HomePage() {
         </div>
         <BundleCards />
       </section>
-
-      {/* ── Customer Video UGC and Reviews Section ── */}
-      <VideoReviewsSection />
 
       {/* ── The Ritual Room (FAQ) - Integrated Luxury Dark Footer-Attached Styling ── */}
       <section

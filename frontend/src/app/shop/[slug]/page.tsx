@@ -6,7 +6,6 @@ import {
   ProductCard,
   ProductDetailActions,
   ProductGallery,
-  ProductReviewsSection,
 } from "@/features/catalog";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
 
@@ -88,11 +87,6 @@ export default async function ProductPage(props: ProductPageProps) {
         : "https://schema.org/OutOfStock",
       url: `/shop/${product.slug}`,
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "142",
-    },
     additionalProperty: [
       { "@type": "PropertyValue", name: "Botanical", value: product.botanical },
       { "@type": "PropertyValue", name: "Plant part", value: product.plantPart },
@@ -156,18 +150,6 @@ export default async function ProductPage(props: ProductPageProps) {
             <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
               {product.subtitle}
             </p>
-          </div>
-
-          {/* Amazon-Style Rating & Review Jump Link */}
-          <div className="flex items-center gap-2 text-[0.72rem] max-[680px]:text-[0.66rem]">
-            <span className="text-amber-500 font-bold text-sm">★★★★★</span>
-            <span className="font-bold text-[var(--forest)]">4.9</span>
-            <a
-              href="#customer-reviews"
-              className="text-[var(--botanical)] font-medium underline hover:text-[var(--forest)] transition-colors cursor-pointer"
-            >
-              (142 customer reviews)
-            </a>
           </div>
 
           {/* Short Description */}
@@ -252,9 +234,6 @@ export default async function ProductPage(props: ProductPageProps) {
         </div>
       </section>
 
-      {/* ── Customer Reviews & Ratings Section (Amazon-Style Breakdown) ── */}
-      <ProductReviewsSection product={product} />
-
       {/* ── Product-Specific FAQ Section ── */}
       <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="product-faq-title">
         <div className="mb-4 flex items-end justify-between max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-0.5">
@@ -305,7 +284,7 @@ export default async function ProductPage(props: ProductPageProps) {
         <div className="mb-4 flex items-end justify-between">
           <div>
             <p className="mb-0.5 text-[0.64rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
-              Customers Also Purchased
+              Explore More Botanicals
             </p>
             <h2
               id="related-title"
@@ -349,21 +328,21 @@ export default async function ProductPage(props: ProductPageProps) {
             <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">📦</span>
             <div>
               <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Fast Dispatch</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Orders packed fresh & shipped within 24 hours</span>
+              <span className="text-[0.68rem] text-[var(--muted)]">Dispatch timing is confirmed securely at checkout</span>
             </div>
           </div>
           <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
             <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🌿</span>
             <div>
-              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">100% Authentic Herb</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Single-origin shade-dried herbs, zero fillers</span>
+              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Clear Product Details</strong>
+              <span className="text-[0.68rem] text-[var(--muted)]">Ingredients and directions are shown before purchase</span>
             </div>
           </div>
           <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
             <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🛡️</span>
             <div>
               <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Secure Encrypted Checkout</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Bank-grade encryption & satisfaction guaranteed</span>
+              <span className="text-[0.68rem] text-[var(--muted)]">Payment is completed on Shopify&rsquo;s hosted checkout</span>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import {
   formatCurrency,
@@ -29,7 +29,11 @@ export function ProductDetailActions({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false,
+  );
   const resetTimer = useRef<number | null>(null);
   const wished = isWishlisted(product.slug);
   const variants = product.variants || [];
@@ -52,7 +56,6 @@ export function ProductDetailActions({ product }: { product: Product }) {
     (variants.length === 1 && variants[0].title !== "Default Title");
 
   useEffect(() => {
-    setMounted(true);
     return () => {
       if (resetTimer.current) window.clearTimeout(resetTimer.current);
     };
