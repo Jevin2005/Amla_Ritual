@@ -138,13 +138,29 @@ export function MobileMenu({
           </Link>
           <Link
             className={utilityLinkClass}
+            href="/faqs"
+            onClick={onClose}
+            aria-current={currentPath === "/faqs" ? "page" : undefined}
+          >
+            FAQs & Guides
+          </Link>
+          <Link
+            className={utilityLinkClass}
+            href="/contact"
+            onClick={onClose}
+            aria-current={currentPath === "/contact" ? "page" : undefined}
+          >
+            Contact care
+          </Link>
+          <Link
+            className={utilityLinkClass}
             href="/shipping-returns"
             onClick={onClose}
             aria-current={
               currentPath === "/shipping-returns" ? "page" : undefined
             }
           >
-            Shipping + returns
+            Shipping & returns
           </Link>
           <Link
             className={utilityLinkClass}

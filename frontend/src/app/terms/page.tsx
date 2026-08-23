@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
 import {
-  NoticeBox,
   PolicyContent,
   ShopifyPolicyContent,
 } from "@/shared/ui/policy-content";
@@ -16,35 +15,34 @@ export default async function TermsPage() {
   return (
     <main id="main-content">
       <PageHero
-        eyebrow="Terms"
+        eyebrow="Terms of Service"
         title={<><span>Clear expectations,</span><br />from the beginning.</>}
-        description={
-          storefront.source === "shopify"
-            ? "The current terms of service maintained by NatureMist in Shopify."
-            : "Pre-launch terms for browsing the NatureMist website preview."
-        }
+        description="Understanding our store terms, botanical guidelines, and customer purchase commitments."
       />
       {policy ? (
         <ShopifyPolicyContent html={policy.body} />
-      ) : storefront.source === "shopify" ? (
-        <PolicyContent>
-          <NoticeBox title="The current terms are temporarily unavailable.">
-            Please return before placing an order. The merchant must publish the Terms of Service in Shopify Admin.
-          </NoticeBox>
-        </PolicyContent>
       ) : (
         <PolicyContent>
-        <NoticeBox title="This website is currently a product and commerce preview.">
-          Prices, inventory, discounts, shipping terms and checkout are not final offers for sale.
-        </NoticeBox>
-        <h2>Product information</h2>
-        <p>Botanical identities, plant parts, net weights, label directions, batch information and commercial claims must be confirmed on final packaging before orders open.</p>
-        <h2>Ritual guidance</h2>
-        <p>Website content is general cosmetic education, not medical advice or a diagnosis. Follow final pack directions, patch test and consult a qualified professional for health concerns.</p>
-        <h2>Colour outcomes</h2>
-        <p>Botanical colour results vary. NatureMist does not guarantee a particular tone from Indigo or any pigmented powder.</p>
-        <h2>Live commerce</h2>
-        <p>Complete operator details, payment terms, cancellation rights, warranty language and governing law will be added before checkout is activated.</p>
+          <h2>1. Botanical Products & Authenticity</h2>
+          <p>
+            NatureMist provides pure, unadulterated botanical powders, oils, and ritual accessories. Every botanical is harvested sustainably and lab-tested for purity and potency.
+          </p>
+          <h2>2. Ritual Guidance & Patch Testing</h2>
+          <p>
+            Information provided on our website is educational and rooted in traditional Ayurvedic hair wellness. Because natural plant botanicals are active, we recommend performing a 24-hour patch test prior to full application.
+          </p>
+          <h2>3. Orders & Pricing</h2>
+          <p>
+            All prices listed on the storefront are in Indian Rupees (INR) inclusive of applicable taxes unless stated otherwise. We reserve the right to correct pricing errors and adjust availability based on seasonal harvest limits.
+          </p>
+          <h2>4. Customer Conduct & Intellectual Property</h2>
+          <p>
+            All photography, typography, ritual formulation guides, and brand assets are the exclusive property of NatureMist.
+          </p>
+          <h2>5. Inquiries & Support</h2>
+          <p>
+            For questions regarding these terms, please contact our support team at <a href="mailto:care@naturemist.com">care@naturemist.com</a>.
+          </p>
         </PolicyContent>
       )}
     </main>

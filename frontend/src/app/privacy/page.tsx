@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
 import {
-  NoticeBox,
   PolicyContent,
   ShopifyPolicyContent,
 } from "@/shared/ui/policy-content";
@@ -16,33 +15,34 @@ export default async function PrivacyPage() {
   return (
     <main id="main-content">
       <PageHero
-        eyebrow="Privacy"
+        eyebrow="Privacy Policy"
         title="Care extends to your data."
-        description={
-          storefront.source === "shopify"
-            ? "The current privacy policy maintained by NatureMist in Shopify."
-            : "A concise pre-launch statement for this interactive storefront preview."
-        }
+        description="We believe in radical transparency—both in our botanical hair formulations and in how we safeguard your personal information."
       />
       {policy ? (
         <ShopifyPolicyContent html={policy.body} />
-      ) : storefront.source === "shopify" ? (
-        <PolicyContent>
-          <NoticeBox title="The current privacy policy is temporarily unavailable.">
-            Please return before submitting personal information or placing an order. The merchant must publish the Privacy Policy in Shopify Admin.
-          </NoticeBox>
-        </PolicyContent>
       ) : (
         <PolicyContent>
-        <NoticeBox title="This preview does not submit personal data to a NatureMist backend.">
-          Newsletter, tracking and checkout integrations remain intentionally disconnected.
-        </NoticeBox>
-        <h2>Device-local preferences</h2>
-        <p>Your bag and wishlist are stored in your browser so they can remain available on the same device. You can remove items at any time or clear this site’s storage through your browser settings.</p>
-        <h2>Analytics readiness</h2>
-        <p>The interface emits non-sensitive conversion event names for a future analytics integration. It does not intentionally include email addresses, names, addresses, payment details or free-text ritual answers.</p>
-        <h2>Before launch</h2>
-        <p>A complete privacy notice must identify the legal operator, purposes, lawful bases, processors, retention, cookie choices, rights and contact details for every live integration.</p>
+          <h2>1. Information We Collect</h2>
+          <p>
+            When you visit our website, place an order, or submit a consultation request, we collect the details you provide (such as your name, delivery address, phone number, email address, and order selections).
+          </p>
+          <h2>2. How We Use Your Information</h2>
+          <p>
+            Your information is used strictly to process orders, fulfill botanical shipments, provide direct customer care, and send optional ritual guides when you subscribe to our newsletter.
+          </p>
+          <h2>3. Payment Security & Encryption</h2>
+          <p>
+            All online transactions are securely encrypted and processed directly via Shopify’s PCI-DSS compliant checkout gateway. We never store or view your credit/debit card numbers or banking passwords.
+          </p>
+          <h2>4. Cookies & Preferences</h2>
+          <p>
+            We use essential cookies to maintain your shopping bag items, remember your ritual preferences, and deliver a smooth browsing experience across sessions.
+          </p>
+          <h2>5. Contact Our Privacy Team</h2>
+          <p>
+            If you have questions regarding your personal data or wish to request data updates, please contact our support team at <a href="mailto:care@naturemist.com">care@naturemist.com</a>.
+          </p>
         </PolicyContent>
       )}
     </main>

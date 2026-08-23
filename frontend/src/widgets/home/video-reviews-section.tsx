@@ -22,8 +22,8 @@ interface ReviewItem {
   quote: string;
   author: string;
   role: string;
-  avatarBg: string;
   avatarText: string;
+  avatarBg: string;
 }
 
 const VIDEOS: VideoItem[] = [
@@ -31,61 +31,45 @@ const VIDEOS: VideoItem[] = [
     id: "vid-1",
     creator: "Ashley Cooper",
     title: "My 4-week Amla ritual transformation",
-    duration: "0:45",
+    duration: "0:41",
     image: "/images/naturemist-ritual.png",
-    productTag: "Amla Powder",
-    productSlug: "amla-powder",
-    testimonial: "Shade-dried Amla transformed my roots and gave my hair an unhurried, natural mirror gloss.",
+    productTag: "AMLA POWDER",
+    productSlug: "amla",
+    testimonial:
+      "Shade-dried Amla transformed my roots and gave my hair an unhurried, natural mirror gloss within four weeks.",
   },
   {
     id: "vid-2",
     creator: "Maya Patel",
     title: "How I mix the fresh pre-wash mask",
-    duration: "0:38",
+    duration: "0:55",
     image: "/images/naturemist-hero.png",
-    productTag: "The Foundation Trio",
-    productSlug: "amla-powder",
-    testimonial: "Mixing 2 parts Amla with 1 part Reetha and Shikakai creates the perfect low-lather cleanse.",
+    productTag: "THE FOUNDATION TRIO",
+    productSlug: "amla",
+    testimonial:
+      "Mixing two parts Amla with one part Reetha and Shikakai creates the perfect low-lather clarifying cleanse.",
   },
   {
     id: "vid-3",
     creator: "Anton de Swardt",
     title: "Pure shade-dried botanicals routine",
-    duration: "1:02",
+    duration: "1:07",
     image: "/images/naturemist-process.png",
-    productTag: "Conditioning Pair",
-    productSlug: "bhringraj-powder",
-    testimonial: "Zero fillers, zero chemical perfumes. Just pure powdered plants that soothe the scalp.",
+    productTag: "CONDITIONING PAIR",
+    productSlug: "bhringraj",
+    testimonial:
+      "Zero fillers, zero chemical perfumes. Just pure powdered plants that ground and soothe the scalp.",
   },
   {
     id: "vid-4",
     creator: "Elena Rostova",
     title: "Zero silicones, mirror hair shine",
-    duration: "0:52",
+    duration: "0:47",
     image: "/images/amla-powder.jpg",
-    productTag: "Bhringraj Powder",
-    productSlug: "bhringraj-powder",
-    testimonial: "Scalp irritation stopped in week two and my lengths have never felt so lightweight.",
-  },
-  {
-    id: "vid-5",
-    creator: "Zainab Al-Hassan",
-    title: "Scalp grounding massage with Shikakai",
-    duration: "0:48",
-    image: "/images/shikakai-powder.jpg",
-    productTag: "Shikakai Powder",
-    productSlug: "shikakai-powder",
-    testimonial: "The natural saponins cleanse thoroughly without stripping essential scalp moisture.",
-  },
-  {
-    id: "vid-6",
-    creator: "Priya Sharma",
-    title: "Sunday unhurried conditioning mask",
-    duration: "1:15",
-    image: "/images/hibiscus-powder.jpg",
-    productTag: "Hibiscus Powder",
-    productSlug: "hibiscus-powder",
-    testimonial: "Deep conditioning with Hibiscus gave my curls intense bounce and vivid color vibrancy.",
+    productTag: "BHRINGRAJ POWDER",
+    productSlug: "bhringraj",
+    testimonial:
+      "Scalp dryness stopped in week two and my lengths have never felt so lightweight, soft, and glossy.",
   },
 ];
 
@@ -97,8 +81,8 @@ const REVIEWS: ReviewItem[] = [
       "NatureMist transformed my Sunday wash day into a restorative ritual. After 4 weeks of the Amla & Bhringraj mask, my hair feels conditioned, softer, and has a natural mirror shine without heavy silicones.",
     author: "Ashley Cooper",
     role: "Verified Customer · 6 months ritual",
-    avatarBg: "bg-[#2d4a36]",
     avatarText: "AC",
+    avatarBg: "bg-[#1f3e2b]",
   },
   {
     id: "rev-2",
@@ -107,135 +91,98 @@ const REVIEWS: ReviewItem[] = [
       "The ingredient purity is unmatched. You open the pack and smell 100% pure shade-dried botanicals. Scalp dryness stopped on week two and the lengths have so much natural body and slip.",
     author: "Anton de Swardt",
     role: "Verified Customer · 4 months ritual",
-    avatarBg: "bg-[#527d42]",
     avatarText: "AD",
+    avatarBg: "bg-[#3a5a30]",
   },
   {
     id: "rev-3",
     rating: 5,
     quote:
-      "I was intimidated by powdered botanicals, but the clear 3-step preparation guide made it effortless. The curls feel deeply hydrated and the gloss lasts until the next wash.",
+      "I was intimidated by powdered botanicals, but the clear 3 step preparation guide made it effortless. The curls feel deeply hydrated and the gloss lasts until the next wash.",
     author: "Priya Sharma",
     role: "Verified Customer · 8 months ritual",
-    avatarBg: "bg-[#3e5f48]",
     avatarText: "PS",
-  },
-  {
-    id: "rev-4",
-    rating: 5,
-    quote:
-      "Finally, a botanical formulation with zero fragrance fillers. My sensitive scalp feels calm, balanced, and shedding during brush out has visibly decreased.",
-    author: "Marcus Vance",
-    role: "Verified Customer · 3 months ritual",
-    avatarBg: "bg-[#456b54]",
-    avatarText: "MV",
-  },
-  {
-    id: "rev-5",
-    rating: 5,
-    quote:
-      "The Shikakai and Reetha combination cleanses effectively without foaming harsh detergents. My lengths stay soft for days between washes.",
-    author: "Dr. Sunita Rao",
-    role: "Verified Customer · 1 year ritual",
-    avatarBg: "bg-[#254636]",
-    avatarText: "SR",
+    avatarBg: "bg-[#234938]",
   },
 ];
 
 export function VideoReviewsSection() {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const reviewsCarouselRef = useRef<HTMLDivElement>(null);
+  const videoScrollRef = useRef<HTMLDivElement>(null);
+  const reviewScrollRef = useRef<HTMLDivElement>(null);
   const [activeModalVideo, setActiveModalVideo] = useState<VideoItem | null>(null);
   const { addToCart } = useStore();
 
-  const handleNext = () => {
-    if (carouselRef.current) {
-      const card = carouselRef.current.querySelector("article");
-      const scrollStep = card ? card.clientWidth + 16 : 290;
-      carouselRef.current.scrollBy({ left: scrollStep, behavior: "smooth" });
+  const handleVideoScroll = (direction: "left" | "right") => {
+    if (videoScrollRef.current) {
+      const scrollAmount = direction === "left" ? -320 : 320;
+      videoScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
-  const handlePrev = () => {
-    if (carouselRef.current) {
-      const card = carouselRef.current.querySelector("article");
-      const scrollStep = card ? card.clientWidth + 16 : 290;
-      carouselRef.current.scrollBy({ left: -scrollStep, behavior: "smooth" });
-    }
-  };
-
-  const handleReviewsNext = () => {
-    if (reviewsCarouselRef.current) {
-      const card = reviewsCarouselRef.current.querySelector("article");
-      const scrollStep = card ? card.clientWidth + 16 : 300;
-      reviewsCarouselRef.current.scrollBy({ left: scrollStep, behavior: "smooth" });
-    }
-  };
-
-  const handleReviewsPrev = () => {
-    if (reviewsCarouselRef.current) {
-      const card = reviewsCarouselRef.current.querySelector("article");
-      const scrollStep = card ? card.clientWidth + 16 : 300;
-      reviewsCarouselRef.current.scrollBy({ left: -scrollStep, behavior: "smooth" });
+  const handleReviewScroll = (direction: "left" | "right") => {
+    if (reviewScrollRef.current) {
+      const scrollAmount = direction === "left" ? -350 : 350;
+      reviewScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
   return (
     <section
-      className="relative mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,100px)] max-[680px]:px-3.5 max-[680px]:py-10"
-      id="customer-reviews"
-      aria-label="Customer Videos and Reviews"
+      className="relative mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(65px,8vw,110px)] max-[680px]:px-4 max-[680px]:py-12"
+      id="community-rituals"
+      aria-label="Community Videos and Reviews"
     >
-      {/* ── PART 1: Videos for this Product ── */}
-      <div className="mb-16 max-[680px]:mb-10">
-        {/* Section Heading */}
+      {/* ─────────────────────────────────────────────────────────────
+          TOP SECTION: Videos for this product.
+      ───────────────────────────────────────────────────────────── */}
+      <div className="mb-14 max-[680px]:mb-10">
+        {/* Section Header */}
         <div className="mb-10 text-center max-[680px]:mb-6">
-          <p className="mb-2 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase max-[680px]:mb-1 max-[680px]:text-[0.54rem]">
-            A community in rhythm
+          <p className="mb-3 text-[0.68rem] font-bold tracking-[0.2em] text-[#529d38] uppercase max-[680px]:mb-1.5 max-[680px]:text-[0.56rem]">
+            A Community in Rhythm
           </p>
-          <h2 className="m-0 text-[clamp(2.4rem,4.2vw,4.4rem)] font-normal leading-[0.96] tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.55rem,7vw,2.1rem)]">
+          <h2 className="m-0 font-serif text-[clamp(2.6rem,4.5vw,4.6rem)] font-normal leading-[0.98] tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.8rem,8vw,2.4rem)]">
             Videos for this product.
           </h2>
-          <p className="mx-auto mt-4 max-w-[600px] text-[0.88rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:text-[0.68rem] max-[680px]:leading-[1.4]">
+          <p className="mx-auto mt-4 max-w-[620px] text-[0.94rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:text-[0.76rem] max-[680px]:leading-[1.45]">
             See how our community prepares fresh botanical pastes, applies scalp rituals, and cares for their lengths.
           </p>
         </div>
 
-        {/* Scrollable Video Cards Track */}
+        {/* 4 Video Cards Grid / Carousel */}
         <div
-          ref={carouselRef}
-          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[680px]:gap-3"
-          tabIndex={0}
+          ref={videoScrollRef}
+          className="grid grid-cols-4 gap-5 max-[1120px]:flex max-[1120px]:overflow-x-auto max-[1120px]:scroll-smooth max-[1120px]:snap-x max-[1120px]:snap-mandatory max-[1120px]:pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[680px]:gap-3.5"
           role="region"
           aria-label="Community video stories"
         >
           {VIDEOS.map((video) => (
             <article
               key={video.id}
-              className="group/video relative aspect-[9/14] w-[calc(25%-12px)] min-w-[260px] max-[1120px]:w-[calc(33.33%-11px)] max-[860px]:w-[calc(50%-8px)] max-[680px]:w-[70vw] max-[680px]:min-w-[210px] max-[680px]:max-w-[245px] shrink-0 snap-center cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-[#e4ede3] shadow-[0_6px_20px_rgba(23,63,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(23,63,42,0.12)]"
+              className="group/video relative aspect-[3/4.2] w-full min-w-[250px] shrink-0 snap-center cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-[#e4ede3] shadow-[0_8px_24px_rgba(21,59,45,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(21,59,45,0.14)] max-[1120px]:w-[280px] max-[680px]:w-[76vw] max-[680px]:min-w-[220px] max-[680px]:max-w-[260px]"
               onClick={() => setActiveModalVideo(video)}
             >
-              {/* Thumbnail Image */}
+              {/* Background Thumbnail Image */}
               <Image
                 src={video.image}
                 alt={video.title}
                 fill
-                sizes="(max-width: 680px) 70vw, (max-width: 1080px) 35vw, 25vw"
+                sizes="(max-width: 680px) 76vw, (max-width: 1120px) 280px, 25vw"
                 className="size-full object-cover object-center transition-transform duration-500 group-hover/video:scale-105"
               />
 
-              {/* Gradient Scrim */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+              {/* Gradient Dark Overlay */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30" />
 
-              {/* Top Tag: Product Name */}
-              <div className="absolute top-3 left-3 z-10 rounded-full bg-black/45 px-2.5 py-0.5 text-[0.52rem] font-bold uppercase tracking-wider text-white backdrop-blur-md max-[680px]:top-2 max-[680px]:left-2 max-[680px]:text-[0.44rem]">
+              {/* Top-Left Category Tag */}
+              <div className="absolute top-3.5 left-3.5 z-10 rounded-full bg-black/45 px-3 py-1 text-[0.54rem] font-bold tracking-[0.08em] text-white uppercase backdrop-blur-md max-[680px]:top-2.5 max-[680px]:left-2.5 max-[680px]:text-[0.46rem]">
                 {video.productTag}
               </div>
 
-              {/* Center Play Button Overlay */}
+              {/* Center Translucent Play Button */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <span
-                  className="grid size-12 place-items-center rounded-full border border-white/70 bg-white/40 text-white shadow-lg backdrop-blur-md transition-transform duration-200 group-hover/video:scale-110 max-[680px]:size-9"
+                  className="grid size-12 place-items-center rounded-full border border-white/80 bg-white/35 text-white shadow-lg backdrop-blur-md transition-transform duration-200 group-hover/video:scale-110 max-[680px]:size-10"
                   aria-hidden="true"
                 >
                   <svg
@@ -248,14 +195,14 @@ export function VideoReviewsSection() {
                 </span>
               </div>
 
-              {/* Bottom Details */}
-              <div className="absolute right-3 bottom-3 left-3 z-10 text-white max-[680px]:right-2 max-[680px]:bottom-2 max-[680px]:left-2">
-                <p className="m-0 line-clamp-2 text-[0.74rem] font-semibold leading-tight drop-shadow-sm max-[680px]:text-[0.6rem]">
+              {/* Bottom Info Overlay */}
+              <div className="absolute right-3.5 bottom-3.5 left-3.5 z-10 text-white max-[680px]:right-2.5 max-[680px]:bottom-2.5 max-[680px]:left-2.5">
+                <p className="m-0 line-clamp-2 text-[0.82rem] font-semibold leading-tight drop-shadow-sm max-[680px]:text-[0.7rem]">
                   {video.title}
                 </p>
-                <div className="mt-1 flex items-center justify-between text-[0.56rem] text-white/85 max-[680px]:text-[0.48rem]">
+                <div className="mt-1.5 flex items-center justify-between text-[0.62rem] text-white/85 max-[680px]:text-[0.52rem]">
                   <span>{video.creator}</span>
-                  <span className="rounded bg-black/35 px-1 py-0.5">
+                  <span className="rounded bg-black/40 px-1.5 py-0.5 font-mono text-[0.58rem]">
                     {video.duration}
                   </span>
                 </div>
@@ -265,18 +212,18 @@ export function VideoReviewsSection() {
         </div>
 
         {/* Carousel Navigation Arrows */}
-        <div className="mt-6 flex items-center justify-center gap-3 max-[680px]:mt-4">
+        <div className="mt-7 flex items-center justify-center gap-3 max-[680px]:mt-5">
           <button
             type="button"
-            onClick={handlePrev}
-            className="grid size-10 place-items-center rounded-full border border-[var(--line)] bg-white text-[1rem] text-[var(--forest)] shadow-xs transition-all duration-200 hover:bg-[var(--beige)] hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-8 max-[680px]:text-[0.85rem]"
+            onClick={() => handleVideoScroll("left")}
+            className="grid size-10 place-items-center rounded-full border border-[var(--line)] bg-white text-[1rem] text-[var(--forest)] shadow-xs transition-all duration-200 hover:bg-[var(--sand)] hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-8 max-[680px]:text-[0.85rem]"
             aria-label="Previous video"
           >
             ←
           </button>
           <button
             type="button"
-            onClick={handleNext}
+            onClick={() => handleVideoScroll("right")}
             className="grid size-10 place-items-center rounded-full bg-[#529d38] text-[1rem] text-white shadow-sm transition-all duration-200 hover:bg-[#43852d] hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-8 max-[680px]:text-[0.85rem]"
             aria-label="Next video"
           >
@@ -285,10 +232,138 @@ export function VideoReviewsSection() {
         </div>
       </div>
 
-      {/* Interactive Video Modal */}
+      {/* ─────────────────────────────────────────────────────────────
+          DECORATIVE FLOATING LEAVES DIVIDER
+      ───────────────────────────────────────────────────────────── */}
+      <div
+        className="pointer-events-none relative my-8 flex items-center justify-between px-16 opacity-70 max-[680px]:my-4 max-[680px]:px-4"
+        aria-hidden="true"
+      >
+        <svg
+          className="size-8 -rotate-45 text-[#60a842] max-[680px]:size-5"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+        </svg>
+        <svg
+          className="size-8 rotate-45 text-[#529d38] max-[680px]:size-5"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+        </svg>
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          BOTTOM SECTION: Our customer reviews.
+      ───────────────────────────────────────────────────────────── */}
+      <div>
+        {/* Section Header */}
+        <div className="mb-10 text-center max-[680px]:mb-6">
+          <p className="mb-3 text-[0.68rem] font-bold tracking-[0.2em] text-[#529d38] uppercase max-[680px]:mb-1.5 max-[680px]:text-[0.56rem]">
+            Voices of the Ritual
+          </p>
+          <h2 className="m-0 font-serif text-[clamp(2.6rem,4.5vw,4.6rem)] font-normal leading-[0.98] tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.8rem,8vw,2.4rem)]">
+            Our customer reviews.
+          </h2>
+          <p className="mx-auto mt-4 max-w-[620px] text-[0.94rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:text-[0.76rem] max-[680px]:leading-[1.45]">
+            Real experiences from customers who made botanical powders part of their weekly rhythm.
+          </p>
+        </div>
+
+        {/* 3 Review Cards Grid */}
+        <div
+          ref={reviewScrollRef}
+          className="grid grid-cols-3 gap-6 max-[960px]:flex max-[960px]:overflow-x-auto max-[960px]:scroll-smooth max-[960px]:snap-x max-[960px]:snap-mandatory max-[960px]:pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[680px]:gap-3.5"
+          role="region"
+          aria-label="Customer written reviews"
+        >
+          {REVIEWS.map((review) => (
+            <article
+              key={review.id}
+              className="flex w-full shrink-0 snap-start flex-col justify-between rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-7 shadow-[0_4px_18px_rgba(21,59,45,0.03)] transition-all duration-300 hover:shadow-[0_12px_28px_rgba(21,59,45,0.06)] max-[960px]:w-[320px] max-[680px]:w-[82vw] max-[680px]:min-w-[260px] max-[680px]:max-w-[300px] max-[680px]:p-5"
+            >
+              <div>
+                {/* 5 Gold Stars */}
+                <div
+                  className="mb-3.5 flex items-center gap-1 text-[#f5a623] max-[680px]:mb-2.5"
+                  aria-label="5 out of 5 stars"
+                >
+                  {Array.from({ length: review.rating }).map((_, i) => (
+                    <span key={i} className="text-base max-[680px]:text-sm">
+                      ★
+                    </span>
+                  ))}
+                </div>
+
+                {/* Review Text */}
+                <p className="m-0 text-[0.88rem] leading-[1.7] text-[#2c3e34] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.5]">
+                  &ldquo;{review.quote}&rdquo;{" "}
+                  <Link href="/reviews" className="font-semibold text-[#529d38] hover:underline">
+                    Learn More...
+                  </Link>
+                </p>
+              </div>
+
+              {/* Author Footer */}
+              <div className="mt-7 flex items-center gap-3.5 border-t border-[var(--line)] pt-4 max-[680px]:mt-5 max-[680px]:gap-2.5 max-[680px]:pt-3">
+                <div
+                  className={`grid size-10 shrink-0 place-items-center rounded-full ${review.avatarBg} text-[0.76rem] font-bold text-white shadow-xs max-[680px]:size-8 max-[680px]:text-[0.65rem]`}
+                >
+                  {review.avatarText}
+                </div>
+                <div>
+                  <h3 className="m-0 text-[0.88rem] font-bold text-[var(--forest)] max-[680px]:text-[0.76rem]">
+                    {review.author}
+                  </h3>
+                  <p className="m-0 text-[0.66rem] text-[var(--muted)] max-[680px]:text-[0.56rem]">
+                    {review.role}
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {/* Reviews Navigation & See All Reviews Button */}
+        <div className="mt-8 flex flex-col items-center justify-center gap-5 max-[680px]:mt-6">
+          {/* Arrow Buttons */}
+          <div className="flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => handleReviewScroll("left")}
+              className="grid size-10 place-items-center rounded-full border border-[var(--line)] bg-white text-[1rem] text-[var(--forest)] shadow-xs transition-all duration-200 hover:bg-[var(--sand)] hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-8 max-[680px]:text-[0.85rem]"
+              aria-label="Previous review"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => handleReviewScroll("right")}
+              className="grid size-10 place-items-center rounded-full bg-[#529d38] text-[1rem] text-white shadow-sm transition-all duration-200 hover:bg-[#43852d] hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-8 max-[680px]:text-[0.85rem]"
+              aria-label="Next review"
+            >
+              →
+            </button>
+          </div>
+
+          {/* See All Reviews CTA Pill Button */}
+          <Link
+            href="/reviews"
+            className="inline-flex min-h-[46px] items-center justify-center rounded-xl bg-[#529d38] px-8 py-3 text-[0.78rem] font-bold tracking-[0.08em] uppercase text-white shadow-[0_8px_22px_rgba(82,157,56,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#43852d] hover:shadow-[0_12px_28px_rgba(82,157,56,0.34)] active:scale-95 max-[680px]:min-h-[38px] max-[680px]:px-6 max-[680px]:py-2.5 max-[680px]:text-[0.68rem]"
+          >
+            See All Reviews
+          </Link>
+        </div>
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          INTERACTIVE VIDEO PLAYER MODAL
+      ───────────────────────────────────────────────────────────── */}
       {activeModalVideo && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm transition-opacity"
           onClick={() => setActiveModalVideo(null)}
           role="dialog"
           aria-modal="true"
@@ -298,7 +373,7 @@ export function VideoReviewsSection() {
             className="relative flex max-h-[90vh] w-full max-w-[420px] flex-col overflow-hidden rounded-3xl bg-[#0e271b] text-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Close Button */}
+            {/* Close Button */}
             <button
               type="button"
               onClick={() => setActiveModalVideo(null)}
@@ -308,7 +383,7 @@ export function VideoReviewsSection() {
               ✕
             </button>
 
-            {/* Video Player Box */}
+            {/* Video Thumbnail with Play Button */}
             <div className="relative aspect-[9/13] w-full overflow-hidden bg-black">
               <Image
                 src={activeModalVideo.image}
@@ -318,7 +393,6 @@ export function VideoReviewsSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0e271b] via-transparent to-black/40" />
 
-              {/* Center Play Graphic */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="grid size-16 place-items-center rounded-full border border-white/80 bg-white/30 text-white backdrop-blur-md shadow-2xl animate-pulse">
                   <svg className="ml-1 size-7 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -328,7 +402,7 @@ export function VideoReviewsSection() {
               </div>
             </div>
 
-            {/* Video Footer Info & CTA */}
+            {/* Video Details & Quick Add */}
             <div className="p-5">
               <div className="flex items-center justify-between text-[0.62rem] uppercase tracking-wider text-[#c8d88e]">
                 <span>{activeModalVideo.creator}</span>
@@ -361,128 +435,6 @@ export function VideoReviewsSection() {
           </div>
         </div>
       )}
-
-      {/* Decorative Floating Leaves */}
-      <div
-        className="pointer-events-none relative my-6 flex items-center justify-between px-12 opacity-60 max-[680px]:my-3 max-[680px]:px-4"
-        aria-hidden="true"
-      >
-        <svg
-          className="size-8 -rotate-45 text-[#60a842] max-[680px]:size-5"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
-        </svg>
-        <svg
-          className="size-9 rotate-45 text-[#529d38] max-[680px]:size-6"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
-        </svg>
-      </div>
-
-      {/* ── PART 2: Our Customers Reviews ── */}
-      <div>
-        {/* Section Heading */}
-        <div className="mb-10 text-center max-[680px]:mb-6">
-          <p className="mb-2 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase max-[680px]:mb-1 max-[680px]:text-[0.54rem]">
-            Voices of the ritual
-          </p>
-          <h2 className="m-0 text-[clamp(2.4rem,4.2vw,4.4rem)] font-normal leading-[0.96] tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.55rem,7vw,2.1rem)]">
-            Our customer reviews.
-          </h2>
-          <p className="mx-auto mt-4 max-w-[600px] text-[0.88rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:text-[0.68rem] max-[680px]:leading-[1.4]">
-            Real experiences from customers who made botanical powders part of their weekly rhythm.
-          </p>
-        </div>
-
-        {/* Scrollable Reviews Carousel with Peeking Next Card */}
-        <div
-          ref={reviewsCarouselRef}
-          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[680px]:gap-3 max-[680px]:px-1"
-          tabIndex={0}
-          role="region"
-          aria-label="Customer written reviews"
-        >
-          {REVIEWS.map((review) => (
-            <article
-              key={review.id}
-              className="flex w-[calc(33.333%-11px)] min-w-[290px] max-[960px]:w-[calc(50%-8px)] max-[680px]:w-[78vw] max-[680px]:min-w-[250px] max-[680px]:max-w-[290px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-6 shadow-[0_4px_16px_rgba(23,63,42,0.03)] transition-all duration-300 hover:shadow-[0_12px_28px_rgba(23,63,42,0.06)] max-[680px]:p-4.5"
-            >
-              <div>
-                {/* 5 Gold Stars */}
-                <div
-                  className="mb-3 flex items-center gap-1 text-[#f5a623] max-[680px]:mb-2"
-                  aria-label="5 out of 5 stars"
-                >
-                  {Array.from({ length: review.rating }).map((_, i) => (
-                    <span key={i} className="text-sm max-[680px]:text-xs">
-                      ★
-                    </span>
-                  ))}
-                </div>
-
-                {/* Review Text */}
-                <p className="m-0 text-[0.82rem] leading-[1.65] text-[#33463a] max-[680px]:text-[0.68rem] max-[680px]:leading-[1.45]">
-                  &ldquo;{review.quote}&rdquo;{" "}
-                  <span className="font-semibold text-[#529d38] cursor-pointer hover:underline">
-                    Learn More...
-                  </span>
-                </p>
-              </div>
-
-              {/* Author Info */}
-              <div className="mt-6 flex items-center gap-3 border-t border-[var(--line)] pt-4 max-[680px]:mt-4 max-[680px]:gap-2 max-[680px]:pt-3">
-                <div
-                  className={`grid size-10 shrink-0 place-items-center rounded-full ${review.avatarBg} text-[0.72rem] font-bold text-white shadow-sm max-[680px]:size-8 max-[680px]:text-[0.62rem]`}
-                >
-                  {review.avatarText}
-                </div>
-                <div>
-                  <h4 className="m-0 text-[0.84rem] font-bold text-[var(--forest)] max-[680px]:text-[0.72rem]">
-                    {review.author}
-                  </h4>
-                  <p className="m-0 text-[0.62rem] text-[var(--muted)] max-[680px]:text-[0.52rem]">
-                    {review.role}
-                  </p>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Reviews Navigation & See All Reviews Row */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 max-[680px]:mt-5">
-          {/* Arrows */}
-          <div className="flex items-center justify-center gap-3">
-            <button
-              type="button"
-              onClick={handleReviewsPrev}
-              className="grid size-10 place-items-center rounded-full border border-[var(--line)] bg-white text-[1rem] text-[var(--forest)] shadow-xs transition-all duration-200 hover:bg-[var(--beige)] hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-8 max-[680px]:text-[0.85rem]"
-              aria-label="Previous review"
-            >
-              ←
-            </button>
-            <button
-              type="button"
-              onClick={handleReviewsNext}
-              className="grid size-10 place-items-center rounded-full bg-[#529d38] text-[1rem] text-white shadow-sm transition-all duration-200 hover:bg-[#43852d] hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-8 max-[680px]:text-[0.85rem]"
-              aria-label="Next review"
-            >
-              →
-            </button>
-          </div>
-
-          <Link
-            href="/our-story"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#529d38] px-8 py-2.5 text-[0.78rem] font-semibold text-white shadow-[0_8px_20px_rgba(82,157,56,0.24)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#43852d] hover:shadow-[0_12px_26px_rgba(82,157,56,0.3)] active:scale-95 max-[680px]:min-h-[36px] max-[680px]:px-6 max-[680px]:py-2 max-[680px]:text-[0.68rem]"
-          >
-            See All Reviews
-          </Link>
-        </div>
-      </div>
     </section>
   );
 }

@@ -9,6 +9,7 @@ import { useStore } from "@/features/store/store-provider";
 import { BundleCards } from "./bundle-cards";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { HeroPurchase } from "./hero-purchase";
+import { VideoReviewsSection } from "./video-reviews-section";
 import { homeFaqs } from "./content";
 
 const eyebrowClass =
@@ -865,6 +866,9 @@ export function HomePage() {
         </div>
         <BundleCards />
       </section>
+
+      {/* ── Community Videos & Customer Reviews Section ── */}
+      <VideoReviewsSection />
 
       {/* ── The Ritual Room (FAQ) - Integrated Luxury Dark Footer-Attached Styling ── */}
       <section

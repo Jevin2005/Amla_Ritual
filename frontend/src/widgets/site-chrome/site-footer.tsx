@@ -28,20 +28,20 @@ const fallbackNavigation = [
     url: "/rituals",
     items: [
       { id: "finder", title: "Build your ritual", url: "/rituals", items: [] },
+      { id: "reviews", title: "Customer reviews", url: "/reviews", items: [] },
       { id: "story", title: "Our story", url: "/our-story", items: [] },
-      { id: "standards", title: "Ingredient standards", url: "/#ingredient-standards", items: [] },
-      { id: "faq", title: "Frequently asked", url: "/#faq", items: [] },
+      { id: "faq", title: "Frequently asked (FAQ)", url: "/faqs", items: [] },
     ],
   },
   {
     id: "footer-care",
-    title: "Care",
-    url: "/shipping-returns",
+    title: "Care & Support",
+    url: "/contact",
     items: [
+      { id: "contact", title: "Contact specialists", url: "/contact", items: [] },
       { id: "tracking", title: "Track an order", url: "/track-order", items: [] },
       { id: "shipping", title: "Shipping + returns", url: "/shipping-returns", items: [] },
-      { id: "privacy", title: "Privacy", url: "/privacy", items: [] },
-      { id: "terms", title: "Terms", url: "/terms", items: [] },
+      { id: "privacy", title: "Privacy policy", url: "/privacy", items: [] },
     ],
   },
 ];

@@ -370,7 +370,9 @@ export const previewContent: StorefrontContent = {
   primaryNavigation: [
     { id: "shop", title: "Shop", url: "/shop", items: [] },
     { id: "rituals", title: "Rituals", url: "/rituals", items: [] },
+    { id: "reviews", title: "Reviews", url: "/reviews", items: [] },
     { id: "story", title: "Our Story", url: "/our-story", items: [] },
+    { id: "contact", title: "Contact", url: "/contact", items: [] },
   ],
   footerNavigation: [],
 };
@@ -680,29 +682,70 @@ function contentImage(content: GraphSiteContent | null, key: string, fallback: S
 
 function storefrontPath(value: string) {
   try {
-    const isAbsolute = /^https?:\/\//i.test(value);
-    const path = new URL(value, "https://shopify.invalid").pathname;
-    if (path.startsWith("/products/")) {
-      return `/shop/${path.slice("/products/".length)}`;
+    const config = configuration();
+    const urlObj = new URL(value, "https://shopify.invalid");
+    const isShopifyDomain =
+      urlObj.hostname === "shopify.invalid" ||
+      (config.domain && urlObj.hostname.toLowerCase() === config.domain.toLowerCase());
+
+    const path = urlObj.pathname.replace(/\/$/, "") || "/";
+    const lowerPath = path.toLowerCase();
+
+    if (lowerPath === "/" || lowerPath === "") return "/";
+    if (
+      lowerPath === "/collections/all" ||
+      lowerPath === "/collections" ||
+      lowerPath === "/catalog" ||
+      lowerPath === "/shop"
+    ) {
+      return "/shop";
     }
-    if (path.startsWith("/collections/")) {
-      return `/shop?collection=${encodeURIComponent(path.slice("/collections/".length))}`;
+    if (lowerPath.startsWith("/products/")) {
+      return `/shop/${lowerPath.slice("/products/".length)}`;
     }
-    const pageHandle = path.startsWith("/pages/") ? path.slice("/pages/".length) : "";
+    if (lowerPath.startsWith("/collections/")) {
+      return `/shop?collection=${encodeURIComponent(lowerPath.slice("/collections/".length))}`;
+    }
+
+    const pageHandle = lowerPath.startsWith("/pages/")
+      ? lowerPath.slice("/pages/".length)
+      : "";
+
     const pageRoutes: Record<string, string> = {
       "our-story": "/our-story",
+      about: "/our-story",
+      story: "/our-story",
       rituals: "/rituals",
+      ritual: "/rituals",
+      contact: "/contact",
+      "contact-us": "/contact",
+      faqs: "/faqs",
+      faq: "/faqs",
+      reviews: "/reviews",
       privacy: "/privacy",
+      "privacy-policy": "/privacy",
       terms: "/terms",
+      "terms-of-service": "/terms",
       "shipping-returns": "/shipping-returns",
+      shipping: "/shipping-returns",
+      "track-order": "/track-order",
     };
     if (pageHandle && pageRoutes[pageHandle]) return pageRoutes[pageHandle];
-    if (path.includes("privacy-policy")) return "/privacy";
-    if (path.includes("terms-of-service")) return "/terms";
-    if (path.includes("shipping-policy") || path.includes("refund-policy")) {
+
+    if (lowerPath.includes("contact")) return "/contact";
+    if (lowerPath.includes("faq")) return "/faqs";
+    if (lowerPath.includes("review")) return "/reviews";
+    if (lowerPath.includes("privacy")) return "/privacy";
+    if (lowerPath.includes("terms")) return "/terms";
+    if (lowerPath.includes("shipping") || lowerPath.includes("refund")) {
       return "/shipping-returns";
     }
-    return isAbsolute ? value : path;
+
+    // If it points to Shopify domain or an internal path, keep it internal
+    if (isShopifyDomain) {
+      return path.startsWith("/") ? path : `/${path}`;
+    }
+    return value;
   } catch {
     return value;
   }
@@ -909,8 +952,8 @@ async function loadStorefront(): Promise<StorefrontData> {
   if (catalogResult.status === "rejected") {
     warnStorefrontPart("catalog", catalogResult.reason);
     return {
-      products: [],
-      bundles: [],
+      products: strict ? [] : previewProducts,
+      bundles: strict ? [] : previewBundles,
       content,
       shopName: shop?.name || "NatureMist",
       shopUrl: shop?.primaryDomain.url || null,
@@ -924,12 +967,13 @@ async function loadStorefront(): Promise<StorefrontData> {
     };
   }
 
-  const products = catalogResult.value.map(mapProduct);
-  if (strict && !products.length) {
+  const rawProducts = catalogResult.value.map(mapProduct);
+  if (strict && !rawProducts.length) {
     throw new Error(
       "Shopify is connected but returned no published products for this market.",
     );
   }
+  const products = rawProducts.length ? rawProducts : (strict ? [] : previewProducts);
 
   if (collectionsResult.status === "rejected") {
     warnStorefrontPart("collection", collectionsResult.reason);
@@ -943,10 +987,13 @@ async function loadStorefront(): Promise<StorefrontData> {
 
   const collections =
     collectionsResult.status === "fulfilled" ? collectionsResult.value : [];
+  const bundles = rawProducts.length
+    ? mapBundles(collections, products)
+    : (strict ? [] : previewBundles);
 
   return {
     products,
-    bundles: mapBundles(collections, products),
+    bundles,
     content,
     shopName: shop?.name || "NatureMist",
     shopUrl: shop?.primaryDomain.url || null,
@@ -967,18 +1014,34 @@ async function loadStorefrontProduct(handle: string) {
     return previewStorefront.products.find((product) => product.slug === handle);
   }
 
+  const strict =
+    process.env.SHOPIFY_STRICT_MODE === "true" &&
+    process.env.NEXT_PHASE !== "phase-production-build";
+
   const marketContext = getMarketContext();
-  const firstPage = await shopifyStorefrontRequest<ProductDetailResponse>(
-    PRODUCT_DETAIL_QUERY,
-    {
-      handle,
-      variantFirst: 250,
-      variantAfter: null,
-      ...marketContext,
-    },
-    { revalidate: 300, tags: ["shopify-storefront"] },
-  );
-  if (!firstPage.product) return undefined;
+  let firstPage: ProductDetailResponse | null = null;
+  try {
+    firstPage = await shopifyStorefrontRequest<ProductDetailResponse>(
+      PRODUCT_DETAIL_QUERY,
+      {
+        handle,
+        variantFirst: 250,
+        variantAfter: null,
+        ...marketContext,
+      },
+      { revalidate: 300, tags: ["shopify-storefront"] },
+    );
+  } catch (error) {
+    if (strict) throw error;
+    return previewStorefront.products.find((product) => product.slug === handle);
+  }
+
+  if (!firstPage?.product) {
+    if (!strict) {
+      return previewStorefront.products.find((product) => product.slug === handle);
+    }
+    return undefined;
+  }
 
   const variants = [...firstPage.product.variants.nodes];
   let pageInfo = firstPage.product.variants.pageInfo;
