@@ -9,6 +9,10 @@ const leafClasses = [
   styles.leafSix,
   styles.leafSeven,
   styles.leafEight,
+  styles.leafNine,
+  styles.leafTen,
+  styles.leafEleven,
+  styles.leafTwelve,
 ];
 
 export function BotanicalAtmosphere() {

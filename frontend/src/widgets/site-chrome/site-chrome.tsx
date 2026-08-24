@@ -11,11 +11,9 @@ export function SiteChrome({ children }: { children: ReactNode }) {
     <>
       <MotionObserver />
       <BotanicalAtmosphere />
-      <div className="relative z-10">
-        <SiteHeader />
-        {children}
-        <SiteFooter />
-      </div>
+      <SiteHeader />
+      {children}
+      <SiteFooter />
       <SearchDialog />
       <CartDrawer />
     </>

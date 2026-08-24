@@ -1,8 +1,8 @@
 .atmosphere {
   position: fixed;
   inset: 0;
-  z-index: 0;
-  overflow: clip;
+  z-index: 80;
+  overflow: hidden;
   pointer-events: none;
   contain: strict;
 }
@@ -13,7 +13,8 @@
   width: min(34vw, 520px);
   aspect-ratio: 1;
   border-radius: 50%;
-  opacity: 0.22;
+  filter: blur(1px);
+  opacity: 0.42;
   content: "";
 }
 
@@ -35,8 +36,8 @@
   aspect-ratio: 1;
   border: 1px solid rgb(82 119 68 / 11%);
   border-radius: 50%;
-  opacity: 0.38;
-  animation: halo-breathe 18s ease-in-out infinite alternate;
+  opacity: 0.7;
+  animation: halo-breathe 12s ease-in-out infinite alternate;
 }
 
 .halo::before,
@@ -70,7 +71,8 @@
 .leaf {
   position: absolute;
   width: var(--leaf-size, 42px);
-  animation: leaf-drift var(--leaf-duration, 16s) var(--leaf-delay, 0s) ease-in-out infinite;
+  animation: leaf-drift var(--leaf-duration, 9s) var(--leaf-delay, 0s) ease-in-out infinite;
+  will-change: transform;
 }
 
 .blade {
@@ -89,7 +91,7 @@
   box-shadow:
     inset -8px -6px 13px rgb(11 40 29 / 12%),
     0 10px 22px rgb(21 59 45 / 11%);
-  opacity: var(--leaf-opacity, 0.14);
+  opacity: var(--leaf-opacity, 0.42);
 }
 
 .blade::before {
@@ -118,101 +120,149 @@
 .leafOne {
   --leaf-size: 58px;
   --leaf-angle: -24deg;
-  --leaf-opacity: 0.15;
-  --leaf-duration: 17.5s;
+  --leaf-opacity: 0.34;
+  --leaf-duration: 10.5s;
   --leaf-delay: -2s;
-  --drift-x: 7px;
-  --drift-y: -9px;
+  --drift-x: 13px;
+  --drift-y: -18px;
   top: 16%;
-  left: -0.8%;
+  left: 1.4%;
 }
 
 .leafTwo {
   --leaf-size: 34px;
   --leaf-angle: 22deg;
-  --leaf-opacity: 0.17;
-  --leaf-duration: 15.5s;
+  --leaf-opacity: 0.38;
+  --leaf-duration: 8.6s;
   --leaf-delay: -5.4s;
-  --drift-x: -6px;
-  --drift-y: 8px;
+  --drift-x: -10px;
+  --drift-y: 15px;
   --leaf-light: #b7d45a;
   --leaf-dark: #6f8f42;
   top: 34%;
-  right: 0.5%;
+  right: 3.1%;
 }
 
 .leafThree {
   --leaf-size: 43px;
   --leaf-angle: -58deg;
-  --leaf-opacity: 0.13;
-  --leaf-duration: 19.2s;
+  --leaf-opacity: 0.3;
+  --leaf-duration: 12.2s;
   --leaf-delay: -4.5s;
-  --drift-x: 8px;
-  --drift-y: 6px;
+  --drift-x: 17px;
+  --drift-y: 12px;
   top: 67%;
-  left: 0.8%;
+  left: 3.8%;
 }
 
 .leafFour {
   --leaf-size: 50px;
   --leaf-angle: 32deg;
-  --leaf-opacity: 0.14;
-  --leaf-duration: 18.4s;
+  --leaf-opacity: 0.29;
+  --leaf-duration: 11.4s;
   --leaf-delay: -8s;
-  --drift-x: -7px;
-  --drift-y: -9px;
+  --drift-x: -14px;
+  --drift-y: -18px;
   --leaf-light: #a4bd61;
   --leaf-dark: #456c42;
-  right: -1.2%;
+  right: 1.2%;
   bottom: 9%;
 }
 
 .leafFive {
   --leaf-size: 25px;
   --leaf-angle: 62deg;
-  --leaf-opacity: 0.12;
-  --leaf-duration: 16.8s;
+  --leaf-opacity: 0.28;
+  --leaf-duration: 8.8s;
   --leaf-delay: -1.4s;
-  --drift-x: -4px;
-  --drift-y: -7px;
+  --drift-x: -8px;
+  --drift-y: -13px;
   top: 11%;
-  right: 3.5%;
+  right: 13%;
 }
 
 .leafSix {
   --leaf-size: 30px;
   --leaf-angle: -12deg;
-  --leaf-opacity: 0.11;
-  --leaf-duration: 17.7s;
+  --leaf-opacity: 0.23;
+  --leaf-duration: 9.7s;
   --leaf-delay: -6.2s;
-  --drift-x: 6px;
-  --drift-y: 8px;
+  --drift-x: 12px;
+  --drift-y: 16px;
   top: 49%;
-  left: 2.5%;
+  left: 8.5%;
 }
 
 .leafSeven {
   --leaf-size: 21px;
   --leaf-angle: 105deg;
-  --leaf-opacity: 0.12;
-  --leaf-duration: 20.5s;
+  --leaf-opacity: 0.25;
+  --leaf-duration: 13.5s;
   --leaf-delay: -7.1s;
-  --drift-x: -9px;
-  --drift-y: 5px;
+  --drift-x: -18px;
+  --drift-y: 9px;
   top: 73%;
-  right: 2.4%;
+  right: 9%;
 }
 
 .leafEight {
   --leaf-size: 29px;
   --leaf-angle: -88deg;
-  --leaf-opacity: 0.11;
-  --leaf-duration: 18.8s;
+  --leaf-opacity: 0.22;
+  --leaf-duration: 10.8s;
   --leaf-delay: -3.8s;
-  --drift-x: 5px;
-  --drift-y: -8px;
+  --drift-x: 10px;
+  --drift-y: -16px;
   bottom: 3.5%;
-  left: -0.8%;
+  left: 22%;
+}
+
+.leafNine {
+  --leaf-size: 19px;
+  --leaf-angle: 38deg;
+  --leaf-opacity: 0.22;
+  --leaf-duration: 9.1s;
+  --leaf-delay: -2.9s;
+  --drift-x: 8px;
+  --drift-y: 12px;
+  top: 5.5%;
+  left: 31%;
+}
+
+.leafTen {
+  --leaf-size: 24px;
+  --leaf-angle: -42deg;
+  --leaf-opacity: 0.2;
+  --leaf-duration: 12.8s;
+  --leaf-delay: -9.4s;
+  --drift-x: -14px;
+  --drift-y: -8px;
+  right: 25%;
+  bottom: 4%;
+}
+
+.leafEleven {
+  --leaf-size: 18px;
+  --leaf-angle: 16deg;
+  --leaf-opacity: 0.2;
+  --leaf-duration: 10.2s;
+  --leaf-delay: -5s;
+  --drift-x: 9px;
+  --drift-y: -11px;
+  top: 43%;
+  right: 15%;
+}
+
+.leafTwelve {
+  --leaf-size: 22px;
+  --leaf-angle: -115deg;
+  --leaf-opacity: 0.2;
+  --leaf-duration: 14s;
+  --leaf-delay: -8.7s;
+  --drift-x: 16px;
+  --drift-y: 8px;
+  top: 81%;
+  left: 13%;
 }
 
 @keyframes leaf-drift {
@@ -240,10 +290,17 @@
 }
 
 @media (max-width: 900px) {
+  .atmosphere {
+    z-index: 70;
+  }
+
   .leafFive,
   .leafSix,
   .leafSeven,
-  .leafEight {
+  .leafNine,
+  .leafTen,
+  .leafEleven,
+  .leafTwelve {
     display: none;
   }
 

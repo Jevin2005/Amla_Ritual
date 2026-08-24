@@ -3,8 +3,9 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useStore } from "@/features/store/store-provider";
-import { PageHero } from "@/shared/ui/page-hero";
 
+const eyebrowClass =
+  "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
 const buttonClass =
   "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-8 py-[14px] text-[0.72rem] leading-none font-bold tracking-[0.14em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]";
 const inputClass =
@@ -35,11 +36,18 @@ export function ContactPage() {
 
   return (
     <main className="overflow-x-clip" id="main-content">
-      <PageHero
-        eyebrow="Direct Botanical Care & Support"
-        title="We are here to guide your ritual."
-        description="Whether you need bespoke mixer recommendations, batch sourcing inquiries, or order care, our botanical specialists respond within 24 hours."
-      />
+      {/* Hero Header */}
+      <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(183,212,90,0.15),transparent_40%),linear-gradient(180deg,#faf7f0,#f4efe4_70%,#f8f5ed)] px-[clamp(24px,5vw,72px)] pb-[clamp(50px,6vw,90px)] pt-[clamp(65px,8vw,110px)] text-center">
+        <div className="mx-auto max-w-[820px]">
+          <p className={eyebrowClass}>Direct Botanical Care & Support</p>
+          <h1 className="m-0 font-serif text-[clamp(2.8rem,5.5vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.045em] text-[var(--forest)] text-balance">
+            We are here to guide your ritual.
+          </h1>
+          <p className="mx-auto mt-6 max-w-[560px] text-[1.05rem] leading-[1.75] text-[var(--muted)]">
+            Whether you need bespoke mixer recommendations, batch sourcing inquiries, or order care, our botanical specialists respond within 24 hours.
+          </p>
+        </div>
+      </section>
 
       {/* Grid: Contact Form + Channels */}
       <section className="mx-auto w-full max-w-[1280px] px-[clamp(24px,5vw,64px)] py-[clamp(60px,7vw,100px)]">

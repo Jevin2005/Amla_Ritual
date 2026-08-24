@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { PageHero } from "@/shared/ui/page-hero";
 
 const eyebrowClass =
   "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
@@ -128,11 +127,16 @@ export function ReviewsPage() {
 
   return (
     <main className="overflow-x-clip" id="main-content">
-      <PageHero
-        eyebrow="Community Reflections & Results"
-        title="Real transformations. Pure botanicals."
-        description="Read unedited reviews from practitioners across India who have returned to pure, filler-free Ayurvedic rituals."
-      >
+      {/* Hero Header */}
+      <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(183,212,90,0.15),transparent_40%),linear-gradient(180deg,#faf7f0,#f4efe4_70%,#f8f5ed)] px-[clamp(24px,5vw,72px)] pb-[clamp(50px,6vw,90px)] pt-[clamp(65px,8vw,110px)] text-center">
+        <div className="mx-auto max-w-[820px]">
+          <p className={eyebrowClass}>Community Reflections & Results</p>
+          <h1 className="m-0 font-serif text-[clamp(2.8rem,5.5vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.045em] text-[var(--forest)] text-balance">
+            Real transformations. Pure botanicals.
+          </h1>
+          <p className="mx-auto mt-6 max-w-[560px] text-[1.05rem] leading-[1.75] text-[var(--muted)]">
+            Read unedited reviews from practitioners across India who have returned to pure, filler-free Ayurvedic rituals.
+          </p>
 
           {/* Social Proof Stats Bar */}
           <div className="mx-auto mt-10 grid max-w-[720px] grid-cols-3 gap-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--paper)] p-6 shadow-[0_12px_32px_rgba(21,59,45,0.06)] max-[600px]:grid-cols-1 max-[600px]:gap-6">
@@ -161,7 +165,8 @@ export function ReviewsPage() {
               </p>
             </div>
           </div>
-      </PageHero>
+        </div>
+      </section>
 
       {/* Reviews Grid */}
       <section className="mx-auto w-full max-w-[1280px] px-[clamp(24px,5vw,64px)] py-[clamp(60px,7vw,100px)]">
