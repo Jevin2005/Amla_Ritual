@@ -35,7 +35,7 @@ export function HomePage() {
     return (
       <main className="grid min-h-[70vh] place-items-center px-[var(--page-pad)] py-24 text-center" id="main-content">
         <div className="max-w-[660px]">
-          <p className={eyebrowClass}>Shopify catalog</p>
+          <p className={eyebrowClass}>NatureMist catalog</p>
           <h1 className="m-0 font-serif text-[clamp(3rem,7vw,6rem)] font-normal leading-[0.92] tracking-[-0.05em] text-[var(--forest)]">
             The next ritual is being prepared.
           </h1>
@@ -431,83 +431,37 @@ export function HomePage() {
             </Link>
           </div>
 
-          {/* Right Column: 2x2 Grid of numbered benefits */}
+          {/* Right Column: 2x2 Grid of numbered benefits from Shopify products */}
           <div className="grid grid-cols-2 gap-x-6 gap-y-8 max-[680px]:grid-cols-1 max-[680px]:gap-y-6 max-[440px]:gap-y-5">
-            {/* 01 */}
-            <div className="flex items-center gap-3.5 max-[680px]:gap-3">
-              <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[2.6rem]">
-                01
-              </span>
-              <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[70px] max-[680px]:rounded-xl">
-                <Image
-                  src="/images/amla-powder.jpg"
-                  alt="Rich in vitamins A, C, E, and minerals like calcium and iron"
-                  fill
-                  sizes="100px"
-                  className="size-full object-cover object-center rounded-[10px]"
-                />
-              </div>
-              <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.35]">
-                Rich in vitamins A, C, E, and minerals like calcium and iron.
-              </p>
-            </div>
-
-            {/* 02 */}
-            <div className="flex items-center gap-3.5 max-[680px]:gap-3">
-              <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[2.6rem]">
-                02
-              </span>
-              <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[70px] max-[680px]:rounded-xl">
-                <Image
-                  src="/images/reetha-powder.jpg"
-                  alt="Known to help detoxify the body and support health"
-                  fill
-                  sizes="100px"
-                  className="size-full object-cover object-center rounded-[10px]"
-                />
-              </div>
-              <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.35]">
-                Known to help detoxify the body and support health.
-              </p>
-            </div>
-
-            {/* 03 */}
-            <div className="flex items-center gap-3.5 max-[680px]:gap-3">
-              <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[2.6rem]">
-                03
-              </span>
-              <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[70px] max-[680px]:rounded-xl">
-                <Image
-                  src="/images/shikakai-powder.jpg"
-                  alt="Can aid in digestion and is beneficial for gut health"
-                  fill
-                  sizes="100px"
-                  className="size-full object-cover object-center rounded-[10px]"
-                />
-              </div>
-              <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.35]">
-                Can aid in digestion and is beneficial for gut health.
-              </p>
-            </div>
-
-            {/* 04 */}
-            <div className="flex items-center gap-3.5 max-[680px]:gap-3">
-              <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[2.6rem]">
-                04
-              </span>
-              <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[70px] max-[680px]:rounded-xl">
-                <Image
-                  src="/images/bhringraj-powder.jpg"
-                  alt="Known for its ability to help regulate blood sugar levels"
-                  fill
-                  sizes="100px"
-                  className="size-full object-cover object-center rounded-[10px]"
-                />
-              </div>
-              <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.35]">
-                Known for its ability to help regulate blood sugar levels.
-              </p>
-            </div>
+            {[
+              { benefit: "Rich in vitamins A, C, E, and minerals like calcium and iron." },
+              { benefit: "Known to help detoxify the body and support health." },
+              { benefit: "Can aid in digestion and is beneficial for gut health." },
+              { benefit: "Known for its ability to help regulate blood sugar levels." },
+            ].map(({ benefit }, idx) => {
+              const p = products[idx];
+              const imgSrc = p?.featuredImage?.url ?? `/images/${["amla-powder", "reetha-powder", "shikakai-powder", "bhringraj-powder"][idx]}.jpg`;
+              const imgAlt = p?.featuredImage?.altText || p?.name || benefit;
+              return (
+                <div key={idx} className="flex items-center gap-3.5 max-[680px]:gap-3">
+                  <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[2.6rem]">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[70px] max-[680px]:rounded-xl">
+                    <Image
+                      src={imgSrc}
+                      alt={imgAlt}
+                      fill
+                      sizes="100px"
+                      className="size-full object-cover object-center rounded-[10px]"
+                    />
+                  </div>
+                  <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.35]">
+                    {benefit}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
