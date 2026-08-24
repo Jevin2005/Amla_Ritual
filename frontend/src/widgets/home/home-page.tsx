@@ -9,7 +9,6 @@ import { useStore } from "@/features/store/store-provider";
 import { BundleCards } from "./bundle-cards";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { HeroPurchase } from "./hero-purchase";
-import { RitualSignatures } from "./ritual-signatures";
 import { VideoReviewsSection } from "./video-reviews-section";
 import { homeFaqs } from "./content";
 
@@ -91,22 +90,22 @@ export function HomePage() {
           className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(rgba(23,63,42,0.22)_0.55px,transparent_0.55px)] bg-size-[7px_7px] opacity-20 [mask-image:linear-gradient(115deg,transparent_8%,black_45%,transparent_88%)]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(310px,1.15fr)_minmax(360px,1.25fr)_minmax(240px,0.85fr)] gap-[clamp(20px,2vw,36px)] px-[clamp(24px,4vw,64px)] pt-[clamp(24px,2.5vw,38px)] pb-[clamp(24px,3vw,44px)] max-[1280px]:grid-cols-[minmax(280px,1.1fr)_minmax(340px,1.2fr)_minmax(220px,0.8fr)] max-[1180px]:grid-cols-[minmax(260px,1fr)_minmax(320px,1.15fr)_minmax(200px,0.85fr)] max-[1080px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[1080px]:gap-[28px_20px] max-[1080px]:px-[4vw] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[900px]:gap-[20px_16px] max-[900px]:px-4 max-[900px]:pt-4 max-[900px]:pb-8 max-[680px]:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] max-[680px]:gap-[16px_10px] max-[680px]:px-3 max-[680px]:pt-3 max-[680px]:pb-6 max-[420px]:grid-cols-[minmax(0,1.22fr)_minmax(0,0.78fr)] max-[420px]:gap-[12px_8px] max-[420px]:px-2">
-          <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
-            <p className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[rgba(63,125,58,0.24)] bg-[rgba(63,125,58,0.08)] px-3 py-1 text-[0.66rem] font-bold tracking-[0.16em] text-[var(--botanical)] uppercase max-[900px]:mb-2 max-[900px]:text-[0.56rem] max-[680px]:mb-1.5 max-[680px]:px-2 max-[680px]:py-0.5 max-[680px]:text-[0.46rem] max-[680px]:tracking-[0.08em]">
+        <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(310px,1.15fr)_minmax(360px,1.25fr)_minmax(240px,0.85fr)] gap-[clamp(20px,2vw,36px)] px-[clamp(24px,4vw,64px)] pt-[clamp(24px,2.5vw,38px)] pb-[clamp(24px,3vw,44px)] max-[1280px]:grid-cols-[minmax(280px,1.1fr)_minmax(340px,1.2fr)_minmax(220px,0.8fr)] max-[1180px]:grid-cols-[minmax(260px,1fr)_minmax(320px,1.15fr)_minmax(200px,0.85fr)] max-[1080px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[1080px]:gap-[28px_20px] max-[1080px]:px-[4vw] max-[900px]:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] max-[900px]:gap-[20px_16px] max-[900px]:px-4 max-[900px]:pt-4 max-[900px]:pb-8 max-[680px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] max-[680px]:gap-x-0 max-[680px]:px-0 max-[680px]:pt-3 max-[680px]:pb-6 max-[420px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] max-[420px]:gap-x-0 max-[420px]:px-0">
+          <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100 max-[680px]:pl-3 max-[680px]:pr-1 max-[420px]:pl-2.5">
+            <p className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[rgba(63,125,58,0.24)] bg-[rgba(63,125,58,0.08)] px-3 py-1 text-[0.66rem] font-bold tracking-[0.16em] text-[var(--botanical)] uppercase max-[900px]:mb-2 max-[900px]:text-[0.56rem] max-[680px]:mb-2 max-[680px]:px-2.5 max-[680px]:py-1 max-[680px]:text-[0.58rem] max-[680px]:tracking-[0.1em] max-[420px]:text-[0.52rem]">
               {details.eyebrow}
             </p>
             <h1
-              className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(3.2rem,3.8vw,4.6rem)] leading-[0.9] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.9rem,4vw,3.8rem)] max-[1080px]:max-w-[480px] max-[1080px]:text-[clamp(2.1rem,3.8vw,2.9rem)] max-[900px]:text-[clamp(1.65rem,4vw,2.3rem)] max-[680px]:text-[clamp(1.2rem,4.8vw,1.65rem)] max-[680px]:leading-[0.92] max-[420px]:text-[clamp(1.05rem,4.5vw,1.35rem)]"
+              className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(3.2rem,3.8vw,4.6rem)] leading-[0.9] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.9rem,4vw,3.8rem)] max-[1080px]:max-w-[480px] max-[1080px]:text-[clamp(2.1rem,3.8vw,2.9rem)] max-[900px]:text-[clamp(1.65rem,4vw,2.3rem)] max-[680px]:text-[clamp(1.65rem,6.5vw,2.2rem)] max-[680px]:leading-[0.94] max-[420px]:text-[clamp(1.45rem,6vw,1.85rem)]"
               id="hero-title"
             >
               <span className="block [animation:hero-title-enter_900ms_var(--ease)_80ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineFirst}
               </span>
-              <span className="flex items-center gap-[clamp(10px,1.2vw,18px)] max-[900px]:gap-2 max-[680px]:gap-1.5 [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+              <span className="flex items-center gap-[clamp(10px,1.2vw,18px)] max-[900px]:gap-2 max-[680px]:gap-2 [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineMiddle}
                 <span
-                  className="relative inline-block h-[0.58em] w-[clamp(85px,8.5vw,135px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[900px]:w-[clamp(45px,9vw,65px)] max-[680px]:w-[clamp(32px,8vw,44px)]"
+                  className="relative inline-block h-[0.58em] w-[clamp(85px,8.5vw,135px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[900px]:w-[clamp(45px,9vw,65px)] max-[680px]:w-[clamp(44px,10vw,60px)]"
                   aria-hidden="true"
                 >
                   <Image
@@ -118,11 +117,11 @@ export function HomePage() {
                   />
                 </span>
               </span>
-              <em className="mt-[0.05em] ml-[0.03em] block text-[0.9em] leading-[inherit] font-normal tracking-[-0.05em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:mt-0 max-[680px]:text-[0.92em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+              <em className="mt-[0.05em] ml-[0.03em] block text-[0.9em] leading-[inherit] font-normal tracking-[-0.05em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:mt-0.5 max-[680px]:text-[0.9em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineItalic}
               </em>
             </h1>
-            <p className="my-[clamp(14px,2vh,22px)_14px] max-w-[420px] text-[clamp(0.9rem,1vw,1.02rem)] leading-[1.65] text-[#4b5047] max-[1080px]:max-w-[440px] max-[900px]:my-2 max-[900px]:text-[0.76rem] max-[900px]:leading-[1.4] max-[680px]:my-1.5 max-[680px]:line-clamp-2 max-[680px]:text-[0.6rem] max-[680px]:leading-[1.3] max-[420px]:text-[0.54rem]">
+            <p className="my-[clamp(14px,2vh,22px)_14px] max-w-[420px] text-[clamp(0.9rem,1vw,1.02rem)] leading-[1.65] text-[#4b5047] max-[1080px]:max-w-[440px] max-[900px]:my-2 max-[900px]:text-[0.76rem] max-[900px]:leading-[1.4] max-[680px]:my-2 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.45] max-[420px]:text-[0.65rem] max-[420px]:leading-[1.4]">
               {details.description}
             </p>
             <HeroPurchase
@@ -131,32 +130,9 @@ export function HomePage() {
               name={activeProduct.name}
               pricePaise={activeProduct.pricePaise}
             />
-            <div
-              className="mt-5 grid max-w-[440px] grid-cols-3 gap-2 border-t border-[rgba(23,63,42,0.14)] pt-4 text-[var(--forest)] max-[1080px]:max-w-full max-[900px]:mt-3 max-[900px]:gap-1.5 max-[900px]:pt-2.5 max-[680px]:mt-2 max-[680px]:gap-1 max-[680px]:pt-1.5"
-              aria-label="NatureMist principles"
-            >
-              <div className="flex flex-col gap-0.5 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[rgba(255,252,245,0.76)] p-2.5 text-[0.6rem] font-bold tracking-[0.06em] uppercase backdrop-blur-sm max-[900px]:p-1.5 max-[900px]:text-[0.52rem] max-[680px]:p-1 max-[680px]:text-[0.42rem] max-[680px]:leading-tight max-[420px]:text-[0.38rem]">
-                <span className="text-[0.82rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[900px]:text-[0.68rem] max-[680px]:text-[0.54rem]">
-                  01
-                </span>{" "}
-                Single botanical
-              </div>
-              <div className="flex flex-col gap-0.5 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[rgba(255,252,245,0.76)] p-2.5 text-[0.6rem] font-bold tracking-[0.06em] uppercase backdrop-blur-sm max-[900px]:p-1.5 max-[900px]:text-[0.52rem] max-[680px]:p-1 max-[680px]:text-[0.42rem] max-[680px]:leading-tight max-[420px]:text-[0.38rem]">
-                <span className="text-[0.82rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[900px]:text-[0.68rem] max-[680px]:text-[0.54rem]">
-                  02
-                </span>{" "}
-                Clearly explained
-              </div>
-              <div className="flex flex-col gap-0.5 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[rgba(255,252,245,0.76)] p-2.5 text-[0.6rem] font-bold tracking-[0.06em] uppercase backdrop-blur-sm max-[900px]:p-1.5 max-[900px]:text-[0.52rem] max-[680px]:p-1 max-[680px]:text-[0.42rem] max-[680px]:leading-tight max-[420px]:text-[0.38rem]">
-                <span className="text-[0.82rem] text-[var(--botanical)] [font-family:var(--font-display)] max-[900px]:text-[0.68rem] max-[680px]:text-[0.54rem]">
-                  03
-                </span>{" "}
-                Made for home rituals
-              </div>
-            </div>
           </div>
 
-          <div className="relative z-[2] h-[clamp(480px,60vh,640px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(440px,56vh,560px)] max-[1080px]:h-[clamp(360px,46vh,440px)] max-[900px]:h-[clamp(290px,40vh,370px)] max-[680px]:h-[clamp(220px,36vh,280px)] max-[420px]:h-[clamp(195px,34vh,240px)] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+          <div className="relative z-[2] h-[clamp(480px,60vh,640px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(440px,56vh,560px)] max-[1080px]:h-[clamp(360px,46vh,440px)] max-[900px]:h-[clamp(290px,40vh,370px)] max-[680px]:h-[clamp(260px,42vh,320px)] max-[420px]:h-[clamp(230px,40vh,280px)] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
             <span
               className="pointer-events-none absolute top-[1%] right-[-5%] bottom-[-2%] left-[-5%] z-0 rounded-[50%_50%_12px_12px/32%_32%_2%_2%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)] max-[1080px]:hidden"
               aria-hidden="true"
@@ -188,7 +164,7 @@ export function HomePage() {
             >
               <i className="block h-[17px] w-[38px] rounded-[100%_0_100%_0] bg-[rgba(143,159,78,0.68)] [animation:hero-arrow_4.2s_ease-in-out_-0.8s_infinite] [will-change:transform] motion-reduce:animate-none" />
             </span>
-            <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[50%_50%_8px_8px/28%_28%_1%_1%] border border-[rgba(23,63,42,0.11)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.2)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_8px_8px/24%_24%_1%_1%]">
+            <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[50%_50%_8px_8px/28%_28%_1%_1%] border border-[rgba(23,63,42,0.14)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.22),0_0_0_1px_rgba(23,63,42,0.06),inset_0_1px_0_rgba(255,255,255,0.5)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_12px_12px/26%_26%_2%_2%] max-[680px]:shadow-[0_20px_60px_rgba(40,51,33,0.28),0_0_0_1px_rgba(23,63,42,0.08)]">
               <Image
                 src={heroPoster.url}
                 alt={heroPoster.altText || "NatureMist botanical hair ritual"}
@@ -196,18 +172,13 @@ export function HomePage() {
                 loading="eager"
                 fetchPriority="high"
                 sizes="(max-width: 680px) 50vw, (max-width: 900px) 50vw, (max-width: 1080px) 55vw, (max-width: 1440px) 44vw, 600px"
-                className="object-cover object-[76%_center] [transform:scale(1.04)] [transition:transform_1.1s_var(--ease)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/portrait:[transform:scale(1.065)] max-[680px]:object-[74%_center] motion-reduce:transition-none motion-reduce:[transform:scale(1.04)]"
+                className="object-cover object-[76%_center] [transform:scale(1.04)] [transition:transform_1.1s_var(--ease)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/portrait:[transform:scale(1.065)] max-[680px]:object-[74%_10%] motion-reduce:transition-none motion-reduce:[transform:scale(1.04)]"
               />
+              {/* Atmospheric gradient overlay */}
               <span
-                className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(17,45,28,0.2)),linear-gradient(90deg,rgba(247,244,232,0.08),transparent_35%)]"
+                className="absolute inset-0 bg-[linear-gradient(180deg,rgba(247,244,232,0.12)_0%,transparent_30%,transparent_55%,rgba(17,45,28,0.32)_100%),linear-gradient(90deg,rgba(247,244,232,0.1),transparent_40%)]"
                 aria-hidden="true"
               />
-              <span
-                className="font-bold tracking-[0.14em] text-[var(--forest)] [font-family:var(--font-sans)] text-[0.62rem] max-[680px]:text-[0.48rem]"
-                aria-live="polite"
-              >
-                Pure Botanical Ritual
-              </span>
             </div>
 
             <Link
@@ -354,9 +325,6 @@ export function HomePage() {
           <path d="M0,0 Q720,48 1440,0 L1440,44 L0,44 Z" fill="currentColor" />
         </svg>
       </section>
-
-      <RitualSignatures />
-
       <section
         className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(70px,7vw,110px)] max-[680px]:px-3 max-[680px]:py-8 max-[420px]:px-2.5 max-[420px]:py-6 ${revealClass}`}
         aria-labelledby="collection-title"
@@ -397,45 +365,39 @@ export function HomePage() {
             <ProductCard product={product} key={product.slug} />
           ))}
         </div>
-
-        {/* Disclaimer */}
-        <p className="mx-auto mt-8 max-w-[680px] text-center text-[0.72rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-5 max-[680px]:px-1 max-[680px]:text-[0.62rem]">
-          Product imagery, availability and pricing are managed through the
-          NatureMist Shopify catalogue.
-        </p>
       </section>
 
-      {/* ── The Benefit of This Products Section ── */}
+      {/* ── The Benefit of This Products Section (Compact & Refined on Phone) ── */}
       <section
-        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[680px]:px-4 max-[680px]:py-10 ${revealClass}`}
+        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[960px]:py-10 max-[680px]:px-3.5 max-[680px]:py-6 max-[400px]:px-2.5 max-[400px]:py-5 ${revealClass}`}
         aria-labelledby="benefits-title"
       >
-        <div className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-x-[clamp(32px,5vw,80px)] gap-y-10 max-[960px]:grid-cols-1 max-[960px]:gap-y-10">
+        <div className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-x-[clamp(32px,5vw,80px)] gap-y-10 max-[960px]:grid-cols-1 max-[960px]:gap-y-6 max-[680px]:gap-y-4">
           {/* Left Column: Heading, description, CTA */}
           <div className="flex flex-col items-start">
-            <p className={`${eyebrowClass} max-[680px]:mb-1 max-[680px]:text-[0.54rem]`}>
+            <p className={`${eyebrowClass} max-[680px]:mb-0.5 max-[680px]:text-[0.52rem]`}>
               Botanical efficacy
             </p>
             <h2
               id="benefits-title"
-              className="m-0 text-[clamp(2.4rem,4.2vw,4.2rem)] font-normal leading-[0.96] tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.6rem,7.5vw,2.1rem)]"
+              className="m-0 text-[clamp(2.4rem,4.2vw,4.2rem)] font-normal leading-[0.96] tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.4rem,6.5vw,1.8rem)] max-[680px]:leading-[1.02]"
             >
               The benefit of <br />
               this product.
             </h2>
-            <p className="mt-4 mb-7 max-w-[420px] text-[0.88rem] leading-[1.65] text-[#55635a] max-[680px]:my-3 max-[680px]:text-[0.78rem] max-[680px]:leading-[1.5]">
+            <p className="mt-4 mb-7 max-w-[420px] text-[0.88rem] leading-[1.65] text-[#55635a] max-[680px]:mt-1.5 max-[680px]:mb-3 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.4] max-[400px]:text-[0.66rem]">
               These powders are typically used as supplements, in smoothies, teas, or as ingredients in natural remedies.
             </p>
             <Link
               href="/shop"
-              className="inline-flex items-center justify-center rounded-[8px] bg-[#5a9e32] px-7 py-3 text-[0.88rem] font-medium text-white shadow-[0_4px_14px_rgba(90,158,50,0.28)] transition-all duration-200 hover:bg-[#4a8528] hover:shadow-[0_6px_20px_rgba(90,158,50,0.36)] hover:-translate-y-0.5 active:scale-95 max-[680px]:px-6 max-[680px]:py-2.5 max-[680px]:text-[0.8rem]"
+              className="inline-flex items-center justify-center rounded-[8px] bg-[#5a9e32] px-7 py-3 text-[0.88rem] font-medium text-white shadow-[0_4px_14px_rgba(90,158,50,0.28)] transition-all duration-200 hover:bg-[#4a8528] hover:shadow-[0_6px_20px_rgba(90,158,50,0.36)] hover:-translate-y-0.5 active:scale-95 max-[680px]:px-5 max-[680px]:py-2 max-[680px]:text-[0.74rem] max-[680px]:rounded-md"
             >
               Explore Us
             </Link>
           </div>
 
-          {/* Right Column: 2x2 Grid of numbered benefits from Shopify products */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-8 max-[680px]:grid-cols-1 max-[680px]:gap-y-6 max-[440px]:gap-y-5">
+          {/* Right Column: 2x2 Grid of numbered benefits (Compact on mobile) */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-8 max-[680px]:grid-cols-2 max-[680px]:gap-2 max-[400px]:gap-1.5">
             {[
               { benefit: "Rich in vitamins A, C, E, and minerals like calcium and iron." },
               { benefit: "Known to help detoxify the body and support health." },
@@ -446,20 +408,25 @@ export function HomePage() {
               const imgSrc = p?.featuredImage?.url ?? `/images/${["amla-powder", "reetha-powder", "shikakai-powder", "bhringraj-powder"][idx]}.jpg`;
               const imgAlt = p?.featuredImage?.altText || p?.name || benefit;
               return (
-                <div key={idx} className="flex items-center gap-3.5 max-[680px]:gap-3">
-                  <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[2.6rem]">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[70px] max-[680px]:rounded-xl">
-                    <Image
-                      src={imgSrc}
-                      alt={imgAlt}
-                      fill
-                      sizes="100px"
-                      className="size-full object-cover object-center rounded-[10px]"
-                    />
+                <div
+                  key={idx}
+                  className="flex items-center gap-3.5 max-[680px]:flex-col max-[680px]:items-stretch max-[680px]:justify-between max-[680px]:gap-1.5 max-[680px]:rounded-xl max-[680px]:border max-[680px]:border-[#dedad0]/80 max-[680px]:bg-[rgba(255,253,248,0.7)] max-[680px]:p-2.5 max-[680px]:shadow-2xs max-[400px]:p-2"
+                >
+                  <div className="flex items-center gap-3.5 max-[680px]:flex-row max-[680px]:items-center max-[680px]:justify-between max-[680px]:gap-1">
+                    <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[1.05rem] max-[680px]:font-bold max-[680px]:text-[var(--botanical)]">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[38px] max-[680px]:rounded-lg max-[680px]:p-0.5 max-[400px]:size-[34px]">
+                      <Image
+                        src={imgSrc}
+                        alt={imgAlt}
+                        fill
+                        sizes="(max-width: 680px) 50px, 100px"
+                        className="size-full object-cover object-center rounded-[10px] max-[680px]:rounded-[6px]"
+                      />
+                    </div>
                   </div>
-                  <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.35]">
+                  <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.62rem] max-[680px]:leading-[1.25] max-[400px]:text-[0.56rem]">
                     {benefit}
                   </p>
                 </div>
