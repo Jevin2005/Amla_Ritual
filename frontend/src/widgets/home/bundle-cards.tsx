@@ -14,7 +14,7 @@ export function BundleCards() {
   ];
 
   return (
-    <div className="mt-8 grid grid-cols-3 gap-[clamp(16px,1.8vw,26px)] max-[860px]:grid-cols-2 max-[680px]:grid-cols-2 max-[680px]:gap-2.5 max-[420px]:gap-2">
+    <div className="mt-8 grid grid-cols-3 gap-[clamp(16px,1.8vw,26px)] max-[860px]:grid-cols-2 max-[680px]:gap-2.5 max-[420px]:grid-cols-1 max-[420px]:gap-4">
       {bundles.map((bundle, index) => {
         const bundleProducts = bundle.slugs
           .map((slug) => products.find((product) => product.slug === slug))
@@ -45,7 +45,7 @@ export function BundleCards() {
               className={`relative aspect-square w-full flex-none overflow-hidden ${accentConfig.bg} flex items-center justify-center p-3 max-[680px]:p-2`}
             >
               {/* Top-Right Set Badge */}
-              <span className="absolute top-3 right-3 z-10 rounded-full border border-black/5 bg-white/90 px-2 py-0.5 text-[0.52rem] font-bold uppercase tracking-wider text-[var(--forest)] shadow-xs backdrop-blur-xs max-[680px]:top-2 max-[680px]:right-2 max-[680px]:text-[0.42rem] max-[680px]:px-1.5">
+              <span className="absolute top-3 right-3 z-10 rounded-full border border-black/5 bg-white/90 px-2 py-0.5 text-[0.52rem] font-bold uppercase tracking-wider text-[var(--forest)] shadow-xs backdrop-blur-xs max-[680px]:top-2 max-[680px]:right-2 max-[680px]:px-2 max-[680px]:py-1 max-[680px]:text-[0.58rem]">
                 Set of {bundleProducts.length}
               </span>
 
@@ -71,7 +71,7 @@ export function BundleCards() {
                         }
                         alt={product.name}
                         fill
-                        sizes="(max-width: 680px) 35vw, (max-width: 900px) 30vw, 22vw"
+                        sizes="(max-width: 420px) 65vw, (max-width: 680px) 35vw, (max-width: 900px) 30vw, 22vw"
                         className="size-full object-cover object-center"
                       />
                     </div>
@@ -88,16 +88,16 @@ export function BundleCards() {
             </div>
 
             {/* ── Info Area (Identical typography and padding to ProductCard) ── */}
-            <div className="flex flex-1 flex-col border-t border-[var(--line)] px-5 pt-4 pb-5 max-[680px]:px-3 max-[680px]:pt-2.5 max-[680px]:pb-3 max-[420px]:px-2.5 max-[420px]:py-2">
-              <p className="mb-1 text-[0.62rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.46rem] max-[680px]:tracking-[0.08em]">
+            <div className="flex flex-1 flex-col border-t border-[var(--line)] px-5 pt-4 pb-5 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5">
+              <p className="mb-1 text-[0.62rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-1 max-[680px]:text-[0.6rem] max-[680px]:tracking-[0.08em]">
                 Curated Ritual Set
               </p>
 
-              <h3 className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,1.95rem)] leading-[1.05] tracking-[-0.03em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:mb-0.5 max-[680px]:text-[1.02rem] max-[420px]:text-[0.92rem]">
+              <h3 className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,1.95rem)] leading-[1.05] tracking-[-0.03em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:mb-1 max-[680px]:text-[1.14rem]">
                 {bundle.name}
               </h3>
 
-              <p className="mb-0 text-[0.74rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-1 max-[680px]:text-[0.56rem] max-[680px]:leading-[1.25] max-[420px]:text-[0.5rem]">
+              <p className="mb-0 text-[0.74rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-2 max-[680px]:text-[0.7rem] max-[680px]:leading-[1.45]">
                 {bundleProducts
                   .map((product) => product.name.replace(" Powder", ""))
                   .join(" · ")}
@@ -107,18 +107,18 @@ export function BundleCards() {
                 <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2">
                   <div>
                     <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                      <span className="[font-family:var(--font-display)] text-[1.22rem] leading-none text-[var(--forest)] max-[680px]:text-[0.95rem] max-[420px]:text-[0.88rem]">
+                      <span className="[font-family:var(--font-display)] text-[1.22rem] leading-none text-[var(--forest)] max-[680px]:text-[1.05rem]">
                         {formatCurrency(total, currencyCode)}
                       </span>
                     </span>
-                    <span className="mt-0.5 block text-[0.55rem] font-bold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.44rem]">
+                    <span className="mt-0.5 block text-[0.55rem] font-bold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.58rem]">
                       {isAvailable ? "Complete Set" : "Sold out"}
                     </span>
                   </div>
 
                   <button
                     type="button"
-                    className="grid size-10 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.15rem] text-white shadow-[0_6px_18px_color-mix(in_srgb,var(--forest)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 max-[680px]:size-7 max-[680px]:text-[0.85rem] max-[420px]:size-6.5 max-[420px]:text-[0.75rem]"
+                    className="grid size-10 shrink-0 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.15rem] text-white shadow-[0_6px_18px_color-mix(in_srgb,var(--forest)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 max-[680px]:size-11 max-[680px]:text-[1rem]"
                     onClick={() =>
                       addManyToCart(
                         bundleProducts.map((product) => product.slug)
@@ -138,5 +138,3 @@ export function BundleCards() {
     </div>
   );
 }
-
-

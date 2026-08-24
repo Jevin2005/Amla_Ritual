@@ -22,15 +22,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = `${brandName} — Pure Botanicals, Powerful Rituals`;
   const description =
     "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.";
-  const socialImage =
-    storefront.source === "shopify"
-      ? storefront.content.homeHeroPoster
-      : {
-          url: "/og-shopify.jpg",
-          width: 1200,
-          height: 630,
-          altText: "NatureMist — Pure botanicals. Powerful rituals.",
-        };
+  const socialImage = {
+    url: "/og.png",
+    width: 1730,
+    height: 909,
+    altText: "NatureMist — Pure botanicals. Powerful rituals.",
+  };
 
   return {
     metadataBase,

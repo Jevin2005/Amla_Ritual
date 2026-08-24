@@ -1,0 +1,309 @@
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: clip;
+  pointer-events: none;
+  contain: strict;
+}
+
+.atmosphere::before,
+.atmosphere::after {
+  position: absolute;
+  width: min(34vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.22;
+  content: "";
+}
+
+.atmosphere::before {
+  top: -18%;
+  left: -17%;
+  background: radial-gradient(circle, rgb(183 212 90 / 12%), transparent 68%);
+}
+
+.atmosphere::after {
+  right: -19%;
+  bottom: -23%;
+  background: radial-gradient(circle, rgb(82 119 68 / 11%), transparent 69%);
+}
+
+.halo {
+  position: absolute;
+  width: clamp(180px, 19vw, 310px);
+  aspect-ratio: 1;
+  border: 1px solid rgb(82 119 68 / 11%);
+  border-radius: 50%;
+  opacity: 0.38;
+  animation: halo-breathe 18s ease-in-out infinite alternate;
+}
+
+.halo::before,
+.halo::after {
+  position: absolute;
+  border: 1px solid rgb(183 212 90 / 12%);
+  border-radius: inherit;
+  content: "";
+}
+
+.halo::before {
+  inset: 12%;
+}
+
+.halo::after {
+  inset: 28%;
+}
+
+.haloNorth {
+  top: 17%;
+  right: -8%;
+}
+
+.haloSouth {
+  bottom: 8%;
+  left: -9%;
+  width: clamp(210px, 22vw, 350px);
+  animation-delay: -5s;
+}
+
+.leaf {
+  position: absolute;
+  width: var(--leaf-size, 42px);
+  animation: leaf-drift var(--leaf-duration, 16s) var(--leaf-delay, 0s) ease-in-out infinite;
+}
+
+.blade {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.85;
+  transform: rotate(var(--leaf-angle, 0deg));
+  transform-origin: 12% 90%;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: 100% 0 100% 0;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 19%), transparent 42%),
+    linear-gradient(135deg, var(--leaf-light, #8da85c), var(--leaf-dark, #355f3a));
+  box-shadow:
+    inset -8px -6px 13px rgb(11 40 29 / 12%),
+    0 10px 22px rgb(21 59 45 / 11%);
+  opacity: var(--leaf-opacity, 0.14);
+}
+
+.blade::before {
+  position: absolute;
+  top: 51%;
+  right: 5%;
+  left: 5%;
+  height: 1px;
+  transform: rotate(-1deg);
+  transform-origin: left;
+  background: linear-gradient(90deg, rgb(255 255 255 / 48%), rgb(21 59 45 / 17%));
+  content: "";
+}
+
+.blade::after {
+  position: absolute;
+  top: 48%;
+  left: -16%;
+  width: 28%;
+  height: 1px;
+  transform: rotate(12deg);
+  background: rgb(53 95 58 / 54%);
+  content: "";
+}
+
+.leafOne {
+  --leaf-size: 58px;
+  --leaf-angle: -24deg;
+  --leaf-opacity: 0.15;
+  --leaf-duration: 17.5s;
+  --leaf-delay: -2s;
+  --drift-x: 7px;
+  --drift-y: -9px;
+  top: 16%;
+  left: -0.8%;
+}
+
+.leafTwo {
+  --leaf-size: 34px;
+  --leaf-angle: 22deg;
+  --leaf-opacity: 0.17;
+  --leaf-duration: 15.5s;
+  --leaf-delay: -5.4s;
+  --drift-x: -6px;
+  --drift-y: 8px;
+  --leaf-light: #b7d45a;
+  --leaf-dark: #6f8f42;
+  top: 34%;
+  right: 0.5%;
+}
+
+.leafThree {
+  --leaf-size: 43px;
+  --leaf-angle: -58deg;
+  --leaf-opacity: 0.13;
+  --leaf-duration: 19.2s;
+  --leaf-delay: -4.5s;
+  --drift-x: 8px;
+  --drift-y: 6px;
+  top: 67%;
+  left: 0.8%;
+}
+
+.leafFour {
+  --leaf-size: 50px;
+  --leaf-angle: 32deg;
+  --leaf-opacity: 0.14;
+  --leaf-duration: 18.4s;
+  --leaf-delay: -8s;
+  --drift-x: -7px;
+  --drift-y: -9px;
+  --leaf-light: #a4bd61;
+  --leaf-dark: #456c42;
+  right: -1.2%;
+  bottom: 9%;
+}
+
+.leafFive {
+  --leaf-size: 25px;
+  --leaf-angle: 62deg;
+  --leaf-opacity: 0.12;
+  --leaf-duration: 16.8s;
+  --leaf-delay: -1.4s;
+  --drift-x: -4px;
+  --drift-y: -7px;
+  top: 11%;
+  right: 3.5%;
+}
+
+.leafSix {
+  --leaf-size: 30px;
+  --leaf-angle: -12deg;
+  --leaf-opacity: 0.11;
+  --leaf-duration: 17.7s;
+  --leaf-delay: -6.2s;
+  --drift-x: 6px;
+  --drift-y: 8px;
+  top: 49%;
+  left: 2.5%;
+}
+
+.leafSeven {
+  --leaf-size: 21px;
+  --leaf-angle: 105deg;
+  --leaf-opacity: 0.12;
+  --leaf-duration: 20.5s;
+  --leaf-delay: -7.1s;
+  --drift-x: -9px;
+  --drift-y: 5px;
+  top: 73%;
+  right: 2.4%;
+}
+
+.leafEight {
+  --leaf-size: 29px;
+  --leaf-angle: -88deg;
+  --leaf-opacity: 0.11;
+  --leaf-duration: 18.8s;
+  --leaf-delay: -3.8s;
+  --drift-x: 5px;
+  --drift-y: -8px;
+  bottom: 3.5%;
+  left: -0.8%;
+}
+
+@keyframes leaf-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0.01deg);
+  }
+  45% {
+    transform: translate3d(var(--drift-x, 10px), var(--drift-y, -14px), 0) rotate(4deg);
+  }
+  72% {
+    transform: translate3d(0, 2px, 0) rotate(-2deg);
+  }
+}
+
+@keyframes halo-breathe {
+  from {
+    transform: scale(0.96) rotate(-5deg);
+    opacity: 0.48;
+  }
+  to {
+    transform: scale(1.05) rotate(4deg);
+    opacity: 0.78;
+  }
+}
+
+@media (max-width: 900px) {
+  .leafFive,
+  .leafSix,
+  .leafSeven,
+  .leafEight {
+    display: none;
+  }
+
+  .leafOne {
+    left: -2%;
+  }
+
+  .leafTwo {
+    right: -1%;
+  }
+}
+
+@media (max-width: 680px) {
+  .atmosphere::before,
+  .atmosphere::after,
+  .haloSouth,
+  .leafThree,
+  .leafEight {
+    display: none;
+  }
+
+  .haloNorth {
+    top: 27%;
+    right: -38%;
+    opacity: 0.38;
+  }
+
+  .leafOne {
+    --leaf-size: 38px;
+    top: 18%;
+    left: -4%;
+  }
+
+  .leafTwo {
+    --leaf-size: 27px;
+    top: 48%;
+    right: -2%;
+  }
+
+  .leafFour {
+    --leaf-size: 34px;
+    right: -3%;
+    bottom: 12%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atmosphere {
+    display: none;
+  }
+}
+
+@media (forced-colors: active), print {
+  .atmosphere {
+    display: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .atmosphere {
+    display: none;
+  }
+}

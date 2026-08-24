@@ -2,9 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { PageHero } from "@/shared/ui/page-hero";
 
-const eyebrowClass =
-  "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
 const inputClass =
   "w-full rounded-full border border-[var(--line)] bg-[var(--paper)] px-6 py-4 text-[0.95rem] text-[var(--forest)] shadow-[0_4px_16px_rgba(21,59,45,0.04)] transition-[border-color,box-shadow] duration-200 placeholder:text-[var(--muted)]/60 focus:border-[var(--forest)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--forest)]/10";
 
@@ -110,29 +109,25 @@ export function FaqsPage() {
 
   return (
     <main className="overflow-x-clip" id="main-content">
-      {/* Hero Header */}
-      <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(183,212,90,0.15),transparent_40%),linear-gradient(180deg,#faf7f0,#f4efe4_70%,#f8f5ed)] px-[clamp(24px,5vw,72px)] pb-[clamp(45px,6vw,80px)] pt-[clamp(65px,8vw,110px)] text-center">
-        <div className="mx-auto max-w-[820px]">
-          <p className={eyebrowClass}>Knowledge & Ritual Guides</p>
-          <h1 className="m-0 font-serif text-[clamp(2.8rem,5.5vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.045em] text-[var(--forest)] text-balance">
-            Frequently Asked Questions
-          </h1>
-          <p className="mx-auto mt-6 max-w-[580px] text-[1.05rem] leading-[1.75] text-[var(--muted)]">
-            Explore complete guidance on traditional botanical preparation, scalp compatibility, purity standards, and order handoff.
-          </p>
-
-          {/* Search Box */}
-          <div className="mx-auto mt-8 max-w-[540px]">
-            <input
-              type="search"
-              placeholder="Search questions (e.g., mixing, hair fall, delivery, color)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={inputClass}
-            />
-          </div>
+      <PageHero
+        eyebrow="Knowledge & Ritual Guides"
+        title="Frequently Asked Questions"
+        description="Explore complete guidance on traditional botanical preparation, scalp compatibility, purity standards, and order handoff."
+      >
+        <div className="mt-8 max-w-[540px]">
+          <label className="sr-only" htmlFor="faq-search">
+            Search frequently asked questions
+          </label>
+          <input
+            id="faq-search"
+            type="search"
+            placeholder="Search questions (e.g., mixing, hair fall, delivery, color)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={inputClass}
+          />
         </div>
-      </section>
+      </PageHero>
 
       {/* Categories & Accordion */}
       <section className="mx-auto w-full max-w-[1040px] px-[clamp(24px,5vw,64px)] py-[clamp(50px,6vw,90px)]">
