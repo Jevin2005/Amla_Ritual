@@ -132,17 +132,6 @@ export default async function ProductPage(props: ProductPageProps) {
 
         {/* Right Column: Aligned Amazon-Style Details & Buy Box */}
         <div className="w-full min-w-0 flex flex-col gap-4">
-          {/* Brand & Ritual Eyebrow */}
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-[#edf3ea] px-2.5 py-0.5 text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
-              NatureMist · {product.ritualStep} Ritual
-            </span>
-            <span className="text-[0.62rem] text-[var(--muted)]">·</span>
-            <span className="text-[0.64rem] font-semibold text-[var(--forest)]">
-              Ayurvedic Single Botanical
-            </span>
-          </div>
-
           {/* Product Headline */}
           <div>
             <h1 className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,3.8vw,3.4rem)] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--forest)] max-[680px]:text-[1.85rem]">

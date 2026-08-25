@@ -90,40 +90,24 @@ export function HomePage() {
           className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(rgba(23,63,42,0.22)_0.55px,transparent_0.55px)] bg-size-[7px_7px] opacity-20 [mask-image:linear-gradient(115deg,transparent_8%,black_45%,transparent_88%)]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(310px,1.15fr)_minmax(360px,1.25fr)_minmax(240px,0.85fr)] gap-[clamp(20px,2vw,36px)] px-[clamp(24px,4vw,64px)] pt-[clamp(24px,2.5vw,38px)] pb-[clamp(24px,3vw,44px)] max-[1280px]:grid-cols-[minmax(280px,1.1fr)_minmax(340px,1.2fr)_minmax(220px,0.8fr)] max-[1180px]:grid-cols-[minmax(260px,1fr)_minmax(320px,1.15fr)_minmax(200px,0.85fr)] max-[1080px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[1080px]:gap-[28px_20px] max-[1080px]:px-[4vw] max-[900px]:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] max-[900px]:gap-[20px_16px] max-[900px]:px-4 max-[900px]:pt-4 max-[900px]:pb-8 max-[680px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] max-[680px]:gap-x-0 max-[680px]:px-0 max-[680px]:pt-3 max-[680px]:pb-6 max-[420px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] max-[420px]:gap-x-0 max-[420px]:px-0">
+        <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(310px,1.15fr)_minmax(360px,1.25fr)_minmax(240px,0.85fr)] gap-x-[clamp(32px,3.5vw,64px)] gap-y-[clamp(20px,2vw,36px)] px-[clamp(24px,4vw,64px)] pt-[clamp(24px,2.5vw,38px)] pb-[clamp(24px,3vw,44px)] max-[1280px]:grid-cols-[minmax(280px,1.1fr)_minmax(340px,1.2fr)_minmax(220px,0.8fr)] max-[1280px]:gap-x-[clamp(28px,3vw,52px)] max-[1180px]:grid-cols-[minmax(260px,1fr)_minmax(320px,1.15fr)_minmax(200px,0.85fr)] max-[1080px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[1080px]:gap-[28px_20px] max-[1080px]:px-[4vw] max-[900px]:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] max-[900px]:gap-[20px_16px] max-[900px]:px-4 max-[900px]:pt-4 max-[900px]:pb-8 max-[680px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] max-[680px]:gap-x-0 max-[680px]:px-0 max-[680px]:pt-3 max-[680px]:pb-6 max-[420px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] max-[420px]:gap-x-0 max-[420px]:px-0">
           <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100 max-[680px]:pl-3 max-[680px]:pr-1 max-[420px]:pl-2.5">
-            <p className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[rgba(63,125,58,0.24)] bg-[rgba(63,125,58,0.08)] px-3 py-1 text-[0.66rem] font-bold tracking-[0.16em] text-[var(--botanical)] uppercase max-[900px]:mb-2 max-[900px]:text-[0.56rem] max-[680px]:mb-2 max-[680px]:px-2.5 max-[680px]:py-1 max-[680px]:text-[0.58rem] max-[680px]:tracking-[0.1em] max-[420px]:text-[0.52rem]">
-              {details.eyebrow}
-            </p>
             <h1
               className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(3.2rem,3.8vw,4.6rem)] leading-[0.9] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.9rem,4vw,3.8rem)] max-[1080px]:max-w-[480px] max-[1080px]:text-[clamp(2.1rem,3.8vw,2.9rem)] max-[900px]:text-[clamp(1.65rem,4vw,2.3rem)] max-[680px]:text-[clamp(1.65rem,6.5vw,2.2rem)] max-[680px]:leading-[0.94] max-[420px]:text-[clamp(1.45rem,6vw,1.85rem)]"
               id="hero-title"
             >
+
               <span className="block [animation:hero-title-enter_900ms_var(--ease)_80ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineFirst}
               </span>
-              <span className="flex items-center gap-[clamp(10px,1.2vw,18px)] max-[900px]:gap-2 max-[680px]:gap-2 [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+              <span className="block [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineMiddle}
-                <span
-                  className="relative inline-block h-[0.58em] w-[clamp(85px,8.5vw,135px)] translate-y-[0.04em] overflow-hidden rounded-[999px] border border-[rgba(23,63,42,0.12)] shadow-[0_12px_30px_rgba(23,63,42,0.1)] max-[900px]:w-[clamp(45px,9vw,65px)] max-[680px]:w-[clamp(44px,10vw,60px)]"
-                  aria-hidden="true"
-                >
-                  <Image
-                    src={heroPoster.url}
-                    alt=""
-                    fill
-                    sizes="160px"
-                    className="scale-[1.38] object-cover object-[77%_27%]"
-                  />
-                </span>
               </span>
               <em className="mt-[0.05em] ml-[0.03em] block text-[0.9em] leading-[inherit] font-normal tracking-[-0.05em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:mt-0.5 max-[680px]:text-[0.9em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                 {details.headlineItalic}
               </em>
             </h1>
-            <p className="my-[clamp(14px,2vh,22px)_14px] max-w-[420px] text-[clamp(0.9rem,1vw,1.02rem)] leading-[1.65] text-[#4b5047] max-[1080px]:max-w-[440px] max-[900px]:my-2 max-[900px]:text-[0.76rem] max-[900px]:leading-[1.4] max-[680px]:my-2 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.45] max-[420px]:text-[0.65rem] max-[420px]:leading-[1.4]">
-              {details.description}
-            </p>
+
             <HeroPurchase
               key={activeProduct.slug}
               slug={activeProduct.slug}
@@ -182,23 +166,23 @@ export function HomePage() {
             </div>
 
             <Link
-              className="absolute bottom-[28%] left-[-68px] z-[5] grid min-h-[62px] w-[225px] grid-cols-[40px_1fr_8px] items-center gap-[10px] rounded-full border border-[rgba(255,255,255,0.75)] bg-[rgba(248,245,234,0.94)] px-3.5 py-[8px] shadow-[0_18px_45px_rgba(28,46,31,0.16)] backdrop-blur-[16px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.98)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[205px] max-[1080px]:left-[-20px] max-[1080px]:w-[185px] max-[900px]:bottom-[12%] max-[900px]:left-[-12px] max-[900px]:min-h-[42px] max-[900px]:w-[min(160px,94%)] max-[900px]:gap-1.5 max-[900px]:px-2 max-[900px]:py-1 max-[680px]:bottom-[10%] max-[680px]:left-[-8px] max-[680px]:min-h-[32px] max-[680px]:w-[min(145px,95%)] max-[680px]:grid-cols-[20px_1fr_6px] max-[680px]:gap-1 max-[680px]:px-1.5 max-[680px]:py-0.5 max-[420px]:bottom-[8%] max-[420px]:left-[-6px] max-[420px]:w-[min(125px,96%)] max-[420px]:grid-cols-[18px_1fr_4px] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
+              className="absolute bottom-[28%] left-[-68px] z-[5] flex min-h-[54px] w-[210px] items-center gap-[10px] rounded-full border border-[rgba(255,255,255,0.75)] bg-[rgba(248,245,234,0.94)] px-3 py-[7px] shadow-[0_18px_45px_rgba(28,46,31,0.16)] backdrop-blur-[16px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.98)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[190px] max-[1080px]:left-[-20px] max-[1080px]:w-[170px] max-[900px]:bottom-[12%] max-[900px]:left-[-12px] max-[900px]:min-h-[38px] max-[900px]:w-[min(155px,94%)] max-[900px]:gap-1.5 max-[900px]:px-2 max-[900px]:py-1 max-[680px]:bottom-[10%] max-[680px]:left-[-8px] max-[680px]:min-h-[30px] max-[680px]:w-[min(134px,95%)] max-[680px]:gap-1 max-[680px]:px-1.5 max-[680px]:py-0.5 max-[420px]:bottom-[8%] max-[420px]:left-[-6px] max-[420px]:w-[min(118px,96%)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
               href={`/shop/${activeProduct.slug}`}
               aria-label={`View the ${activeProduct.name} ritual`}
             >
-              <span className="grid size-10 place-items-center rounded-full bg-[var(--forest)] text-[var(--paper)] text-[0.8rem] max-[900px]:size-6 max-[900px]:text-[0.6rem] max-[680px]:size-5 max-[680px]:text-[0.48rem] max-[420px]:size-4.5 max-[420px]:text-[0.42rem]">
+              <span className="grid size-[34px] shrink-0 place-items-center rounded-full bg-[var(--forest)] text-[0.75rem] max-[900px]:size-[24px] max-[900px]:text-[0.55rem] max-[680px]:size-[18px] max-[680px]:text-[0.42rem] max-[420px]:size-[15px] max-[420px]:text-[0.36rem]">
                 🌿
               </span>
-              <div className="grid leading-[1.15]">
-                <strong className="text-[0.88rem] font-semibold text-[var(--forest)] [font-family:var(--font-display)] max-[900px]:text-[0.66rem] max-[680px]:text-[0.52rem] max-[420px]:text-[0.46rem]">
-                  {details.badgeText}
+              <div className="min-w-0 flex-1">
+                <strong className="block truncate text-[0.72rem] font-semibold leading-[1.2] text-[var(--forest)] [font-family:var(--font-display)] max-[900px]:text-[0.58rem] max-[680px]:text-[0.46rem] max-[420px]:text-[0.4rem]">
+                  {activeProduct.name}
                 </strong>
-                <small className="mt-0.5 text-[0.48rem] text-[var(--muted)] max-[900px]:text-[0.38rem] max-[680px]:text-[0.32rem] max-[420px]:hidden">
-                  {details.badgeSubtitle}
+                <small className="mt-[2px] block truncate text-[0.44rem] leading-[1.3] text-[var(--muted)] max-[900px]:text-[0.36rem] max-[680px]:text-[0.3rem] max-[420px]:hidden">
+                  {activeProduct.subtitle}
                 </small>
               </div>
               <i
-                className="size-[8px] rounded-full shadow-[0_0_0_5px_rgba(167,201,67,0.2)] max-[900px]:size-[5px] max-[680px]:size-[4px] max-[420px]:size-[3px]"
+                className="size-[7px] shrink-0 rounded-full shadow-[0_0_0_4px_rgba(167,201,67,0.2)] max-[900px]:size-[5px] max-[680px]:size-[3px] max-[420px]:size-[3px]"
                 style={{ backgroundColor: activeProduct.accent }}
                 aria-hidden="true"
               />
@@ -246,7 +230,9 @@ export function HomePage() {
                 →
               </button>
             </nav>
-            <div className="relative h-[clamp(245px,31vh,305px)] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] shadow-[0_16px_44px_rgba(21,59,45,0.08)] ring-1 ring-[var(--line)] max-[1080px]:col-start-1 max-[1080px]:row-[2/4] max-[1080px]:h-[300px] max-[680px]:col-start-1 max-[680px]:row-[2/4] max-[680px]:h-[clamp(190px,28vh,240px)] max-[680px]:w-full max-[420px]:h-[180px]">
+            <div className="relative h-[clamp(245px,31vh,305px)] w-full overflow-hidden rounded-[var(--radius-md)] bg-white shadow-[0_8px_16px_rgba(21,59,45,0.06),0_24px_60px_rgba(21,59,45,0.14),0_0_0_1px_rgba(21,59,45,0.1)] ring-1 ring-[rgba(21,59,45,0.08)] max-[1080px]:col-start-1 max-[1080px]:row-[2/4] max-[1080px]:h-[300px] max-[680px]:col-start-1 max-[680px]:row-[2/4] max-[680px]:h-[clamp(190px,28vh,240px)] max-[680px]:w-full max-[420px]:h-[180px]">
+              {/* Inner top-edge highlight for depth */}
+              <span className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.9)_40%,rgba(255,255,255,0.9)_60%,transparent)]" aria-hidden="true" />
               <Image
                 key={activeProduct.slug}
                 src={activeProduct.featuredImage?.url || "/images/amla-powder.jpg"}
@@ -279,9 +265,17 @@ export function HomePage() {
                     ＋
                   </span>
                 </summary>
-                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.74rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-2 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.54rem]">
-                  {activeProduct.shortDescription}
-                </p>
+                <div className="mt-[-1px] mb-0 pb-[14px] text-[0.74rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-2 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.54rem]">
+                  {activeProduct.benefits && activeProduct.benefits.length > 0 ? (
+                    <ul className="m-0 space-y-1.5 pl-4 list-disc marker:text-[var(--botanical)]">
+                      {activeProduct.benefits.slice(0, 3).map((benefit, i) => (
+                        <li key={i}>{benefit}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="m-0">{activeProduct.shortDescription}</p>
+                  )}
+                </div>
               </details>
               <details className="group/fact border-b border-[var(--line)]">
                 <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[34px] max-[680px]:text-[0.76rem] max-[420px]:text-[0.7rem]">
@@ -293,9 +287,17 @@ export function HomePage() {
                     ＋
                   </span>
                 </summary>
-                <p className="mt-[-1px] mb-0 pb-[14px] text-[0.74rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-2 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.54rem]">
-                  {details.howToText}
-                </p>
+                <div className="mt-[-1px] mb-0 pb-[14px] text-[0.74rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-2 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.54rem]">
+                  {activeProduct.howTo && activeProduct.howTo.length > 1 ? (
+                    <ol className="m-0 space-y-1 pl-4 list-decimal marker:font-bold marker:text-[var(--forest)]">
+                      {activeProduct.howTo.slice(0, 3).map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <p className="m-0">{details.howToText}</p>
+                  )}
+                </div>
               </details>
               <details className="group/fact border-b border-[var(--line)]" open>
                 <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[34px] max-[680px]:text-[0.76rem] max-[420px]:text-[0.7rem]">

@@ -4,6 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useStore } from "@/features/store/store-provider";
+import type {
+  StorefrontCustomerReview,
+  StorefrontVideoReview,
+} from "@/lib/shopify/storefront";
 
 interface VideoItem {
   id: string;
@@ -109,8 +113,11 @@ const REVIEWS: ReviewItem[] = [
 export function VideoReviewsSection() {
   const videoScrollRef = useRef<HTMLDivElement>(null);
   const reviewScrollRef = useRef<HTMLDivElement>(null);
-  const [activeModalVideo, setActiveModalVideo] = useState<VideoItem | null>(null);
-  const { addToCart } = useStore();
+  const [activeModalVideo, setActiveModalVideo] = useState<StorefrontVideoReview | null>(null);
+  const { content, addToCart } = useStore();
+
+  const videos = content.videoReviews?.length ? content.videoReviews : VIDEOS;
+  const reviews = content.customerReviews?.length ? content.customerReviews : REVIEWS;
 
   const handleVideoScroll = (direction: "left" | "right") => {
     if (videoScrollRef.current) {
@@ -156,7 +163,7 @@ export function VideoReviewsSection() {
           role="region"
           aria-label="Community video stories"
         >
-          {VIDEOS.map((video) => (
+          {videos.map((video) => (
             <article
               key={video.id}
               className="group/video relative aspect-[3/4.2] w-full min-w-[250px] shrink-0 snap-center cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-[#e4ede3] shadow-[0_8px_24px_rgba(21,59,45,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(21,59,45,0.14)] max-[1120px]:w-[280px] max-[680px]:w-[76vw] max-[680px]:min-w-[220px] max-[680px]:max-w-[260px]"
@@ -279,7 +286,7 @@ export function VideoReviewsSection() {
           role="region"
           aria-label="Customer written reviews"
         >
-          {REVIEWS.map((review) => (
+          {reviews.map((review) => (
             <article
               key={review.id}
               className="flex w-full shrink-0 snap-start flex-col justify-between rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-7 shadow-[0_4px_18px_rgba(21,59,45,0.03)] transition-all duration-300 hover:shadow-[0_12px_28px_rgba(21,59,45,0.06)] max-[960px]:w-[320px] max-[680px]:w-[82vw] max-[680px]:min-w-[260px] max-[680px]:max-w-[300px] max-[680px]:p-5"
@@ -288,7 +295,7 @@ export function VideoReviewsSection() {
                 {/* 5 Gold Stars */}
                 <div
                   className="mb-3.5 flex items-center gap-1 text-[#f5a623] max-[680px]:mb-2.5"
-                  aria-label="5 out of 5 stars"
+                  aria-label={`${review.rating} out of 5 stars`}
                 >
                   {Array.from({ length: review.rating }).map((_, i) => (
                     <span key={i} className="text-base max-[680px]:text-sm">
@@ -309,9 +316,9 @@ export function VideoReviewsSection() {
               {/* Author Footer */}
               <div className="mt-7 flex items-center gap-3.5 border-t border-[var(--line)] pt-4 max-[680px]:mt-5 max-[680px]:gap-2.5 max-[680px]:pt-3">
                 <div
-                  className={`grid size-10 shrink-0 place-items-center rounded-full ${review.avatarBg} text-[0.76rem] font-bold text-white shadow-xs max-[680px]:size-8 max-[680px]:text-[0.65rem]`}
+                  className={`grid size-10 shrink-0 place-items-center rounded-full ${review.avatarBg || "bg-[#1f3e2b]"} text-[0.76rem] font-bold text-white shadow-xs max-[680px]:size-8 max-[680px]:text-[0.65rem]`}
                 >
-                  {review.avatarText}
+                  {review.avatarText || review.author.slice(0, 2).toUpperCase()}
                 </div>
                 <div>
                   <h3 className="m-0 text-[0.88rem] font-bold text-[var(--forest)] max-[680px]:text-[0.76rem]">
@@ -359,7 +366,7 @@ export function VideoReviewsSection() {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          INTERACTIVE VIDEO PLAYER MODAL
+          INTERACTIVE VIDEO PLAYER MODAL (Plays MP4 video if provided)
       ───────────────────────────────────────────────────────────── */}
       {activeModalVideo && (
         <div
@@ -383,23 +390,36 @@ export function VideoReviewsSection() {
               ✕
             </button>
 
-            {/* Video Thumbnail with Play Button */}
+            {/* Video Player or Thumbnail */}
             <div className="relative aspect-[9/13] w-full overflow-hidden bg-black">
-              <Image
-                src={activeModalVideo.image}
-                alt={activeModalVideo.title}
-                fill
-                className="size-full object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e271b] via-transparent to-black/40" />
+              {activeModalVideo.videoUrl ? (
+                <video
+                  src={activeModalVideo.videoUrl}
+                  controls
+                  autoPlay
+                  playsInline
+                  poster={activeModalVideo.image}
+                  className="size-full object-cover"
+                />
+              ) : (
+                <>
+                  <Image
+                    src={activeModalVideo.image}
+                    alt={activeModalVideo.title}
+                    fill
+                    className="size-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e271b] via-transparent to-black/40" />
 
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="grid size-16 place-items-center rounded-full border border-white/80 bg-white/30 text-white backdrop-blur-md shadow-2xl animate-pulse">
-                  <svg className="ml-1 size-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </span>
-              </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="grid size-16 place-items-center rounded-full border border-white/80 bg-white/30 text-white backdrop-blur-md shadow-2xl animate-pulse">
+                      <svg className="ml-1 size-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Video Details & Quick Add */}

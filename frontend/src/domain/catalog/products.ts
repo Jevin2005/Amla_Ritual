@@ -107,7 +107,7 @@ export const products: Product[] = [
     howTo: [
       "Scoop enough powder for your hair length into a clean, dry bowl.",
       "Add water gradually and mix until smooth and spreadable.",
-      "Apply in sections, follow the final pack timing, then rinse thoroughly.",
+      "Apply in sections from roots to ends, leave for 20–30 minutes, then rinse thoroughly with cool water.",
     ],
     mixers: ["Water", "Aloe gel", "Plain yoghurt", "Hibiscus powder"],
     suitableFor: ["Dull-looking lengths", "Dry-feeling hair", "All hair textures"],
@@ -133,7 +133,7 @@ export const products: Product[] = [
       {
         question: "Is Amla a good first botanical ritual?",
         answer:
-          "It can be a simple place to begin because the paste is easy to adapt. Start with water, follow the final pack timing and strand-test very light or porous hair.",
+          "It can be a simple place to begin because the paste is easy to adapt. Start with water, leave for 20–30 minutes, then rinse thoroughly. Strand-test very light or porous hair first.",
       },
       {
         question: "Can I combine Amla with another powder?",
@@ -293,7 +293,7 @@ export const products: Product[] = [
     howTo: [
       "Mix with water until the paste is smooth and easy to spread.",
       "Apply in sections across scalp and lengths.",
-      "Follow the final pack timing, then rinse or cleanse out thoroughly.",
+      "Leave for 20–30 minutes, then rinse or cleanse out thoroughly with cool water.",
     ],
     mixers: ["Water", "Amla powder", "Hibiscus powder"],
     suitableFor: ["Normal-to-dry hair", "Scalp-focused rituals", "Rich pre-wash masks"],
@@ -353,7 +353,7 @@ export const products: Product[] = [
     howTo: [
       "Mix with water into a silky, smooth mask.",
       "Concentrate the ritual through mid-lengths and ends.",
-      "Follow the final pack timing and rinse extremely well.",
+      "Leave for 20–30 minutes, then rinse extremely well with cool water.",
     ],
     mixers: ["Water", "Amla powder", "Bhringraj powder"],
     suitableFor: ["Dry or coarse hair", "Curly and textured hair", "Softness-focused rituals"],
@@ -411,11 +411,11 @@ export const products: Product[] = [
       "Includes clear guidance around result variables",
     ],
     howTo: [
-      "Read the final pack directions in full before mixing.",
-      "Use gloves and the product-tested water ratio, temperature and application window.",
-      "Patch and strand test; final tone varies with starting colour, porosity and previous treatments.",
+      "Read all directions in full before mixing — Indigo requires precision and proper preparation.",
+      "Use gloves, mix with water only, and apply within the recommended 10–15 minute window after mixing.",
+      "Patch and strand test before use; final tone varies with starting colour, porosity and previous treatments.",
     ],
-    mixers: ["Water only, unless the final pack states otherwise", "A separately designed henna step"],
+    mixers: ["Water only", "A separately designed henna step"],
     suitableFor: ["Experienced botanical colour users", "Hair colour rituals only"],
     safety: [
       "Indigo alone may appear blue or green on light or grey hair.",

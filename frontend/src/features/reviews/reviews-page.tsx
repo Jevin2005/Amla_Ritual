@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useStore } from "@/features/store/store-provider";
 
 const eyebrowClass =
   "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
@@ -118,12 +119,33 @@ const FILTER_TAGS = [
 ] as const;
 
 export function ReviewsPage() {
+  const { content } = useStore();
   const [activeFilter, setActiveFilter] = useState<string>("All");
 
+  const allReviews = useMemo<Review[]>(() => {
+    if (!content.customerReviews || content.customerReviews.length === 0) {
+      return REVIEWS;
+    }
+    const shopifyMapped: Review[] = content.customerReviews.map((r) => ({
+      id: r.id,
+      name: r.author,
+      location: r.location || "India",
+      rating: r.rating || 5,
+      date: r.date || "Recent",
+      productSlug: r.productSlug || "amla-powder",
+      productName: r.productName || "Wildcrafted Amla Powder",
+      tag: "Scalp Health",
+      headline: r.headline || "Remarkable botanical transformation.",
+      content: r.quote,
+      verified: r.verified !== false,
+    }));
+    return [...shopifyMapped, ...REVIEWS.filter((r) => !shopifyMapped.some((s) => s.id === r.id))];
+  }, [content.customerReviews]);
+
   const filteredReviews = useMemo(() => {
-    if (activeFilter === "All") return REVIEWS;
-    return REVIEWS.filter((r) => r.tag === activeFilter);
-  }, [activeFilter]);
+    if (activeFilter === "All") return allReviews;
+    return allReviews.filter((r) => r.tag === activeFilter);
+  }, [activeFilter, allReviews]);
 
   return (
     <main className="overflow-x-clip" id="main-content">

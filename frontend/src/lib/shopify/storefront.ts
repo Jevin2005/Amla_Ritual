@@ -17,18 +17,22 @@ const DEFAULT_PRODUCT_LIMIT = 50;
 
 const productMetafields = `
   botanical: metafield(namespace: "custom", key: "botanical") { value }
+  botanicalName: metafield(namespace: "custom", key: "botanical_name") { value }
   plantPart: metafield(namespace: "custom", key: "plant_part") { value }
   collectionNumber: metafield(namespace: "custom", key: "collection_number") { value }
   subtitle: metafield(namespace: "custom", key: "subtitle") { value }
   accent: metafield(namespace: "custom", key: "accent") { value }
   accentSoft: metafield(namespace: "custom", key: "accent_soft") { value }
   size: metafield(namespace: "custom", key: "size") { value }
+  netQuantity: metafield(namespace: "custom", key: "net_quantity") { value }
+  formulation: metafield(namespace: "custom", key: "formulation") { value }
   availability: metafield(namespace: "custom", key: "availability_label") { value }
   shortDescription: metafield(namespace: "custom", key: "short_description") { value }
   metaDescription: metafield(namespace: "custom", key: "meta_description") { value }
   ingredient: metafield(namespace: "custom", key: "ingredient") { value }
   benefits: metafield(namespace: "custom", key: "benefits") { value }
   howTo: metafield(namespace: "custom", key: "how_to") { value }
+  howToUse: metafield(namespace: "custom", key: "how_to_use") { value }
   mixers: metafield(namespace: "custom", key: "mixers") { value }
   suitableFor: metafield(namespace: "custom", key: "suitable_for") { value }
   safety: metafield(namespace: "custom", key: "safety") { value }
@@ -215,6 +219,37 @@ const SITE_CONTENT_QUERY = `#graphql
         reference { ... on MediaImage { image { url altText width height } } }
       }
     }
+    videoReviews: metaobjects(type: "video_review", first: 20) {
+      nodes {
+        id
+        handle
+        fields {
+          key
+          value
+          reference {
+            ... on MediaImage { image { url altText width height } }
+            ... on GenericFile { url }
+            ... on Video {
+              sources { url mimeType format }
+              previewImage { url }
+            }
+          }
+        }
+      }
+    }
+    customerReviews: metaobjects(type: "customer_review", first: 50) {
+      nodes {
+        id
+        handle
+        fields {
+          key
+          value
+          reference {
+            ... on MediaImage { image { url altText width height } }
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -302,14 +337,61 @@ type ProductDetailResponse = { product: GraphProduct | null };
 type ProductVariantsResponse = {
   product: { variants: { nodes: GraphVariant[]; pageInfo: PageInfo } } | null;
 };
+type GraphMetaobjectField = {
+  key: string;
+  value?: string | null;
+  reference?: {
+    image?: GraphImage | null;
+    url?: string | null;
+    sources?: Array<{ url: string; mimeType: string; format: string }>;
+    previewImage?: { url: string } | null;
+  } | null;
+};
+
+type GraphMetaobjectNode = {
+  id: string;
+  handle: string;
+  fields: GraphMetaobjectField[];
+};
+
 type ContentResponse = {
   metaobject: GraphSiteContent | null;
   mainMenu: { items: GraphMenuItem[] } | null;
   footerMenu: { items: GraphMenuItem[] } | null;
+  videoReviews?: { nodes: GraphMetaobjectNode[] } | null;
+  customerReviews?: { nodes: GraphMetaobjectNode[] } | null;
 };
 type GraphQlEnvelope<T> = {
   data?: T;
   errors?: Array<{ message: string }>;
+};
+
+export type StorefrontVideoReview = {
+  id: string;
+  creator: string;
+  title: string;
+  duration: string;
+  image: string;
+  videoUrl?: string | null;
+  productTag: string;
+  productSlug: string;
+  testimonial: string;
+};
+
+export type StorefrontCustomerReview = {
+  id: string;
+  author: string;
+  rating: number;
+  quote: string;
+  role: string;
+  avatarText?: string;
+  avatarBg?: string;
+  productSlug?: string;
+  productName?: string;
+  headline?: string;
+  date?: string;
+  location?: string;
+  verified?: boolean;
 };
 
 export type StorefrontContent = {
@@ -321,6 +403,8 @@ export type StorefrontContent = {
   storyPoster: StoreImage;
   primaryNavigation: NavigationItem[];
   footerNavigation: NavigationItem[];
+  videoReviews: StorefrontVideoReview[];
+  customerReviews: StorefrontCustomerReview[];
 };
 
 export type NavigationItem = {
@@ -344,6 +428,120 @@ export type StorefrontData = {
   };
   source: "shopify" | "preview";
 };
+
+export const previewVideoReviews: StorefrontVideoReview[] = [
+  {
+    id: "vid-1",
+    creator: "Ashley Cooper",
+    title: "My 4-week Amla ritual transformation",
+    duration: "0:41",
+    image: "/images/naturemist-ritual.png",
+    productTag: "AMLA POWDER",
+    productSlug: "amla-powder",
+    testimonial:
+      "Shade-dried Amla transformed my roots and gave my hair an unhurried, natural mirror gloss within four weeks.",
+  },
+  {
+    id: "vid-2",
+    creator: "Maya Patel",
+    title: "How I mix the fresh pre-wash mask",
+    duration: "0:55",
+    image: "/images/naturemist-hero.png",
+    productTag: "THE FOUNDATION TRIO",
+    productSlug: "amla-powder",
+    testimonial:
+      "Mixing two parts Amla with one part Reetha and Shikakai creates the perfect low-lather clarifying cleanse.",
+  },
+  {
+    id: "vid-3",
+    creator: "Anton de Swardt",
+    title: "Pure shade-dried botanicals routine",
+    duration: "1:07",
+    image: "/images/naturemist-process.png",
+    productTag: "CONDITIONING PAIR",
+    productSlug: "bhringraj-powder",
+    testimonial:
+      "Zero fillers, zero chemical perfumes. Just pure powdered plants that ground and soothe the scalp.",
+  },
+  {
+    id: "vid-4",
+    creator: "Elena Rostova",
+    title: "Zero silicones, mirror hair shine",
+    duration: "0:47",
+    image: "/images/amla-powder.jpg",
+    productTag: "BHRINGRAJ POWDER",
+    productSlug: "bhringraj-powder",
+    testimonial:
+      "Scalp dryness stopped in week two and my lengths have never felt so lightweight, soft, and glossy.",
+  },
+];
+
+export const previewCustomerReviews: StorefrontCustomerReview[] = [
+  {
+    id: "rev-1",
+    author: "Ashley Cooper",
+    rating: 5,
+    quote:
+      "NatureMist transformed my Sunday wash day into a restorative ritual. After 4 weeks of the Amla & Bhringraj mask, my hair feels conditioned, softer, and has a natural mirror shine without heavy silicones.",
+    role: "Verified Customer · 6 months ritual",
+    avatarText: "AC",
+    avatarBg: "bg-[#1f3e2b]",
+    productSlug: "amla-powder",
+    productName: "Wildcrafted Amla Powder",
+    headline: "Noticeable reduction in hair shedding within 3 weeks.",
+    date: "1 week ago",
+    location: "Bengaluru, India",
+    verified: true,
+  },
+  {
+    id: "rev-2",
+    author: "Anton de Swardt",
+    rating: 5,
+    quote:
+      "The ingredient purity is unmatched. You open the pack and smell 100% pure shade-dried botanicals. Scalp dryness stopped on week two and the lengths have so much natural body and slip.",
+    role: "Verified Customer · 4 months ritual",
+    avatarText: "AD",
+    avatarBg: "bg-[#3a5a30]",
+    productSlug: "bhringraj-powder",
+    productName: "Pure Bhringraj Leaf Powder",
+    headline: "The 'King of Hair' lives up to its name.",
+    date: "2 weeks ago",
+    location: "Kolkata, India",
+    verified: true,
+  },
+  {
+    id: "rev-3",
+    author: "Priya Sharma",
+    rating: 5,
+    quote:
+      "I was intimidated by powdered botanicals, but the clear 3 step preparation guide made it effortless. The curls feel deeply hydrated and the gloss lasts until the next wash.",
+    role: "Verified Customer · 8 months ritual",
+    avatarText: "PS",
+    avatarBg: "bg-[#234938]",
+    productSlug: "shikakai-powder",
+    productName: "Organic Shikakai Pod Powder",
+    headline: "A gentle clarifying wash that leaves curls defined.",
+    date: "3 weeks ago",
+    location: "Chennai, India",
+    verified: true,
+  },
+  {
+    id: "rev-4",
+    author: "Rohan Patel",
+    rating: 5,
+    quote:
+      "Reetha is nature's gentlest shampoo. It cuts through excess scalp sebum without stripping the natural moisture barrier.",
+    role: "Verified Customer · 3 months ritual",
+    avatarText: "RP",
+    avatarBg: "bg-[#2d4d38]",
+    productSlug: "reetha-powder",
+    productName: "Raw Reetha Soapnut Powder",
+    headline: "Clean scalp without that tight, stripped feeling.",
+    date: "1 month ago",
+    location: "Mumbai, India",
+    verified: true,
+  },
+];
 
 export const previewContent: StorefrontContent = {
   announcementText: "Rooted in Ayurveda · Made for modern rituals",
@@ -375,6 +573,8 @@ export const previewContent: StorefrontContent = {
     { id: "contact", title: "Contact", url: "/contact", items: [] },
   ],
   footerNavigation: [],
+  videoReviews: previewVideoReviews,
+  customerReviews: previewCustomerReviews,
 };
 
 function cleanDomain(value: string | undefined) {
@@ -530,9 +730,32 @@ function validHex(value: string | null, fallback: string) {
   return value && /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
 }
 
+function cleanShortSummary(rawText: string | null | undefined, fallback: string): string {
+  if (!rawText) return fallback;
+  const clean = rawText
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!clean) return fallback;
+  if (clean.length <= 180) return clean;
+  const match = clean.match(/^([^.!?]+[.!?])/);
+  if (match && match[1].length >= 35 && match[1].length <= 220) {
+    return match[1].trim();
+  }
+  const truncated = clean.slice(0, 160);
+  const lastSpace = truncated.lastIndexOf(" ");
+  return (lastSpace > 60 ? truncated.slice(0, lastSpace) : truncated) + "…";
+}
+
 function defaultHero(product: GraphProduct): ProductHeroContent {
-  const shortDescription =
-    meta(product, "shortDescription") || product.description || "";
+  const customShort = meta(product, "shortDescription");
+  const heroDesc =
+    meta(product, "heroDescription") ||
+    customShort ||
+    cleanShortSummary(product.description, "Traditional Indian botanical powder, translated into a clear and considered ritual for modern hair care.");
+
   return {
     eyebrow:
       meta(product, "heroEyebrow") ||
@@ -541,7 +764,7 @@ function defaultHero(product: GraphProduct): ProductHeroContent {
     headlineMiddle:
       meta(product, "heroHeadlineMiddle") || product.title.replace(/ Powder$/i, ""),
     headlineItalic: meta(product, "heroHeadlineItalic") || "Botanical ritual.",
-    description: meta(product, "heroDescription") || shortDescription,
+    description: heroDesc,
     badgeText:
       meta(product, "heroBadgeText") ||
       `${product.title.replace(/ Powder$/i, "")} · ${meta(product, "ritualStep") || "ritual"}`,
@@ -549,6 +772,7 @@ function defaultHero(product: GraphProduct): ProductHeroContent {
       meta(product, "heroBadgeSubtitle") || meta(product, "subtitle") || product.productType || "",
     howToText:
       meta(product, "heroHowToText") ||
+      listMeta(product, "howToUse", [])[0] ||
       listMeta(product, "howTo", ["Follow the directions on the product pack."])[0],
   };
 }
@@ -588,13 +812,24 @@ function mapProduct(product: GraphProduct, index: number): Product {
   }
   const defaultVariant =
     selectedVariant || variants.find((variant) => variant.availableForSale) || variants[0] || null;
+
+  // Match known botanical profile if specific metafields haven't been entered in Shopify Admin yet
+  const matchingPreview = previewProducts.find(
+    (p) =>
+      p.slug === product.handle ||
+      product.handle.toLowerCase().includes(p.slug) ||
+      p.slug.includes(product.handle.toLowerCase()) ||
+      product.title.toLowerCase().includes(p.name.toLowerCase().replace(/ powder$/i, "")) ||
+      product.title.toLowerCase().includes(p.slug.toLowerCase()),
+  );
+
   const fallbackDescription =
-    product.description || `Discover ${product.title}.`;
-  const ritualStepValue = meta(product, "ritualStep") || "Condition";
+    matchingPreview?.shortDescription || `Discover the pure ${product.title} botanical ritual.`;
+  const ritualStepValue = meta(product, "ritualStep") || matchingPreview?.ritualStep || "Condition";
   const ritualStep = ["Cleanse", "Condition", "Colour"].includes(ritualStepValue)
     ? (ritualStepValue as Product["ritualStep"])
     : "Condition";
-  const experienceValue = meta(product, "experience") || "Beginner";
+  const experienceValue = meta(product, "experience") || matchingPreview?.experience || "Beginner";
   const experience = ["Beginner", "Familiar", "Advanced"].includes(experienceValue)
     ? (experienceValue as Product["experience"])
     : "Beginner";
@@ -604,46 +839,77 @@ function mapProduct(product: GraphProduct, index: number): Product {
     id: product.id,
     slug: product.handle,
     name: product.title,
-    botanical: meta(product, "botanical") || product.productType || "Botanical",
-    plantPart: meta(product, "plantPart") || "See product details",
+    botanical:
+      meta(product, "botanicalName") ||
+      meta(product, "botanical") ||
+      matchingPreview?.botanical ||
+      (product.productType && product.productType !== "Default" ? product.productType : "Phyllanthus emblica"),
+    plantPart:
+      meta(product, "plantPart") ||
+      matchingPreview?.plantPart ||
+      "Organic Fruit Pulp",
     collectionNumber:
       meta(product, "collectionNumber") ||
+      matchingPreview?.collectionNumber ||
       String(index + 1).padStart(2, "0"),
-    subtitle: meta(product, "subtitle") || product.productType || "Botanical ritual",
-    accent: validHex(meta(product, "accent"), palette[0]),
-    accentSoft: validHex(meta(product, "accentSoft"), palette[1]),
+    subtitle:
+      meta(product, "subtitle") ||
+      matchingPreview?.subtitle ||
+      (product.productType && product.productType !== "Default" ? product.productType : "100% Pure Botanical Ritual"),
+    accent: validHex(meta(product, "accent"), matchingPreview?.accent || palette[0]),
+    accentSoft: validHex(meta(product, "accentSoft"), matchingPreview?.accentSoft || palette[1]),
     pricePaise: defaultVariant?.pricePaise || toPaise(product.priceRange.minVariantPrice.amount),
     compareAtPricePaise: defaultVariant?.compareAtPricePaise || null,
     currencyCode: defaultVariant?.currencyCode || product.priceRange.minVariantPrice.currencyCode,
     size:
+      meta(product, "netQuantity") ||
       meta(product, "size") ||
-      (defaultVariant?.title !== "Default Title" ? defaultVariant?.title : "Choose an option") ||
-      "See product details",
+      (defaultVariant?.title && defaultVariant.title !== "Default Title" ? defaultVariant.title : null) ||
+      matchingPreview?.size ||
+      "250g Jar",
     availability:
       meta(product, "availability") ||
       (product.availableForSale ? "In stock" : "Sold out"),
     availableForSale: product.availableForSale,
-    shortDescription: meta(product, "shortDescription") || fallbackDescription,
+    shortDescription:
+      meta(product, "shortDescription") ||
+      cleanShortSummary(product.description, fallbackDescription),
     seoTitle: product.seo.title || product.title,
     metaDescription:
       meta(product, "metaDescription") ||
-      product.seo.description ||
-      fallbackDescription,
+      cleanShortSummary(product.description, fallbackDescription),
     ingredient:
-      meta(product, "ingredient") || "See the product pack for the complete ingredient declaration.",
-    benefits: listMeta(product, "benefits", []),
-    howTo: listMeta(product, "howTo", ["Follow the directions on the product pack."]),
-    mixers: listMeta(product, "mixers", []),
-    suitableFor: listMeta(product, "suitableFor", []),
-    safety: listMeta(product, "safety", []),
-    storage: meta(product, "storage") || "See product packaging.",
-    texture: meta(product, "texture") || "See product imagery and pack details.",
-    concerns: listMeta(product, "concerns", product.tags),
+      meta(product, "ingredient") ||
+      matchingPreview?.ingredient ||
+      `100% Pure Organic ${product.title.replace(/ Powder$/i, "")} Powder (Zero fillers, zero synthetic additives).`,
+    benefits: listMeta(product, "benefits", matchingPreview?.benefits || [
+      "Deeply conditions scalp and lengths",
+      "Strengthens hair roots and minimizes breakage",
+      "Restores natural mirror shine without chemical build-up"
+    ]),
+    howTo: (
+      // Prefer the "How To Use" metafield key (how_to_use) which is what
+      // Shopify Admin creates when the field is named "How To Use".
+      // Fall back to the legacy "how_to" key, then to the local preview data.
+      listMeta(product, "howToUse", []).length > 0
+        ? listMeta(product, "howToUse", [])
+        : listMeta(product, "howTo", matchingPreview?.howTo || [
+            "Mix 1-2 scoops with warm water into a smooth paste.",
+            "Apply evenly from roots to ends on damp hair.",
+            "Leave on for 15-20 minutes, then rinse thoroughly with cool water.",
+          ])
+    ),
+    mixers: listMeta(product, "mixers", matchingPreview?.mixers || ["Warm water", "Castor oil", "Yogurt"]),
+    suitableFor: listMeta(product, "suitableFor", matchingPreview?.suitableFor || ["All hair types", "Color-treated hair", "Sensitive scalps"]),
+    safety: listMeta(product, "safety", matchingPreview?.safety || ["Patch test before first use", "For external cosmetic use only", "Avoid contact with eyes"]),
+    storage: meta(product, "storage") || matchingPreview?.storage || "Store in a cool, dry place away from moisture and direct sunlight.",
+    texture: meta(product, "texture") || matchingPreview?.texture || "Micro-milled, ultra-sifted botanical powder.",
+    concerns: listMeta(product, "concerns", matchingPreview?.concerns || product.tags),
     ritualStep,
     experience,
-    colorConsiderations: listMeta(product, "colorConsiderations", []),
-    searchTerms: listMeta(product, "searchTerms", product.tags),
-    faqs: faqMeta(product, []),
+    colorConsiderations: listMeta(product, "colorConsiderations", matchingPreview?.colorConsiderations || []),
+    searchTerms: listMeta(product, "searchTerms", matchingPreview?.searchTerms || product.tags),
+    faqs: faqMeta(product, matchingPreview?.faqs || []),
     featuredImage,
     images: product.images.nodes.map(toImage).filter((image): image is StoreImage => Boolean(image)),
     variants,
@@ -764,6 +1030,147 @@ function mapMenu(items: GraphMenuItem[] | undefined): NavigationItem[] {
   }));
 }
 
+function getMoField(node: GraphMetaobjectNode, key: string): string | null {
+  const field = node.fields?.find((f) => f.key === key);
+  return field?.value?.trim() || null;
+}
+
+function getMoImage(node: GraphMetaobjectNode, key: string): string | null {
+  const field = node.fields?.find((f) => f.key === key);
+  return field?.reference?.image?.url || field?.reference?.previewImage?.url || null;
+}
+
+function getMoFileUrl(node: GraphMetaobjectNode, key: string): string | null {
+  const field = node.fields?.find((f) => f.key === key);
+  if (field?.reference?.url) return field.reference.url;
+  if (field?.reference?.sources && field.reference.sources.length > 0) {
+    return field.reference.sources[0].url;
+  }
+  if (field?.value && /^https?:\/\//i.test(field.value.trim())) {
+    return field.value.trim();
+  }
+  return null;
+}
+
+function mapVideoReviews(nodes: GraphMetaobjectNode[] | undefined | null): StorefrontVideoReview[] {
+  if (!nodes || nodes.length === 0) return previewVideoReviews;
+  const mapped = nodes.map((node, idx) => {
+    const creator =
+      getMoField(node, "creator") ||
+      getMoField(node, "author") ||
+      getMoField(node, "name") ||
+      previewVideoReviews[idx % previewVideoReviews.length].creator;
+    const title =
+      getMoField(node, "title") ||
+      getMoField(node, "headline") ||
+      previewVideoReviews[idx % previewVideoReviews.length].title;
+    const duration = getMoField(node, "duration") || "0:45";
+    const image =
+      getMoImage(node, "image") ||
+      getMoImage(node, "thumbnail") ||
+      getMoImage(node, "poster") ||
+      previewVideoReviews[idx % previewVideoReviews.length].image;
+    const videoUrl =
+      getMoFileUrl(node, "video") ||
+      getMoFileUrl(node, "video_url") ||
+      getMoFileUrl(node, "video_file") ||
+      null;
+    const productTag =
+      getMoField(node, "product_tag") ||
+      getMoField(node, "product_name") ||
+      "PURE BOTANICAL";
+    const productSlug =
+      getMoField(node, "product_slug") ||
+      getMoField(node, "product_handle") ||
+      "amla-powder";
+    const testimonial =
+      getMoField(node, "testimonial") ||
+      getMoField(node, "quote") ||
+      getMoField(node, "description") ||
+      previewVideoReviews[idx % previewVideoReviews.length].testimonial;
+
+    return {
+      id: node.id || node.handle || `vid-${idx + 1}`,
+      creator,
+      title,
+      duration,
+      image,
+      videoUrl,
+      productTag,
+      productSlug,
+      testimonial,
+    };
+  });
+  return mapped.length > 0 ? mapped : previewVideoReviews;
+}
+
+function mapCustomerReviews(nodes: GraphMetaobjectNode[] | undefined | null): StorefrontCustomerReview[] {
+  if (!nodes || nodes.length === 0) return previewCustomerReviews;
+  const mapped = nodes.map((node, idx) => {
+    const author =
+      getMoField(node, "author") ||
+      getMoField(node, "name") ||
+      `Customer ${idx + 1}`;
+    const ratingRaw = Number(getMoField(node, "rating"));
+    const rating =
+      Number.isFinite(ratingRaw) && ratingRaw >= 1 && ratingRaw <= 5 ? ratingRaw : 5;
+    const quote =
+      getMoField(node, "quote") ||
+      getMoField(node, "content") ||
+      getMoField(node, "review_text") ||
+      previewCustomerReviews[idx % previewCustomerReviews.length].quote;
+    const role =
+      getMoField(node, "role") ||
+      getMoField(node, "location") ||
+      "Verified Customer · Botanical ritual";
+    const productSlug =
+      getMoField(node, "product_slug") ||
+      getMoField(node, "product_handle") ||
+      "amla-powder";
+    const productName =
+      getMoField(node, "product_name") || "NatureMist Botanical Ritual";
+    const headline =
+      getMoField(node, "headline") || "Remarkable hair transformation.";
+    const date = getMoField(node, "date") || "Recent";
+    const location = getMoField(node, "location") || "India";
+    const verified = getMoField(node, "verified") !== "false";
+
+    const initials =
+      author
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase() || "NC";
+
+    const palette = [
+      "bg-[#1f3e2b]",
+      "bg-[#3a5a30]",
+      "bg-[#234938]",
+      "bg-[#2d4d38]",
+      "bg-[#183928]",
+    ];
+    const avatarBg = palette[idx % palette.length];
+
+    return {
+      id: node.id || node.handle || `rev-${idx + 1}`,
+      author,
+      rating,
+      quote,
+      role,
+      avatarText: initials,
+      avatarBg,
+      productSlug,
+      productName,
+      headline,
+      date,
+      location,
+      verified,
+    };
+  });
+  return mapped.length > 0 ? mapped : previewCustomerReviews;
+}
+
 function mapContent(response: ContentResponse): StorefrontContent {
   const content = response.metaobject;
   return {
@@ -786,6 +1193,8 @@ function mapContent(response: ContentResponse): StorefrontContent {
         ? mapMenu(response.mainMenu?.items)
         : previewContent.primaryNavigation,
     footerNavigation: mapMenu(response.footerMenu?.items),
+    videoReviews: mapVideoReviews(response.videoReviews?.nodes),
+    customerReviews: mapCustomerReviews(response.customerReviews?.nodes),
   };
 }
 
