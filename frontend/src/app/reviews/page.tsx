@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { ReviewsPage } from "@/features/reviews/reviews-page";
 
 export const metadata: Metadata = {
-  title: "Verified Reviews & Transformations | NatureMist",
+  title: "Customer Reviews & Video Stories | NatureMist",
   description:
-    "Discover unedited reviews and hair transformation reflections from practitioners using pure, single-origin NatureMist botanical rituals.",
+    "Read published written reviews and watch customer video stories connected to the exact NatureMist botanical they describe.",
   alternates: { canonical: "/reviews" },
 };
 

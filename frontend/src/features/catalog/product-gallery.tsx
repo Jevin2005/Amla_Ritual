@@ -18,38 +18,9 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         height: 800,
       };
 
-  // Multiple high-resolution angles & contextual ritual views
-  const images =
-    product.images && product.images.length > 1
-      ? product.images
-      : [
-          baseImage,
-          {
-            url: "/images/naturemist-process.png",
-            altText: `${product.name} — Pure Botanical Powder Texture`,
-            width: 1024,
-            height: 1024,
-          },
-          {
-            url: "/images/naturemist-ritual.png",
-            altText: `${product.name} — Ritual Preparation`,
-            width: 1024,
-            height: 1024,
-          },
-          {
-            url: "/images/naturemist-hero.png",
-            altText: `${product.name} — Botanical Transformation`,
-            width: 1200,
-            height: 800,
-          },
-        ];
-
-  const photoLabels = [
-    "Packaging & Jar",
-    "Texture & Grain",
-    "Preparation",
-    "Ritual Result",
-  ];
+  // Shopify product media is the only source for gallery slides. A listing
+  // with one uploaded photo must stay a one-photo gallery.
+  const images = product.images?.length ? product.images : [baseImage];
 
   const [activeIndex, setActiveIndex] = useState(0);
   const activeImage = images[activeIndex] || images[0];
@@ -75,24 +46,26 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         </div>
 
         {/* Top-Right: Premium Photo Showcase Counter Notation */}
-        <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-white shadow-md backdrop-blur-md max-[680px]:top-2.5 max-[680px]:right-2.5 max-[680px]:px-2.5 max-[680px]:py-0.5">
-          <svg
-            className="size-3.5 text-white/90 max-[680px]:size-3"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="4" />
-            <circle cx="8.5" cy="8.5" r="1.5" />
-            <path d="M21 15l-5-5L5 21" />
-          </svg>
-          <span className="font-mono text-[0.68rem] font-bold tracking-wider max-[680px]:text-[0.58rem]">
-            {activeIndex + 1} / {images.length}
-          </span>
-        </div>
+        {images.length > 1 && (
+          <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-white shadow-md backdrop-blur-md max-[680px]:top-2.5 max-[680px]:right-2.5 max-[680px]:px-2.5 max-[680px]:py-0.5">
+            <svg
+              className="size-3.5 text-white/90 max-[680px]:size-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="4" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" />
+            </svg>
+            <span className="font-mono text-[0.68rem] font-bold tracking-wider max-[680px]:text-[0.58rem]">
+              {activeIndex + 1} / {images.length}
+            </span>
+          </div>
+        )}
 
         {/* Master Image View */}
         <div className="relative size-full flex items-center justify-center">
@@ -100,7 +73,9 @@ export function ProductGallery({ product }: ProductGalleryProps) {
             src={activeImage.url}
             alt={activeImage.altText || product.name}
             fill
-            priority
+            loading="eager"
+            fetchPriority={activeIndex === 0 ? "high" : "auto"}
+            quality={82}
             sizes="(max-width: 960px) 95vw, 48vw"
             className="size-full object-contain object-center transition-all duration-300 ease-out"
           />
@@ -156,7 +131,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         >
           {images.map((img, idx) => {
             const isSelected = idx === activeIndex;
-            const label = photoLabels[idx] || `View ${idx + 1}`;
+            const label = img.altText || `Photo ${idx + 1}`;
             return (
               <button
                 key={img.url + idx}

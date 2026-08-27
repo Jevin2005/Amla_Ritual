@@ -11,6 +11,11 @@ For every definition below:
 - pin the definition so the team sees it on every product editor;
 - keep the definitions in the order below, which follows the website layout.
 
+For `hero_poster`, restrict the file definition to images and add useful alt
+text to the uploaded Shopify media. The image itself is the homepage opt-in:
+no separate featured-product switch is required. Featured products appear in
+ascending numeric `collection_number` order.
+
 ## Form fields in website order
 
 | Shopify form label | Key | Type | Required before publishing | Website placement |
@@ -39,6 +44,7 @@ For every definition below:
 | Colour considerations | `color_considerations` | List of single-line text | When relevant | Strand-test guidance |
 | Search terms | `search_terms` | List of single-line text | Recommended | Store search |
 | FAQs | `faqs` | JSON | Recommended | Product FAQ accordion |
+| Homepage hero poster | `hero_poster` | File reference, images only | Only to feature this product in the hero | Homepage hero poster; blank keeps the product in standard listings only |
 | Hero eyebrow | `hero_eyebrow` | Single-line text | No | Homepage featured-product slide |
 | Hero line 1 | `hero_headline_first` | Single-line text | No | Homepage featured-product slide |
 | Hero line 2 | `hero_headline_middle` | Single-line text | No | Homepage featured-product slide |
@@ -83,6 +89,7 @@ Inventory per variant:
 Weight/shipping data per variant:
 
 NatureMist website form
+Homepage hero poster filename + alt text (optional; enables homepage hero):
 Botanical name:
 Plant part / form:
 Collection number:
@@ -159,9 +166,13 @@ The remaining copy must match the approved pack and compliance review. Do not co
 
 1. Create the product as **Draft** and assign its category, vendor, type, tags, and collections.
 2. Add options/variants, SKUs, prices, inventory, shipping weight, and high-quality media with alt text.
-3. Complete the pinned NatureMist form from top to bottom.
+3. Complete the pinned NatureMist form from top to bottom. Upload a **Homepage hero poster** only when this product should join the homepage hero; leave it blank for a standard product listing.
 4. Preview the product and test every variant, sold-out state, quantity change, cart action, and checkout handoff.
 5. Publish it to the **Headless** sales channel and the intended Shopify Markets.
 6. Change the status to **Active**. The storefront refreshes automatically; allow up to five minutes if a webhook is not configured.
 
 To remove a product from the website without deleting its history, unpublish it from the Headless channel or set it to Draft. To reorder a ritual set, reorder products inside its Shopify collection.
+
+To remove only the homepage feature while keeping the product for sale, clear
+its `hero_poster` value. The product remains in the homepage collection, shop,
+search, and other standard product lines.

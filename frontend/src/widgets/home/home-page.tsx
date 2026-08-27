@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { getHomepageHeroProducts } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
 import { useStore } from "@/features/store/store-provider";
@@ -47,41 +48,51 @@ export function HomePage() {
     );
   }
 
-  const activeProduct = products[activeProductIndex] ?? products[0];
-  const productName = activeProduct.name.replace(/ Powder$/i, "");
-  const details = {
-    eyebrow:
-      activeProduct.hero?.eyebrow ||
-      `The ${productName} Ritual`,
-    headlineFirst: activeProduct.hero?.headlineFirst || "Discover",
-    headlineMiddle: activeProduct.hero?.headlineMiddle || productName,
-    headlineItalic:
-      activeProduct.hero?.headlineItalic || "Botanical ritual.",
-    description:
-      activeProduct.hero?.description || activeProduct.shortDescription,
-    badgeText:
-      activeProduct.hero?.badgeText ||
-      `${productName} · ${activeProduct.ritualStep.toLowerCase()}`,
-    badgeSubtitle:
-      activeProduct.hero?.badgeSubtitle || activeProduct.subtitle,
-    howToText:
-      activeProduct.hero?.howToText ||
-      activeProduct.howTo[0] ||
-      "Follow the directions on the product pack.",
-  };
-  const heroPoster = content.homeHeroPoster;
+  const heroProducts = getHomepageHeroProducts(products);
+  const activeProduct = heroProducts.length
+    ? heroProducts[activeProductIndex % heroProducts.length]
+    : null;
+  const productName = activeProduct?.name.replace(/ Powder$/i, "") || "";
+  const details = activeProduct
+    ? {
+        eyebrow:
+          activeProduct.hero?.eyebrow ||
+          `The ${productName} Ritual`,
+        headlineFirst: activeProduct.hero?.headlineFirst || "Discover",
+        headlineMiddle: activeProduct.hero?.headlineMiddle || productName,
+        headlineItalic:
+          activeProduct.hero?.headlineItalic || "Botanical ritual.",
+        description:
+          activeProduct.hero?.description || activeProduct.shortDescription,
+        badgeText:
+          activeProduct.hero?.badgeText ||
+          `${productName} · ${activeProduct.ritualStep.toLowerCase()}`,
+        badgeSubtitle:
+          activeProduct.hero?.badgeSubtitle || activeProduct.subtitle,
+        howToText:
+          activeProduct.hero?.howToText ||
+          activeProduct.howTo[0] ||
+          "Follow the directions on the product pack.",
+      }
+    : null;
   const ritualPoster = content.ritualPoster;
+  const CollectionHeading = activeProduct ? "h2" : "h1";
 
   const handlePrevProduct = () => {
-    setActiveProductIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
+    if (heroProducts.length < 2) return;
+    setActiveProductIndex(
+      (prev) => (prev - 1 + heroProducts.length) % heroProducts.length,
+    );
   };
 
   const handleNextProduct = () => {
-    setActiveProductIndex((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+    if (heroProducts.length < 2) return;
+    setActiveProductIndex((prev) => (prev + 1) % heroProducts.length);
   };
 
   return (
     <main className="overflow-x-clip" id="main-content">
+      {activeProduct && details ? (
       <section
         className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_53%_18%,rgba(255,255,255,0.92),transparent_30%),radial-gradient(circle_at_92%_30%,rgba(167,201,67,0.1),transparent_25%),linear-gradient(135deg,#fbf8f0,#f5f0e3_62%,#f9f7ef)] after:absolute after:right-0 after:bottom-0 after:left-0 after:z-[7] after:h-px after:bg-[var(--line)] after:content-['']"
         aria-labelledby="hero-title"
@@ -150,11 +161,13 @@ export function HomePage() {
             </span>
             <div className="group/portrait absolute inset-[2%_0_0] z-[2] overflow-hidden rounded-[50%_50%_8px_8px/28%_28%_1%_1%] border border-[rgba(23,63,42,0.14)] bg-[var(--beige)] shadow-[0_36px_90px_rgba(40,51,33,0.22),0_0_0_1px_rgba(23,63,42,0.06),inset_0_1px_0_rgba(255,255,255,0.5)] max-[1080px]:inset-0 max-[1080px]:rounded-[50%_50%_8px_8px/28%_28%_1%_1%] max-[680px]:rounded-[50%_50%_12px_12px/26%_26%_2%_2%] max-[680px]:shadow-[0_20px_60px_rgba(40,51,33,0.28),0_0_0_1px_rgba(23,63,42,0.08)]">
               <Image
-                src={heroPoster.url}
-                alt={heroPoster.altText || "NatureMist botanical hair ritual"}
+                key={activeProduct.slug}
+                src={activeProduct.heroPoster.url}
+                alt={activeProduct.heroPoster.altText || `${activeProduct.name} botanical hair ritual`}
                 fill
                 loading="eager"
                 fetchPriority="high"
+                quality={82}
                 sizes="(max-width: 680px) 50vw, (max-width: 900px) 50vw, (max-width: 1080px) 55vw, (max-width: 1440px) 44vw, 600px"
                 className="object-cover object-[76%_center] [transform:scale(1.04)] [transition:transform_1.1s_var(--ease)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/portrait:[transform:scale(1.065)] max-[680px]:object-[74%_10%] motion-reduce:transition-none motion-reduce:[transform:scale(1.04)]"
               />
@@ -213,6 +226,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={handlePrevProduct}
+                disabled={heroProducts.length < 2}
                 className="grid size-[44px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.15rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] max-[680px]:size-[34px] max-[680px]:text-[0.95rem]"
                 aria-label="Previous featured ritual"
               >
@@ -224,6 +238,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={handleNextProduct}
+                disabled={heroProducts.length < 2}
                 className="grid size-[44px] place-items-center rounded-full border border-[rgba(23,63,42,0.24)] text-[1.15rem] [transition:color_240ms_ease,background_240ms_ease,transform_240ms_ease] motion-reduce:transition-none hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:[transform:translateY(-2px)] max-[680px]:size-[34px] max-[680px]:text-[0.95rem]"
                 aria-label="Next featured ritual"
               >
@@ -238,9 +253,10 @@ export function HomePage() {
                 src={activeProduct.featuredImage?.url || "/images/amla-powder.jpg"}
                 alt={activeProduct.featuredImage?.altText || activeProduct.name}
                 fill
+                loading="eager"
+                quality={82}
                 sizes="(max-width: 680px) 45vw, (max-width: 1080px) 45vw, 30vw"
                 className="size-full object-cover object-center transition-all duration-500 ease-out hover:scale-105"
-                priority
               />
             </div>
             <div className="py-[17px_11px] max-[1080px]:col-start-2 max-[1080px]:row-start-2 max-[1080px]:py-[14px] max-[680px]:col-start-2 max-[680px]:row-start-2 max-[680px]:pt-0 max-[680px]:pb-1.5">
@@ -327,6 +343,7 @@ export function HomePage() {
           <path d="M0,0 Q720,48 1440,0 L1440,44 L0,44 Z" fill="currentColor" />
         </svg>
       </section>
+      ) : null}
       <section
         className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(70px,7vw,110px)] max-[680px]:px-3 max-[680px]:py-8 max-[420px]:px-2.5 max-[420px]:py-6 ${revealClass}`}
         aria-labelledby="collection-title"
@@ -337,12 +354,12 @@ export function HomePage() {
             <p className={`${eyebrowClass} max-[680px]:mb-1 max-[680px]:text-[0.54rem]`}>
               The botanical cabinet
             </p>
-            <h2
+            <CollectionHeading
               className="m-0 scroll-mt-[calc(var(--header-height)+24px)] text-[clamp(2.6rem,4vw,4.5rem)] leading-[0.96] font-normal tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.6rem,7.5vw,2.1rem)]"
               id="collection-title"
             >
               Shop the herbal collection.
-            </h2>
+            </CollectionHeading>
           </div>
           <div className="flex flex-col justify-end gap-3 max-[680px]:gap-2">
             <p className="m-0 text-[0.84rem] leading-[1.65] text-[var(--muted)] max-[680px]:text-[0.68rem] max-[680px]:leading-[1.4]">
@@ -363,8 +380,12 @@ export function HomePage() {
           className="grid grid-cols-3 gap-[clamp(16px,1.8vw,26px)] max-[860px]:grid-cols-2 max-[680px]:grid-cols-2 max-[680px]:gap-2.5 max-[420px]:gap-2"
           aria-label="NatureMist botanical collection"
         >
-          {products.map((product) => (
-            <ProductCard product={product} key={product.slug} />
+          {products.map((product, index) => (
+            <ProductCard
+              product={product}
+              key={product.slug}
+              eagerImage={!activeProduct && index < 3}
+            />
           ))}
         </div>
       </section>

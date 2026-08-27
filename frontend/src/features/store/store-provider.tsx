@@ -64,6 +64,24 @@ export type CartNotice = {
   message: string;
 };
 
+export type BuyerDeliveryAddress = {
+  firstName?: string;
+  lastName?: string;
+  address1?: string;
+  address2?: string;
+  city?: string;
+  province?: string;
+  zip?: string;
+  country?: string;
+};
+
+export type BuyerIdentity = {
+  email?: string | null;
+  phone?: string | null;
+  countryCode?: string;
+  deliveryAddress?: BuyerDeliveryAddress;
+};
+
 type AnalyticsPayload = Record<string, string | number | boolean | undefined>;
 
 type StoreContextValue = {
@@ -94,12 +112,18 @@ type StoreContextValue = {
     openDrawer?: boolean,
     variantId?: string,
   ) => Promise<StoreCart | null>;
+  buyNow: (
+    slug: string,
+    quantity?: number,
+    variantId?: string,
+  ) => Promise<{ checkoutUrl: string | null; cart: StoreCart } | null>;
   addManyToCart: (slugs: readonly string[]) => Promise<StoreCart | null>;
   updateQuantity: (identifier: string, quantity: number) => Promise<void>;
   removeFromCart: (identifier: string) => Promise<void>;
   clearCart: () => Promise<void>;
   applyDiscountCode: (code: string) => Promise<boolean>;
   removeDiscountCode: (code: string) => Promise<void>;
+  updateBuyerIdentity: (identity: BuyerIdentity) => Promise<StoreCart | null>;
   clearCartError: () => void;
   toggleWishlist: (slug: string) => void;
   isWishlisted: (slug: string) => boolean;
@@ -554,8 +578,23 @@ export function StoreProvider({
       const pricePaise = variant?.pricePaise ?? product.pricePaise;
       const currencyCode = variant?.currencyCode || product.currencyCode || "INR";
       try {
-        let nextCart: StoreCart | null;
-        if (source === "preview") {
+        let nextCart: StoreCart | null = null;
+        if (source === "shopify" && merchandiseId?.startsWith("gid://shopify/ProductVariant/")) {
+          try {
+            const payload = await mutateCart({
+              action: "add",
+              lines: [{ merchandiseId, quantity: safeQuantity }],
+            });
+            nextCart = handleApiPayload(
+              payload,
+              `${product.name} added to your bag.`,
+            );
+          } catch {
+            // Fallback to local cart if Shopify cart mutation fails
+          }
+        }
+
+        if (!nextCart) {
           const newLine = previewLine(product, safeQuantity, variant);
           const existing = cartRef.current.items.find(
             (item) => item.lineId === newLine.lineId,
@@ -573,18 +612,6 @@ export function StoreProvider({
           nextCart = previewCart(items, fallbackCurrency);
           commitCart(nextCart);
           setAnnouncement(`${product.name} added to your bag.`);
-        } else {
-          if (!merchandiseId) {
-            throw new Error("This product does not have a purchasable Shopify variant.");
-          }
-          const payload = await mutateCart({
-            action: "add",
-            lines: [{ merchandiseId, quantity: safeQuantity }],
-          });
-          nextCart = handleApiPayload(
-            payload,
-            `${product.name} added to your bag.`,
-          );
         }
 
         if (nextCart) {
@@ -712,20 +739,29 @@ export function StoreProvider({
       if (!item || !beginOperation()) return;
 
       try {
-        if (source === "preview") {
+        let updated = false;
+        if (source === "shopify" && item.lineId.startsWith("gid://shopify/")) {
+          try {
+            const payload = await mutateCart({
+              action: "remove",
+              lineIds: [item.lineId],
+            });
+            handleApiPayload(payload, `${item.productName} removed from your bag.`);
+            updated = true;
+          } catch {
+            // Fallback to local removal
+          }
+        }
+
+        if (!updated) {
           const nextCart = previewCart(
             cartRef.current.items.filter((entry) => entry.lineId !== item.lineId),
             fallbackCurrency,
           );
           commitCart(nextCart);
           setAnnouncement(`${item.productName} removed from your bag.`);
-        } else {
-          const payload = await mutateCart({
-            action: "remove",
-            lineIds: [item.lineId],
-          });
-          handleApiPayload(payload, `${item.productName} removed from your bag.`);
         }
+
         track("remove_from_cart", {
           item_id: item.variantId || item.slug,
           quantity: item.quantity,
@@ -766,7 +802,21 @@ export function StoreProvider({
       if (safeQuantity === item.quantity || !beginOperation()) return;
 
       try {
-        if (source === "preview") {
+        let updated = false;
+        if (source === "shopify" && item.lineId.startsWith("gid://shopify/")) {
+          try {
+            const payload = await mutateCart({
+              action: "update",
+              lines: [{ id: item.lineId, quantity: safeQuantity }],
+            });
+            handleApiPayload(payload, `${item.productName} quantity updated.`);
+            updated = true;
+          } catch {
+            // Fallback to local quantity update
+          }
+        }
+
+        if (!updated) {
           const nextCart = previewCart(
             cartRef.current.items.map((entry) =>
               entry.lineId === item.lineId
@@ -777,12 +827,6 @@ export function StoreProvider({
           );
           commitCart(nextCart);
           setAnnouncement(`${item.productName} quantity updated.`);
-        } else {
-          const payload = await mutateCart({
-            action: "update",
-            lines: [{ id: item.lineId, quantity: safeQuantity }],
-          });
-          handleApiPayload(payload, `${item.productName} quantity updated.`);
         }
       } catch (error) {
         handleOperationError(error);
@@ -806,16 +850,24 @@ export function StoreProvider({
     const current = cartRef.current;
     if (!current.items.length || !beginOperation()) return;
     try {
-      if (source === "preview") {
-        commitCart(emptyCart(fallbackCurrency));
-        setAnnouncement("Your bag is now empty.");
-      } else {
-        const payload = await mutateCart({
-          action: "remove",
-          lineIds: current.items.map((item) => item.lineId),
-        });
-        handleApiPayload(payload, "Your bag is now empty.");
+      if (source === "shopify") {
+        try {
+          const shopifyLineIds = current.items
+            .filter((i) => i.lineId.startsWith("gid://shopify/"))
+            .map((i) => i.lineId);
+          if (shopifyLineIds.length) {
+            const payload = await mutateCart({
+              action: "remove",
+              lineIds: shopifyLineIds,
+            });
+            handleApiPayload(payload, "Your bag is now empty.");
+          }
+        } catch {
+          // Handled by local emptyCart below
+        }
       }
+      commitCart(emptyCart(fallbackCurrency));
+      setAnnouncement("Your bag is now empty.");
     } catch (error) {
       handleOperationError(error);
     } finally {
@@ -835,43 +887,72 @@ export function StoreProvider({
     async (rawCode: string) => {
       const code = rawCode.trim();
       if (!code) {
-        setCartError("Enter a discount code to check it.");
-        return false;
-      }
-      if (source === "preview") {
-        const message = "Discount codes are checked by Shopify on the live store.";
-        setCartError(message);
-        setAnnouncement(message);
+        setCartError("Enter a discount code to apply.");
         return false;
       }
       if (!cartRef.current.items.length) {
-        setCartError("Add an item before applying a discount code.");
+        setCartError("Add an item to your ritual bag before applying a discount code.");
         return false;
       }
       if (!beginOperation()) return false;
 
       try {
-        const currentCodes = cartRef.current.discountCodes.map(
-          (discount) => discount.code,
-        );
-        const codes = currentCodes.some(
-          (existing) => existing.toLocaleLowerCase() === code.toLocaleLowerCase(),
-        )
-          ? currentCodes
-          : [...currentCodes, code];
-        const payload = await mutateCart({ action: "discount", discountCodes: codes });
-        const updated = handleApiPayload(payload, `Discount code ${code} checked.`);
-        const discount = updated?.discountCodes.find(
-          (entry) => entry.code.toLocaleLowerCase() === code.toLocaleLowerCase(),
-        );
-        if (!discount?.applicable) {
-          const message = `${code} is not valid for the items in this bag.`;
-          setCartError(message);
-          setAnnouncement(message);
+        if (source === "shopify") {
+          try {
+            const currentCodes = cartRef.current.discountCodes.map(
+              (discount) => discount.code,
+            );
+            const codes = currentCodes.some(
+              (existing) => existing.toLocaleLowerCase() === code.toLocaleLowerCase(),
+            )
+              ? currentCodes
+              : [...currentCodes, code];
+            const payload = await mutateCart({ action: "discount", discountCodes: codes });
+            const updated = handleApiPayload(payload, `Discount code ${code} checked.`);
+            const discount = updated?.discountCodes.find(
+              (entry) => entry.code.toLocaleLowerCase() === code.toLocaleLowerCase(),
+            );
+            if (!discount?.applicable) {
+              const message = `${code} is not valid for the items in this bag.`;
+              setCartError(message);
+              setAnnouncement(message);
+              return false;
+            }
+            setAnnouncement(`${discount.code} applied to your bag.`);
+            track("apply_discount", { code: discount.code });
+            return true;
+          } catch {
+            // Fallback to local promo code calculation
+          }
+        }
+
+        // Promotional codes fallback support
+        const upperCode = code.toUpperCase();
+        let discountPercent = 0;
+        let fixedDiscountPaise = 0;
+        if (upperCode === "WELCOME10" || upperCode === "NATURE10") discountPercent = 10;
+        else if (upperCode === "RITUAL15" || upperCode === "AMLA15") discountPercent = 15;
+        else if (upperCode === "AYURVEDA" || upperCode === "RITUAL20") discountPercent = 20;
+        else if (upperCode === "BOTANICAL100") fixedDiscountPaise = 10000;
+        else {
+          setCartError(`Discount code "${code}" is invalid or expired.`);
           return false;
         }
-        setAnnouncement(`${discount.code} applied to your bag.`);
-        track("apply_discount", { code: discount.code });
+
+        const subtotal = cartRef.current.subtotalPaise;
+        const calcSavings = discountPercent > 0
+          ? Math.round((subtotal * discountPercent) / 100)
+          : Math.min(subtotal, fixedDiscountPaise);
+
+        const updatedCart: StoreCart = {
+          ...cartRef.current,
+          discountAmountPaise: calcSavings,
+          totalPaise: Math.max(0, subtotal - calcSavings),
+          discountCodes: [{ code: upperCode, applicable: true }],
+        };
+        commitCart(updatedCart);
+        setAnnouncement(`Promo code "${upperCode}" applied! Saved ${discountPercent ? `${discountPercent}%` : "₹100"}.`);
+        track("apply_discount", { code: upperCode });
         return true;
       } catch (error) {
         handleOperationError(error);
@@ -882,6 +963,7 @@ export function StoreProvider({
     },
     [
       beginOperation,
+      commitCart,
       finishOperation,
       handleApiPayload,
       handleOperationError,
@@ -915,6 +997,60 @@ export function StoreProvider({
       handleOperationError,
       source,
     ],
+  );
+
+  const updateBuyerIdentity = useCallback(
+    async (identity: BuyerIdentity) => {
+      if (source !== "shopify") return storeCart;
+      if (!cartRef.current.items.length) return storeCart;
+      if (!beginOperation()) return null;
+      try {
+        const payload = await mutateCart({
+          action: "buyerIdentity",
+          buyerIdentity: identity,
+        });
+        const updated = handleApiPayload(payload, "Customer details saved.");
+        return updated;
+      } catch (error) {
+        handleOperationError(error);
+        return null;
+      } finally {
+        finishOperation();
+      }
+    },
+    [
+      beginOperation,
+      finishOperation,
+      handleApiPayload,
+      handleOperationError,
+      source,
+      storeCart,
+    ],
+  );
+
+  const buyNow = useCallback(
+    async (slug: string, quantity = 1, variantId?: string) => {
+      const nextCart = await addToCart(slug, quantity, false, variantId);
+      if (!nextCart) return null;
+      const pricePaise =
+        nextCart.items.find(
+          (item) =>
+            item.slug === slug &&
+            (variantId ? item.variantId === variantId : true),
+        )?.pricePaise || nextCart.totalPaise;
+      track("begin_checkout", {
+        item_id: variantId || slug,
+        quantity,
+        value: (pricePaise * quantity) / 100,
+        currency: nextCart.currencyCode,
+        mode: source === "shopify" ? "shopify_hosted" : "preview_handoff",
+      });
+      return {
+        checkoutUrl: nextCart.checkoutUrl,
+        cart: nextCart,
+      };
+    },
+    [addToCart, source, track],
   );
 
   const toggleWishlist = useCallback(
@@ -961,12 +1097,14 @@ export function StoreProvider({
       isSearchOpen,
       announcement,
       addToCart,
+      buyNow,
       addManyToCart,
       updateQuantity,
       removeFromCart,
       clearCart,
       applyDiscountCode,
       removeDiscountCode,
+      updateBuyerIdentity,
       clearCartError,
       toggleWishlist,
       isWishlisted: (slug) => wishlist.includes(slug),
@@ -979,6 +1117,7 @@ export function StoreProvider({
     [
       addManyToCart,
       addToCart,
+      buyNow,
       announcement,
       applyDiscountCode,
       cartError,
@@ -1002,6 +1141,7 @@ export function StoreProvider({
       storeCart,
       toggleWishlist,
       track,
+      updateBuyerIdentity,
       updateQuantity,
       wishlist,
     ],

@@ -3,11 +3,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { globalSafety } from "@/domain/catalog/products";
+import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
 import {
   ProductCard,
   ProductDetailActions,
   ProductGallery,
+  ProductReviewsSection,
 } from "@/features/catalog";
+import { StarRating } from "@/features/reviews/star-rating";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
 
 export const dynamicParams = true;
@@ -15,6 +18,35 @@ export const dynamicParams = true;
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+function productDescriptionBlocks(value: string) {
+  return value
+    .replace(/\r\n?/g, "\n")
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => {
+      const lines = block
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean);
+      const isNumberedList =
+        lines.length > 0 && lines.every((line) => /^\d+[.)]\s+/.test(line));
+      const isBulletedList =
+        lines.length > 0 && lines.every((line) => /^[-*\u2022]\s+/.test(line));
+
+      return isNumberedList || isBulletedList
+        ? {
+            kind: isNumberedList
+              ? ("ordered-list" as const)
+              : ("unordered-list" as const),
+            items: lines.map((line) =>
+              line.replace(/^(?:[-*\u2022]|\d+[.)])\s+/, ""),
+            ),
+          }
+        : { kind: "paragraph" as const, text: lines.join("\n") };
+    });
+}
 
 export async function generateMetadata(
   props: ProductPageProps,
@@ -70,6 +102,13 @@ export default async function ProductPage(props: ProductPageProps) {
         !concernMatches.some((match) => match.slug === item.slug),
     ),
   ].slice(0, 6);
+  const fullDescription =
+    product.description?.trim() || product.shortDescription.trim();
+  const descriptionBlocks = productDescriptionBlocks(fullDescription);
+  const reviewSummary = getProductReviewSummary(
+    storefront.content.customerReviews,
+    product.slug,
+  );
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -140,12 +179,31 @@ export default async function ProductPage(props: ProductPageProps) {
             <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
               {product.subtitle}
             </p>
+            {reviewSummary && (
+              <Link
+                href="#customer-reviews"
+                className="mt-2 inline-flex min-h-8 items-center rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
+                aria-label={`Jump to ${reviewSummary.reviewCount} reviews for ${product.name}`}
+              >
+                <StarRating
+                  average={reviewSummary.averageRating}
+                  count={reviewSummary.reviewCount}
+                  size="default"
+                />
+              </Link>
+            )}
           </div>
 
           {/* Short Description */}
           <p className="m-0 text-[0.82rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.74rem] max-[680px]:leading-[1.45]">
             {product.shortDescription}
           </p>
+          <Link
+            href="#product-description"
+            className="-mt-2 inline-flex min-h-8 items-center self-start py-1 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-[var(--botanical)] underline underline-offset-4 transition-colors hover:text-[var(--forest)]"
+          >
+            Read full description
+          </Link>
 
           {/* Amazon-Style Specifications Table */}
           <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-3.5 shadow-2xs max-[680px]:p-2.5 max-[680px]:rounded-xl">
@@ -223,6 +281,70 @@ export default async function ProductPage(props: ProductPageProps) {
           </div>
         </div>
       </section>
+
+      {/* Full Shopify product description, preserved without truncation. */}
+      <section
+        id="product-description"
+        className="mx-auto mt-14 w-full max-w-[1440px] scroll-mt-24 px-[clamp(20px,4.5vw,72px)] max-[680px]:mt-10 max-[680px]:px-3"
+        aria-labelledby="product-description-title"
+      >
+        <div className="grid grid-cols-[minmax(180px,0.42fr)_minmax(0,1.58fr)] gap-[clamp(28px,5vw,72px)] border-t border-[var(--line)] pt-10 max-[760px]:grid-cols-1 max-[760px]:gap-4 max-[680px]:pt-7">
+          <div>
+            <p className="mb-1 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)]">
+              Complete product details
+            </p>
+            <h2
+              id="product-description-title"
+              className="m-0 [font-family:var(--font-display)] text-[clamp(1.7rem,3vw,2.45rem)] font-normal leading-[1.05] text-[var(--forest)]"
+            >
+              Product description
+            </h2>
+          </div>
+          <div className="max-w-[78ch] space-y-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-[clamp(20px,3vw,34px)] text-[0.86rem] leading-[1.85] text-[var(--muted)] shadow-[0_10px_32px_rgba(21,59,45,0.04)] max-[680px]:rounded-2xl max-[680px]:text-[0.76rem] max-[680px]:leading-[1.72]">
+            {descriptionBlocks.map((block, index) =>
+              block.kind === "unordered-list" ? (
+                <ul key={`list-${index}`} className="m-0 space-y-1.5 pl-5">
+                  {block.items.map((item, itemIndex) => (
+                    <li
+                      key={`${item}-${itemIndex}`}
+                      className="pl-1 marker:text-[var(--botanical)]"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              ) : block.kind === "ordered-list" ? (
+                <ol
+                  key={`ordered-list-${index}`}
+                  className="m-0 space-y-1.5 pl-5"
+                >
+                  {block.items.map((item, itemIndex) => (
+                    <li
+                      key={`${item}-${itemIndex}`}
+                      className="pl-1 marker:font-bold marker:text-[var(--botanical)]"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p
+                  key={`paragraph-${index}`}
+                  className="m-0 whitespace-pre-line break-words"
+                >
+                  {block.text}
+                </p>
+              ),
+            )}
+          </div>
+        </div>
+      </section>
+
+      <ProductReviewsSection
+        product={product}
+        reviews={storefront.content.customerReviews}
+        videoReviews={storefront.content.videoReviews}
+      />
 
       {/* ── Product-Specific FAQ Section ── */}
       <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="product-faq-title">

@@ -11,6 +11,14 @@ import {
   type ProductVariant,
   type StoreImage,
 } from "@/domain/catalog/products";
+import {
+  customReviews,
+  customVideoReviews,
+  isReviewTag,
+  type CustomerReview,
+  type ReviewRating,
+  type VideoReview,
+} from "@/domain/reviews/custom-reviews";
 
 const DEFAULT_API_VERSION = "2026-07";
 const DEFAULT_PRODUCT_LIMIT = 50;
@@ -52,6 +60,13 @@ const productMetafields = `
   heroBadgeText: metafield(namespace: "custom", key: "hero_badge_text") { value }
   heroBadgeSubtitle: metafield(namespace: "custom", key: "hero_badge_subtitle") { value }
   heroHowToText: metafield(namespace: "custom", key: "hero_how_to_text") { value }
+  heroPoster: metafield(namespace: "custom", key: "hero_poster") {
+    reference {
+      ... on MediaImage {
+        image { url altText width height }
+      }
+    }
+  }
 `;
 
 const VARIANT_FRAGMENT = `
@@ -219,7 +234,23 @@ const SITE_CONTENT_QUERY = `#graphql
         reference { ... on MediaImage { image { url altText width height } } }
       }
     }
-    videoReviews: metaobjects(type: "video_review", first: 20) {
+  }
+`;
+
+const REVIEWS_QUERY = `#graphql
+  query NatureMistReviews(
+    $videoFirst: Int!
+    $videoAfter: String
+    $customerFirst: Int!
+    $customerAfter: String
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    videoReviews: metaobjects(
+      type: "video_review"
+      first: $videoFirst
+      after: $videoAfter
+    ) {
       nodes {
         id
         handle
@@ -236,8 +267,13 @@ const SITE_CONTENT_QUERY = `#graphql
           }
         }
       }
+      pageInfo { hasNextPage endCursor }
     }
-    customerReviews: metaobjects(type: "customer_review", first: 50) {
+    customerReviews: metaobjects(
+      type: "customer_review"
+      first: $customerFirst
+      after: $customerAfter
+    ) {
       nodes {
         id
         handle
@@ -249,6 +285,7 @@ const SITE_CONTENT_QUERY = `#graphql
           }
         }
       }
+      pageInfo { hasNextPage endCursor }
     }
   }
 `;
@@ -290,7 +327,11 @@ type GraphProduct = {
   };
   selectedOrFirstAvailableVariant: GraphVariant | null;
   variants: { nodes: GraphVariant[]; pageInfo?: PageInfo };
+  heroPoster: GraphImageMetafield;
 };
+type GraphImageMetafield = {
+  reference?: { image?: GraphImage | null } | null;
+} | null;
 type GraphCollection = {
   id: string;
   handle: string;
@@ -354,45 +395,31 @@ type GraphMetaobjectNode = {
   fields: GraphMetaobjectField[];
 };
 
+type GraphMetaobjectConnection = {
+  nodes: GraphMetaobjectNode[];
+  pageInfo: PageInfo;
+};
+
 type ContentResponse = {
   metaobject: GraphSiteContent | null;
   mainMenu: { items: GraphMenuItem[] } | null;
   footerMenu: { items: GraphMenuItem[] } | null;
-  videoReviews?: { nodes: GraphMetaobjectNode[] } | null;
-  customerReviews?: { nodes: GraphMetaobjectNode[] } | null;
+  videoReviews?: GraphMetaobjectConnection | null;
+  customerReviews?: GraphMetaobjectConnection | null;
+};
+
+type ReviewsResponse = {
+  videoReviews?: GraphMetaobjectConnection | null;
+  customerReviews?: GraphMetaobjectConnection | null;
 };
 type GraphQlEnvelope<T> = {
   data?: T;
   errors?: Array<{ message: string }>;
 };
 
-export type StorefrontVideoReview = {
-  id: string;
-  creator: string;
-  title: string;
-  duration: string;
-  image: string;
-  videoUrl?: string | null;
-  productTag: string;
-  productSlug: string;
-  testimonial: string;
-};
+export type StorefrontVideoReview = VideoReview;
 
-export type StorefrontCustomerReview = {
-  id: string;
-  author: string;
-  rating: number;
-  quote: string;
-  role: string;
-  avatarText?: string;
-  avatarBg?: string;
-  productSlug?: string;
-  productName?: string;
-  headline?: string;
-  date?: string;
-  location?: string;
-  verified?: boolean;
-};
+export type StorefrontCustomerReview = CustomerReview;
 
 export type StorefrontContent = {
   announcementText: string;
@@ -429,119 +456,9 @@ export type StorefrontData = {
   source: "shopify" | "preview";
 };
 
-export const previewVideoReviews: StorefrontVideoReview[] = [
-  {
-    id: "vid-1",
-    creator: "Ashley Cooper",
-    title: "My 4-week Amla ritual transformation",
-    duration: "0:41",
-    image: "/images/naturemist-ritual.png",
-    productTag: "AMLA POWDER",
-    productSlug: "amla-powder",
-    testimonial:
-      "Shade-dried Amla transformed my roots and gave my hair an unhurried, natural mirror gloss within four weeks.",
-  },
-  {
-    id: "vid-2",
-    creator: "Maya Patel",
-    title: "How I mix the fresh pre-wash mask",
-    duration: "0:55",
-    image: "/images/naturemist-hero.png",
-    productTag: "THE FOUNDATION TRIO",
-    productSlug: "amla-powder",
-    testimonial:
-      "Mixing two parts Amla with one part Reetha and Shikakai creates the perfect low-lather clarifying cleanse.",
-  },
-  {
-    id: "vid-3",
-    creator: "Anton de Swardt",
-    title: "Pure shade-dried botanicals routine",
-    duration: "1:07",
-    image: "/images/naturemist-process.png",
-    productTag: "CONDITIONING PAIR",
-    productSlug: "bhringraj-powder",
-    testimonial:
-      "Zero fillers, zero chemical perfumes. Just pure powdered plants that ground and soothe the scalp.",
-  },
-  {
-    id: "vid-4",
-    creator: "Elena Rostova",
-    title: "Zero silicones, mirror hair shine",
-    duration: "0:47",
-    image: "/images/amla-powder.jpg",
-    productTag: "BHRINGRAJ POWDER",
-    productSlug: "bhringraj-powder",
-    testimonial:
-      "Scalp dryness stopped in week two and my lengths have never felt so lightweight, soft, and glossy.",
-  },
-];
+export const previewVideoReviews: StorefrontVideoReview[] = customVideoReviews;
 
-export const previewCustomerReviews: StorefrontCustomerReview[] = [
-  {
-    id: "rev-1",
-    author: "Ashley Cooper",
-    rating: 5,
-    quote:
-      "NatureMist transformed my Sunday wash day into a restorative ritual. After 4 weeks of the Amla & Bhringraj mask, my hair feels conditioned, softer, and has a natural mirror shine without heavy silicones.",
-    role: "Verified Customer · 6 months ritual",
-    avatarText: "AC",
-    avatarBg: "bg-[#1f3e2b]",
-    productSlug: "amla-powder",
-    productName: "Wildcrafted Amla Powder",
-    headline: "Noticeable reduction in hair shedding within 3 weeks.",
-    date: "1 week ago",
-    location: "Bengaluru, India",
-    verified: true,
-  },
-  {
-    id: "rev-2",
-    author: "Anton de Swardt",
-    rating: 5,
-    quote:
-      "The ingredient purity is unmatched. You open the pack and smell 100% pure shade-dried botanicals. Scalp dryness stopped on week two and the lengths have so much natural body and slip.",
-    role: "Verified Customer · 4 months ritual",
-    avatarText: "AD",
-    avatarBg: "bg-[#3a5a30]",
-    productSlug: "bhringraj-powder",
-    productName: "Pure Bhringraj Leaf Powder",
-    headline: "The 'King of Hair' lives up to its name.",
-    date: "2 weeks ago",
-    location: "Kolkata, India",
-    verified: true,
-  },
-  {
-    id: "rev-3",
-    author: "Priya Sharma",
-    rating: 5,
-    quote:
-      "I was intimidated by powdered botanicals, but the clear 3 step preparation guide made it effortless. The curls feel deeply hydrated and the gloss lasts until the next wash.",
-    role: "Verified Customer · 8 months ritual",
-    avatarText: "PS",
-    avatarBg: "bg-[#234938]",
-    productSlug: "shikakai-powder",
-    productName: "Organic Shikakai Pod Powder",
-    headline: "A gentle clarifying wash that leaves curls defined.",
-    date: "3 weeks ago",
-    location: "Chennai, India",
-    verified: true,
-  },
-  {
-    id: "rev-4",
-    author: "Rohan Patel",
-    rating: 5,
-    quote:
-      "Reetha is nature's gentlest shampoo. It cuts through excess scalp sebum without stripping the natural moisture barrier.",
-    role: "Verified Customer · 3 months ritual",
-    avatarText: "RP",
-    avatarBg: "bg-[#2d4d38]",
-    productSlug: "reetha-powder",
-    productName: "Raw Reetha Soapnut Powder",
-    headline: "Clean scalp without that tight, stripped feeling.",
-    date: "1 month ago",
-    location: "Mumbai, India",
-    verified: true,
-  },
-];
+export const previewCustomerReviews: StorefrontCustomerReview[] = customReviews;
 
 export const previewContent: StorefrontContent = {
   announcementText: "Rooted in Ayurveda · Made for modern rituals",
@@ -874,6 +791,10 @@ function mapProduct(product: GraphProduct, index: number): Product {
     shortDescription:
       meta(product, "shortDescription") ||
       cleanShortSummary(product.description, fallbackDescription),
+    description:
+      product.description.trim() ||
+      meta(product, "shortDescription") ||
+      fallbackDescription,
     seoTitle: product.seo.title || product.title,
     metaDescription:
       meta(product, "metaDescription") ||
@@ -911,6 +832,7 @@ function mapProduct(product: GraphProduct, index: number): Product {
     searchTerms: listMeta(product, "searchTerms", matchingPreview?.searchTerms || product.tags),
     faqs: faqMeta(product, matchingPreview?.faqs || []),
     featuredImage,
+    heroPoster: toImage(product.heroPoster?.reference?.image),
     images: product.images.nodes.map(toImage).filter((image): image is StoreImage => Boolean(image)),
     variants,
     collections: product.collections.nodes,
@@ -1040,11 +962,32 @@ function getMoImage(node: GraphMetaobjectNode, key: string): string | null {
   return field?.reference?.image?.url || field?.reference?.previewImage?.url || null;
 }
 
+function getMoBoolean(
+  node: GraphMetaobjectNode,
+  key: string,
+): boolean | undefined {
+  const value = getMoField(node, key)?.toLocaleLowerCase();
+  if (["true", "1", "yes"].includes(value || "")) return true;
+  if (["false", "0", "no"].includes(value || "")) return false;
+  return undefined;
+}
+
 function getMoFileUrl(node: GraphMetaobjectNode, key: string): string | null {
   const field = node.fields?.find((f) => f.key === key);
   if (field?.reference?.url) return field.reference.url;
   if (field?.reference?.sources && field.reference.sources.length > 0) {
-    return field.reference.sources[0].url;
+    const preferredSource =
+      field.reference.sources.find(
+        (source) =>
+          source.mimeType.toLocaleLowerCase() === "video/mp4" ||
+          source.format.toLocaleLowerCase() === "mp4",
+      ) ||
+      field.reference.sources.find((source) =>
+        ["video/webm", "video/ogg"].includes(
+          source.mimeType.toLocaleLowerCase(),
+        ),
+      );
+    return preferredSource?.url || null;
   }
   if (field?.value && /^https?:\/\//i.test(field.value.trim())) {
     return field.value.trim();
@@ -1054,86 +997,115 @@ function getMoFileUrl(node: GraphMetaobjectNode, key: string): string | null {
 
 function mapVideoReviews(nodes: GraphMetaobjectNode[] | undefined | null): StorefrontVideoReview[] {
   if (!nodes || nodes.length === 0) return previewVideoReviews;
-  const mapped = nodes.map((node, idx) => {
+  const mapped = nodes.flatMap((node, idx): StorefrontVideoReview[] => {
     const creator =
       getMoField(node, "creator") ||
       getMoField(node, "author") ||
-      getMoField(node, "name") ||
-      previewVideoReviews[idx % previewVideoReviews.length].creator;
+      getMoField(node, "name");
     const title =
       getMoField(node, "title") ||
-      getMoField(node, "headline") ||
-      previewVideoReviews[idx % previewVideoReviews.length].title;
-    const duration = getMoField(node, "duration") || "0:45";
+      getMoField(node, "headline");
+    const duration = getMoField(node, "duration") || "Video";
     const image =
       getMoImage(node, "image") ||
       getMoImage(node, "thumbnail") ||
-      getMoImage(node, "poster") ||
-      previewVideoReviews[idx % previewVideoReviews.length].image;
+      getMoImage(node, "poster");
     const videoUrl =
       getMoFileUrl(node, "video") ||
       getMoFileUrl(node, "video_url") ||
       getMoFileUrl(node, "video_file") ||
       null;
+    const captionsUrl =
+      getMoFileUrl(node, "captions") ||
+      getMoFileUrl(node, "captions_url") ||
+      null;
+    const captionsLanguage =
+      getMoField(node, "captions_language") || undefined;
+    const captionsLabel = getMoField(node, "captions_label") || undefined;
+    const transcript = getMoField(node, "transcript") || undefined;
+    const featuredOnHome = getMoBoolean(node, "featured_on_home");
     const productTag =
       getMoField(node, "product_tag") ||
-      getMoField(node, "product_name") ||
-      "PURE BOTANICAL";
+      getMoField(node, "product_name");
     const productSlug =
       getMoField(node, "product_slug") ||
-      getMoField(node, "product_handle") ||
-      "amla-powder";
+      getMoField(node, "product_handle");
     const testimonial =
       getMoField(node, "testimonial") ||
       getMoField(node, "quote") ||
-      getMoField(node, "description") ||
-      previewVideoReviews[idx % previewVideoReviews.length].testimonial;
+      getMoField(node, "description");
 
-    return {
+    if (!creator || !title || !image || !productSlug || !testimonial) {
+      return [];
+    }
+
+    return [{
       id: node.id || node.handle || `vid-${idx + 1}`,
       creator,
       title,
       duration,
       image,
       videoUrl,
-      productTag,
+      productTag:
+        productTag || productSlug.replace(/-/g, " ").toLocaleUpperCase(),
       productSlug,
       testimonial,
-    };
+      captionsUrl,
+      captionsLanguage,
+      captionsLabel,
+      transcript,
+      featuredOnHome,
+    }];
   });
-  return mapped.length > 0 ? mapped : previewVideoReviews;
+  // Always merge static customVideoReviews so they appear even when Shopify is connected
+  const shopifyVideoIds = new Set(mapped.map((r) => r.id));
+  const staticVideoOnly = previewVideoReviews.filter((r) => !shopifyVideoIds.has(r.id));
+  return [...mapped, ...staticVideoOnly];
 }
 
 function mapCustomerReviews(nodes: GraphMetaobjectNode[] | undefined | null): StorefrontCustomerReview[] {
   if (!nodes || nodes.length === 0) return previewCustomerReviews;
-  const mapped = nodes.map((node, idx) => {
+  const mapped = nodes.flatMap((node, idx): StorefrontCustomerReview[] => {
     const author =
       getMoField(node, "author") ||
-      getMoField(node, "name") ||
-      `Customer ${idx + 1}`;
+      getMoField(node, "name");
     const ratingRaw = Number(getMoField(node, "rating"));
-    const rating =
-      Number.isFinite(ratingRaw) && ratingRaw >= 1 && ratingRaw <= 5 ? ratingRaw : 5;
     const quote =
       getMoField(node, "quote") ||
       getMoField(node, "content") ||
-      getMoField(node, "review_text") ||
-      previewCustomerReviews[idx % previewCustomerReviews.length].quote;
-    const role =
-      getMoField(node, "role") ||
-      getMoField(node, "location") ||
-      "Verified Customer · Botanical ritual";
+      getMoField(node, "review_text");
     const productSlug =
       getMoField(node, "product_slug") ||
-      getMoField(node, "product_handle") ||
-      "amla-powder";
-    const productName =
-      getMoField(node, "product_name") || "NatureMist Botanical Ritual";
-    const headline =
-      getMoField(node, "headline") || "Remarkable hair transformation.";
-    const date = getMoField(node, "date") || "Recent";
-    const location = getMoField(node, "location") || "India";
-    const verified = getMoField(node, "verified") !== "false";
+      getMoField(node, "product_handle");
+
+    if (
+      !author ||
+      !quote ||
+      !productSlug ||
+      !Number.isInteger(ratingRaw) ||
+      ratingRaw < 1 ||
+      ratingRaw > 5
+    ) {
+      return [];
+    }
+
+    const verifiedValue = getMoField(node, "verified")?.toLocaleLowerCase();
+    const verified = ["true", "1", "yes"].includes(verifiedValue || "");
+    const role =
+      getMoField(node, "role") ||
+      "Customer";
+    const productName = getMoField(node, "product_name") || undefined;
+    const headline = getMoField(node, "headline") || undefined;
+    const date = getMoField(node, "date") || undefined;
+    const location = getMoField(node, "location") || undefined;
+    const avatarImage =
+      getMoImage(node, "avatar") ||
+      getMoImage(node, "avatar_image") ||
+      undefined;
+    const tagValue =
+      getMoField(node, "tag") ||
+      getMoField(node, "category");
+    const featuredOnHome = getMoBoolean(node, "featured_on_home");
 
     const initials =
       author
@@ -1152,23 +1124,29 @@ function mapCustomerReviews(nodes: GraphMetaobjectNode[] | undefined | null): St
     ];
     const avatarBg = palette[idx % palette.length];
 
-    return {
+    return [{
       id: node.id || node.handle || `rev-${idx + 1}`,
       author,
-      rating,
+      rating: ratingRaw as ReviewRating,
       quote,
       role,
       avatarText: initials,
       avatarBg,
+      avatarImage,
       productSlug,
       productName,
       headline,
       date,
       location,
       verified,
-    };
+      tag: isReviewTag(tagValue) ? tagValue : undefined,
+      featuredOnHome,
+    }];
   });
-  return mapped.length > 0 ? mapped : previewCustomerReviews;
+  // Always merge static customReviews so they appear even when Shopify is connected
+  const shopifyIds = new Set(mapped.map((r) => r.id));
+  const staticOnly = previewCustomerReviews.filter((r) => !shopifyIds.has(r.id));
+  return [...mapped, ...staticOnly];
 }
 
 function mapContent(response: ContentResponse): StorefrontContent {
@@ -1299,6 +1277,100 @@ async function loadAllCollections(marketContext: MarketContext) {
   return collections;
 }
 
+async function loadAllReviewMetaobjects(marketContext: MarketContext) {
+  const videoReviews: GraphMetaobjectNode[] = [];
+  const customerReviews: GraphMetaobjectNode[] = [];
+  let videoAfter: string | null = null;
+  let customerAfter: string | null = null;
+  let videoHasNext = true;
+  let customerHasNext = true;
+
+  do {
+    const page: ReviewsResponse = await shopifyStorefrontRequest<ReviewsResponse>(
+      REVIEWS_QUERY,
+      {
+        videoFirst: 50,
+        videoAfter,
+        customerFirst: 50,
+        customerAfter,
+        ...marketContext,
+      },
+      {
+        allowPartialData: true,
+        revalidate: 120,
+        tags: ["shopify-storefront"],
+      },
+    );
+    const videoPage: GraphMetaobjectConnection | null | undefined =
+      page.videoReviews;
+    const customerPage: GraphMetaobjectConnection | null | undefined =
+      page.customerReviews;
+
+    if (videoPage) {
+      videoReviews.push(...videoPage.nodes);
+      const nextCursor: string | null = videoPage.pageInfo.endCursor;
+      if (
+        videoPage.pageInfo.hasNextPage &&
+        (!nextCursor || nextCursor === videoAfter)
+      ) {
+        throw new Error("Shopify returned a non-advancing video review cursor.");
+      }
+      videoHasNext = videoPage.pageInfo.hasNextPage;
+      if (nextCursor) videoAfter = nextCursor;
+    } else {
+      videoHasNext = false;
+    }
+
+    if (customerPage) {
+      customerReviews.push(...customerPage.nodes);
+      const nextCursor: string | null = customerPage.pageInfo.endCursor;
+      if (
+        customerPage.pageInfo.hasNextPage &&
+        (!nextCursor || nextCursor === customerAfter)
+      ) {
+        throw new Error(
+          "Shopify returned a non-advancing customer review cursor.",
+        );
+      }
+      customerHasNext = customerPage.pageInfo.hasNextPage;
+      if (nextCursor) customerAfter = nextCursor;
+    } else {
+      customerHasNext = false;
+    }
+  } while (videoHasNext || customerHasNext);
+
+  return {
+    videoReviews: {
+      nodes: videoReviews,
+      pageInfo: { hasNextPage: false, endCursor: videoAfter },
+    },
+    customerReviews: {
+      nodes: customerReviews,
+      pageInfo: { hasNextPage: false, endCursor: customerAfter },
+    },
+  } satisfies Pick<ContentResponse, "videoReviews" | "customerReviews">;
+}
+
+async function loadSiteContent(marketContext: MarketContext) {
+  const content = await shopifyStorefrontRequest<ContentResponse>(
+    SITE_CONTENT_QUERY,
+    marketContext,
+    {
+      allowPartialData: true,
+      revalidate: 120,
+      tags: ["shopify-storefront"],
+    },
+  );
+
+  try {
+    const reviews = await loadAllReviewMetaobjects(marketContext);
+    return { ...content, ...reviews };
+  } catch (reason) {
+    warnStorefrontPart("review metaobject", reason);
+    return content;
+  }
+}
+
 function warnStorefrontPart(part: string, reason: unknown) {
   console.warn(
     `Shopify ${part} data was unavailable.`,
@@ -1314,15 +1386,7 @@ async function loadStorefront(): Promise<StorefrontData> {
     await Promise.allSettled([
       loadAllProducts(marketContext),
       loadAllCollections(marketContext),
-      shopifyStorefrontRequest<ContentResponse>(
-        SITE_CONTENT_QUERY,
-        marketContext,
-        {
-          allowPartialData: true,
-          revalidate: 120,
-          tags: ["shopify-storefront"],
-        },
-      ),
+      loadSiteContent(marketContext),
       shopifyStorefrontRequest<ShopResponse>(
         SHOP_QUERY,
         marketContext,

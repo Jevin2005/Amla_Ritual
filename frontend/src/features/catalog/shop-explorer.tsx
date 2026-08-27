@@ -294,8 +294,12 @@ export function ShopExplorer() {
           {/* Product Grid (2-columns on mobile, 3 on desktop) */}
           {filtered.length ? (
             <div className="grid grid-cols-3 gap-4 max-[1140px]:grid-cols-2 max-[680px]:grid-cols-2 max-[680px]:gap-2.5 max-[420px]:gap-2">
-              {filtered.map((product) => (
-                <ProductCard key={product.slug} product={product} />
+              {filtered.map((product, index) => (
+                <ProductCard
+                  key={product.slug}
+                  product={product}
+                  eagerImage={index < 3}
+                />
               ))}
             </div>
           ) : (

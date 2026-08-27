@@ -83,6 +83,7 @@ Use the [product entry form](product-entry-form.md) as the merchant-facing check
 | `color_considerations` | List of single-line text | Hair-colour cautions |
 | `search_terms` | List of single-line text | Extra storefront search words |
 | `faqs` | JSON | Array of `{ "question": "…", "answer": "…" }` |
+| `hero_poster` | File reference, restricted to images | Uploading an image includes the product in the homepage hero; blank keeps it in standard listings only |
 | `hero_eyebrow` | Single-line text | Homepage featured-slide eyebrow |
 | `hero_headline_first` | Single-line text | First headline line |
 | `hero_headline_middle` | Single-line text | Middle headline line |
@@ -94,7 +95,11 @@ Use the [product entry form](product-entry-form.md) as the merchant-facing check
 
 When Shopify is connected, deleted or empty metafields stay empty or use a neutral product-derived label; the original preview claims are never substituted into a live product. Complete every customer-facing and safety field before publishing.
 
-## 4. Promotional posters and announcement bar
+Homepage hero products appear in ascending numeric `custom.collection_number`
+order. Uploading or clearing `custom.hero_poster` controls inclusion without
+changing the product's normal storefront visibility.
+
+## 4. Site content, page posters, and announcement bar
 
 Create a merchant-owned metaobject definition with:
 
@@ -113,7 +118,7 @@ Create one published entry with handle `main` and these fields:
 | `ritual_poster` | File reference, restricted to images |
 | `story_poster` | File reference, restricted to images |
 
-Upload/choose the images through Shopify Files and add useful alt text to each image. The three references control the homepage, Rituals page, and Our Story page posters. Promotional content is refreshed within two minutes even if no webhook reaches the active runtime.
+Upload/choose the images through Shopify Files and add useful alt text to each image. `ritual_poster` and `story_poster` control their named page posters. The existing `home_hero_poster` remains the site social-preview fallback; visible homepage hero posters now come from each product's `custom.hero_poster` field. Metaobject content is refreshed within two minutes even if no webhook reaches the active runtime.
 
 ## 5. Collections, listings, and ritual sets
 
@@ -162,6 +167,7 @@ The storefront supports one-time purchases, Shopify's standard options/variants,
 ## 9. Launch checklist
 
 - Replace preview prices, sizes, and imagery with verified Shopify product data.
+- Confirm every product intended for the homepage hero has an image-only `custom.hero_poster` value with useful alt text, and that catalogue-only products leave it blank.
 - Test every variant, sold-out state, quantity change, discount, market/currency, and checkout on a test order.
 - Confirm shipping profiles, taxes, payments, email receipts, fulfilment, returns, and legal policies in Shopify.
 - Add the production domain to the Headless storefront and Shopify checkout/domain configuration.
@@ -173,13 +179,15 @@ Reference: [Shopify Storefront API setup](https://shopify.dev/docs/storefronts/h
 ## 10. Everyday store management
 
 - **Add or edit a product:** Shopify Admin → Products. Use the pinned NatureMist fields and the [product entry form](product-entry-form.md).
-- **Change a homepage/ritual/story poster:** Shopify Admin → Content → Metaobjects → Storefront content → `main`. Choose a new image from Shopify Files and save.
+- **Feature or remove a product in the homepage hero:** Shopify Admin → Products → open the product → **Homepage hero poster**. Upload/select an image to feature it; clear the image to remove only the hero feature. An active product remains in all standard listings either way.
+- **Change the Rituals/Our Story poster or site social fallback:** Shopify Admin → Content → Metaobjects → Storefront content → `main`. Choose a new image from Shopify Files and save.
 - **Change the announcement:** edit the same `main` metaobject entry.
 - **Change header/footer links:** Shopify Admin → Content → Menus; edit `main-menu` or `footer`.
 - **Create a ritual set:** create/reorder a collection, enable its `custom.display_as_bundle` value, and publish its products to Headless.
 - **Run a promotion:** create the discount in Shopify. The website sends the code to Shopify and shows Shopify's calculated total.
+- **Publish a written or video review:** follow the [review management guide](review-management.md). Use either Shopify metaobjects or the local approved-review file, and always enter the exact Shopify product handle.
 - **Hide a product:** unpublish it from Headless or change it to Draft. Do not delete it simply to hide it.
 - **Process orders, refunds, inventory, fulfillment, taxes, shipping, and payments:** use Shopify Admin; these are never managed in the website code.
 - **Check an update:** allow two minutes for posters/menus and five minutes for catalogue changes if immediate webhook refresh is unavailable.
 
-Reviews are intentionally not invented or stored by this storefront. Install and connect a Shopify-compatible review provider before publishing customer ratings, review counts, or review structured data.
+Reviews are never invented by the storefront. Published `customer_review` and `video_review` metaobjects (or merchant-approved local review entries) power the home page, `/reviews`, the matching product page, and exact-product card ratings. Public customer submission, automatic purchase verification, moderation, and review structured data still require a connected review provider or a dedicated authenticated backend.

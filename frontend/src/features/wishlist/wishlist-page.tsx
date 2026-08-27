@@ -49,7 +49,13 @@ export function WishlistPage() {
         <span className="rounded-full bg-[var(--paper)] px-3 py-1.5 text-[0.66rem] font-bold uppercase tracking-[0.1em] text-[var(--muted)] ring-1 ring-[var(--line)]">Saved on this device</span>
       </div>
       <div className="grid grid-cols-3 gap-[22px] max-[1100px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:[&>*]:w-full [&>article>div:first-child]:h-[clamp(330px,28vw,430px)] max-[680px]:[&>article>div:first-child]:h-[360px]">
-        {savedProducts.map((product) => <ProductCard key={product.slug} product={product} />)}
+        {savedProducts.map((product, index) => (
+          <ProductCard
+            key={product.slug}
+            product={product}
+            eagerImage={index < 3}
+          />
+        ))}
       </div>
     </section>
   );

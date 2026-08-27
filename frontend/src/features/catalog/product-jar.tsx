@@ -34,11 +34,11 @@ export function ProductJar({
     hero: "text-[18px]",
   }[size];
 
-  const imageSizes = {
-    small: "88px",
-    medium: "160px",
-    large: "225px",
-    hero: "195px",
+  const imageDimensions = {
+    small: { width: 88, height: 135 },
+    medium: { width: 160, height: 245 },
+    large: { width: 225, height: 345 },
+    hero: { width: 195, height: 300 },
   }[size];
 
   if (product.featuredImage?.url) {
@@ -52,9 +52,8 @@ export function ProductJar({
         <Image
           src={image.url}
           alt={decorative ? "" : image.altText || `${product.name} product`}
-          width={image.width}
-          height={image.height}
-          sizes={imageSizes}
+          width={imageDimensions.width}
+          height={imageDimensions.height}
           className="h-full w-full object-contain"
         />
       </div>

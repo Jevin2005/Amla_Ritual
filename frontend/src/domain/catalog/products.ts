@@ -54,6 +54,7 @@ export type Product = {
   size: string;
   availability: string;
   shortDescription: string;
+  description?: string;
   metaDescription: string;
   seoTitle?: string;
   ingredient: string;
@@ -74,12 +75,37 @@ export type Product = {
   compareAtPricePaise?: number | null;
   availableForSale?: boolean;
   featuredImage?: StoreImage | null;
+  heroPoster?: StoreImage | null;
   images?: StoreImage[];
   variants?: ProductVariant[];
   collections?: ProductCollection[];
   tags?: string[];
   hero?: ProductHeroContent;
 };
+
+export type HomepageHeroProduct = Product & { heroPoster: StoreImage };
+
+export function getHomepageHeroProducts(
+  catalog: readonly Product[],
+): HomepageHeroProduct[] {
+  return catalog
+    .filter(
+      (product): product is HomepageHeroProduct =>
+        Boolean(product.heroPoster?.url),
+    )
+    .sort((left, right) => {
+      const leftOrder = Number(left.collectionNumber);
+      const rightOrder = Number(right.collectionNumber);
+      const normalizedLeft = Number.isFinite(leftOrder)
+        ? leftOrder
+        : Number.MAX_SAFE_INTEGER;
+      const normalizedRight = Number.isFinite(rightOrder)
+        ? rightOrder
+        : Number.MAX_SAFE_INTEGER;
+
+      return normalizedLeft - normalizedRight;
+    });
+}
 
 export const products: Product[] = [
   {
@@ -128,6 +154,12 @@ export const products: Product[] = [
       altText: "NatureMist Amla Powder 100% Pure Herbal Powder 250g Jar",
       width: 1000,
       height: 1000,
+    },
+    heroPoster: {
+      url: "/images/naturemist-hero.png",
+      altText: "NatureMist Amla botanical hair ritual",
+      width: 1692,
+      height: 930,
     },
     faqs: [
       {

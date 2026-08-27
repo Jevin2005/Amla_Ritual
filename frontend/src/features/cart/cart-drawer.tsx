@@ -357,38 +357,21 @@ export function CartDrawer() {
                   : "Preview pricing only. No order or payment is created in preview mode."}
               </p>
 
-              {source === "shopify" && checkoutUrl && !isCartBusy ? (
-                <a
-                  className={`${darkButtonClass} mt-5 w-full`}
-                  href={checkoutUrl}
-                  onClick={() => {
-                    track("begin_checkout", {
-                      value: totalPaise / 100,
-                      currency: currencyCode,
-                      mode: "shopify_hosted",
-                    });
-                    closeCart();
-                  }}
-                >
-                  Checkout securely with Shopify <span aria-hidden="true">↗</span>
-                </a>
-              ) : source === "preview" ? (
-                <Link
-                  className={`${darkButtonClass} mt-5 w-full`}
-                  href="/checkout"
-                  onClick={closeCart}
-                >
-                  Review preview checkout <span aria-hidden="true">↗</span>
-                </Link>
-              ) : (
-                <button
-                  className={`${darkButtonClass} mt-5 w-full`}
-                  type="button"
-                  disabled
-                >
-                  Checkout is temporarily unavailable
-                </button>
-              )}
+              <Link
+                className={`${darkButtonClass} mt-5 w-full`}
+                href="/checkout"
+                onClick={() => {
+                  track("begin_checkout", {
+                    value: totalPaise / 100,
+                    currency: currencyCode,
+                    mode: "in_app_checkout",
+                  });
+                  closeCart();
+                }}
+              >
+                <span>Proceed to Checkout</span>
+                <span aria-hidden="true">➔</span>
+              </Link>
               <Link
                 className={`mx-auto mt-[18px] flex w-max justify-center ${textLinkClass}`}
                 href="/shop"

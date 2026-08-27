@@ -78,20 +78,15 @@ export function ProductDetailActions({ product }: { product: Product }) {
   const buyNow = async () => {
     setIsBuyingNow(true);
     try {
-      const nextCart = await add(false);
-      if (!nextCart) return;
+      await add(false);
       track("begin_checkout", {
         item_id: selectedVariant?.id || product.slug,
         quantity,
         value: (pricePaise * quantity) / 100,
         currency: currencyCode,
-        mode: source === "shopify" ? "shopify_hosted" : "preview_handoff",
+        mode: "in_app_checkout",
       });
-      if (source === "shopify" && nextCart.checkoutUrl) {
-        window.location.assign(nextCart.checkoutUrl);
-      } else {
-        router.push("/checkout");
-      }
+      router.push("/checkout");
     } finally {
       setIsBuyingNow(false);
     }
@@ -221,20 +216,25 @@ export function ProductDetailActions({ product }: { product: Product }) {
         {/* Secondary Action Row: Buy Now + Wishlist */}
         <div className="grid grid-cols-[1fr_auto] gap-2.5">
           <button
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full border border-[var(--forest)] bg-transparent px-5 text-[0.68rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] transition-all hover:bg-[var(--forest)] hover:text-white active:scale-98 cursor-pointer disabled:opacity-50"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[var(--forest)] px-5 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_6px_18px_rgba(21,59,45,0.18)] transition-all hover:bg-[var(--forest-dark)] active:scale-98 cursor-pointer disabled:opacity-50"
             type="button"
             onClick={() => void buyNow()}
             disabled={isCartBusy || isBuyingNow || !available || maximumQuantity < 1}
           >
-            {isBuyingNow
-              ? "Preparing checkout…"
-              : source === "shopify"
-                ? "Buy Now ↗"
-                : "Direct Checkout Preview ↗"}
+            {isBuyingNow ? (
+              <span className="flex items-center gap-2">
+                <span className="size-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                Preparing Checkout…
+              </span>
+            ) : source === "shopify" ? (
+              <span>Buy Now (Shopify) ↗</span>
+            ) : (
+              <span>Buy Now ➔</span>
+            )}
           </button>
 
           <button
-            className={`inline-flex h-10 items-center justify-center gap-1.5 rounded-full border px-4 text-[0.66rem] font-bold tracking-[0.06em] uppercase transition-all cursor-pointer ${
+            className={`inline-flex h-11 items-center justify-center gap-1.5 rounded-full border px-4 text-[0.66rem] font-bold tracking-[0.06em] uppercase transition-all cursor-pointer ${
               wished
                 ? "border-red-300 bg-red-50 text-red-500"
                 : "border-[var(--line)] bg-[var(--paper)] text-[var(--forest)] hover:bg-[var(--beige)]"
@@ -274,25 +274,25 @@ export function ProductDetailActions({ product }: { product: Product }) {
         typeof document !== "undefined" &&
         createPortal(
           <div
-            className="fixed inset-x-0 bottom-0 z-[9999] hidden max-[960px]:flex items-center justify-between gap-1.5 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(8px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
+            className="fixed inset-x-0 bottom-0 z-[9999] hidden max-[960px]:flex items-center justify-between gap-2 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(10px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
             role="region"
             aria-label="Sticky Purchase Footer"
           >
-            {/* Left Price & Stock Info (Compact, no wrapping) */}
+            {/* Left Price & Stock Info */}
             <div className="flex flex-col shrink-0 min-w-0 pr-1 max-[360px]:pr-0.5">
-              <span className="[font-family:var(--font-display)] text-[1.15rem] font-bold leading-tight text-[var(--forest)] whitespace-nowrap max-[380px]:text-[1.05rem]">
+              <span className="[font-family:var(--font-display)] text-[1.18rem] font-bold leading-tight text-[var(--forest)] whitespace-nowrap max-[380px]:text-[1.02rem]">
                 {formatCurrency(pricePaise, currencyCode)}
               </span>
-              <div className="flex items-center gap-1 text-[0.52rem] font-bold text-[#529d38] uppercase tracking-wider whitespace-nowrap max-[380px]:text-[0.48rem]">
+              <div className="flex items-center gap-1 text-[0.52rem] font-bold text-[#529d38] uppercase tracking-wider whitespace-nowrap max-[380px]:text-[0.46rem]">
                 <span className="size-1.5 rounded-full bg-[#529d38] animate-pulse shrink-0" />
                 <span>{available ? "In Stock" : "Sold Out"}</span>
               </div>
             </div>
 
-            {/* Right Actions Group: Stepper + Add to Bag + Wishlist (Aligned & Proportional) */}
-            <div className="flex items-center gap-1 shrink-0">
-              {/* Stepper (Compact on small phones) */}
-              <div className="inline-flex h-8.5 items-center rounded-full border border-[var(--line)] bg-white px-0.5 shadow-2xs max-[380px]:h-8">
+            {/* Right Actions Group: Add to Bag + Buy Now + Wishlist */}
+            <div className="flex items-center gap-1.5 shrink-0 flex-1 justify-end max-[360px]:gap-1">
+              {/* Stepper (Compact) */}
+              <div className="inline-flex h-9 items-center rounded-full border border-[var(--line)] bg-white px-0.5 shadow-2xs max-[380px]:h-8 max-[480px]:hidden">
                 <button
                   type="button"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -321,17 +321,28 @@ export function ProductDetailActions({ product }: { product: Product }) {
                 type="button"
                 onClick={() => void add(true)}
                 disabled={isCartBusy || !available || maximumQuantity < 1}
-                className="inline-flex h-8.5 items-center justify-center gap-1 rounded-full bg-[#529d38] px-3.5 text-[0.68rem] font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-[#43852d] active:scale-95 cursor-pointer disabled:opacity-50 whitespace-nowrap max-[380px]:h-8 max-[380px]:px-2.5 max-[380px]:text-[0.62rem]"
+                className="inline-flex h-9 items-center justify-center gap-1 rounded-full bg-[#529d38] px-3.5 text-[0.66rem] font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-[#43852d] active:scale-95 cursor-pointer disabled:opacity-50 whitespace-nowrap max-[380px]:h-8 max-[380px]:px-2.5 max-[380px]:text-[0.6rem]"
+                title="Add to Ritual Bag"
               >
                 <span>{isCartBusy ? "..." : added ? "Added ✓" : "Add to Bag"}</span>
-                <span aria-hidden="true">{added ? "" : "＋"}</span>
+              </button>
+
+              {/* Buy Now Button (High conversion direct checkout) */}
+              <button
+                type="button"
+                onClick={() => void buyNow()}
+                disabled={isCartBusy || isBuyingNow || !available || maximumQuantity < 1}
+                className="inline-flex h-9 items-center justify-center gap-1 rounded-full bg-[var(--forest)] px-4 text-[0.68rem] font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(21,59,45,0.2)] transition-all hover:bg-[var(--forest-dark)] active:scale-95 cursor-pointer disabled:opacity-50 whitespace-nowrap max-[380px]:h-8 max-[380px]:px-3 max-[380px]:text-[0.62rem]"
+              >
+                <span>{isBuyingNow ? "Preparing…" : "Buy Now"}</span>
+                <span aria-hidden="true">➔</span>
               </button>
 
               {/* Wishlist Button */}
               <button
                 type="button"
                 onClick={() => toggleWishlist(product.slug)}
-                className={`grid size-8.5 place-items-center rounded-full border text-xs transition-colors cursor-pointer shrink-0 max-[380px]:size-8 ${
+                className={`grid size-9 place-items-center rounded-full border text-xs transition-colors cursor-pointer shrink-0 max-[380px]:size-8 ${
                   wished
                     ? "border-red-300 bg-red-50 text-red-500"
                     : "border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--beige)]"

@@ -4,15 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { formatCurrency, type Product } from "@/domain/catalog/products";
+import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
+import { StarRating } from "@/features/reviews/star-rating";
 import { useStore } from "@/features/store/store-provider";
 
 export function ProductCard({
   product,
+  eagerImage = false,
 }: {
   product: Product;
+  eagerImage?: boolean;
 }) {
-  const { addToCart, toggleWishlist, isWishlisted, track } = useStore();
+  const { addToCart, toggleWishlist, isWishlisted, track, content } = useStore();
   const wished = isWishlisted(product.slug);
+  const reviewSummary = getProductReviewSummary(
+    content.customerReviews,
+    product.slug,
+  );
   const currencyCode = product.currencyCode || "INR";
   const isAvailable = product.availableForSale !== false;
   const compareAtPrice =
@@ -64,6 +72,8 @@ export function ProductCard({
             src={imageUrl}
             alt={imageAlt}
             fill
+            loading={eagerImage ? "eager" : "lazy"}
+            quality={eagerImage ? 82 : 75}
             sizes="(max-width: 680px) 50vw, (max-width: 900px) 50vw, 33vw"
             className="size-full object-cover object-center"
           />
@@ -87,6 +97,26 @@ export function ProductCard({
         <p className="mb-0 text-[0.74rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-1 max-[680px]:text-[0.56rem] max-[680px]:leading-[1.25] max-[420px]:text-[0.5rem]">
           {product.subtitle}
         </p>
+
+        {reviewSummary && (
+          <Link
+            href={`/shop/${product.slug}#customer-reviews`}
+            className="mt-2 inline-flex min-h-7 items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:mt-1 max-[680px]:min-h-8"
+            onClick={() =>
+              track("select_item_reviews", {
+                item_id: product.slug,
+                placement: "product_card",
+              })
+            }
+            aria-label={`Read ${reviewSummary.reviewCount} reviews for ${product.name}`}
+          >
+            <StarRating
+              average={reviewSummary.averageRating}
+              count={reviewSummary.reviewCount}
+              size="compact"
+            />
+          </Link>
+        )}
 
         <div className="mt-auto pt-4 max-[680px]:pt-2">
           <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2">

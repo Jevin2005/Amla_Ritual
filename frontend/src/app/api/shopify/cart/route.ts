@@ -165,6 +165,17 @@ const CART_DISCOUNT_CODES_UPDATE_MUTATION = `#graphql
   ${CART_FRAGMENT}
 `;
 
+const CART_BUYER_IDENTITY_UPDATE_MUTATION = `#graphql
+  mutation NatureMistCartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {
+    cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
+      cart { ...NatureMistCartFields }
+      userErrors { field message code }
+      warnings { code message target }
+    }
+  }
+  ${CART_FRAGMENT}
+`;
+
 type Money = {
   amount: string;
   currencyCode: string;
@@ -247,6 +258,7 @@ type CartLinesAddResponse = { cartLinesAdd: GraphCartPayload };
 type CartLinesUpdateResponse = { cartLinesUpdate: GraphCartPayload };
 type CartLinesRemoveResponse = { cartLinesRemove: GraphCartPayload };
 type CartDiscountResponse = { cartDiscountCodesUpdate: GraphCartPayload };
+type CartBuyerIdentityResponse = { cartBuyerIdentityUpdate: GraphCartPayload };
 
 type CartLineInput = { merchandiseId: string; quantity: number };
 type CartLineUpdate = { id: string; quantity: number };
@@ -501,6 +513,42 @@ function readDiscountCodes(value: unknown): string[] | null {
   });
 }
 
+function readBuyerIdentity(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const input = value as Record<string, unknown>;
+  const email = typeof input.email === "string" && input.email.trim() ? input.email.trim() : null;
+  const phone = typeof input.phone === "string" && input.phone.trim() ? input.phone.trim() : null;
+  const countryCode =
+    typeof input.countryCode === "string" && input.countryCode.trim()
+      ? input.countryCode.trim().toUpperCase()
+      : process.env.SHOPIFY_DEFAULT_COUNTRY?.trim().toUpperCase() || "IN";
+
+  const address = input.deliveryAddress as Record<string, unknown> | undefined;
+  const deliveryAddressPreferences = address && typeof address === "object"
+    ? [
+        {
+          deliveryAddress: {
+            firstName: typeof address.firstName === "string" ? address.firstName.trim() : "",
+            lastName: typeof address.lastName === "string" ? address.lastName.trim() : "",
+            address1: typeof address.address1 === "string" ? address.address1.trim() : "",
+            address2: typeof address.address2 === "string" ? address.address2.trim() : "",
+            city: typeof address.city === "string" ? address.city.trim() : "",
+            province: typeof address.province === "string" ? address.province.trim() : "",
+            zip: typeof address.zip === "string" ? address.zip.trim() : "",
+            country: countryCode,
+          },
+        },
+      ]
+    : undefined;
+
+  return {
+    email,
+    phone,
+    countryCode,
+    ...(deliveryAddressPreferences ? { deliveryAddressPreferences } : {}),
+  };
+}
+
 async function payloadResponse(payload: GraphCartPayload, ip: string | null) {
   const userErrors = normalizeIssues(payload.userErrors);
   const warnings = normalizeIssues(payload.warnings || []);
@@ -665,6 +713,17 @@ export async function POST(request: NextRequest) {
         { buyerIp: ip },
       );
       return payloadResponse(data.cartDiscountCodesUpdate, ip);
+    }
+
+    if (action === "buyerIdentity") {
+      const buyerIdentity = readBuyerIdentity(body.buyerIdentity);
+      if (!buyerIdentity) return json({ error: "The buyer identity details are invalid." }, 400);
+      const data = await shopifyStorefrontRequest<CartBuyerIdentityResponse>(
+        CART_BUYER_IDENTITY_UPDATE_MUTATION,
+        { cartId, buyerIdentity },
+        { buyerIp: ip },
+      );
+      return payloadResponse(data.cartBuyerIdentityUpdate, ip);
     }
 
     return json({ error: "This cart action is not supported." }, 400);
