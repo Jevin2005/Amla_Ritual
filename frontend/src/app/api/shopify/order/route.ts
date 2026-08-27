@@ -32,6 +32,7 @@ type OrderRequestPayload = {
   totalPaise: number;
   currencyCode?: string;
   discountCode?: string;
+  razorpayPaymentId?: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -47,9 +48,32 @@ export async function POST(req: NextRequest) {
 
     const domain =
       process.env.SHOPIFY_STORE_DOMAIN || "amla-ritual.myshopify.com";
-    const adminToken =
-      process.env.SHOPIFY_ADMIN_API_TOKEN ||
-      process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN;
+
+    // ── Permanent Token Resolution (Auto-Refreshes Forever via Client ID + Secret) ──
+    let adminToken = process.env.SHOPIFY_ADMIN_API_TOKEN || null;
+
+    if (!adminToken && process.env.SHOPIFY_CLIENT_ID && (process.env.SHOPIFY_CLIENT_SECRET || process.env.SHOPIFY_APP_SECRET)) {
+      try {
+        const clientSecret = process.env.SHOPIFY_CLIENT_SECRET || process.env.SHOPIFY_APP_SECRET;
+        const tokenRes = await fetch(`https://${domain}/admin/oauth/access_token`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            client_id: process.env.SHOPIFY_CLIENT_ID.trim(),
+            client_secret: clientSecret?.trim(),
+            grant_type: "client_credentials",
+          }),
+        });
+        if (tokenRes.ok) {
+          const tokenData = await tokenRes.json();
+          if (tokenData?.access_token) {
+            adminToken = tokenData.access_token;
+          }
+        }
+      } catch (authErr) {
+        console.warn("[Shopify Auto-Auth Note]:", authErr);
+      }
+    }
 
     const randomSuffix = Math.floor(10000 + Math.random() * 90000);
     let orderId = `NMR-2026-${randomSuffix}`;
@@ -60,15 +84,15 @@ export async function POST(req: NextRequest) {
     // ── Attempt Shopify Admin Order API Creation ──
     if (domain && adminToken) {
       try {
-        const financialStatus =
-          payload.paymentMethod === "cod" ? "pending" : "paid";
+        const isPaid = payload.paymentMethod !== "cod";
+        const financialStatus = isPaid ? "paid" : "pending";
 
         const paymentGatewayName =
           payload.paymentMethod === "cod"
             ? "Cash on Delivery (COD)"
-            : payload.paymentMethod === "upi"
-              ? "Instant UPI Transfer"
-              : "Online Debit/Credit Card";
+            : payload.razorpayPaymentId
+              ? `Razorpay Net Banking / Online (Ref: ${payload.razorpayPaymentId})`
+              : "Razorpay Net Banking & UPI";
 
         const rawPhone = payload.customer.phone.replace(/\D/g, "");
         const formattedPhone = rawPhone.length >= 10 ? `+91${rawPhone.slice(-10)}` : rawPhone;
@@ -81,8 +105,12 @@ export async function POST(req: NextRequest) {
             fulfillment_status: null,
             send_receipt: true,
             send_fulfillment_receipt: true,
-            note: `NatureMist In-App Ritual Checkout · Payment: ${paymentGatewayName}`,
-            tags: `NatureMist, In-App-Checkout, ${payload.paymentMethod.toUpperCase()}`,
+            note: `NatureMist Ritual Checkout · Payment: ${paymentGatewayName}${
+              payload.razorpayPaymentId ? ` · Razorpay ID: ${payload.razorpayPaymentId}` : ""
+            }`,
+            tags: `NatureMist, In-App-Checkout, ${payload.paymentMethod.toUpperCase()}${
+              payload.razorpayPaymentId ? `, RZP_${payload.razorpayPaymentId}` : ""
+            }`,
             customer: {
               first_name: payload.customer.firstName.trim(),
               last_name: payload.customer.lastName.trim(),

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Script from "next/script";
 import { useStore } from "@/features/store/store-provider";
 
 export type CheckoutFormData = {
@@ -117,7 +118,7 @@ export function CheckoutForm({
     country: "India",
     saveAddress: true,
     shippingMethod: "standard",
-    paymentMethod: "cod",
+    paymentMethod: "shopify",
     upiId: "",
   });
 
@@ -247,7 +248,184 @@ export function CheckoutForm({
         }
       }
 
-      // 2. Submit order to /api/shopify/order
+      // ── IN-APP DIRECT PAYMENT (RAZORPAY MODAL: NET BANKING, UPI, CARDS) ──
+      if (formData.paymentMethod === "shopify" || formData.paymentMethod === "upi") {
+        const razorpayKey =
+          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+          process.env.RAZORPAY_KEY_ID ||
+          "rzp_test_TUl9QJD7dQZhX6";
+
+        // Function to load Razorpay Checkout.js dynamically if not already available
+        const loadScript = (): Promise<boolean> => {
+          return new Promise((resolve) => {
+            if (typeof window === "undefined") return resolve(false);
+            if ((window as unknown as { Razorpay?: unknown }).Razorpay) return resolve(true);
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.async = true;
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+          });
+        };
+
+        try {
+          const isLoaded = await loadScript();
+          const RazorpayConstructor = (window as unknown as { Razorpay?: new (opts: unknown) => { open: () => void; on: (event: string, cb: unknown) => void } }).Razorpay;
+          
+          if (!isLoaded || !RazorpayConstructor) {
+            setErrorMessage("Failed to load Razorpay payment gateway. Please check your internet connection and try again.");
+            setIsSubmitting(false);
+            return;
+          }
+
+          const finalTotalPaise = Math.max(100, totalPaise + shippingFeePaise);
+          const cleanPhone = digitsOnlyPhone.length >= 10 ? digitsOnlyPhone.slice(-10) : digitsOnlyPhone;
+
+          const rzp = new RazorpayConstructor({
+            key: razorpayKey,
+            amount: finalTotalPaise,
+            currency: currencyCode || "INR",
+            name: "NatureMist Botanicals",
+            description: "Ayurvedic Botanical Ritual Order",
+            prefill: {
+              name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
+              email: formData.email.trim(),
+              contact: cleanPhone,
+            },
+            notes: {
+              address: `${formData.address1.trim()}, ${formData.city.trim()}, ${formData.province.trim()} - ${formData.zip.trim()}`,
+            },
+            theme: {
+              color: "#153b2d",
+            },
+            modal: {
+              ondismiss: () => {
+                setIsSubmitting(false);
+              },
+            },
+            handler: async (response: { razorpay_payment_id?: string }) => {
+            // 1. Submit paid order directly to Shopify Admin API
+            let finalOrderId = `NMR-RZP-${response.razorpay_payment_id?.slice(-6) || Math.floor(10000 + Math.random() * 90000)}`;
+            let finalPlacedAt = new Date().toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            try {
+              const orderRes = await fetch("/api/shopify/order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  customer: {
+                    firstName: formData.firstName.trim(),
+                    lastName: formData.lastName.trim(),
+                    email: formData.email.trim(),
+                    phone: `+91${digitsOnlyPhone.slice(-10)}`,
+                  },
+                  deliveryAddress: {
+                    firstName: formData.firstName.trim(),
+                    lastName: formData.lastName.trim(),
+                    address1: formData.address1.trim(),
+                    address2: formData.address2.trim(),
+                    city: formData.city.trim(),
+                    province: formData.province.trim(),
+                    zip: formData.zip.trim(),
+                    country: "India",
+                  },
+                  items: cart.map((item) => ({
+                    name: item.productName,
+                    variant: item.variantTitle,
+                    quantity: item.quantity,
+                    pricePaise: item.lineTotalPaise,
+                    slug: item.slug,
+                  })),
+                  paymentMethod: "shopify",
+                  shippingMethod: formData.shippingMethod,
+                  shippingFeePaise,
+                  totalPaise: finalTotalPaise,
+                  currencyCode,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                }),
+              });
+
+              if (orderRes.ok) {
+                const resData = await orderRes.json();
+                if (resData?.orderId) {
+                  finalOrderId = resData.orderId;
+                }
+                if (resData?.placedAt) {
+                  finalPlacedAt = resData.placedAt;
+                }
+              }
+            } catch (syncErr) {
+              console.warn("Shopify order sync note:", syncErr);
+            }
+
+            // 2. Track purchase event
+            track("purchase", {
+              value: finalTotalPaise / 100,
+              currency: currencyCode,
+              payment_type: "razorpay_netbanking",
+              transaction_id: response.razorpay_payment_id,
+              items_count: cart.reduce((t, i) => t + i.quantity, 0),
+            });
+
+            const confirmation: OrderConfirmationData = {
+              orderId: finalOrderId,
+              placedAt: finalPlacedAt,
+              customerName: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
+              email: formData.email.trim(),
+              phone: formData.phone.trim(),
+              shippingAddress: `${formData.address1.trim()}${
+                formData.address2.trim() ? `, ${formData.address2.trim()}` : ""
+              }, ${formData.city.trim()}, ${formData.province.trim()} - ${formData.zip.trim()}, India`,
+              shippingMethod:
+                formData.shippingMethod === "express"
+                  ? "Express Priority Air Delivery (1-2 Days)"
+                  : "Standard Ayurvedic Delivery (3-5 Days · Free)",
+              paymentMethod: `Paid Online (Razorpay Ref: ${response.razorpay_payment_id || "Verified"})`,
+              totalPaise: finalTotalPaise,
+              currencyCode,
+              items: cart.map((item) => ({
+                name: item.productName,
+                variant: item.variantTitle,
+                quantity: item.quantity,
+                pricePaise: item.lineTotalPaise,
+                slug: item.slug,
+              })),
+            };
+
+            await clearCart();
+            onOrderSuccess(confirmation);
+            setIsSubmitting(false);
+          },
+        });
+
+        rzp.on("payment.failed", (errResponse: { error?: { description?: string; reason?: string } }) => {
+          console.warn("Razorpay payment failed:", errResponse);
+          setErrorMessage(
+            errResponse?.error?.description || "Payment failed. Please try a different bank or payment method.",
+          );
+          setIsSubmitting(false);
+        });
+
+        rzp.open();
+        return;
+      } catch (rzpErr: unknown) {
+          console.error("Razorpay initialization error:", rzpErr);
+          setErrorMessage(
+            rzpErr instanceof Error ? rzpErr.message : "Failed to open Razorpay payment gateway.",
+          );
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // 2. Submit order to /api/shopify/order (for COD or fallback)
       let finalOrderId = `NMR-2026-${Math.floor(10000 + Math.random() * 90000)}`;
       let finalPlacedAt = new Date().toLocaleDateString("en-IN", {
         day: "numeric",
@@ -364,6 +542,7 @@ export function CheckoutForm({
 
   return (
     <div className="flex flex-col gap-6">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       {/* ── Main Form ── */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-7" noValidate>
         {/* Error Alert */}
@@ -879,7 +1058,7 @@ export function CheckoutForm({
             ) : formData.paymentMethod === "upi" ? (
               <span className="whitespace-nowrap">Place Order & Pay via UPI ➔</span>
             ) : (
-              <span className="whitespace-nowrap">Place Ritual Order ➔</span>
+              <span className="whitespace-nowrap">Pay via Razorpay / Net Banking ➔</span>
             )}
           </button>
 
