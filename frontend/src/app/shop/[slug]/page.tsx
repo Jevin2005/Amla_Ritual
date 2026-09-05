@@ -37,13 +37,13 @@ function productDescriptionBlocks(value: string) {
 
       return isNumberedList || isBulletedList
         ? {
-            kind: isNumberedList
-              ? ("ordered-list" as const)
-              : ("unordered-list" as const),
-            items: lines.map((line) =>
-              line.replace(/^(?:[-*\u2022]|\d+[.)])\s+/, ""),
-            ),
-          }
+          kind: isNumberedList
+            ? ("ordered-list" as const)
+            : ("unordered-list" as const),
+          items: lines.map((line) =>
+            line.replace(/^(?:[-*\u2022]|\d+[.)])\s+/, ""),
+          ),
+        }
         : { kind: "paragraph" as const, text: lines.join("\n") };
     });
 }
@@ -69,13 +69,13 @@ export async function generateMetadata(
       url: `/shop/${slug}`,
       images: image
         ? [
-            {
-              url: image.url,
-              width: image.width,
-              height: image.height,
-              alt: image.altText || product.name,
-            },
-          ]
+          {
+            url: image.url,
+            width: image.width,
+            height: image.height,
+            alt: image.altText || product.name,
+          },
+        ]
         : undefined,
     },
   };

@@ -66,11 +66,10 @@ export function SiteHeader() {
         </div>
       </div>
       <header
-        className={`sticky top-0 z-[100] border-b border-[var(--line)] bg-[rgba(245,241,232,0.9)] backdrop-blur-[18px] transition-[height,box-shadow,background-color] duration-[420ms] ease-[var(--ease)] max-[900px]:h-[70px] max-[680px]:h-[60px] ${
-          compact
+        className={`sticky top-0 z-[100] border-b border-[var(--line)] bg-[rgba(245,241,232,0.9)] backdrop-blur-[18px] transition-[height,box-shadow,background-color] duration-[420ms] ease-[var(--ease)] max-[900px]:h-[70px] max-[680px]:h-[60px] ${compact
             ? "h-[68px] bg-[rgba(255,252,245,0.94)] shadow-[0_12px_35px_rgba(21,59,45,0.09)] max-[900px]:h-[64px] max-[680px]:h-[60px]"
             : "h-[var(--header-height)]"
-        }`}
+          }`}
       >
         <nav
           className="mx-auto grid h-full w-full max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-[clamp(20px,3.35vw,48px)] max-[900px]:pr-[max(18px,env(safe-area-inset-right))] max-[900px]:pl-[max(18px,env(safe-area-inset-left))] max-[680px]:pr-[max(16px,env(safe-area-inset-right))] max-[680px]:pl-[max(16px,env(safe-area-inset-left))]"

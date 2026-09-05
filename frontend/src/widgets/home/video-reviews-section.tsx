@@ -225,11 +225,10 @@ function VideoStoryCard({
           alt=""
           fill
           sizes="(max-width: 680px) 78vw, 270px"
-          className={`object-cover object-center transition-all duration-500 ${
-            isDirectVideo && isHovered
+          className={`object-cover object-center transition-all duration-500 ${isDirectVideo && isHovered
               ? "opacity-0 scale-105"
               : "opacity-100 group-hover:scale-105"
-          }`}
+            }`}
         />
 
         {/* Video element for instant hover preview */}
@@ -241,9 +240,8 @@ function VideoStoryCard({
             loop
             playsInline
             preload="metadata"
-            className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${
-              isHovered ? "opacity-100 scale-105" : "opacity-0"
-            }`}
+            className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${isHovered ? "opacity-100 scale-105" : "opacity-0"
+              }`}
           />
         )}
 
@@ -252,11 +250,10 @@ function VideoStoryCard({
         {/* Play Icon Badge */}
         <span className="absolute inset-0 grid place-items-center pointer-events-none">
           <span
-            className={`grid size-14 place-items-center rounded-full border shadow-xl backdrop-blur-md transition-all duration-300 ${
-              isHovered
+            className={`grid size-14 place-items-center rounded-full border shadow-xl backdrop-blur-md transition-all duration-300 ${isHovered
                 ? "scale-110 bg-[var(--botanical)] text-[var(--forest-dark)] border-transparent"
                 : "border-white/80 bg-white/25 text-white group-hover:scale-105"
-            }`}
+              }`}
           >
             <span className="ml-1 text-xl" aria-hidden="true">
               ▶

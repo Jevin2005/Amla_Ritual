@@ -60,8 +60,8 @@ export function ShopExplorer() {
 
   const collectionTitle = collection
     ? products
-        .flatMap((product) => product.collections ?? [])
-        .find((membership) => membership.handle.toLowerCase() === collection)?.title
+      .flatMap((product) => product.collections ?? [])
+      .find((membership) => membership.handle.toLowerCase() === collection)?.title
     : null;
 
   const clear = () => {
@@ -106,11 +106,10 @@ export function ShopExplorer() {
           <button
             type="button"
             onClick={() => setIsFilterDrawerOpen(true)}
-            className={`inline-flex h-8.5 items-center gap-1 rounded-full border px-3 text-[0.68rem] font-bold transition-all active:scale-95 cursor-pointer ${
-              activeFilterCount > 0
+            className={`inline-flex h-8.5 items-center gap-1 rounded-full border px-3 text-[0.68rem] font-bold transition-all active:scale-95 cursor-pointer ${activeFilterCount > 0
                 ? "border-[var(--forest)] bg-[var(--forest)] text-white shadow-2xs"
                 : "border-[var(--line)] bg-[var(--paper)] text-[var(--forest)] hover:bg-[var(--beige)]"
-            }`}
+              }`}
           >
             <span>⚙️ Filters</span>
             {activeFilterCount > 0 && (
@@ -130,11 +129,10 @@ export function ShopExplorer() {
                 key={option}
                 type="button"
                 onClick={() => chooseGoal(option as RitualGoal | "All")}
-                className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[0.62rem] font-medium transition-all active:scale-95 ${
-                  isSelected
+                className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[0.62rem] font-medium transition-all active:scale-95 ${isSelected
                     ? "bg-[var(--forest)] text-white font-semibold shadow-2xs"
                     : "border border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--beige)]"
-                }`}
+                  }`}
               >
                 {option}
               </button>
@@ -160,17 +158,15 @@ export function ShopExplorer() {
                 <button
                   type="button"
                   key={option}
-                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.74rem] transition-colors cursor-pointer ${
-                    goal === option
+                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.74rem] transition-colors cursor-pointer ${goal === option
                       ? "bg-[var(--ivory)] font-bold text-[var(--forest)]"
                       : "text-[var(--muted)] hover:bg-white/60 hover:text-[var(--forest)]"
-                  }`}
+                    }`}
                   onClick={() => chooseGoal(option as RitualGoal | "All")}
                 >
                   <span
-                    className={`absolute top-1/2 left-2 size-1.5 -translate-y-1/2 rounded-full ${
-                      goal === option ? "bg-[var(--botanical)] ring-2 ring-[var(--botanical)]/30" : "bg-[var(--line)]"
-                    }`}
+                    className={`absolute top-1/2 left-2 size-1.5 -translate-y-1/2 rounded-full ${goal === option ? "bg-[var(--botanical)] ring-2 ring-[var(--botanical)]/30" : "bg-[var(--line)]"
+                      }`}
                   />
                   {option}
                 </button>
@@ -188,20 +184,18 @@ export function ShopExplorer() {
                 <button
                   type="button"
                   key={option}
-                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.74rem] transition-colors cursor-pointer ${
-                    step === option
+                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.74rem] transition-colors cursor-pointer ${step === option
                       ? "bg-[var(--ivory)] font-bold text-[var(--forest)]"
                       : "text-[var(--muted)] hover:bg-white/60 hover:text-[var(--forest)]"
-                  }`}
+                    }`}
                   onClick={() => {
                     setStep(option);
                     track("filter_applied", { filter: "step", value: option });
                   }}
                 >
                   <span
-                    className={`absolute top-1/2 left-2 size-1.5 -translate-y-1/2 rounded-full ${
-                      step === option ? "bg-[var(--botanical)] ring-2 ring-[var(--botanical)]/30" : "bg-[var(--line)]"
-                    }`}
+                    className={`absolute top-1/2 left-2 size-1.5 -translate-y-1/2 rounded-full ${step === option ? "bg-[var(--botanical)] ring-2 ring-[var(--botanical)]/30" : "bg-[var(--line)]"
+                      }`}
                   />
                   {option}
                 </button>
@@ -386,11 +380,10 @@ export function ShopExplorer() {
                       key={s.id}
                       type="button"
                       onClick={() => setSort(s.id as typeof sort)}
-                      className={`rounded-xl py-2 text-center text-[0.68rem] font-semibold transition-all cursor-pointer ${
-                        sort === s.id
+                      className={`rounded-xl py-2 text-center text-[0.68rem] font-semibold transition-all cursor-pointer ${sort === s.id
                           ? "bg-[var(--forest)] text-white shadow-2xs"
                           : "border border-[var(--line)] bg-white text-[var(--forest)]"
-                      }`}
+                        }`}
                     >
                       {s.label}
                     </button>
@@ -409,11 +402,10 @@ export function ShopExplorer() {
                       key={option}
                       type="button"
                       onClick={() => chooseGoal(option as RitualGoal | "All")}
-                      className={`rounded-xl p-2.5 text-left text-[0.72rem] transition-all cursor-pointer ${
-                        goal === option
+                      className={`rounded-xl p-2.5 text-left text-[0.72rem] transition-all cursor-pointer ${goal === option
                           ? "border border-[var(--forest)] bg-[var(--forest)] text-white font-semibold shadow-2xs"
                           : "border border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--ivory)]"
-                      }`}
+                        }`}
                     >
                       {option}
                     </button>
@@ -435,11 +427,10 @@ export function ShopExplorer() {
                         setStep(option);
                         track("filter_applied", { filter: "step", value: option });
                       }}
-                      className={`rounded-xl p-2.5 text-left text-[0.72rem] transition-all cursor-pointer ${
-                        step === option
+                      className={`rounded-xl p-2.5 text-left text-[0.72rem] transition-all cursor-pointer ${step === option
                           ? "border border-[var(--forest)] bg-[var(--forest)] text-white font-semibold shadow-2xs"
                           : "border border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--ivory)]"
-                      }`}
+                        }`}
                     >
                       {option}
                     </button>

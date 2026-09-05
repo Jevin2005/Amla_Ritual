@@ -60,9 +60,8 @@ export function BundleCards() {
                   return (
                     <div
                       key={product.slug}
-                      className={`relative size-[58%] overflow-hidden rounded-xl border border-white/80 bg-white/70 shadow-sm transition-transform duration-300 group-hover/card:scale-105 max-[680px]:rounded-lg ${
-                        offsets[productIndex % offsets.length]
-                      }`}
+                      className={`relative size-[58%] overflow-hidden rounded-xl border border-white/80 bg-white/70 shadow-sm transition-transform duration-300 group-hover/card:scale-105 max-[680px]:rounded-lg ${offsets[productIndex % offsets.length]
+                        }`}
                     >
                       <Image
                         src={

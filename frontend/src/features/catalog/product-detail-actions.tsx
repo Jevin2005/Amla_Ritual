@@ -110,9 +110,8 @@ export function ProductDetailActions({ product }: { product: Product }) {
         {/* Stock status indicator */}
         <div className="flex items-center gap-1.5 text-[0.66rem] font-bold uppercase tracking-wider max-[680px]:text-[0.6rem]">
           <span
-            className={`size-2 rounded-full ${
-              available ? "bg-[#529d38] ring-2 ring-[#529d38]/30 animate-pulse" : "bg-red-500"
-            }`}
+            className={`size-2 rounded-full ${available ? "bg-[#529d38] ring-2 ring-[#529d38]/30 animate-pulse" : "bg-red-500"
+              }`}
           />
           <span className={available ? "text-[var(--forest)]" : "text-red-600"}>
             {available
@@ -234,11 +233,10 @@ export function ProductDetailActions({ product }: { product: Product }) {
           </button>
 
           <button
-            className={`inline-flex h-11 items-center justify-center gap-1.5 rounded-full border px-4 text-[0.66rem] font-bold tracking-[0.06em] uppercase transition-all cursor-pointer ${
-              wished
+            className={`inline-flex h-11 items-center justify-center gap-1.5 rounded-full border px-4 text-[0.66rem] font-bold tracking-[0.06em] uppercase transition-all cursor-pointer ${wished
                 ? "border-red-300 bg-red-50 text-red-500"
                 : "border-[var(--line)] bg-[var(--paper)] text-[var(--forest)] hover:bg-[var(--beige)]"
-            }`}
+              }`}
             type="button"
             onClick={() => toggleWishlist(product.slug)}
             aria-pressed={wished}
@@ -342,11 +340,10 @@ export function ProductDetailActions({ product }: { product: Product }) {
               <button
                 type="button"
                 onClick={() => toggleWishlist(product.slug)}
-                className={`grid size-9 place-items-center rounded-full border text-xs transition-colors cursor-pointer shrink-0 max-[380px]:size-8 ${
-                  wished
+                className={`grid size-9 place-items-center rounded-full border text-xs transition-colors cursor-pointer shrink-0 max-[380px]:size-8 ${wished
                     ? "border-red-300 bg-red-50 text-red-500"
                     : "border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--beige)]"
-                }`}
+                  }`}
                 aria-label="Wishlist"
               >
                 {wished ? "♥" : "♡"}

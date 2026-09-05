@@ -37,11 +37,10 @@ export function FeaturedProductSwitcher() {
                 type="button"
                 aria-pressed={isSelected}
                 onClick={() => setActiveSlug(item.slug)}
-                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.68rem] font-medium transition-all duration-200 active:scale-95 max-[440px]:px-2.5 max-[440px]:py-1 max-[440px]:text-[0.62rem] ${
-                  isSelected
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.68rem] font-medium transition-all duration-200 active:scale-95 max-[440px]:px-2.5 max-[440px]:py-1 max-[440px]:text-[0.62rem] ${isSelected
                     ? "bg-[var(--forest)] text-white shadow-sm font-semibold"
                     : "border border-[color-mix(in_srgb,var(--family-accent)_25%,transparent)] bg-white/45 text-[var(--forest)] hover:bg-white/70"
-                }`}
+                  }`}
               >
                 <span>{item.name.replace(" Powder", "")}</span>
               </button>
@@ -126,11 +125,10 @@ export function FeaturedProductSwitcher() {
                 key={item.slug}
                 type="button"
                 aria-pressed={isSelected}
-                className={`flex min-h-[62px] items-center gap-3.5 border-b border-[color-mix(in_srgb,var(--family-accent)_17%,transparent)] bg-transparent pr-3 text-left [font-family:var(--font-display)] text-[1.12rem] transition-all duration-200 hover:bg-white/35 hover:pl-5 hover:text-[var(--family-accent)] max-[900px]:min-h-[54px] max-[900px]:text-[0.96rem] ${
-                  isSelected
+                className={`flex min-h-[62px] items-center gap-3.5 border-b border-[color-mix(in_srgb,var(--family-accent)_17%,transparent)] bg-transparent pr-3 text-left [font-family:var(--font-display)] text-[1.12rem] transition-all duration-200 hover:bg-white/35 hover:pl-5 hover:text-[var(--family-accent)] max-[900px]:min-h-[54px] max-[900px]:text-[0.96rem] ${isSelected
                     ? "pl-5 font-medium text-[var(--family-accent)]"
                     : "pl-2.5 [color:color-mix(in_srgb,var(--family-accent)_55%,var(--muted))]"
-                }`}
+                  }`}
                 onClick={() => setActiveSlug(item.slug)}
               >
                 <span

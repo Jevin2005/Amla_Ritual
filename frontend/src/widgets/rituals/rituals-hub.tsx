@@ -391,19 +391,17 @@ export function RitualsHub() {
                 <article
                   key={step.number}
                   onClick={() => setActiveStepIndex(idx)}
-                  className={`group cursor-pointer rounded-2xl border p-5 transition-all duration-300 ${
-                    isActive
+                  className={`group cursor-pointer rounded-2xl border p-5 transition-all duration-300 ${isActive
                       ? "border-[var(--botanical)] bg-[var(--paper)] shadow-[0_10px_28px_rgba(23,63,42,0.08)] -translate-y-0.5"
                       : "border-[var(--line)] bg-white/60 hover:bg-white hover:border-black/15"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start gap-4">
                     <span
-                      className={`grid size-10 shrink-0 place-items-center rounded-full text-[0.82rem] font-bold transition-colors duration-200 ${
-                        isActive
+                      className={`grid size-10 shrink-0 place-items-center rounded-full text-[0.82rem] font-bold transition-colors duration-200 ${isActive
                           ? "bg-[var(--forest)] text-[#c8d88e]"
                           : "bg-[var(--beige)] text-[var(--forest)]"
-                      }`}
+                        }`}
                     >
                       {step.number}
                     </span>
@@ -495,11 +493,10 @@ export function RitualsHub() {
                   key={recipe.id}
                   type="button"
                   onClick={() => setActiveRecipeId(recipe.id)}
-                  className={`shrink-0 rounded-full px-4 py-2 text-[0.72rem] font-bold transition-all duration-200 cursor-pointer active:scale-95 max-[680px]:px-3 max-[680px]:py-1.5 max-[680px]:text-[0.6rem] ${
-                    isSelected
+                  className={`shrink-0 rounded-full px-4 py-2 text-[0.72rem] font-bold transition-all duration-200 cursor-pointer active:scale-95 max-[680px]:px-3 max-[680px]:py-1.5 max-[680px]:text-[0.6rem] ${isSelected
                       ? "bg-[var(--forest)] text-white shadow-sm"
                       : "border border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--beige)]"
-                  }`}
+                    }`}
                 >
                   {recipe.name}
                 </button>
