@@ -23,7 +23,6 @@ export function CartDrawer() {
     currencyCode,
     totalsEstimated,
     discountCodes,
-    checkoutUrl,
     cartError,
     cartWarnings,
     isCartBusy,

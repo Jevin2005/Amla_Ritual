@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { formatCurrency } from "@/domain/catalog/products";
 import type { OrderConfirmationData } from "./checkout-form";
 
@@ -9,8 +10,20 @@ type CheckoutOrderSuccessProps = {
 };
 
 export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
+  const [copied, setCopied] = useState(false);
+
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleCopyRef = async () => {
+    try {
+      await navigator.clipboard.writeText(order.orderId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
   };
 
   return (
@@ -149,15 +162,15 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
               </p>
             </div>
 
-            <div>
+            <div className="flex flex-col gap-2">
               <span className="text-[0.62rem] font-bold uppercase tracking-wider text-[var(--muted)]">
                 Estimated Delivery
               </span>
-              <p className="mt-1 text-[0.82rem] font-bold text-[#529d38]">
+              <p className="m-0 text-[0.82rem] font-bold text-[#529d38]">
                 3–5 Business Days (Tracked)
               </p>
-              <p className="mt-1 text-[0.72rem] text-[var(--muted)]">
-                A tracking link will be sent to your WhatsApp and Email once dispatched.
+              <p className="m-0 text-[0.72rem] text-[var(--muted)]">
+                A tracking link has been issued. You can track your parcel dispatch in real time below.
               </p>
             </div>
           </div>
@@ -196,18 +209,64 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
           </div>
         </div>
 
+        {/* ── Prominent Interactive Order Tracking Card ── */}
+        <div className="mt-6 w-full rounded-3xl border border-[#529d38]/35 bg-[#edf3dd]/50 p-6 text-left shadow-xs transition-all max-[680px]:p-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <span className="grid size-12 place-items-center rounded-2xl bg-[#529d38] text-2xl text-white shadow-sm shrink-0">
+                📦
+              </span>
+              <div>
+                <span className="text-[0.64rem] font-bold uppercase tracking-wider text-[#529d38]">
+                  Live Dispatch & Courier Journey
+                </span>
+                <h4 className="m-0 font-serif text-[1.15rem] font-medium text-[var(--forest)]">
+                  Track your Ayurvedic package
+                </h4>
+                <p className="m-0 mt-0.5 text-[0.74rem] text-[var(--muted)]">
+                  Order ID: <strong className="font-mono text-[var(--forest)] font-bold">{order.orderId}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 max-[500px]:w-full max-[500px]:justify-between">
+              <button
+                type="button"
+                onClick={handleCopyRef}
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[var(--line)] bg-[var(--paper)] px-4 text-[0.7rem] font-bold uppercase tracking-wider text-[var(--forest)] shadow-2xs hover:bg-[var(--ivory)] transition-all cursor-pointer"
+              >
+                {copied ? "Copied! ✓" : "Copy ID"}
+              </button>
+              <Link
+                href={`/track-order?ref=${encodeURIComponent(order.orderId)}`}
+                className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-[#529d38] px-6 text-[0.74rem] font-bold uppercase tracking-wider text-white shadow-sm hover:bg-[#43822d] transition-all whitespace-nowrap"
+              >
+                <span>Track Order</span>
+                <span aria-hidden="true">➔</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Action Buttons */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <Link
+            href={`/track-order?ref=${encodeURIComponent(order.orderId)}`}
+            className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[var(--forest)] px-8 text-[0.74rem] font-bold uppercase tracking-wider text-[var(--paper)] shadow-md hover:bg-[var(--forest-dark)] transition-all"
+          >
+            <span>Live Order Status</span>
+            <span aria-hidden="true">➔</span>
+          </Link>
+          <Link
             href="/shop"
-            className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-[var(--forest)] px-8 text-[0.74rem] font-bold uppercase tracking-wider text-[var(--paper)] shadow-md hover:bg-[var(--forest-dark)] transition-all"
+            className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-[var(--line)] bg-[var(--paper)] px-7 text-[0.74rem] font-bold uppercase tracking-wider text-[var(--forest)] hover:bg-[var(--ivory)] transition-all"
           >
             Continue Exploring Shop
           </Link>
           <button
             type="button"
             onClick={handlePrint}
-            className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-[var(--forest)] bg-transparent px-7 text-[0.74rem] font-bold uppercase tracking-wider text-[var(--forest)] hover:bg-[var(--forest)] hover:text-white transition-all cursor-pointer"
+            className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-[var(--forest)] bg-transparent px-6 text-[0.74rem] font-bold uppercase tracking-wider text-[var(--forest)] hover:bg-[var(--forest)] hover:text-white transition-all cursor-pointer"
           >
             Print Receipt 🖨️
           </button>

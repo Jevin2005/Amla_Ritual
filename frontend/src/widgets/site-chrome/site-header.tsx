@@ -57,12 +57,21 @@ export function SiteHeader() {
           <p className="m-0 text-center">
             {content.announcementText}
           </p>
-          <Link
-            className="shrink-0 border-b border-[rgba(255,255,255,0.5)] transition-colors hover:border-white hover:text-white max-[900px]:hidden"
-            href={content.announcementLinkUrl}
-          >
-            {content.announcementLinkLabel} <span aria-hidden="true">↗</span>
-          </Link>
+          <div className="flex items-center gap-4 max-[900px]:hidden">
+            <Link
+              className="shrink-0 border-b border-[rgba(255,255,255,0.4)] transition-colors hover:border-white hover:text-white"
+              href={content.announcementLinkUrl}
+            >
+              {content.announcementLinkLabel} <span aria-hidden="true">↗</span>
+            </Link>
+            <span className="opacity-40 select-none" aria-hidden="true">|</span>
+            <Link
+              className="shrink-0 border-b border-transparent transition-colors hover:border-white hover:text-white"
+              href="/track-order"
+            >
+              Track Order
+            </Link>
+          </div>
         </div>
       </div>
       <header

@@ -57,8 +57,7 @@ function CarouselControls({
   );
 }
 
-function useCarousel() {
-  const ref = useRef<HTMLDivElement>(null);
+function useCarousel(ref: React.RefObject<HTMLDivElement | null>) {
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
@@ -79,7 +78,7 @@ function useCarousel() {
       canPrevious: element.scrollLeft > 4,
       canNext: element.scrollLeft < maximum - 4,
     });
-  }, []);
+  }, [ref]);
 
   useEffect(() => {
     const element = ref.current;
@@ -109,7 +108,7 @@ function useCarousel() {
       observer?.disconnect();
       window.removeEventListener("mouseup", handleGlobalMouseUp);
     };
-  }, [update]);
+  }, [ref, update]);
 
   const move = useCallback((direction: -1 | 1) => {
     const element = ref.current;
@@ -119,10 +118,10 @@ function useCarousel() {
       left: direction * scrollAmount,
       behavior: "smooth",
     });
-  }, []);
+  }, [ref]);
 
   // Mouse drag-to-scroll support
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     // Only drag on primary left-click
     if (e.button !== 0) return;
     const element = ref.current;
@@ -133,9 +132,9 @@ function useCarousel() {
     scrollLeft.current = element.scrollLeft;
     element.style.scrollBehavior = "auto";
     element.style.scrollSnapType = "none";
-  };
+  }, [ref]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging.current) return;
     const element = ref.current;
     if (!element) return;
@@ -146,9 +145,9 @@ function useCarousel() {
       hasMoved.current = true;
     }
     element.scrollLeft = scrollLeft.current - walk;
-  };
+  }, [ref]);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     if (!isDragging.current) return;
     isDragging.current = false;
     const element = ref.current;
@@ -156,27 +155,24 @@ function useCarousel() {
       element.style.scrollBehavior = "";
       element.style.scrollSnapType = "";
     }
-  };
+  }, [ref]);
 
   // Prevent accidental clicks when dragging to scroll
-  const handleClickCapture = (e: React.MouseEvent) => {
+  const handleClickCapture = useCallback((e: React.MouseEvent) => {
     if (hasMoved.current) {
       e.preventDefault();
       e.stopPropagation();
       hasMoved.current = false;
     }
-  };
+  }, []);
 
   return {
-    ref,
     state,
     move,
-    dragProps: {
-      onMouseDown: handleMouseDown,
-      onMouseMove: handleMouseMove,
-      onMouseUp: handleMouseUp,
-      onClickCapture: handleClickCapture,
-    },
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+    handleClickCapture,
   };
 }
 
@@ -312,8 +308,10 @@ function selectBestHomeVideos(
 }
 
 export function VideoReviewsSection() {
-  const videoCarousel = useCarousel();
-  const reviewCarousel = useCarousel();
+  const videoRef = useRef<HTMLDivElement>(null);
+  const reviewRef = useRef<HTMLDivElement>(null);
+  const videoCarousel = useCarousel(videoRef);
+  const reviewCarousel = useCarousel(reviewRef);
   const [activeVideo, setActiveVideo] = useState<VideoReview | null>(null);
   const { content } = useStore();
 
@@ -368,8 +366,11 @@ export function VideoReviewsSection() {
 
           <div
             id="home-video-stories"
-            ref={videoCarousel.ref}
-            {...videoCarousel.dragProps}
+            ref={videoRef}
+            onMouseDown={videoCarousel.handleMouseDown}
+            onMouseMove={videoCarousel.handleMouseMove}
+            onMouseUp={videoCarousel.handleMouseUp}
+            onClickCapture={videoCarousel.handleClickCapture}
             className="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 pt-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[680px]:gap-3.5 cursor-grab active:cursor-grabbing"
             role="region"
             aria-label="Customer video stories carousel"
@@ -409,8 +410,11 @@ export function VideoReviewsSection() {
 
           <div
             id="home-written-reviews"
-            ref={reviewCarousel.ref}
-            {...reviewCarousel.dragProps}
+            ref={reviewRef}
+            onMouseDown={reviewCarousel.handleMouseDown}
+            onMouseMove={reviewCarousel.handleMouseMove}
+            onMouseUp={reviewCarousel.handleMouseUp}
+            onClickCapture={reviewCarousel.handleClickCapture}
             className="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 pt-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
             role="region"
             aria-label="Written customer reviews carousel"

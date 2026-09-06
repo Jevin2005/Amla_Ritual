@@ -13,7 +13,6 @@ type HeroPurchaseProps = {
 export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
   const {
     products,
-    source,
     addToCart,
     isWishlisted,
     toggleWishlist,

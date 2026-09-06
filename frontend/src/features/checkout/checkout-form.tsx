@@ -97,7 +97,6 @@ export function CheckoutForm({
     cart,
     totalPaise,
     currencyCode,
-    checkoutUrl,
     updateBuyerIdentity,
     clearCart,
     track,
@@ -250,11 +249,6 @@ export function CheckoutForm({
 
       // ── IN-APP DIRECT PAYMENT (RAZORPAY MODAL: NET BANKING, UPI, CARDS) ──
       if (formData.paymentMethod === "shopify" || formData.paymentMethod === "upi") {
-        const razorpayKey =
-          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
-          process.env.RAZORPAY_KEY_ID ||
-          "rzp_test_TUl9QJD7dQZhX6";
-
         // Function to load Razorpay Checkout.js dynamically if not already available
         const loadScript = (): Promise<boolean> => {
           return new Promise((resolve) => {
@@ -270,22 +264,47 @@ export function CheckoutForm({
         };
 
         try {
+          const finalTotalPaise = Math.max(100, totalPaise + shippingFeePaise);
+          const cleanPhone = digitsOnlyPhone.length >= 10 ? digitsOnlyPhone.slice(-10) : digitsOnlyPhone;
+
+          // 1. Server-Side Secure Order Initialization (Locks price & creates authentic order_id)
+          const createOrderRes = await fetch("/api/razorpay/create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amountPaise: finalTotalPaise,
+              currency: currencyCode || "INR",
+              notes: {
+                customer: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
+                email: formData.email.trim(),
+                phone: `+91${cleanPhone}`,
+              },
+            }),
+          });
+
+          const createOrderData = await createOrderRes.json();
+          if (!createOrderRes.ok || !createOrderData?.orderId) {
+            throw new Error(
+              createOrderData?.error || "Failed to initialize secure payment order. Please try again.",
+            );
+          }
+
           const isLoaded = await loadScript();
-          const RazorpayConstructor = (window as unknown as { Razorpay?: new (opts: unknown) => { open: () => void; on: (event: string, cb: unknown) => void } }).Razorpay;
-          
+          const RazorpayConstructor = (window as unknown as {
+            Razorpay?: new (opts: unknown) => { open: () => void; on: (event: string, cb: unknown) => void };
+          }).Razorpay;
+
           if (!isLoaded || !RazorpayConstructor) {
             setErrorMessage("Failed to load Razorpay payment gateway. Please check your internet connection and try again.");
             setIsSubmitting(false);
             return;
           }
 
-          const finalTotalPaise = Math.max(100, totalPaise + shippingFeePaise);
-          const cleanPhone = digitsOnlyPhone.length >= 10 ? digitsOnlyPhone.slice(-10) : digitsOnlyPhone;
-
           const rzp = new RazorpayConstructor({
-            key: razorpayKey,
-            amount: finalTotalPaise,
-            currency: currencyCode || "INR",
+            key: createOrderData.keyId,
+            order_id: createOrderData.orderId,
+            amount: createOrderData.amountPaise,
+            currency: createOrderData.currency || "INR",
             name: "NatureMist Botanicals",
             description: "Ayurvedic Botanical Ritual Order",
             prefill: {
@@ -304,38 +323,120 @@ export function CheckoutForm({
                 setIsSubmitting(false);
               },
             },
-            handler: async (response: { razorpay_payment_id?: string }) => {
-            // 1. Submit paid order directly to Shopify Admin API
-            let finalOrderId = `NMR-RZP-${response.razorpay_payment_id?.slice(-6) || Math.floor(10000 + Math.random() * 90000)}`;
-            let finalPlacedAt = new Date().toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            });
+            handler: async (response: {
+              razorpay_payment_id?: string;
+              razorpay_order_id?: string;
+              razorpay_signature?: string;
+            }) => {
+              try {
+                if (!response.razorpay_payment_id || !response.razorpay_signature) {
+                  throw new Error("Missing payment credentials from gateway.");
+                }
 
-            try {
-              const orderRes = await fetch("/api/shopify/order", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  customer: {
-                    firstName: formData.firstName.trim(),
-                    lastName: formData.lastName.trim(),
-                    email: formData.email.trim(),
-                    phone: `+91${digitsOnlyPhone.slice(-10)}`,
-                  },
-                  deliveryAddress: {
-                    firstName: formData.firstName.trim(),
-                    lastName: formData.lastName.trim(),
-                    address1: formData.address1.trim(),
-                    address2: formData.address2.trim(),
-                    city: formData.city.trim(),
-                    province: formData.province.trim(),
-                    zip: formData.zip.trim(),
-                    country: "India",
-                  },
+                // 2. Cryptographic Signature Verification on Server
+                const verifyRes = await fetch("/api/razorpay/verify-payment", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    razorpayOrderId: response.razorpay_order_id || createOrderData.orderId,
+                    razorpayPaymentId: response.razorpay_payment_id,
+                    razorpaySignature: response.razorpay_signature,
+                  }),
+                });
+
+                const verifyData = await verifyRes.json();
+                if (!verifyRes.ok || !verifyData?.verified) {
+                  throw new Error(verifyData?.error || "Payment signature verification failed.");
+                }
+
+                // 3. Submit verified paid order directly to Shopify Admin API
+                let finalOrderId = `NMR-RZP-${response.razorpay_payment_id?.slice(-6) || Math.floor(10000 + Math.random() * 90000)}`;
+                let finalPlacedAt = new Date().toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+
+                try {
+                  const orderRes = await fetch("/api/shopify/order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      customer: {
+                        firstName: formData.firstName.trim(),
+                        lastName: formData.lastName.trim(),
+                        email: formData.email.trim(),
+                        phone: `+91${cleanPhone}`,
+                      },
+                      deliveryAddress: {
+                        firstName: formData.firstName.trim(),
+                        lastName: formData.lastName.trim(),
+                        address1: formData.address1.trim(),
+                        address2: formData.address2.trim(),
+                        city: formData.city.trim(),
+                        province: formData.province.trim(),
+                        zip: formData.zip.trim(),
+                        country: "India",
+                      },
+                      items: cart.map((item) => ({
+                        name: item.productName,
+                        variant: item.variantTitle,
+                        quantity: item.quantity,
+                        pricePaise: item.lineTotalPaise,
+                        slug: item.slug,
+                      })),
+                      paymentMethod: "shopify",
+                      shippingMethod: formData.shippingMethod,
+                      shippingFeePaise,
+                      totalPaise: finalTotalPaise,
+                      currencyCode,
+                      newsletter: formData.newsletter,
+                      razorpayPaymentId: response.razorpay_payment_id,
+                      razorpayOrderId: response.razorpay_order_id || createOrderData.orderId,
+                      razorpaySignature: response.razorpay_signature,
+                    }),
+                  });
+
+                  if (orderRes.ok) {
+                    const resData = await orderRes.json();
+                    if (resData?.orderId) {
+                      finalOrderId = resData.orderId;
+                    }
+                    if (resData?.placedAt) {
+                      finalPlacedAt = resData.placedAt;
+                    }
+                  }
+                } catch (syncErr) {
+                  console.warn("Shopify order sync note:", syncErr);
+                }
+
+                // 4. Track purchase event
+                track("purchase", {
+                  value: finalTotalPaise / 100,
+                  currency: currencyCode,
+                  payment_type: "razorpay_netbanking",
+                  transaction_id: response.razorpay_payment_id,
+                  items_count: cart.reduce((t, i) => t + i.quantity, 0),
+                });
+
+                const confirmation: OrderConfirmationData = {
+                  orderId: finalOrderId,
+                  placedAt: finalPlacedAt,
+                  customerName: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
+                  email: formData.email.trim(),
+                  phone: formData.phone.trim(),
+                  shippingAddress: `${formData.address1.trim()}${
+                    formData.address2.trim() ? `, ${formData.address2.trim()}` : ""
+                  }, ${formData.city.trim()}, ${formData.province.trim()} - ${formData.zip.trim()}, India`,
+                  shippingMethod:
+                    formData.shippingMethod === "express"
+                      ? "Express Priority Air Delivery (1-2 Days)"
+                      : "Standard Ayurvedic Delivery (3-5 Days · Free)",
+                  paymentMethod: `Paid Online (Razorpay Ref: ${response.razorpay_payment_id || "Verified"})`,
+                  totalPaise: finalTotalPaise,
+                  currencyCode,
                   items: cart.map((item) => ({
                     name: item.productName,
                     variant: item.variantTitle,
@@ -343,79 +444,34 @@ export function CheckoutForm({
                     pricePaise: item.lineTotalPaise,
                     slug: item.slug,
                   })),
-                  paymentMethod: "shopify",
-                  shippingMethod: formData.shippingMethod,
-                  shippingFeePaise,
-                  totalPaise: finalTotalPaise,
-                  currencyCode,
-                  razorpayPaymentId: response.razorpay_payment_id,
-                }),
-              });
+                };
 
-              if (orderRes.ok) {
-                const resData = await orderRes.json();
-                if (resData?.orderId) {
-                  finalOrderId = resData.orderId;
-                }
-                if (resData?.placedAt) {
-                  finalPlacedAt = resData.placedAt;
-                }
+                await clearCart();
+                onOrderSuccess(confirmation);
+                setIsSubmitting(false);
+              } catch (handlerErr) {
+                console.error("Payment processing handler error:", handlerErr);
+                setErrorMessage(
+                  handlerErr instanceof Error
+                    ? handlerErr.message
+                    : "Payment verified but failed to record order. Please contact support.",
+                );
+                setIsSubmitting(false);
               }
-            } catch (syncErr) {
-              console.warn("Shopify order sync note:", syncErr);
-            }
+            },
+          });
 
-            // 2. Track purchase event
-            track("purchase", {
-              value: finalTotalPaise / 100,
-              currency: currencyCode,
-              payment_type: "razorpay_netbanking",
-              transaction_id: response.razorpay_payment_id,
-              items_count: cart.reduce((t, i) => t + i.quantity, 0),
-            });
-
-            const confirmation: OrderConfirmationData = {
-              orderId: finalOrderId,
-              placedAt: finalPlacedAt,
-              customerName: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
-              email: formData.email.trim(),
-              phone: formData.phone.trim(),
-              shippingAddress: `${formData.address1.trim()}${
-                formData.address2.trim() ? `, ${formData.address2.trim()}` : ""
-              }, ${formData.city.trim()}, ${formData.province.trim()} - ${formData.zip.trim()}, India`,
-              shippingMethod:
-                formData.shippingMethod === "express"
-                  ? "Express Priority Air Delivery (1-2 Days)"
-                  : "Standard Ayurvedic Delivery (3-5 Days · Free)",
-              paymentMethod: `Paid Online (Razorpay Ref: ${response.razorpay_payment_id || "Verified"})`,
-              totalPaise: finalTotalPaise,
-              currencyCode,
-              items: cart.map((item) => ({
-                name: item.productName,
-                variant: item.variantTitle,
-                quantity: item.quantity,
-                pricePaise: item.lineTotalPaise,
-                slug: item.slug,
-              })),
-            };
-
-            await clearCart();
-            onOrderSuccess(confirmation);
+          rzp.on("payment.failed", (errResponse: { error?: { description?: string; reason?: string } }) => {
+            console.warn("Razorpay payment failed:", errResponse);
+            setErrorMessage(
+              errResponse?.error?.description || "Payment failed. Please try a different bank or payment method.",
+            );
             setIsSubmitting(false);
-          },
-        });
+          });
 
-        rzp.on("payment.failed", (errResponse: { error?: { description?: string; reason?: string } }) => {
-          console.warn("Razorpay payment failed:", errResponse);
-          setErrorMessage(
-            errResponse?.error?.description || "Payment failed. Please try a different bank or payment method.",
-          );
-          setIsSubmitting(false);
-        });
-
-        rzp.open();
-        return;
-      } catch (rzpErr: unknown) {
+          rzp.open();
+          return;
+        } catch (rzpErr: unknown) {
           console.error("Razorpay initialization error:", rzpErr);
           setErrorMessage(
             rzpErr instanceof Error ? rzpErr.message : "Failed to open Razorpay payment gateway.",
@@ -468,6 +524,7 @@ export function CheckoutForm({
             shippingFeePaise,
             totalPaise: totalPaise + shippingFeePaise,
             currencyCode,
+            newsletter: formData.newsletter,
           }),
         });
 

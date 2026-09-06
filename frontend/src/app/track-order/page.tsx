@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { TrackingForm } from "@/features/tracking/tracking-form";
 import { PageHero } from "@/shared/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Track Your Order",
-  description: "NatureMist order tracking entry point.",
+  description: "Live real-time order tracking for your NatureMist botanical packages.",
   alternates: { canonical: "/track-order" },
   robots: { index: false, follow: true },
 };
@@ -15,9 +16,9 @@ export default function TrackOrderPage() {
       <PageHero
         eyebrow="After the ritual leaves us"
         title="Track an order."
-        description="Enter your NatureMist reference. Live tracking will appear here once fulfilment is connected."
+        description="Enter your order reference (e.g. #1004) or mobile number to view live preparation and delivery milestones."
       />
-      <section className="mx-auto grid w-full max-w-[1200px] grid-cols-[1fr_0.8fr] items-center gap-[clamp(52px,8vw,96px)] px-[clamp(24px,5vw,64px)] pb-[150px] pt-[100px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[100px] max-[680px]:pt-[72px]">
+      <section className="mx-auto grid w-full max-w-[1200px] grid-cols-[1fr_0.8fr] items-start gap-[clamp(52px,8vw,96px)] px-[clamp(24px,5vw,64px)] pb-[150px] pt-[100px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[100px] max-[680px]:pt-[72px]">
         <div>
           <p className="mb-4 text-[0.68rem] font-bold uppercase leading-[1.3] tracking-[0.2em] text-[var(--botanical)]">
             Order care
@@ -26,13 +27,13 @@ export default function TrackOrderPage() {
             A clear journey from our shelf to yours.
           </h2>
           <p className="max-w-[620px] leading-[1.75] text-[var(--muted)]">
-            Tracking data is never invented. Until a fulfilment provider is connected, this preview keeps every reference on your device only.
+            Every herbal jar is packed fresh to order, sealed in UV-protected glass, and tracked directly through our courier network.
           </p>
           <ol className="mt-8 grid list-none gap-3 p-0" aria-label="Future order journey">
             {[
-              ["01", "Order confirmed", "Your reference and receipt will be issued together."],
-              ["02", "Packed with care", "Dispatch details will appear after the carrier scans the parcel."],
-              ["03", "On its way", "Live milestones will come directly from the fulfilment provider."],
+              ["01", "Order confirmed", "Your reference and receipt are issued and logged in Shopify."],
+              ["02", "Packed with care", "Herbal powders are freshly filled and seal-inspected."],
+              ["03", "On its way", "Live courier waybill milestones update automatically."],
             ].map(([number, title, copy]) => (
               <li className="grid grid-cols-[38px_1fr] gap-3 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--paper)] p-4" key={number}>
                 <span className="text-[0.65rem] font-bold text-[var(--botanical)]">{number}</span>
@@ -44,7 +45,9 @@ export default function TrackOrderPage() {
             ))}
           </ol>
         </div>
-        <TrackingForm />
+        <Suspense fallback={<div className="p-8 text-center text-sm text-[var(--muted)]">Loading tracking console…</div>}>
+          <TrackingForm />
+        </Suspense>
       </section>
     </main>
   );
