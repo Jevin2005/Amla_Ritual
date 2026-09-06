@@ -12,6 +12,7 @@ import {
 } from "@/features/catalog";
 import { StarRating } from "@/features/reviews/star-rating";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
+import { getPublicSiteUrl } from "@/lib/site-url";
 
 export const dynamicParams = true;
 
@@ -110,14 +111,23 @@ export default async function ProductPage(props: ProductPageProps) {
     product.slug,
   );
 
+  const siteUrl = getPublicSiteUrl();
+  const productUrl = `${siteUrl}/shop/${product.slug}`;
+  const imageUrl = product.featuredImage?.url
+    ? product.featuredImage.url.startsWith("http")
+      ? product.featuredImage.url
+      : `${siteUrl}${product.featuredImage.url}`
+    : undefined;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: `NatureMist ${product.name}`,
-    description: product.metaDescription,
+    description: product.metaDescription || product.shortDescription,
     brand: { "@type": "Brand", name: "NatureMist" },
     category: "Botanical hair care powder",
-    image: product.featuredImage?.url,
+    image: imageUrl,
+    url: productUrl,
     offers: {
       "@type": "Offer",
       price: (product.pricePaise / 100).toFixed(2),
@@ -125,7 +135,12 @@ export default async function ProductPage(props: ProductPageProps) {
       availability: product.availableForSale
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
-      url: `/shop/${product.slug}`,
+      url: productUrl,
+      seller: {
+        "@type": "Organization",
+        name: "NatureMist",
+        url: siteUrl,
+      },
     },
     additionalProperty: [
       { "@type": "PropertyValue", name: "Botanical", value: product.botanical },

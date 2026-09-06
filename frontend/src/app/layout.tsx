@@ -47,6 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
       "botanical hair care",
       "Indian beauty rituals",
     ],
+    alternates: {
+      canonical: "./",
+    },
     openGraph: {
       type: "website",
       siteName: brandName,
@@ -71,6 +74,13 @@ export async function generateMetadata(): Promise<Metadata> {
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }
@@ -85,6 +95,36 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const storefront = await getStorefront();
   const globalProducts = storefront.products.map(productForGlobalStore);
+  const siteUrl = getPublicSiteUrl();
+
+  const brandName = storefront.shopName || "NatureMist";
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        name: brandName,
+        url: siteUrl,
+        logo: `${siteUrl}/og-shopify.jpg`,
+        description:
+          "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.",
+        email: "care@naturemist.com",
+        sameAs: [siteUrl],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        url: siteUrl,
+        name: brandName,
+        description:
+          "Traditional Indian botanical powders, translated into clear rituals for modern hair care.",
+        publisher: {
+          "@id": `${siteUrl}/#organization`,
+        },
+      },
+    ],
+  };
 
   return (
     <html
@@ -93,6 +133,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       data-scroll-behavior="smooth"
     >
       <body className="m-0 min-h-screen overflow-x-hidden bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema).replace(/</g, "\\u003c"),
+          }}
+        />
         <StoreProvider
           initialProducts={globalProducts}
           initialBundles={storefront.bundles}
