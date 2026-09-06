@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your NatureMist Order is Confirmed</title>
+  <style>
+    body { margin: 0; padding: 0; background-color: #f6f4ed; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #202b23; }
+    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    td { padding: 0; }
+    .email-container { width: 100%; max-width: 600px; margin: 24px auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid #e5e0d3; box-shadow: 0 4px 20px rgba(21, 59, 45, 0.05); }
+    .hero-banner { background-color: #153b2d; text-align: center; padding: 40px 24px 32px; background-image: linear-gradient(180deg, #153b2d 0%, #0d281e 100%); }
+    .brand-title { font-family: Georgia, serif; font-size: 28px; font-weight: 400; color: #ffffff; letter-spacing: 0.12em; text-transform: uppercase; margin: 0; }
+    .brand-sub { font-size: 11px; color: #a7c943; text-transform: uppercase; letter-spacing: 0.18em; margin: 6px 0 0; font-weight: 600; }
+    .main-body { padding: 36px 32px; }
+    .status-pill { display: inline-block; background-color: #edf3dd; color: #3f7d3a; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 6px 14px; border-radius: 24px; margin-bottom: 16px; border: 1px solid #dce7ad; }
+    .headline { font-family: Georgia, serif; font-size: 24px; font-weight: 400; color: #153b2d; margin: 0 0 12px; line-height: 1.25; }
+    .intro-text { font-size: 14px; line-height: 1.65; color: #586359; margin: 0 0 28px; }
+    
+    /* Primary Action Button */
+    .btn-track { display: block; width: 100%; max-width: 340px; margin: 20px auto 32px; background-color: #153b2d; color: #ffffff !important; text-decoration: none; text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 28px; border-radius: 50px; box-sizing: border-box; box-shadow: 0 4px 14px rgba(21, 59, 45, 0.25); }
+    
+    /* Product Items Section with Images */
+    .items-header { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #153b2d; margin-bottom: 12px; border-bottom: 2px solid #153b2d; padding-bottom: 8px; }
+    .item-table { width: 100%; }
+    .item-row td { padding: 14px 0; border-bottom: 1px solid #f0ecdf; vertical-align: middle; }
+    .item-img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; border: 1px solid #e7e2d4; display: block; }
+    .item-title { font-size: 14px; font-weight: 600; color: #153b2d; margin: 0 0 4px; }
+    .item-variant { font-size: 12px; color: #788577; margin: 0; }
+    .item-price { font-size: 14px; font-weight: 700; color: #153b2d; text-align: right; }
+
+    /* Totals Summary Table */
+    .totals-table { width: 100%; margin-top: 16px; font-size: 14px; }
+    .totals-table td { padding: 6px 0; }
+    .total-row td { border-top: 2px solid #153b2d; padding: 14px 0 6px; font-size: 17px; font-weight: 700; color: #153b2d; }
+
+    /* Footer & Trust */
+    .trust-strip { background-color: #faf8f2; padding: 22px 20px; border-top: 1px solid #e7e2d4; }
+    .trust-pill { font-size: 11px; font-weight: 700; color: #153b2d; text-align: center; }
+    .email-footer { background-color: #ffffff; padding: 30px 24px; text-align: center; font-size: 12px; color: #8c968b; line-height: 1.6; }
+    .email-footer a { color: #3f7d3a; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <table width="100%" bgcolor="#f6f4ed" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td align="center" style="padding: 24px 12px;">
+        
+        <div class="email-container">
+          
+          <!-- Grand Header Banner -->
+          <div class="hero-banner">
+            <h1 class="brand-title">NatureMist</h1>
+            <p class="brand-sub">Pure Botanicals &bull; Powerful Rituals</p>
+          </div>
+
+          <!-- Main Content Area -->
+          <div class="main-body">
+            <span class="status-pill">&#10003; Order Confirmed &bull; {{ order.name }}</span>
+            <h2 class="headline">Thank you for your order, {{ customer.first_name | default: "friend" }}.</h2>
+            <p class="intro-text">
+              We have safely received your order. Our team will measure, jar-inspect, and package your botanical powders in UV-protective glass jars. You will receive a dispatch email with your courier waybill as soon as it ships.
+            </p>
+
+            <!-- Direct Live Tracking Link -->
+            <a href="https://www.naturemist.shop/track-order?ref={{ order.name | url_encode }}" class="btn-track" target="_blank">
+              View Live Order Status &rarr;
+            </a>
+
+            <!-- Items with Real Dynamic Product Images -->
+            <div style="margin-top: 36px;">
+              <div class="items-header">Order Summary ({{ line_items.size }} Item{% if line_items.size > 1 %}s{% endif %})</div>
+              <table class="item-table" cellpadding="0" cellspacing="0">
+                {% for line in line_items %}
+                  <tr class="item-row">
+                    <!-- Dynamic Product Image -->
+                    <td width="76" style="vertical-align: middle;">
+                      {% if line.image %}
+                        <img src="{{ line.image | image_url: width: 140, height: 140, crop: 'center' }}" alt="{{ line.title }}" class="item-img">
+                      {% elsif line.line_item.image %}
+                        <img src="{{ line.line_item.image | image_url: width: 140, height: 140, crop: 'center' }}" alt="{{ line.title }}" class="item-img">
+                      {% else %}
+                        <div style="width: 64px; height: 64px; border-radius: 10px; background-color: #edf3dd; text-align: center; line-height: 64px; font-size: 26px; border: 1px solid #dce7ad;">&#127807;</div>
+                      {% endif %}
+                    </td>
+                    <!-- Product Title & Details -->
+                    <td style="padding-left: 10px; vertical-align: middle;">
+                      <h4 class="item-title">{{ line.title }}</h4>
+                      <p class="item-variant">
+                        {% unless line.variant.title contains 'Default' %}
+                          {{ line.variant.title }} &bull;
+                        {% endunless %}
+                        Quantity: <strong>{{ line.quantity }}</strong>
+                      </p>
+                    </td>
+                    <!-- Line Total -->
+                    <td class="item-price" style="vertical-align: middle;">
+                      {{ line.final_line_price | money }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+
+              <!-- Totals Breakdown -->
+              <table class="totals-table" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="color: #586359;">Subtotal</td>
+                  <td style="text-align: right; color: #153b2d; font-weight: 600;">{{ order.subtotal_price | money }}</td>
+                </tr>
+                {% for discount_application in order.discount_applications %}
+                  <tr>
+                    <td style="color: #3f7d3a;">Discount ({{ discount_application.title }})</td>
+                    <td style="text-align: right; color: #3f7d3a; font-weight: 600;">-{{ discount_application.total_allocated_amount | money }}</td>
+                  </tr>
+                {% endfor %}
+                <tr>
+                  <td style="color: #586359;">Shipping</td>
+                  <td style="text-align: right; color: #3f7d3a; font-weight: 600;">
+                    {% if order.shipping_price == 0 %}FREE (Standard Botanical Delivery){% else %}{{ order.shipping_price | money }}{% endif %}
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td>Total Paid</td>
+                  <td style="text-align: right;">{{ order.total_price | money }}</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Real Shipping Address -->
+            {% if order.shipping_address %}
+              <div style="margin-top: 28px; padding: 18px; background-color: #faf8f2; border-radius: 12px; font-size: 13px; line-height: 1.5; color: #586359; border: 1px solid #e7e2d4;">
+                <strong style="color: #153b2d; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 6px;">
+                  Shipping Address:
+                </strong>
+                <strong>{{ order.shipping_address.name }}</strong><br>
+                {{ order.shipping_address.street }}<br>
+                {{ order.shipping_address.city }}, {{ order.shipping_address.province }} &mdash; {{ order.shipping_address.zip }}<br>
+                Phone: {{ order.shipping_address.phone | default: customer.phone | default: "On File" }}
+              </div>
+            {% endif %}
+
+          </div>
+
+          <!-- Trust Badges Strip -->
+          <div class="trust-strip">
+            <table width="100%">
+              <tr>
+                <td class="trust-pill" width="33%">&#127807; 100% Single-Origin</td>
+                <td class="trust-pill" width="33%">&#129514; Zero Preservatives</td>
+                <td class="trust-pill" width="33%">&#128230; Plastic-Free Jar Packaging</td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Footer -->
+          <div class="email-footer">
+            <p style="margin: 0 0 10px;">
+              Need to change your shipping address or have questions?<br>
+              Contact our ritual team at <a href="mailto:care@naturemist.com">care@naturemist.com</a>.
+            </p>
+            <p style="margin: 0; font-size: 11px; color: #a4aca3;">
+              &copy; {{ "now" | date: "%Y" }} NatureMist Botanicals &bull; <a href="https://www.naturemist.shop">naturemist.shop</a>
+            </p>
+          </div>
+
+        </div>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
