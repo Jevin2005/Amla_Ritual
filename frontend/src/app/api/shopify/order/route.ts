@@ -38,6 +38,7 @@ type OrderRequestPayload = {
   razorpayPaymentId?: string;
   razorpayOrderId?: string;
   razorpaySignature?: string;
+  upiId?: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -55,10 +56,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── 1. Strict Payment Security: Verify Payment Before Creating Paid Orders ──
-    const isOnlinePayment = payload.paymentMethod !== "cod";
+    // ── 1. Strict Payment Security: Verify Razorpay for Cards/NetBanking & UPI ──
+    const isRazorpayPayment =
+      payload.paymentMethod === "shopify" ||
+      (payload.paymentMethod === "upi" && Boolean(payload.razorpayPaymentId));
 
-    if (isOnlinePayment) {
+    if (isRazorpayPayment) {
       const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = payload;
       const keySecret = process.env.RAZORPAY_KEY_SECRET || "";
 
@@ -165,14 +168,18 @@ export async function POST(req: NextRequest) {
     // ── 3. Create Order & Customer in Shopify Admin ──
     if (domain && adminToken) {
       try {
-        const financialStatus = isOnlinePayment ? "paid" : "pending";
+        const financialStatus = isRazorpayPayment ? "paid" : "pending";
 
         const paymentGatewayName =
           payload.paymentMethod === "cod"
             ? "Cash on Delivery (COD)"
-            : payload.razorpayPaymentId
-              ? `Razorpay Net Banking / UPI (ID: ${payload.razorpayPaymentId})`
-              : "Razorpay Online";
+            : payload.paymentMethod === "upi"
+              ? payload.razorpayPaymentId
+                ? `Razorpay Instant UPI (ID: ${payload.razorpayPaymentId})`
+                : `Instant UPI Transfer (Ref/UTR: ${payload.upiId || "Submitted"})`
+              : payload.razorpayPaymentId
+                ? `Razorpay Net Banking / Cards (ID: ${payload.razorpayPaymentId})`
+                : "Razorpay Online";
 
         const rawPhone = payload.customer.phone.replace(/\D/g, "");
         const formattedPhone =
@@ -187,6 +194,10 @@ export async function POST(req: NextRequest) {
             send_receipt: true,
             send_fulfillment_receipt: true,
             note: `NatureMist Ritual Order · Payment: ${paymentGatewayName}${
+              payload.upiId
+                ? ` · UPI Ref/UTR: ${payload.upiId.trim()}`
+                : ""
+            }${
               payload.razorpayPaymentId
                 ? ` · Razorpay Payment: ${payload.razorpayPaymentId}`
                 : ""
@@ -200,6 +211,8 @@ export async function POST(req: NextRequest) {
                 : ""
             }`,
             tags: `NatureMist, In-App-Checkout, ${payload.paymentMethod.toUpperCase()}${
+              payload.paymentMethod === "upi" ? ", UPI, INSTANT_UPI" : ""
+            }${
               payload.razorpayPaymentId
                 ? `, RZP_${payload.razorpayPaymentId}`
                 : ""

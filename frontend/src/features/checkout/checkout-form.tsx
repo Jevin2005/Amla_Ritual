@@ -124,6 +124,8 @@ export function CheckoutForm({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const finalTotalPaise = Math.max(100, totalPaise + shippingFeePaise);
+  const finalPayableRupees = (finalTotalPaise / 100).toFixed(2);
 
   const handleInputChange = (
     field: keyof CheckoutFormData,
@@ -247,7 +249,7 @@ export function CheckoutForm({
         }
       }
 
-      // ── IN-APP DIRECT PAYMENT (RAZORPAY MODAL: NET BANKING, UPI, CARDS) ──
+      // ── IN-APP DIRECT PAYMENT (RAZORPAY MODAL: UPI, QR, CARDS, NET BANKING & WALLETS) ──
       if (formData.paymentMethod === "shopify" || formData.paymentMethod === "upi") {
         // Function to load Razorpay Checkout.js dynamically if not already available
         const loadScript = (): Promise<boolean> => {
@@ -278,6 +280,7 @@ export function CheckoutForm({
                 customer: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
                 email: formData.email.trim(),
                 phone: `+91${cleanPhone}`,
+                payment_type: "RAZORPAY_ONLINE",
               },
             }),
           });
@@ -300,20 +303,23 @@ export function CheckoutForm({
             return;
           }
 
-          const rzp = new RazorpayConstructor({
+          const rzpPrefill: Record<string, string> = {
+            name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
+            email: formData.email.trim(),
+            contact: cleanPhone,
+          };
+
+          const rzpOptions: Record<string, unknown> = {
             key: createOrderData.keyId,
             order_id: createOrderData.orderId,
             amount: createOrderData.amountPaise,
             currency: createOrderData.currency || "INR",
             name: "NatureMist Botanicals",
-            description: "Ayurvedic Botanical Ritual Order",
-            prefill: {
-              name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
-              email: formData.email.trim(),
-              contact: cleanPhone,
-            },
+            description: "NatureMist Botanical Ritual Order",
+            prefill: rzpPrefill,
             notes: {
               address: `${formData.address1.trim()}, ${formData.city.trim()}, ${formData.province.trim()} - ${formData.zip.trim()}`,
+              payment_method: "RAZORPAY_ONLINE",
             },
             theme: {
               color: "#153b2d",
@@ -323,6 +329,10 @@ export function CheckoutForm({
                 setIsSubmitting(false);
               },
             },
+          };
+
+          const rzp = new RazorpayConstructor({
+            ...rzpOptions,
             handler: async (response: {
               razorpay_payment_id?: string;
               razorpay_order_id?: string;
@@ -416,7 +426,7 @@ export function CheckoutForm({
                 track("purchase", {
                   value: finalTotalPaise / 100,
                   currency: currencyCode,
-                  payment_type: "razorpay_netbanking",
+                  payment_type: "razorpay_online",
                   transaction_id: response.razorpay_payment_id,
                   items_count: cart.reduce((t, i) => t + i.quantity, 0),
                 });
@@ -434,7 +444,7 @@ export function CheckoutForm({
                     formData.shippingMethod === "express"
                       ? "Express Priority Air Delivery (1-2 Days)"
                       : "Standard Ayurvedic Delivery (3-5 Days · Free)",
-                  paymentMethod: `Paid Online (Razorpay Ref: ${response.razorpay_payment_id || "Verified"})`,
+                  paymentMethod: `Paid Online via Razorpay (Ref: ${response.razorpay_payment_id || "Verified"})`,
                   totalPaise: finalTotalPaise,
                   currencyCode,
                   items: cart.map((item) => ({
@@ -520,6 +530,7 @@ export function CheckoutForm({
               slug: item.slug,
             })),
             paymentMethod: formData.paymentMethod,
+            upiId: formData.upiId?.trim() || undefined,
             shippingMethod: formData.shippingMethod,
             shippingFeePaise,
             totalPaise: totalPaise + shippingFeePaise,
@@ -552,9 +563,7 @@ export function CheckoutForm({
       const paymentLabel =
         formData.paymentMethod === "cod"
           ? "Cash on Delivery (Pay at Doorstep)"
-          : formData.paymentMethod === "upi"
-            ? "Direct UPI Instant Transfer"
-            : "Online Payment (Card / NetBanking)";
+          : "Paid Online via Razorpay";
 
       const confirmation: OrderConfirmationData = {
         orderId: finalOrderId,
@@ -1008,7 +1017,38 @@ export function CheckoutForm({
           </div>
 
           <div className="grid gap-2.5">
-            {/* Cash on Delivery (COD) */}
+            {/* 1. All-in-One Online Payment via Razorpay */}
+            <label
+              className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${
+                formData.paymentMethod === "shopify"
+                  ? "border-[var(--forest)] bg-[#edf3dd]/50 ring-2 ring-[var(--forest)]/15 shadow-sm"
+                  : "border-[var(--line)] bg-[var(--paper)] hover:bg-[var(--ivory)]"
+              }`}
+            >
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="shopify"
+                checked={formData.paymentMethod === "shopify"}
+                onChange={() => handleInputChange("paymentMethod", "shopify")}
+                className="mt-0.5 size-4 accent-[var(--forest)] shrink-0"
+              />
+              <div className="flex-1">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <span className="text-[0.84rem] font-bold text-[var(--forest)]">
+                    Pay Online (UPI, QR, Cards, Net Banking & Wallets)
+                  </span>
+                  <span className="text-[0.74rem] font-semibold text-[var(--forest)]">
+                    ₹{finalPayableRupees}
+                  </span>
+                </div>
+                <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
+                  Pay securely via Razorpay with UPI, QR Code, Debit / Credit Cards, Net Banking, or Wallets.
+                </p>
+              </div>
+            </label>
+
+            {/* 2. Cash on Delivery (COD) */}
             <label
               className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${
                 formData.paymentMethod === "cod"
@@ -1030,58 +1070,6 @@ export function CheckoutForm({
                 </span>
                 <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
                   Pay securely with Cash, UPI, or Card directly to the courier partner when your ritual arrives.
-                </p>
-              </div>
-            </label>
-
-            {/* Direct UPI / QR Instant Transfer */}
-            <label
-              className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${
-                formData.paymentMethod === "upi"
-                  ? "border-[var(--forest)] bg-[#edf3dd]/50 ring-2 ring-[var(--forest)]/15"
-                  : "border-[var(--line)] bg-[var(--paper)] hover:bg-[var(--ivory)]"
-              }`}
-            >
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="upi"
-                checked={formData.paymentMethod === "upi"}
-                onChange={() => handleInputChange("paymentMethod", "upi")}
-                className="mt-0.5 size-4 accent-[var(--forest)]"
-              />
-              <div className="flex-1">
-                <span className="text-[0.82rem] font-bold text-[var(--forest)]">
-                  Instant UPI / QR Code Transfer
-                </span>
-                <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
-                  Instant confirmation via any UPI app (Google Pay, PhonePe, Paytm, CRED).
-                </p>
-              </div>
-            </label>
-
-            {/* Online Payment (Card / NetBanking) */}
-            <label
-              className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${
-                formData.paymentMethod === "shopify"
-                  ? "border-[var(--forest)] bg-[#edf3dd]/50 ring-2 ring-[var(--forest)]/15"
-                  : "border-[var(--line)] bg-[var(--paper)] hover:bg-[var(--ivory)]"
-              }`}
-            >
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="shopify"
-                checked={formData.paymentMethod === "shopify"}
-                onChange={() => handleInputChange("paymentMethod", "shopify")}
-                className="mt-0.5 size-4 accent-[var(--forest)]"
-              />
-              <div className="flex-1">
-                <span className="text-[0.82rem] font-bold text-[var(--forest)]">
-                  Debit / Credit Card & Net Banking
-                </span>
-                <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
-                  Pay securely with Visa, MasterCard, RuPay, or All-India Net Banking.
                 </p>
               </div>
             </label>
@@ -1108,14 +1096,16 @@ export function CheckoutForm({
             {isSubmitting ? (
               <span className="flex items-center gap-2">
                 <span className="size-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                <span>Placing Ritual Order…</span>
+                <span>
+                  {formData.paymentMethod === "cod"
+                    ? "Placing Cash on Delivery Order…"
+                    : "Opening Razorpay Gateway…"}
+                </span>
               </span>
             ) : formData.paymentMethod === "cod" ? (
               <span className="whitespace-nowrap">Place Order (Cash on Delivery) ➔</span>
-            ) : formData.paymentMethod === "upi" ? (
-              <span className="whitespace-nowrap">Place Order & Pay via UPI ➔</span>
             ) : (
-              <span className="whitespace-nowrap">Pay via Razorpay / Net Banking ➔</span>
+              <span className="whitespace-nowrap">Pay Online via Razorpay (₹{finalPayableRupees}) ➔</span>
             )}
           </button>
 
