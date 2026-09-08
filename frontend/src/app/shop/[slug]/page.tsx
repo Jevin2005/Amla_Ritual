@@ -215,42 +215,42 @@ export default async function ProductPage(props: ProductPageProps) {
           </p>
           <Link
             href="#product-description"
-            className="-mt-2 inline-flex min-h-8 items-center self-start py-1 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-[var(--botanical)] underline underline-offset-4 transition-colors hover:text-[var(--forest)]"
+            className="-mt-2 inline-flex min-h-8 items-center self-start py-1 text-[0.72rem] font-bold uppercase tracking-[0.08em] text-[var(--botanical)] underline underline-offset-4 transition-colors hover:text-[var(--forest)]"
           >
             Read full description
           </Link>
 
           {/* Amazon-Style Specifications Table */}
-          <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-3.5 shadow-2xs max-[680px]:p-2.5 max-[680px]:rounded-xl">
-            <span className="mb-2 block text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
+          <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
+            <span className="mb-2.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
               Botanical Specifications
             </span>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[0.72rem] max-[680px]:text-[0.66rem]">
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
-                <span className="text-[var(--muted)]">Botanical Name:</span>
-                <span className="font-semibold text-[var(--forest)] italic">{product.botanical}</span>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-[0.8rem] max-[680px]:grid-cols-1 max-[680px]:gap-y-1.5 max-[680px]:text-[0.74rem]">
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
+                <span className="text-[var(--muted)] shrink-0">Botanical Name:</span>
+                <span className="font-semibold text-[var(--forest)] italic text-right">{product.botanical}</span>
               </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
-                <span className="text-[var(--muted)]">Plant Part:</span>
-                <span className="font-semibold text-[var(--forest)]">{product.plantPart}</span>
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
+                <span className="text-[var(--muted)] shrink-0">Plant Part:</span>
+                <span className="font-semibold text-[var(--forest)] text-right">{product.plantPart}</span>
               </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
-                <span className="text-[var(--muted)]">Net Quantity:</span>
-                <span className="font-semibold text-[var(--forest)]">{product.size}</span>
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
+                <span className="text-[var(--muted)] shrink-0">Net Quantity:</span>
+                <span className="font-semibold text-[var(--forest)] text-right">{product.size}</span>
               </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1">
-                <span className="text-[var(--muted)]">Formulation:</span>
-                <span className="font-semibold text-[var(--forest)]">Shade-Dried Powder</span>
+              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
+                <span className="text-[var(--muted)] shrink-0">Formulation:</span>
+                <span className="font-semibold text-[var(--forest)] text-right">Shade-Dried Powder</span>
               </div>
             </div>
           </div>
 
           {/* About This Item (Key Benefits) */}
           <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
-            <span className="mb-2 block text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)]">
+            <span className="mb-2.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)]">
               About this item
             </span>
-            <ul className="m-0 space-y-1.5 pl-0 list-none text-[0.76rem] text-[var(--muted)] max-[680px]:text-[0.7rem]">
+            <ul className="m-0 space-y-1.5 pl-0 list-none text-[0.82rem] text-[var(--muted)] max-[680px]:text-[0.76rem]">
               {product.benefits.map((b) => (
                 <li key={b} className="flex items-start gap-2 leading-relaxed">
                   <span className="text-[#529d38] font-bold">✓</span>
@@ -266,13 +266,13 @@ export default async function ProductPage(props: ProductPageProps) {
           </div>
 
           {/* Preparation & Storage Accordions */}
-          <div className="space-y-1.5">
-            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-3.5 transition-all max-[680px]:p-2.5 max-[680px]:rounded-xl" open>
-              <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.05rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[0.92rem]">
+          <div className="space-y-2">
+            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl" open>
+              <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.12rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[1rem]">
                 <span>How to prepare & apply</span>
-                <span className="text-sm text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
+                <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
               </summary>
-              <ol className="mt-2.5 mb-0 space-y-1 pl-4 text-[0.76rem] text-[var(--muted)] max-[680px]:text-[0.68rem]">
+              <ol className="mt-2.5 mb-0 space-y-1.5 pl-4 text-[0.82rem] text-[var(--muted)] max-[680px]:text-[0.75rem]">
                 {product.howTo.map((step) => (
                   <li key={step} className="list-decimal leading-relaxed">
                     {step}
@@ -281,14 +281,14 @@ export default async function ProductPage(props: ProductPageProps) {
               </ol>
             </details>
 
-            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-3.5 transition-all max-[680px]:p-2.5 max-[680px]:rounded-xl">
-              <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.05rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[0.92rem]">
+            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl">
+              <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.12rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[1rem]">
                 <span>Storage & Safety Guidelines</span>
-                <span className="text-sm text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
+                <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
               </summary>
-              <div className="mt-2 text-[0.76rem] text-[var(--muted)] leading-relaxed max-[680px]:text-[0.68rem]">
+              <div className="mt-2.5 text-[0.82rem] text-[var(--muted)] leading-relaxed max-[680px]:text-[0.75rem]">
                 <p className="m-0 font-medium text-[var(--forest)]">{product.storage}</p>
-                <p className="mt-1 mb-0 text-[0.68rem] text-[var(--muted)]">
+                <p className="mt-1.5 mb-0 text-[0.74rem] text-[var(--muted)]">
                   {globalSafety}
                 </p>
               </div>

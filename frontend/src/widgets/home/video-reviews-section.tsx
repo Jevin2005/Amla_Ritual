@@ -259,16 +259,16 @@ function VideoStoryCard({
 
         {/* Story details */}
         <span className="absolute bottom-0 left-0 right-0 block p-4 text-white z-10 pointer-events-none">
-          <span className="flex items-center justify-between gap-2 text-[0.56rem] font-bold uppercase tracking-[0.1em] text-[#dce8b6]">
+          <span className="flex items-center justify-between gap-2 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-[#dce8b6]">
             <span>{video.creator}</span>
-            <span className="rounded-full bg-black/40 px-2 py-0.5 backdrop-blur-xs">
+            <span className="rounded-full bg-black/50 px-2.5 py-0.5 backdrop-blur-xs text-[0.64rem]">
               {video.duration}
             </span>
           </span>
-          <strong className="mt-1.5 block [font-family:var(--font-display)] text-[1.1rem] font-normal leading-[1.2] line-clamp-2">
+          <strong className="mt-1.5 block [font-family:var(--font-display)] text-[1.12rem] font-normal leading-[1.25] line-clamp-2">
             {video.title}
           </strong>
-          <span className="mt-2 block text-[0.58rem] font-bold uppercase tracking-[0.12em] text-[var(--botanical)]">
+          <span className="mt-2 block text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--botanical)]">
             {video.productTag}
           </span>
         </span>
@@ -323,12 +323,12 @@ export function VideoReviewsSection() {
 
   return (
     <section
-      className="relative mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(65px,8vw,110px)] max-[680px]:px-3.5 max-[680px]:py-12"
+      className="relative mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(65px,8vw,110px)] max-[680px]:px-4 max-[680px]:py-12"
       id="community-rituals"
       aria-labelledby="community-reviews-title"
     >
       <div className="mx-auto mb-10 max-w-[720px] text-center max-[680px]:mb-7">
-        <p className="mb-3 text-[0.66rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mb-1.5 max-[680px]:text-[0.54rem]">
+        <p className="mb-3 text-[0.74rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mb-1.5 max-[680px]:text-[0.66rem]">
           A community in rhythm
         </p>
         <h2
@@ -337,7 +337,7 @@ export function VideoReviewsSection() {
         >
           Customer rituals, honestly shared.
         </h2>
-        <p className="mx-auto mb-0 mt-4 max-w-[600px] text-[0.9rem] leading-[1.7] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:text-[0.74rem]">
+        <p className="mx-auto mb-0 mt-4 max-w-[600px] text-[0.92rem] leading-[1.7] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:text-[0.82rem]">
           Explore published video and written experiences, then open the exact botanical connected to each story.
         </p>
       </div>
@@ -347,7 +347,7 @@ export function VideoReviewsSection() {
         <div className="mb-14 max-[680px]:mb-10">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
-              <p className="mb-1 text-[0.58rem] font-bold uppercase tracking-[0.16em] text-[var(--botanical)]">
+              <p className="mb-1 text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[var(--botanical)] max-[680px]:text-[0.66rem]">
                 Explore their method
               </p>
               <h3 className="m-0 [font-family:var(--font-display)] text-[1.5rem] font-normal text-[var(--forest)]">
@@ -391,7 +391,7 @@ export function VideoReviewsSection() {
         <div>
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
-              <p className="mb-1 text-[0.58rem] font-bold uppercase tracking-[0.16em] text-[var(--botanical)]">
+              <p className="mb-1 text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[var(--botanical)] max-[680px]:text-[0.66rem]">
                 In their words
               </p>
               <h3 className="m-0 [font-family:var(--font-display)] text-[1.5rem] font-normal text-[var(--forest)]">

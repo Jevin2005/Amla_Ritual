@@ -37,7 +37,7 @@ export function WishlistPage() {
         <span className="mb-[30px] grid size-[90px] place-items-center rounded-full border border-[var(--line)] text-2xl text-[var(--botanical)]" aria-hidden="true">♡</span>
         <p className="m-0 font-serif text-[clamp(2rem,3vw,3rem)] leading-[1.04]">Save a ritual for later.</p>
         <p className="max-w-[360px] text-[var(--muted)]">Your favourite botanicals will remain here on this device while you explore.</p>
-        <Link className="mt-[15px] inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-6 py-[13px] text-[0.72rem] font-bold uppercase leading-none tracking-[0.12em] text-[var(--paper)] shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,color,border-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)]" href="/shop">Explore the collection</Link>
+        <Link className="mt-[15px] inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-7 py-[13px] text-[0.74rem] font-bold uppercase leading-none tracking-[0.14em] text-[var(--paper)] shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,color,border-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)]" href="/shop">Explore the collection</Link>
       </section>
     );
   }
@@ -46,7 +46,7 @@ export function WishlistPage() {
     <section className="mx-auto min-h-[600px] w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(84px,9vw,140px)] max-[680px]:px-5 max-[680px]:py-[75px]" aria-labelledby="saved-title">
       <div className="flex items-center justify-between px-0 pb-[22px] pt-[30px] max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-1">
         <h2 className="m-0 font-serif text-[1.7rem] font-normal text-[var(--forest)]" id="saved-title">{savedProducts.length} saved ritual{savedProducts.length === 1 ? "" : "s"}</h2>
-        <span className="rounded-full bg-[var(--paper)] px-3 py-1.5 text-[0.66rem] font-bold uppercase tracking-[0.1em] text-[var(--muted)] ring-1 ring-[var(--line)]">Saved on this device</span>
+        <span className="rounded-full bg-[var(--paper)] px-3.5 py-1.5 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)] ring-1 ring-[var(--line)]">Saved on this device</span>
       </div>
       <div className="grid grid-cols-3 gap-[22px] max-[1100px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:[&>*]:w-full [&>article>div:first-child]:h-[clamp(330px,28vw,430px)] max-[680px]:[&>article>div:first-child]:h-[360px]">
         {savedProducts.map((product, index) => (

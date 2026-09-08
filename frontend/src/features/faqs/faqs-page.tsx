@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 
 const eyebrowClass =
-  "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
+  "mb-4 text-[0.72rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
 const inputClass =
   "w-full rounded-full border border-[var(--line)] bg-[var(--paper)] px-6 py-4 text-[0.95rem] text-[var(--forest)] shadow-[0_4px_16px_rgba(21,59,45,0.04)] transition-[border-color,box-shadow] duration-200 placeholder:text-[var(--muted)]/60 focus:border-[var(--forest)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--forest)]/10";
 
@@ -143,7 +143,7 @@ export function FaqsPage() {
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategory(cat.id)}
-              className={`rounded-full px-5 py-2.5 text-[0.74rem] font-bold tracking-[0.08em] uppercase transition-[background-color,color,transform] duration-200 ${
+              className={`rounded-full px-5 py-2.5 text-[0.74rem] font-bold tracking-[0.1em] uppercase transition-[background-color,color,transform] duration-200 ${
                 selectedCategory === cat.id
                   ? "bg-[var(--forest)] text-[var(--paper)] shadow-[0_6px_18px_rgba(21,59,45,0.15)]"
                   : "border border-[var(--line)] bg-[var(--paper)] text-[var(--muted)] hover:border-[var(--forest)] hover:text-[var(--forest)]"
@@ -165,7 +165,7 @@ export function FaqsPage() {
             </p>
             <Link
               href="/contact"
-              className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--forest)] px-6 text-[0.72rem] font-bold tracking-[0.1em] text-[var(--paper)] uppercase"
+              className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--forest)] px-7 text-[0.74rem] font-bold tracking-[0.12em] text-[var(--paper)] uppercase"
             >
               Ask a botanical specialist →
             </Link>
@@ -182,14 +182,14 @@ export function FaqsPage() {
                   <button
                     type="button"
                     onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="flex w-full items-center justify-between gap-6 px-7 py-6 text-left"
+                    className="flex w-full items-start justify-between gap-6 px-7 py-6 text-left"
                     aria-expanded={isOpen}
                   >
-                    <span className="font-serif text-[clamp(1.1rem,2vw,1.35rem)] font-normal text-[var(--forest)]">
+                    <span className="font-serif text-[clamp(1.1rem,2vw,1.35rem)] font-normal leading-[1.25] text-[var(--forest)]">
                       {faq.question}
                     </span>
                     <span
-                      className={`grid size-8 shrink-0 place-items-center rounded-full border border-[var(--line)] text-sm text-[var(--forest)] transition-transform duration-300 ${
+                      className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full border border-[var(--line)] text-sm font-semibold text-[var(--forest)] transition-transform duration-300 ${
                         isOpen ? "rotate-45 bg-[var(--sand)]" : "bg-[var(--paper)]"
                       }`}
                     >
@@ -220,13 +220,13 @@ export function FaqsPage() {
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--amla)] px-8 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--forest-dark)] uppercase shadow-lg transition-transform hover:-translate-y-0.5"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--amla)] px-8 text-[0.74rem] font-bold tracking-[0.14em] text-[var(--forest-dark)] uppercase shadow-lg transition-transform hover:-translate-y-0.5"
             >
               Get personalized advice →
             </Link>
             <Link
               href="/shop"
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/30 px-8 text-[0.72rem] font-bold tracking-[0.14em] text-white uppercase transition-colors hover:bg-white/10"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/30 px-8 text-[0.74rem] font-bold tracking-[0.14em] text-white uppercase transition-colors hover:bg-white/10"
             >
               Shop all rituals
             </Link>

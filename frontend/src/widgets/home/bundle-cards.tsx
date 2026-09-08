@@ -42,10 +42,10 @@ export function BundleCards() {
           >
             {/* ── Photo Stage (Exact aspect-square as ProductCard) ── */}
             <div
-              className={`relative aspect-square w-full flex-none overflow-hidden ${accentConfig.bg} flex items-center justify-center p-3 max-[680px]:p-2`}
+              className={`relative aspect-square w-full flex-none overflow-hidden ${accentConfig.bg} flex items-center justify-center p-3 max-[680px]:p-2.5`}
             >
               {/* Top-Right Set Badge */}
-              <span className="absolute top-3 right-3 z-10 rounded-full border border-black/5 bg-white/90 px-2 py-0.5 text-[0.52rem] font-bold uppercase tracking-wider text-[var(--forest)] shadow-xs backdrop-blur-xs max-[680px]:top-2 max-[680px]:right-2 max-[680px]:text-[0.42rem] max-[680px]:px-1.5">
+              <span className="absolute top-3 right-3 z-10 rounded-full border border-black/5 bg-white/95 px-2.5 py-0.5 text-[0.66rem] font-bold uppercase tracking-wider text-[var(--forest)] shadow-xs backdrop-blur-xs max-[680px]:top-2 max-[680px]:right-2 max-[680px]:text-[0.58rem] max-[680px]:px-2">
                 Set of {bundleProducts.length}
               </span>
 
@@ -79,7 +79,7 @@ export function BundleCards() {
 
                 {/* Extra badge if more than 3 products */}
                 {bundleProducts.length > 3 && (
-                  <span className="absolute right-1 bottom-1 z-30 grid size-6 place-items-center rounded-full bg-[var(--forest)] text-[0.52rem] font-bold text-white shadow-md max-[680px]:size-5 max-[680px]:text-[0.46rem]">
+                  <span className="absolute right-1 bottom-1 z-30 grid size-7 place-items-center rounded-full bg-[var(--forest)] text-[0.68rem] font-bold text-white shadow-md max-[680px]:size-6 max-[680px]:text-[0.6rem]">
                     +{bundleProducts.length - 3}
                   </span>
                 )}
@@ -87,37 +87,37 @@ export function BundleCards() {
             </div>
 
             {/* ── Info Area (Identical typography and padding to ProductCard) ── */}
-            <div className="flex flex-1 flex-col border-t border-[var(--line)] px-5 pt-4 pb-5 max-[680px]:px-3 max-[680px]:pt-2.5 max-[680px]:pb-3 max-[420px]:px-2.5 max-[420px]:py-2">
-              <p className="mb-1 text-[0.62rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.46rem] max-[680px]:tracking-[0.08em]">
+            <div className="flex flex-1 flex-col border-t border-[var(--line)] px-5 pt-4 pb-5 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5 max-[420px]:px-2.5 max-[420px]:py-2.5">
+              <p className="mb-1 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.1em]">
                 Curated Ritual Set
               </p>
 
-              <h3 className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,1.95rem)] leading-[1.05] tracking-[-0.03em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:mb-0.5 max-[680px]:text-[1.02rem] max-[420px]:text-[0.92rem]">
+              <h3 className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,1.95rem)] leading-[1.08] tracking-[-0.03em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:mb-1 max-[680px]:text-[1.18rem] max-[420px]:text-[1.05rem]">
                 {bundle.name}
               </h3>
 
-              <p className="mb-0 text-[0.74rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-1 max-[680px]:text-[0.56rem] max-[680px]:leading-[1.25] max-[420px]:text-[0.5rem]">
+              <p className="mb-0 text-[0.82rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.68rem]">
                 {bundleProducts
                   .map((product) => product.name.replace(" Powder", ""))
                   .join(" · ")}
               </p>
 
-              <div className="mt-auto pt-4 max-[680px]:pt-2">
-                <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2">
+              <div className="mt-auto pt-4 max-[680px]:pt-3">
+                <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2.5">
                   <div>
                     <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                      <span className="[font-family:var(--font-display)] text-[1.22rem] leading-none text-[var(--forest)] max-[680px]:text-[0.95rem] max-[420px]:text-[0.88rem]">
+                      <span className="[font-family:var(--font-display)] text-[1.32rem] leading-none text-[var(--forest)] max-[680px]:text-[1.12rem] max-[420px]:text-[1.02rem]">
                         {formatCurrency(total, currencyCode)}
                       </span>
                     </span>
-                    <span className="mt-0.5 block text-[0.55rem] font-bold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.44rem]">
+                    <span className="mt-0.5 block text-[0.64rem] font-bold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.55rem]">
                       {isAvailable ? "Complete Set" : "Sold out"}
                     </span>
                   </div>
 
                   <button
                     type="button"
-                    className="grid size-10 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.15rem] text-white shadow-[0_6px_18px_color-mix(in_srgb,var(--forest)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 max-[680px]:size-7 max-[680px]:text-[0.85rem] max-[420px]:size-6.5 max-[420px]:text-[0.75rem]"
+                    className="grid size-11 place-items-center rounded-full border border-[var(--forest)] bg-[var(--forest)] text-[1.15rem] text-white shadow-[0_6px_18px_color-mix(in_srgb,var(--forest)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 max-[680px]:size-9 max-[680px]:text-[0.95rem] max-[420px]:size-8.5 max-[420px]:text-[0.88rem]"
                     onClick={() =>
                       addManyToCart(
                         bundleProducts.map((product) => product.slug)

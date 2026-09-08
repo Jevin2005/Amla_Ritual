@@ -8,7 +8,7 @@ import { BrandMark } from "./brand-mark";
 const footerHeadingClass =
   "m-0 mb-[18px] text-[0.7rem] font-bold tracking-[0.14em] text-[var(--amla)] uppercase";
 const footerLinkClass =
-  "inline-flex min-h-11 w-fit max-w-full items-center text-[0.82rem] leading-[1.35] text-white/72 transition-[color,transform] duration-200 ease-[ease] hover:text-[var(--paper)] hover:[transform:translateX(4px)]";
+  "inline-flex min-h-8 w-fit max-w-full items-center text-[0.84rem] leading-snug text-white/76 transition-[color,transform] duration-200 ease-[ease] hover:text-[var(--paper)] hover:[transform:translateX(4px)]";
 
 const fallbackNavigation = [
   {
@@ -73,8 +73,8 @@ export function SiteFooter() {
           <NewsletterForm />
         </div>
       </div>
-      <div className="mx-auto grid max-w-[1440px] grid-cols-[1.6fr_repeat(3,0.7fr)] gap-[45px] py-[65px] max-[900px]:grid-cols-[1.35fr_repeat(3,1fr)] max-[680px]:grid-cols-[1fr_1fr] max-[680px]:gap-x-6 max-[680px]:gap-y-10">
-        <div className="max-[680px]:col-span-full">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-[1.6fr_repeat(3,0.7fr)] gap-[45px] py-[65px] max-[1024px]:grid-cols-[1.3fr_1fr_1fr] max-[820px]:grid-cols-[1fr_1fr] max-[820px]:gap-8 max-[680px]:grid-cols-[1fr_1fr] max-[680px]:gap-x-6 max-[680px]:gap-y-10">
+        <div className="max-[820px]:col-span-full">
           <Link
             className="inline-block"
             href="/"
@@ -97,9 +97,9 @@ export function SiteFooter() {
           </nav>
         ))}
       </div>
-      <div className="mx-auto flex max-w-[1440px] justify-between border-t border-white/16 pt-[22px] text-[0.62rem] tracking-[0.1em] text-white/68 uppercase max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-2">
+      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 border-t border-white/16 pt-[22px] text-[0.68rem] tracking-[0.08em] text-white/70 uppercase max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-2">
         <span>© {new Date().getFullYear()} NatureMist</span>
-        <span>Rooted in Ayurveda. Made for modern rituals.</span>
+        <span className="text-white/55 max-[820px]:order-3 max-[820px]:w-full">Rooted in Ayurveda. Made for modern rituals.</span>
         <span>India · Worldwide vision</span>
       </div>
     </footer>

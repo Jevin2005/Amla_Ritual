@@ -52,14 +52,14 @@ export function SiteHeader() {
       >
         Skip to content
       </a>
-      <div className="bg-[linear-gradient(90deg,var(--forest-dark),var(--forest))] text-white/84 max-[680px]:pt-[env(safe-area-inset-top)]">
-        <div className="mx-auto flex min-h-9 w-full max-w-[1440px] items-center justify-between gap-8 px-[clamp(20px,3.35vw,48px)] py-1.5 text-[0.66rem] font-[650] tracking-[0.14em] uppercase max-[900px]:justify-center max-[680px]:min-h-[32px] max-[680px]:pr-[max(12px,env(safe-area-inset-right))] max-[680px]:pl-[max(12px,env(safe-area-inset-left))] max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.075em]">
-          <p className="m-0 text-center">
+      <div className="bg-[linear-gradient(90deg,var(--forest-dark),var(--forest))] text-white/88 max-[680px]:pt-[env(safe-area-inset-top)]">
+        <div className="mx-auto flex min-h-9 w-full max-w-[1440px] items-center justify-between gap-6 px-[clamp(20px,3.35vw,48px)] py-1.5 text-[0.7rem] font-[650] tracking-[0.12em] uppercase max-[900px]:justify-center max-[680px]:min-h-[32px] max-[680px]:pr-[max(12px,env(safe-area-inset-right))] max-[680px]:pl-[max(12px,env(safe-area-inset-left))] max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.08em]">
+          <p className="m-0 text-center leading-normal">
             {content.announcementText}
           </p>
-          <div className="flex items-center gap-4 max-[900px]:hidden">
+          <div className="flex items-center gap-3.5 text-[0.68rem] max-[900px]:hidden">
             <Link
-              className="shrink-0 border-b border-[rgba(255,255,255,0.4)] transition-colors hover:border-white hover:text-white"
+              className="shrink-0 border-b border-white/40 transition-colors hover:border-white hover:text-white"
               href={content.announcementLinkUrl}
             >
               {content.announcementLinkLabel} <span aria-hidden="true">↗</span>
@@ -75,8 +75,8 @@ export function SiteHeader() {
         </div>
       </div>
       <header
-        className={`sticky top-0 z-[100] border-b border-[var(--line)] bg-[rgba(245,241,232,0.9)] backdrop-blur-[18px] transition-[height,box-shadow,background-color] duration-[420ms] ease-[var(--ease)] max-[900px]:h-[70px] max-[680px]:h-[60px] ${compact
-            ? "h-[68px] bg-[rgba(255,252,245,0.94)] shadow-[0_12px_35px_rgba(21,59,45,0.09)] max-[900px]:h-[64px] max-[680px]:h-[60px]"
+        className={`sticky top-0 z-[100] border-b border-[var(--line)] bg-[rgba(245,241,232,0.9)] backdrop-blur-[18px] transition-[height,box-shadow,background-color] duration-[420ms] ease-[var(--ease)] max-[1024px]:h-[72px] max-[680px]:h-[60px] ${compact
+            ? "h-[68px] bg-[rgba(255,252,245,0.94)] shadow-[0_12px_35px_rgba(21,59,45,0.09)] max-[1024px]:h-[66px] max-[680px]:h-[60px]"
             : "h-[var(--header-height)]"
           }`}
       >
@@ -84,7 +84,7 @@ export function SiteHeader() {
           className="mx-auto grid h-full w-full max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-[clamp(20px,3.35vw,48px)] max-[900px]:pr-[max(18px,env(safe-area-inset-right))] max-[900px]:pl-[max(18px,env(safe-area-inset-left))] max-[680px]:pr-[max(16px,env(safe-area-inset-right))] max-[680px]:pl-[max(16px,env(safe-area-inset-left))]"
           aria-label="Primary navigation"
         >
-          <div className="flex min-w-0 items-center gap-[clamp(20px,2.5vw,42px)] max-[1180px]:gap-[18px] max-[900px]:hidden">
+          <div className="flex min-w-0 items-center gap-[clamp(16px,2vw,36px)] max-[1100px]:gap-3.5 max-[900px]:hidden">
             {content.primaryNavigation.map((item) => (
               <Link
                 className={interactiveNavClass}
@@ -109,28 +109,28 @@ export function SiteHeader() {
             <span className="h-px w-[21px] bg-[var(--forest)]" />
           </button>
           <Link
-            className="z-10 justify-self-center px-6 py-2.5 max-[900px]:col-start-2 max-[900px]:row-start-1 max-[900px]:px-1 max-[900px]:py-1"
+            className="z-10 justify-self-center px-4 py-2 max-[900px]:col-start-2 max-[900px]:row-start-1 max-[900px]:px-1 max-[900px]:py-1"
             href="/"
             aria-label="NatureMist home"
           >
             <BrandMark />
           </Link>
-          <div className="flex min-w-0 items-center justify-end gap-[clamp(20px,2.5vw,42px)] max-[1180px]:gap-4 max-[900px]:col-start-3 max-[900px]:row-start-1 max-[900px]:justify-self-end max-[900px]:gap-0">
+          <div className="flex min-w-0 items-center justify-end gap-[clamp(16px,2vw,36px)] max-[1100px]:gap-3 max-[900px]:col-start-3 max-[900px]:row-start-1 max-[900px]:justify-self-end max-[900px]:gap-0">
             <button
-              className={`gap-2 max-[900px]:hidden ${interactiveNavClass}`}
+              className={`gap-1.5 max-[900px]:hidden ${interactiveNavClass}`}
               type="button"
               onClick={openSearch}
             >
               Search
             </button>
             <Link
-              className={`gap-2 max-[900px]:hidden ${interactiveNavClass}`}
+              className={`gap-1.5 max-[900px]:hidden ${interactiveNavClass}`}
               href="/wishlist"
               aria-current={pathname === "/wishlist" ? "page" : undefined}
             >
               Wishlist{" "}
               <span
-                className="inline-flex h-5 min-w-5 items-center justify-center rounded-[99px] bg-[var(--forest)] px-1 text-[0.62rem] tracking-normal text-[var(--paper)]"
+                className="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[var(--forest)] px-1.5 text-[0.66rem] font-semibold leading-none tracking-normal text-[var(--paper)] align-middle"
                 aria-live="polite"
                 aria-atomic="true"
               >
@@ -141,13 +141,13 @@ export function SiteHeader() {
               </span>
             </Link>
             <button
-              className={`gap-2 max-[900px]:px-1 max-[900px]:text-[0.64rem] ${interactiveNavClass}`}
+              className={`gap-1.5 max-[900px]:px-1 max-[900px]:text-[0.68rem] ${interactiveNavClass}`}
               type="button"
               onClick={openCart}
             >
               Bag{" "}
               <span
-                className="inline-flex h-5 min-w-5 items-center justify-center rounded-[99px] bg-[var(--forest)] px-1 text-[0.62rem] tracking-normal text-[var(--paper)]"
+                className="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[var(--forest)] px-1.5 text-[0.66rem] font-semibold leading-none tracking-normal text-[var(--paper)] align-middle"
                 aria-live="polite"
                 aria-atomic="true"
               >

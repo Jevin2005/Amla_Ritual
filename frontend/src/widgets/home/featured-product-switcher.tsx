@@ -21,11 +21,11 @@ export function FeaturedProductSwitcher() {
         "--family-soft": product.accentSoft,
       } as CSSProperties}
     >
-      {/* ── Mobile View: Horizontal Pill Switcher + Compact 2-Column Showcase Card ── */}
-      <div className="hidden max-[680px]:block p-3 max-[440px]:p-2.5">
+      {/* ── Mobile View (<680px): Horizontal Pill Switcher + Clean Showcase Card ── */}
+      <div className="hidden max-[680px]:block p-3.5 max-[440px]:p-3">
         {/* Horizontal scrollable pills */}
         <div
-          className="mb-2.5 flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mb-3 flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="group"
           aria-label="Choose a botanical"
         >
@@ -37,11 +37,15 @@ export function FeaturedProductSwitcher() {
                 type="button"
                 aria-pressed={isSelected}
                 onClick={() => setActiveSlug(item.slug)}
-                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.68rem] font-medium transition-all duration-200 active:scale-95 max-[440px]:px-2.5 max-[440px]:py-1 max-[440px]:text-[0.62rem] ${isSelected
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[0.74rem] font-medium transition-all duration-200 active:scale-95 ${isSelected
                     ? "bg-[var(--forest)] text-white shadow-sm font-semibold"
-                    : "border border-[color-mix(in_srgb,var(--family-accent)_25%,transparent)] bg-white/45 text-[var(--forest)] hover:bg-white/70"
+                    : "border border-[color-mix(in_srgb,var(--family-accent)_25%,transparent)] bg-white/60 text-[var(--forest)] hover:bg-white/80"
                   }`}
               >
+                <span
+                  className="size-1.5 rounded-full inline-block"
+                  style={{ backgroundColor: item.accent }}
+                />
                 <span>{item.name.replace(" Powder", "")}</span>
               </button>
             );
@@ -49,9 +53,9 @@ export function FeaturedProductSwitcher() {
         </div>
 
         {/* 2-Column Side-by-Side Product Card */}
-        <div className="grid grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] items-center gap-3 rounded-xl border border-[color-mix(in_srgb,var(--family-accent)_20%,transparent)] bg-white/40 p-2.5 shadow-sm max-[440px]:gap-2 max-[440px]:p-2">
+        <div className="grid grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] items-center gap-3.5 rounded-xl border border-[color-mix(in_srgb,var(--family-accent)_20%,transparent)] bg-white/50 p-3 shadow-xs max-[440px]:gap-2.5 max-[440px]:p-2.5">
           {/* Left Column: Product Photo */}
-          <div className="relative aspect-[0.84] w-full overflow-hidden rounded-lg border border-black/5 bg-white/60 shadow-inner">
+          <div className="relative aspect-[0.84] w-full overflow-hidden rounded-lg border border-black/5 bg-white/70 shadow-inner">
             <Image
               src={product.featuredImage?.url || "/images/amla-powder.jpg"}
               alt={product.name}
@@ -64,22 +68,22 @@ export function FeaturedProductSwitcher() {
           {/* Right Column: Title, concise copy, actions */}
           <div className="flex flex-col justify-between">
             <div>
-              <p className="m-0 text-[0.52rem] font-bold uppercase tracking-[0.16em] text-[var(--family-accent)]">
+              <p className="m-0 text-[0.66rem] font-bold uppercase tracking-[0.16em] text-[var(--family-accent)]">
                 {product.ritualStep} Ritual
               </p>
-              <h3 className="my-0.5 [color:var(--forest)] [font-family:var(--font-display)] text-[1.12rem] font-normal leading-tight max-[440px]:text-[1.02rem]">
+              <h3 className="my-1 [color:var(--forest)] [font-family:var(--font-display)] text-[1.2rem] font-normal leading-tight max-[440px]:text-[1.08rem]">
                 {product.name}
               </h3>
-              <p className="my-1 line-clamp-2 text-[0.6rem] leading-[1.3] text-[var(--muted)] max-[440px]:text-[0.55rem]">
+              <p className="my-1 line-clamp-2 text-[0.74rem] leading-[1.38] text-[var(--muted)]">
                 {product.shortDescription}
               </p>
 
               {/* 2 Key Benefits */}
-              <ul className="my-1 list-none p-0">
+              <ul className="my-1.5 list-none p-0">
                 {product.benefits.slice(0, 2).map((benefit) => (
                   <li
                     key={benefit}
-                    className="flex items-start gap-1 py-0.5 text-[0.54rem] leading-[1.25] text-[var(--muted)] max-[440px]:text-[0.48rem]"
+                    className="flex items-start gap-1.5 py-0.5 text-[0.7rem] leading-[1.3] text-[var(--muted)]"
                   >
                     <span className="text-[var(--family-accent)] font-bold">○</span>
                     <span className="line-clamp-1">{benefit}</span>
@@ -89,9 +93,9 @@ export function FeaturedProductSwitcher() {
             </div>
 
             {/* Actions: View the ritual + Add to Bag button */}
-            <div className="mt-2 flex items-center justify-between gap-2 pt-1 border-t border-[color-mix(in_srgb,var(--family-accent)_15%,transparent)]">
+            <div className="mt-2.5 flex items-center justify-between gap-2 pt-2 border-t border-[color-mix(in_srgb,var(--family-accent)_15%,transparent)]">
               <Link
-                className="text-[0.58rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] underline-offset-2 hover:underline"
+                className="text-[0.68rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] underline-offset-2 hover:underline"
                 href={`/shop/${product.slug}`}
               >
                 View Ritual ↗
@@ -100,7 +104,7 @@ export function FeaturedProductSwitcher() {
                 type="button"
                 onClick={() => addToCart(product.slug)}
                 disabled={product.availableForSale === false}
-                className="grid size-7 shrink-0 place-items-center rounded-full bg-[var(--forest)] text-[0.9rem] text-white shadow-sm transition-all hover:bg-[var(--forest-dark)] active:scale-90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid size-8 shrink-0 place-items-center rounded-full bg-[var(--forest)] text-[1.05rem] text-white shadow-sm transition-all hover:bg-[var(--forest-dark)] active:scale-90 disabled:cursor-not-allowed disabled:opacity-40"
                 aria-label={`Add ${product.name} to bag`}
               >
                 +
@@ -110,11 +114,11 @@ export function FeaturedProductSwitcher() {
         </div>
       </div>
 
-      {/* ── Desktop & Tablet View: 3-Column Split Matching Reference Layout ── */}
-      <div className="grid min-h-[560px] grid-cols-[0.4fr_0.8fr_0.8fr] max-[1180px]:grid-cols-[minmax(140px,0.36fr)_minmax(220px,0.64fr)_minmax(220px,0.8fr)] max-[900px]:min-h-[500px] max-[900px]:grid-cols-[minmax(125px,0.35fr)_minmax(190px,0.62fr)_minmax(205px,0.82fr)] max-[680px]:hidden">
-        {/* Left Column: Vertical 6 Botanical Tabs */}
+      {/* ── Tablet View (681px - 1000px): Horizontal Pills + Generous 2-Column Showcase ── */}
+      <div className="hidden min-[681px]:max-[1000px]:block p-6">
+        {/* Horizontal scrollable pills */}
         <div
-          className="flex flex-col justify-center border-r border-[color-mix(in_srgb,var(--family-accent)_24%,transparent)] py-6 pl-6 max-[900px]:py-4 max-[900px]:pl-3"
+          className="mb-5 flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="group"
           aria-label="Choose a botanical"
         >
@@ -125,7 +129,100 @@ export function FeaturedProductSwitcher() {
                 key={item.slug}
                 type="button"
                 aria-pressed={isSelected}
-                className={`flex min-h-[62px] items-center gap-3.5 border-b border-[color-mix(in_srgb,var(--family-accent)_17%,transparent)] bg-transparent pr-3 text-left [font-family:var(--font-display)] text-[1.12rem] transition-all duration-200 hover:bg-white/35 hover:pl-5 hover:text-[var(--family-accent)] max-[900px]:min-h-[54px] max-[900px]:text-[0.96rem] ${isSelected
+                onClick={() => setActiveSlug(item.slug)}
+                className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[0.8rem] font-medium transition-all duration-200 active:scale-95 ${isSelected
+                    ? "bg-[var(--forest)] text-white shadow-sm font-semibold"
+                    : "border border-[color-mix(in_srgb,var(--family-accent)_25%,transparent)] bg-white/60 text-[var(--forest)] hover:bg-white/85"
+                  }`}
+              >
+                <span
+                  className="size-2 rounded-full inline-block"
+                  style={{ backgroundColor: item.accent }}
+                />
+                <span>{item.name.replace(" Powder", "")}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 2-Column Showcase Card */}
+        <div className="grid grid-cols-[0.9fr_1.1fr] items-center gap-6 rounded-2xl border border-[color-mix(in_srgb,var(--family-accent)_20%,transparent)] bg-white/45 p-6 shadow-sm">
+          {/* Left Column: Product Photo */}
+          <div className="relative aspect-[0.9] w-full overflow-hidden rounded-xl border border-black/5 bg-white/70 shadow-inner">
+            <Image
+              src={product.featuredImage?.url || "/images/amla-powder.jpg"}
+              alt={product.name}
+              fill
+              sizes="40vw"
+              className="size-full object-cover object-center"
+            />
+          </div>
+
+          {/* Right Column: Content */}
+          <div className="flex flex-col justify-between">
+            <div>
+              <p className="mb-1 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[var(--family-accent)]">
+                {product.ritualStep} Ritual
+              </p>
+              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.8rem,2.8vw,2.4rem)] font-normal leading-[1.05] tracking-tight">
+                {product.name}
+              </h3>
+              <p className="my-2.5 text-[0.88rem] leading-[1.55] text-[var(--muted)]">
+                {product.shortDescription}
+              </p>
+
+              {/* 3 Key Benefits */}
+              <ul className="my-3 list-none p-0">
+                {product.benefits.slice(0, 3).map((benefit) => (
+                  <li
+                    key={benefit}
+                    className="flex items-start gap-2 border-b border-[color-mix(in_srgb,var(--family-accent)_15%,transparent)] py-2 text-[0.8rem] text-[var(--muted)]"
+                  >
+                    <span className="text-[var(--family-accent)] font-bold">○</span>
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Actions */}
+            <div className="mt-4 flex items-center justify-between gap-4 pt-2 border-t border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)]">
+              <Link
+                className="inline-flex min-h-11 items-center gap-2.5 border-b border-[var(--forest)] text-[0.74rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] transition-all hover:gap-4"
+                href={`/shop/${product.slug}`}
+              >
+                View the ritual <span aria-hidden="true">↗</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => addToCart(product.slug)}
+                disabled={product.availableForSale === false}
+                className="grid size-11 place-items-center rounded-full bg-[var(--forest)] text-[1.2rem] text-white shadow-md transition-all hover:bg-[var(--forest-dark)] hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-45"
+                aria-label={`Add ${product.name} to bag`}
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Desktop View (>1000px): 3-Column Split Layout ── */}
+      <div className="hidden min-[1001px]:grid min-h-[560px] grid-cols-[0.42fr_0.8fr_0.85fr]">
+        {/* Left Column: Vertical 6 Botanical Tabs */}
+        <div
+          className="flex flex-col justify-center border-r border-[color-mix(in_srgb,var(--family-accent)_24%,transparent)] py-6 pl-6"
+          role="group"
+          aria-label="Choose a botanical"
+        >
+          {products.map((item) => {
+            const isSelected = item.slug === product.slug;
+            return (
+              <button
+                key={item.slug}
+                type="button"
+                aria-pressed={isSelected}
+                className={`flex min-h-[62px] items-center gap-3.5 border-b border-[color-mix(in_srgb,var(--family-accent)_17%,transparent)] bg-transparent pr-3 text-left [font-family:var(--font-display)] text-[1.12rem] transition-all duration-200 hover:bg-white/35 hover:pl-5 hover:text-[var(--family-accent)] ${isSelected
                     ? "pl-5 font-medium text-[var(--family-accent)]"
                     : "pl-2.5 [color:color-mix(in_srgb,var(--family-accent)_55%,var(--muted))]"
                   }`}
@@ -151,31 +248,31 @@ export function FeaturedProductSwitcher() {
               src={product.featuredImage?.url || "/images/amla-powder.jpg"}
               alt={product.name}
               fill
-              sizes="(max-width: 900px) 50vw, 33vw"
+              sizes="33vw"
               className="size-full object-cover object-center"
             />
           </div>
         </div>
 
         {/* Right Column: Title, copy, 3 bullets, and action bar */}
-        <div className="flex min-w-0 flex-col justify-center border-l border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] px-[clamp(32px,3.8vw,52px)] py-[clamp(40px,4vw,56px)] max-[900px]:px-5 max-[900px]:py-7">
-          <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[var(--family-accent)]">
+        <div className="flex min-w-0 flex-col justify-center border-l border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] px-[clamp(32px,3.8vw,52px)] py-[clamp(40px,4vw,56px)]">
+          <p className="mb-3 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--family-accent)]">
             {product.ritualStep} Ritual
           </p>
-          <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2.6rem,3.8vw,4.2rem)] font-normal leading-[0.95] tracking-[-0.04em] max-[900px]:text-[2.2rem]">
+          <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2.6rem,3.8vw,4.2rem)] font-normal leading-[0.95] tracking-[-0.04em]">
             {product.name}
           </h3>
-          <p className="my-3 text-[clamp(0.95rem,1.2vw,1.1rem)] leading-[1.65] [color:var(--muted)] max-[900px]:text-[0.78rem] max-[900px]:leading-[1.5]">
+          <p className="my-3 text-[clamp(0.95rem,1.2vw,1.1rem)] leading-[1.65] [color:var(--muted)]">
             {product.shortDescription}
           </p>
 
-          <ul className="my-5 list-none p-0 max-[900px]:my-3">
+          <ul className="my-5 list-none p-0">
             {product.benefits.slice(0, 3).map((benefit) => (
               <li
-                className="flex items-start gap-2.5 border-b border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] py-2.5 text-[0.78rem] [color:var(--muted)] max-[900px]:py-1.5 max-[900px]:text-[0.68rem]"
+                className="flex items-start gap-2.5 border-b border-[color-mix(in_srgb,var(--family-accent)_18%,transparent)] py-2.5 text-[0.84rem] [color:var(--muted)]"
                 key={benefit}
               >
-                <span className="text-[var(--family-accent)]">○</span>
+                <span className="text-[var(--family-accent)] font-bold">○</span>
                 <span>{benefit}</span>
               </li>
             ))}
@@ -183,7 +280,7 @@ export function FeaturedProductSwitcher() {
 
           <div className="mt-4 flex items-center justify-between gap-4">
             <Link
-              className="inline-flex min-h-11 items-center gap-3 border-b border-[var(--forest)] text-[0.74rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] transition-[gap] duration-200 hover:gap-5"
+              className="inline-flex min-h-11 items-center gap-3 border-b border-[var(--forest)] text-[0.76rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)] transition-[gap] duration-200 hover:gap-5"
               href={`/shop/${product.slug}`}
             >
               View the ritual <span aria-hidden="true">↗</span>

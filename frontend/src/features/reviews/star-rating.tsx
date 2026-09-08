@@ -21,16 +21,16 @@ export function StarRating({
   const safeCount = Math.max(0, Math.round(count));
   const sizes = {
     compact: {
-      wrapper: "gap-1.5 text-[0.62rem] max-[680px]:gap-1 max-[680px]:text-[0.5rem]",
-      stars: "text-[0.72rem] max-[680px]:text-[0.58rem]",
+      wrapper: "gap-1.5 text-[0.72rem] max-[680px]:gap-1 max-[680px]:text-[0.68rem]",
+      stars: "text-[0.82rem] max-[680px]:text-[0.75rem]",
     },
     default: {
-      wrapper: "gap-2 text-[0.74rem]",
-      stars: "text-[0.9rem]",
+      wrapper: "gap-2 text-[0.78rem] max-[680px]:text-[0.72rem]",
+      stars: "text-[0.92rem] max-[680px]:text-[0.84rem]",
     },
     large: {
-      wrapper: "gap-3 text-[0.86rem]",
-      stars: "text-[1.15rem]",
+      wrapper: "gap-3 text-[0.88rem] max-[680px]:text-[0.8rem]",
+      stars: "text-[1.15rem] max-[680px]:text-[1rem]",
     },
   }[size];
   const formattedCount = safeCount.toLocaleString("en-IN");

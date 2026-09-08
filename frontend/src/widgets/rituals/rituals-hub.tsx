@@ -356,7 +356,7 @@ export function RitualsHub() {
         </div>
 
         {/* Desktop View: Photo Stage Left + Interactive Step List Right */}
-        <div className="grid grid-cols-[0.85fr_1.15fr] items-center gap-[clamp(36px,5vw,70px)] max-[900px]:hidden">
+        <div className="grid grid-cols-[0.85fr_1.15fr] items-center gap-[clamp(36px,5vw,70px)] max-[840px]:hidden">
           {/* Left Arched Photo Stage */}
           <div className="relative aspect-[0.88] w-full overflow-hidden rounded-3xl border border-[var(--line)] bg-[#e3eae1] shadow-[0_16px_40px_rgba(23,63,42,0.08)]">
             <Image
@@ -368,12 +368,12 @@ export function RitualsHub() {
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10" />
 
-            <div className="absolute right-4 bottom-4 left-4 flex items-center justify-between rounded-2xl border border-white/20 bg-white/80 p-3.5 backdrop-blur-md">
+            <div className="absolute right-4 bottom-4 left-4 flex items-center justify-between rounded-2xl border border-white/20 bg-white/85 p-3.5 backdrop-blur-md">
               <div>
-                <span className="block text-[0.55rem] font-bold uppercase tracking-wider text-[var(--botanical)]">
+                <span className="block text-[0.66rem] font-bold uppercase tracking-wider text-[var(--botanical)]">
                   Fresh Paste Alchemy
                 </span>
-                <span className="text-[0.82rem] font-bold text-[var(--forest)]">
+                <span className="text-[0.88rem] font-bold text-[var(--forest)]">
                   Silky Yogurt Consistency
                 </span>
               </div>
@@ -398,7 +398,7 @@ export function RitualsHub() {
                 >
                   <div className="flex items-start gap-4">
                     <span
-                      className={`grid size-10 shrink-0 place-items-center rounded-full text-[0.82rem] font-bold transition-colors duration-200 ${isActive
+                      className={`grid size-10 shrink-0 place-items-center rounded-full font-mono text-[0.84rem] font-bold transition-colors duration-200 ${isActive
                           ? "bg-[var(--forest)] text-[#c8d88e]"
                           : "bg-[var(--beige)] text-[var(--forest)]"
                         }`}
@@ -414,12 +414,12 @@ export function RitualsHub() {
                         <span className="text-base">{step.icon}</span>
                       </div>
 
-                      <p className="mt-1 mb-0 text-[0.78rem] leading-[1.55] text-[var(--muted)]">
+                      <p className="mt-1 mb-0 text-[0.85rem] leading-[1.6] text-[var(--muted)]">
                         {step.description}
                       </p>
 
                       {isActive && (
-                        <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#edf3ea] px-3 py-1.5 text-[0.68rem] font-medium text-[var(--forest)]">
+                        <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#edf3ea] px-3 py-2 text-[0.74rem] font-medium text-[var(--forest)]">
                           <span className="text-[var(--botanical)] font-bold">💡 Pro Tip:</span>
                           <span>{step.tip}</span>
                         </div>
@@ -432,28 +432,28 @@ export function RitualsHub() {
           </div>
         </div>
 
-        {/* Mobile View: Swipeable Horizontal Step Cards (Compact, peeking next step) */}
-        <div className="hidden max-[900px]:flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-1">
+        {/* Mobile & Tablet View: Swipeable Horizontal Step Cards */}
+        <div className="hidden max-[840px]:flex gap-3.5 overflow-x-auto snap-x snap-mandatory pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-1">
           {PREPARATION_STEPS.map((step) => (
             <article
               key={step.number}
-              className="w-[78vw] max-w-[280px] shrink-0 snap-start rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-xs flex flex-col justify-between"
+              className="w-[80vw] max-w-[320px] shrink-0 snap-start rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4.5 shadow-xs flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="grid size-7 place-items-center rounded-full bg-[var(--forest)] text-[#c8d88e] text-[0.68rem] font-bold">
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="grid size-8 place-items-center rounded-full bg-[var(--forest)] text-[#c8d88e] font-mono text-[0.74rem] font-bold">
                     {step.number}
                   </span>
-                  <span className="text-sm">{step.icon}</span>
+                  <span className="text-base">{step.icon}</span>
                 </div>
-                <h3 className="my-1 [font-family:var(--font-display)] text-[1.08rem] font-normal text-[var(--forest)] leading-tight">
+                <h3 className="my-1 [font-family:var(--font-display)] text-[1.15rem] font-normal text-[var(--forest)] leading-tight">
                   {step.title}
                 </h3>
-                <p className="m-0 text-[0.68rem] leading-[1.42] text-[var(--muted)] line-clamp-3">
+                <p className="m-0 text-[0.78rem] leading-[1.5] text-[var(--muted)]">
                   {step.description}
                 </p>
               </div>
-              <div className="mt-3 pt-2 border-t border-[var(--line)] flex items-center gap-1.5 text-[0.58rem] text-[var(--forest)]">
+              <div className="mt-3.5 pt-2.5 border-t border-[var(--line)] flex items-center gap-1.5 text-[0.68rem] text-[var(--forest)]">
                 <span className="text-[var(--botanical)] font-bold">💡 Tip:</span>
                 <span className="line-clamp-1">{step.tip}</span>
               </div>
@@ -465,27 +465,27 @@ export function RitualsHub() {
       {/* ── 4. The Botanical Mixing Matrix & Ratio Calculator ── */}
       <section
         id="matrix"
-        className="relative overflow-hidden bg-[#f4f7f2] px-[clamp(24px,5vw,72px)] py-[clamp(75px,8vw,115px)] max-[680px]:px-3 max-[680px]:py-7 scroll-mt-20"
+        className="relative overflow-hidden bg-[#f4f7f2] px-[clamp(24px,5vw,72px)] py-[clamp(75px,8vw,115px)] max-[680px]:px-3.5 max-[680px]:py-8 scroll-mt-20"
         aria-labelledby="matrix-title"
       >
         <div className="mx-auto max-w-[1440px]">
-          <div className="mb-10 text-center max-[680px]:mb-4">
-            <p className="mb-2 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mb-1 max-[680px]:text-[0.52rem]">
+          <div className="mb-10 text-center max-[680px]:mb-5">
+            <p className="mb-2 text-[0.74rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mb-1 max-[680px]:text-[0.66rem]">
               The Cabinet Matrix
             </p>
             <h2
               id="matrix-title"
-              className="m-0 [font-family:var(--font-display)] text-[clamp(2.4rem,4.2vw,4.4rem)] font-normal leading-[0.96] tracking-[-0.045em] text-[var(--forest)] max-[680px]:text-[clamp(1.55rem,7vw,2.05rem)]"
+              className="m-0 [font-family:var(--font-display)] text-[clamp(2.4rem,4.2vw,4.4rem)] font-normal leading-[0.96] tracking-[-0.045em] text-[var(--forest)] max-[680px]:text-[clamp(1.75rem,7vw,2.2rem)]"
             >
               Proven botanical ratios.
             </h2>
-            <p className="mx-auto mt-3 max-w-[560px] text-[0.88rem] leading-[1.6] text-[var(--muted)] max-[680px]:mt-1.5 max-[680px]:text-[0.68rem] max-[680px]:leading-[1.4]">
+            <p className="mx-auto mt-3 max-w-[560px] text-[0.92rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:text-[0.82rem] max-[680px]:leading-[1.5]">
               Traditional Ayurvedic synergies formulated for targeted hair goals.
             </p>
           </div>
 
           {/* Recipe Selector Tabs (Scrollable on mobile) */}
-          <div className="mb-7 flex flex-wrap items-center justify-center gap-2 max-[680px]:mb-3.5 max-[680px]:flex-nowrap max-[680px]:overflow-x-auto max-[680px]:justify-start max-[680px]:gap-1.5 max-[680px]:pb-1 max-[680px]:[scrollbar-width:none] max-[680px]:[&::-webkit-scrollbar]:hidden">
+          <div className="mb-7 flex flex-wrap items-center justify-center gap-2 max-[680px]:mb-4 max-[680px]:flex-nowrap max-[680px]:overflow-x-auto max-[680px]:justify-start max-[680px]:gap-2 max-[680px]:pb-1 max-[680px]:[scrollbar-width:none] max-[680px]:[&::-webkit-scrollbar]:hidden">
             {MIXING_RECIPES.map((recipe) => {
               const isSelected = recipe.id === activeRecipe.id;
               return (
@@ -493,7 +493,7 @@ export function RitualsHub() {
                   key={recipe.id}
                   type="button"
                   onClick={() => setActiveRecipeId(recipe.id)}
-                  className={`shrink-0 rounded-full px-4 py-2 text-[0.72rem] font-bold transition-all duration-200 cursor-pointer active:scale-95 max-[680px]:px-3 max-[680px]:py-1.5 max-[680px]:text-[0.6rem] ${isSelected
+                  className={`shrink-0 rounded-full px-4.5 py-2 text-[0.76rem] font-bold transition-all duration-200 cursor-pointer active:scale-95 max-[680px]:px-3.5 max-[680px]:py-1.5 max-[680px]:text-[0.7rem] ${isSelected
                       ? "bg-[var(--forest)] text-white shadow-sm"
                       : "border border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--beige)]"
                     }`}
@@ -505,42 +505,42 @@ export function RitualsHub() {
           </div>
 
           {/* Active Recipe Showcase Card (Compact & Optimized for Mobile) */}
-          <div className="mx-auto max-w-[960px] overflow-hidden rounded-3xl border border-[var(--line)] bg-white p-7 shadow-[0_16px_44px_rgba(23,63,42,0.06)] max-[680px]:p-3.5 max-[680px]:rounded-2xl">
-            <div className="grid grid-cols-[1fr_0.9fr] items-center gap-7 max-[800px]:grid-cols-1 max-[800px]:gap-4">
+          <div className="mx-auto max-w-[960px] overflow-hidden rounded-3xl border border-[var(--line)] bg-white p-7 shadow-[0_16px_44px_rgba(23,63,42,0.06)] max-[680px]:p-4 max-[680px]:rounded-2xl">
+            <div className="grid grid-cols-[1fr_0.9fr] items-center gap-7 max-[800px]:grid-cols-1 max-[800px]:gap-5">
               {/* Left Details */}
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-[#edf3ea] px-2.5 py-0.5 text-[0.58rem] font-bold uppercase tracking-wider text-[var(--botanical)]">
+                <div className="flex items-center gap-2.5">
+                  <span className="rounded-full bg-[#edf3ea] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-wider text-[var(--botanical)]">
                     Ratio: {activeRecipe.ratio}
                   </span>
-                  <span className="text-[0.62rem] text-[var(--muted)]">·</span>
-                  <span className="text-[0.64rem] font-semibold text-[var(--forest)]">
+                  <span className="text-[0.68rem] text-[var(--muted)]">·</span>
+                  <span className="text-[0.74rem] font-semibold text-[var(--forest)]">
                     {activeRecipe.time}
                   </span>
                 </div>
 
-                <h3 className="my-1.5 [font-family:var(--font-display)] text-[clamp(1.5rem,2.8vw,2.2rem)] font-normal leading-tight text-[var(--forest)] max-[680px]:text-[1.25rem]">
+                <h3 className="my-2 [font-family:var(--font-display)] text-[clamp(1.5rem,2.8vw,2.2rem)] font-normal leading-tight text-[var(--forest)] max-[680px]:text-[1.35rem]">
                   {activeRecipe.name}
                 </h3>
-                <p className="m-0 text-[0.8rem] leading-[1.55] text-[var(--muted)] max-[680px]:text-[0.68rem]">
+                <p className="m-0 text-[0.86rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.8rem]">
                   {activeRecipe.instructions}
                 </p>
 
                 {/* Target & Frequency */}
-                <div className="mt-4 grid grid-cols-2 gap-2.5 border-t border-[var(--line)] pt-3 max-[680px]:mt-2.5 max-[680px]:pt-2.5">
+                <div className="mt-5 grid grid-cols-2 gap-3 border-t border-[var(--line)] pt-3.5 max-[680px]:mt-3 max-[680px]:pt-3">
                   <div>
-                    <span className="block text-[0.52rem] font-bold uppercase tracking-wider text-[var(--muted)]">
+                    <span className="block text-[0.66rem] font-bold uppercase tracking-wider text-[var(--muted)]">
                       Target Hair State
                     </span>
-                    <span className="text-[0.7rem] font-medium text-[var(--forest)] max-[680px]:text-[0.62rem]">
+                    <span className="text-[0.78rem] font-medium text-[var(--forest)] max-[680px]:text-[0.74rem]">
                       {activeRecipe.target}
                     </span>
                   </div>
                   <div>
-                    <span className="block text-[0.52rem] font-bold uppercase tracking-wider text-[var(--muted)]">
+                    <span className="block text-[0.66rem] font-bold uppercase tracking-wider text-[var(--muted)]">
                       Rhythm
                     </span>
-                    <span className="text-[0.7rem] font-medium text-[var(--forest)] max-[680px]:text-[0.62rem]">
+                    <span className="text-[0.78rem] font-medium text-[var(--forest)] max-[680px]:text-[0.74rem]">
                       {activeRecipe.frequency}
                     </span>
                   </div>
@@ -548,33 +548,33 @@ export function RitualsHub() {
               </div>
 
               {/* Right Ingredients Visual Stack */}
-              <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 max-[680px]:p-3 max-[680px]:rounded-xl">
-                <span className="mb-2 block text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
+              <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4.5 max-[680px]:p-3.5 max-[680px]:rounded-xl">
+                <span className="mb-2.5 block text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
                   Botanicals in this Blend
                 </span>
                 <div className="space-y-2">
                   {activeRecipe.ingredients.map((ing) => (
                     <div
                       key={ing.name}
-                      className="flex items-center justify-between rounded-xl border border-black/5 bg-white p-2.5 shadow-2xs max-[680px]:p-2"
+                      className="flex items-center justify-between rounded-xl border border-black/5 bg-white p-3 shadow-2xs max-[680px]:p-2.5"
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5">
                         <span
                           className="size-2.5 rounded-full"
                           style={{ backgroundColor: ing.color }}
                         />
-                        <span className="text-[0.78rem] font-semibold text-[var(--forest)] max-[680px]:text-[0.7rem]">
+                        <span className="text-[0.82rem] font-semibold text-[var(--forest)] max-[680px]:text-[0.76rem]">
                           {ing.name}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="rounded bg-[var(--beige)] px-1.5 py-0.5 text-[0.58rem] font-bold text-[var(--forest)] max-[680px]:text-[0.52rem]">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded bg-[var(--beige)] px-2 py-0.5 text-[0.68rem] font-bold text-[var(--forest)]">
                           {ing.parts}
                         </span>
                         <button
                           type="button"
                           onClick={() => addToCart(ing.slug)}
-                          className="grid size-5.5 place-items-center rounded-full bg-[var(--forest)] text-[0.72rem] text-white hover:bg-[var(--forest-dark)] active:scale-90 cursor-pointer"
+                          className="grid size-7 place-items-center rounded-full bg-[var(--forest)] text-[0.95rem] text-white hover:bg-[var(--forest-dark)] active:scale-90 cursor-pointer"
                           aria-label={`Add ${ing.name} to bag`}
                         >
                           +

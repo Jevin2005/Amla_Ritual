@@ -168,8 +168,8 @@ export function ProductDetailActions({ product }: { product: Product }) {
         </div>
       )}
 
-      {/* Desktop Inline Actions (Only shown in Desktop 2-column view min-width 961px) */}
-      <div className="flex flex-col gap-2.5 max-[960px]:hidden">
+      {/* Inline Actions (Shown in Desktop & Tablet 2-column view min-width 681px) */}
+      <div className="flex flex-col gap-2.5 max-[680px]:hidden">
         {/* Main Action Buttons Grid */}
         <div className="grid grid-cols-[105px_minmax(0,1fr)] gap-2.5">
           {/* Quantity Stepper */}
@@ -202,7 +202,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
 
           {/* Add to Bag Button */}
           <button
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#529d38] px-6 text-[0.74rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_20px_rgba(82,157,56,0.22)] transition-all hover:bg-[#43852d] active:scale-98 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#529d38] px-6 text-[0.76rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_20px_rgba(82,157,56,0.22)] transition-all hover:bg-[#43852d] active:scale-98 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
             onClick={() => void add(true)}
             disabled={isCartBusy || !available || maximumQuantity < 1}
@@ -215,7 +215,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
         {/* Secondary Action Row: Buy Now + Wishlist */}
         <div className="grid grid-cols-[1fr_auto] gap-2.5">
           <button
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[var(--forest)] px-5 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_6px_18px_rgba(21,59,45,0.18)] transition-all hover:bg-[var(--forest-dark)] active:scale-98 cursor-pointer disabled:opacity-50"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[var(--forest)] px-5 text-[0.74rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_6px_18px_rgba(21,59,45,0.18)] transition-all hover:bg-[var(--forest-dark)] active:scale-98 cursor-pointer disabled:opacity-50"
             type="button"
             onClick={() => void buyNow()}
             disabled={isCartBusy || isBuyingNow || !available || maximumQuantity < 1}
@@ -233,7 +233,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
           </button>
 
           <button
-            className={`inline-flex h-11 items-center justify-center gap-1.5 rounded-full border px-4 text-[0.66rem] font-bold tracking-[0.06em] uppercase transition-all cursor-pointer ${wished
+            className={`inline-flex h-11 items-center justify-center gap-1.5 rounded-full border px-4 text-[0.72rem] font-bold tracking-[0.06em] uppercase transition-all cursor-pointer ${wished
                 ? "border-red-300 bg-red-50 text-red-500"
                 : "border-[var(--line)] bg-[var(--paper)] text-[var(--forest)] hover:bg-[var(--beige)]"
               }`}
@@ -252,7 +252,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
       {/* Error Message */}
       {cartError && (
         <div
-          className="flex items-start justify-between gap-3 rounded-xl bg-[#f7e9e4] p-3 text-[0.72rem] text-[#813c2f] ring-1 ring-[#dfb7ad]"
+          className="flex items-start justify-between gap-3 rounded-xl bg-[#f7e9e4] p-3 text-[0.74rem] text-[#813c2f] ring-1 ring-[#dfb7ad]"
           role="alert"
         >
           <span>{cartError}</span>
@@ -267,21 +267,21 @@ export function ProductDetailActions({ product }: { product: Product }) {
         </div>
       )}
 
-      {/* ── React Portal: Mobile Fixed Sticky Bottom Bar (Permanently docked to screen viewport on phone/tablet) ── */}
+      {/* ── React Portal: Mobile Fixed Sticky Bottom Bar (Permanently docked to screen viewport on phone) ── */}
       {mounted &&
         typeof document !== "undefined" &&
         createPortal(
           <div
-            className="fixed inset-x-0 bottom-0 z-[9999] hidden max-[960px]:flex items-center justify-between gap-2 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(10px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
+            className="fixed inset-x-0 bottom-0 z-[9999] hidden max-[680px]:flex items-center justify-between gap-2 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3.5 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(10px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
             role="region"
             aria-label="Sticky Purchase Footer"
           >
             {/* Left Price & Stock Info */}
             <div className="flex flex-col shrink-0 min-w-0 pr-1 max-[360px]:pr-0.5">
-              <span className="[font-family:var(--font-display)] text-[1.18rem] font-bold leading-tight text-[var(--forest)] whitespace-nowrap max-[380px]:text-[1.02rem]">
+              <span className="[font-family:var(--font-display)] text-[1.2rem] font-bold leading-tight text-[var(--forest)] whitespace-nowrap max-[380px]:text-[1.05rem]">
                 {formatCurrency(pricePaise, currencyCode)}
               </span>
-              <div className="flex items-center gap-1 text-[0.52rem] font-bold text-[#529d38] uppercase tracking-wider whitespace-nowrap max-[380px]:text-[0.46rem]">
+              <div className="flex items-center gap-1 text-[0.62rem] font-bold text-[#529d38] uppercase tracking-wider whitespace-nowrap">
                 <span className="size-1.5 rounded-full bg-[#529d38] animate-pulse shrink-0" />
                 <span>{available ? "In Stock" : "Sold Out"}</span>
               </div>

@@ -66,6 +66,26 @@
   display: inline-block;
 }
 
+/* Fluid responsive typography utilities */
+.text-eyebrow {
+  font-size: clamp(0.6875rem, 0.82vw, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.text-caption {
+  font-size: clamp(0.75rem, 0.92vw, 0.825rem);
+  line-height: 1.55;
+}
+
+.text-micro {
+  font-size: clamp(0.6875rem, 0.8vw, 0.75rem);
+  line-height: 1.35;
+}
+
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -332,17 +352,19 @@ body[data-motion-ready="true"] [data-reveal="pending"] {
   50%       { opacity: 0.75; transform: scale(1.02) rotate(-2deg); }
 }
 
-@media (max-width: 900px) {
+@media (min-width: 681px) and (max-width: 1024px) {
   :root {
-    --page-pad: clamp(20px, 5vw, 40px);
+    --page-pad: clamp(24px, 4.5vw, 48px);
+    --header-height: 72px;
   }
 }
 
 @media (max-width: 680px) {
   :root {
-    --page-pad: 20px;
+    --page-pad: 16px;
     --radius-md: 14px;
     --radius-lg: 20px;
+    --header-height: 60px;
   }
 }
 

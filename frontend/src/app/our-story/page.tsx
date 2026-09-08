@@ -115,7 +115,7 @@ export default async function OurStoryPage() {
           <div className="max-w-[860px]">
 
             {/* Eyebrow */}
-            <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/18 bg-white/8 px-4 py-2.5 text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#c8d88e] backdrop-blur-md max-[680px]:mb-5 max-[680px]:gap-2 max-[680px]:px-3 max-[680px]:py-2 max-[680px]:text-[0.56rem]">
+            <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/18 bg-white/8 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[#c8d88e] backdrop-blur-md max-[680px]:mb-5 max-[680px]:gap-2 max-[680px]:px-3.5 max-[680px]:py-1.5 max-[680px]:text-[0.68rem]">
               <span className="relative flex size-2 shrink-0">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--amla)] opacity-60" />
                 <span className="relative inline-flex size-2 rounded-full bg-[var(--amla)]" />
@@ -124,14 +124,14 @@ export default async function OurStoryPage() {
             </p>
 
             {/* Headline */}
-            <h1 className="m-0 max-w-[14ch] font-serif text-[clamp(4rem,8vw,9.5rem)] font-normal leading-[0.81] tracking-[-0.07em] text-balance max-[680px]:text-[clamp(2.9rem,12.5vw,4.5rem)] max-[680px]:leading-[0.85]">
+            <h1 className="m-0 max-w-[14ch] font-serif text-[clamp(3.8rem,7.5vw,9rem)] font-normal leading-[0.88] tracking-[-0.06em] text-balance max-[680px]:text-[clamp(2.8rem,11.5vw,4.2rem)] max-[680px]:leading-[0.92]">
               Nature,
               <em className="block font-normal text-[#c8d88e]">carefully</em>
               <em className="block font-normal text-white">translated.</em>
             </h1>
 
             {/* Sub-copy */}
-            <p className="mb-0 mt-10 max-w-[560px] text-[1.05rem] leading-[1.76] text-white/68 max-[680px]:mt-5 max-[680px]:max-w-full max-[680px]:text-[0.82rem] max-[680px]:leading-[1.62]">
+            <p className="mb-0 mt-8 max-w-[580px] text-[1.05rem] leading-[1.76] text-white/75 max-[680px]:mt-5 max-[680px]:max-w-full max-[680px]:text-[0.88rem] max-[680px]:leading-[1.65]">
               Beauty botanicals carry generations of ritual knowledge. NatureMist brings them forward through a considered path—from plant identity and careful preparation to the powder ready in your bowl.
             </p>
 
@@ -139,14 +139,14 @@ export default async function OurStoryPage() {
             <div className="mt-10 flex flex-wrap items-center gap-5 max-[680px]:mt-7 max-[680px]:gap-3">
               <a
                 href="#story"
-                className="inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-white px-8 py-3.5 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--forest-dark)] shadow-[0_16px_40px_rgba(0,0,0,0.26)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.12em]"
+                className="inline-flex min-h-[50px] items-center justify-center gap-3 rounded-full bg-white px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[var(--forest-dark)] shadow-[0_16px_40px_rgba(0,0,0,0.26)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem] max-[680px]:tracking-[0.12em]"
               >
                 Follow the making
                 <span aria-hidden="true">↓</span>
               </a>
               <Link
                 href="/shop"
-                className="inline-flex min-h-[52px] items-center gap-2 border-b border-white/40 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-[var(--amla)] hover:text-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:text-[0.62rem]"
+                className="inline-flex min-h-[50px] items-center gap-2 border-b border-white/40 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-[var(--amla)] hover:text-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:text-[0.7rem]"
               >
                 Meet the botanicals <span aria-hidden="true">↗</span>
               </Link>
@@ -162,8 +162,8 @@ export default async function OurStoryPage() {
               { n: "02", label: "Considered preparation" },
               { n: "03", label: "Clear ritual guidance" },
             ].map(({ n, label }) => (
-              <p key={n} className="m-0 flex min-h-[72px] items-center gap-5 px-8 text-[0.64rem] font-bold uppercase tracking-[0.18em] text-white/55 first:pl-0">
-                <span className="font-serif text-[1.15rem] font-normal text-[var(--amla)]">{n}</span>
+              <p key={n} className="m-0 flex min-h-[72px] items-center gap-5 px-8 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-white/70 first:pl-0">
+                <span className="font-mono text-[0.88rem] font-normal text-[var(--amla)]">{n}</span>
                 {label}
               </p>
             ))}
@@ -172,11 +172,11 @@ export default async function OurStoryPage() {
 
         {/* Mobile stats — below hero text, above bottom */}
         <div className="absolute inset-x-0 bottom-0 z-[2] hidden max-[680px]:block">
-          <div className="flex items-center justify-around border-t border-white/12 bg-black/30 px-4 py-3 backdrop-blur-lg">
+          <div className="flex items-center justify-around border-t border-white/12 bg-black/35 px-4 py-3 backdrop-blur-lg">
             {[{ n: "01", l: "Identity" }, { n: "02", l: "Preparation" }, { n: "03", l: "Guidance" }].map(({ n, l }) => (
               <div key={n} className="flex flex-col items-center gap-0.5">
-                <span className="font-serif text-[0.9rem] text-[var(--amla)]">{n}</span>
-                <span className="text-[0.48rem] font-bold uppercase tracking-[0.16em] text-white/50">{l}</span>
+                <span className="font-mono text-[0.76rem] font-bold text-[var(--amla)]">{n}</span>
+                <span className="text-[0.64rem] font-bold uppercase tracking-[0.14em] text-white/70">{l}</span>
               </div>
             ))}
           </div>
@@ -195,10 +195,10 @@ export default async function OurStoryPage() {
           {/* Pull-quote */}
           <div className="mx-auto max-w-[860px] text-center">
             <span className="mb-6 block font-serif text-[4rem] leading-none text-[var(--botanical)] max-[680px]:mb-4 max-[680px]:text-[2.8rem]">&ldquo;</span>
-            <blockquote className="m-0 font-serif text-[clamp(2rem,3.8vw,4.2rem)] font-normal leading-[1.08] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(1.42rem,6.5vw,2.1rem)] max-[680px]:leading-[1.14]">
+            <blockquote className="m-0 font-serif text-[clamp(2rem,3.8vw,4.2rem)] font-normal leading-[1.12] tracking-[-0.05em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(1.42rem,6.5vw,2.1rem)] max-[680px]:leading-[1.18]">
               True luxury lies in transparency. We honour the plant, the soil, and the centuries of knowledge that bring them together.
             </blockquote>
-            <p className="mt-7 text-[0.66rem] font-bold uppercase tracking-[0.22em] text-[var(--botanical)] max-[680px]:mt-5 max-[680px]:text-[0.54rem]">
+            <p className="mt-7 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mt-5 max-[680px]:text-[0.66rem]">
               — The NatureMist Founding Principle
             </p>
           </div>
@@ -211,9 +211,9 @@ export default async function OurStoryPage() {
               { stat: "Clear", label: "Ritual guidance", desc: "Preparation, safety and storage on every pack" },
             ].map(({ stat, label, desc }) => (
               <div key={label} className="bg-[var(--paper)] p-[clamp(24px,3.5vw,44px)] max-[680px]:p-5">
-                <p className="m-0 font-serif text-[clamp(2.8rem,5vw,5.5rem)] font-normal leading-[0.88] tracking-[-0.06em] text-[var(--forest)] max-[680px]:text-[2.2rem]">{stat}</p>
-                <p className="mt-3 text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[var(--botanical)] max-[680px]:mt-2 max-[680px]:text-[0.6rem]">{label}</p>
-                <p className="mb-0 mt-2 max-w-[280px] text-[0.82rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-1.5 max-[680px]:text-[0.74rem] max-[680px]:leading-[1.55]">{desc}</p>
+                <p className="m-0 font-serif text-[clamp(2.8rem,5vw,5.5rem)] font-normal leading-[0.9] tracking-[-0.06em] text-[var(--forest)] max-[680px]:text-[2.2rem]">{stat}</p>
+                <p className="mt-3 text-[0.74rem] font-bold uppercase tracking-[0.16em] text-[var(--botanical)] max-[680px]:mt-2 max-[680px]:text-[0.7rem]">{label}</p>
+                <p className="mb-0 mt-2 max-w-[280px] text-[0.84rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-1.5 max-[680px]:text-[0.78rem] max-[680px]:leading-[1.55]">{desc}</p>
               </div>
             ))}
           </div>
@@ -228,10 +228,10 @@ export default async function OurStoryPage() {
 
           {/* Section header */}
           <div className="mb-[clamp(64px,7vw,100px)] max-[680px]:mb-10">
-            <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[var(--botanical)] max-[680px]:mb-2 max-[680px]:text-[0.58rem]">
+            <p className="mb-3 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mb-2 max-[680px]:text-[0.68rem]">
               The production story
             </p>
-            <h2 className="m-0 max-w-[720px] font-serif text-[clamp(3rem,5vw,5.8rem)] font-normal leading-[0.9] tracking-[-0.06em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2rem,9.5vw,3rem)] max-[680px]:leading-[0.94]">
+            <h2 className="m-0 max-w-[720px] font-serif text-[clamp(3rem,5vw,5.8rem)] font-normal leading-[0.96] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(2rem,9.5vw,3rem)] max-[680px]:leading-[1.0]">
               From living plant to
               <em className="font-normal text-[var(--botanical)]"> ritual powder.</em>
             </h2>
@@ -247,18 +247,18 @@ export default async function OurStoryPage() {
               >
                 {/* Text block */}
                 <div className={chapter.imageSide === "left" ? "order-2 max-[800px]:order-1" : ""}>
-                  <p className="mb-4 text-[0.64rem] font-bold uppercase tracking-[0.22em] text-[var(--botanical)] max-[680px]:mb-2.5 max-[680px]:text-[0.54rem]">
+                  <p className="mb-4 font-mono text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mb-2.5 max-[680px]:text-[0.66rem]">
                     {chapter.number}
                   </p>
-                  <h3 className="m-0 font-serif text-[clamp(2.4rem,3.8vw,4.5rem)] font-normal leading-[0.92] tracking-[-0.055em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(1.6rem,7.5vw,2.4rem)] max-[680px]:leading-[1.0]">
+                  <h3 className="m-0 font-serif text-[clamp(2.4rem,3.8vw,4.5rem)] font-normal leading-[1.06] tracking-[-0.05em] text-[var(--forest)] text-balance max-[680px]:text-[clamp(1.6rem,7.5vw,2.4rem)] max-[680px]:leading-[1.08]">
                     {chapter.headline}
                   </h3>
                   <div className="my-5 h-px max-w-[60px] max-[680px]:my-4" style={{ backgroundColor: chapter.accent }} />
-                  <p className="mb-0 max-w-[560px] text-[0.95rem] leading-[1.82] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.68]">
+                  <p className="mb-0 max-w-[560px] text-[0.95rem] leading-[1.82] text-[var(--muted)] max-[680px]:text-[0.84rem] max-[680px]:leading-[1.68]">
                     {chapter.copy}
                   </p>
                   <p
-                    className="mt-7 inline-flex items-center gap-3 rounded-full px-4 py-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] max-[680px]:mt-5 max-[680px]:px-3 max-[680px]:py-1.5 max-[680px]:text-[0.52rem]"
+                    className="mt-7 inline-flex items-center gap-3 rounded-full px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.14em] max-[680px]:mt-5 max-[680px]:px-3.5 max-[680px]:py-1.5 max-[680px]:text-[0.66rem]"
                     style={{ backgroundColor: chapter.accent + "28", color: "var(--forest)" }}
                   >
                     <span className="size-1.5 rounded-full" style={{ backgroundColor: chapter.accent }} />
@@ -287,7 +287,7 @@ export default async function OurStoryPage() {
                     {/* Badge */}
                     <div className="absolute left-5 top-5 max-[680px]:left-3 max-[680px]:top-3">
                       <div
-                        className="rounded-full border border-white/30 px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] backdrop-blur-sm max-[680px]:px-2.5 max-[680px]:py-1 max-[680px]:text-[0.5rem]"
+                        className="rounded-full border border-white/30 px-3.5 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.16em] backdrop-blur-sm max-[680px]:px-2.5 max-[680px]:py-1 max-[680px]:text-[0.62rem]"
                         style={{ backgroundColor: chapter.accent + "44", color: "var(--forest)" }}
                       >
                         {chapter.title}
@@ -299,7 +299,7 @@ export default async function OurStoryPage() {
                         <p className="font-serif text-[clamp(3rem,8vw,7rem)] font-normal leading-none tracking-[-0.06em] max-[680px]:text-[clamp(2.5rem,16vw,5rem)]" style={{ color: chapter.accent }}>
                           {String(i + 1).padStart(2, "0")}
                         </p>
-                        <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--forest)]/55 max-[680px]:text-[0.54rem]">
+                        <p className="mt-2 text-[0.74rem] font-bold uppercase tracking-[0.18em] text-[var(--forest)]/70 max-[680px]:text-[0.66rem]">
                           {chapter.title}
                         </p>
                       </div>
@@ -322,13 +322,13 @@ export default async function OurStoryPage() {
 
             {/* Sticky intro */}
             <div className="self-start min-[901px]:sticky min-[901px]:top-[calc(var(--header-height)+40px)]">
-              <p className="m-0 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.58rem]">
+              <p className="m-0 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.66rem]">
                 Source to seal
               </p>
-              <h2 className="mb-0 mt-5 max-w-[10ch] font-serif text-[clamp(2.8rem,4.5vw,5.5rem)] font-normal leading-[0.88] tracking-[-0.06em] max-[900px]:max-w-full max-[680px]:mt-3 max-[680px]:text-[clamp(2rem,9vw,3rem)] max-[680px]:leading-[0.92]">
+              <h2 className="mb-0 mt-5 max-w-[10ch] font-serif text-[clamp(2.8rem,4.5vw,5.5rem)] font-normal leading-[0.92] tracking-[-0.055em] max-[900px]:max-w-full max-[680px]:mt-3 max-[680px]:text-[clamp(2rem,9vw,3rem)] max-[680px]:leading-[0.96]">
                 Six decisions. One considered path.
               </h2>
-              <p className="mb-0 mt-7 max-w-[400px] text-[0.92rem] leading-[1.78] text-white/52 max-[900px]:max-w-full max-[680px]:mt-4 max-[680px]:text-[0.76rem] max-[680px]:leading-[1.65]">
+              <p className="mb-0 mt-7 max-w-[400px] text-[0.92rem] leading-[1.78] text-white/60 max-[900px]:max-w-full max-[680px]:mt-4 max-[680px]:text-[0.82rem] max-[680px]:leading-[1.65]">
                 A premium botanical product is not defined by decoration. It is defined by the care, records and useful guidance that stand behind it.
               </p>
             </div>
@@ -338,24 +338,24 @@ export default async function OurStoryPage() {
               {processSteps.map((step, i) => (
                 <li
                   key={step.number}
-                  className="relative grid grid-cols-[52px_1fr] gap-x-6 gap-y-1.5 border-t border-white/12 py-10 first:pt-0 max-[680px]:grid-cols-[38px_1fr] max-[680px]:gap-x-4 max-[680px]:py-6"
+                  className="relative grid grid-cols-[40px_1fr] items-start gap-x-5 gap-y-1.5 border-t border-white/12 py-9 first:pt-0 max-[680px]:grid-cols-[34px_1fr] max-[680px]:gap-x-3.5 max-[680px]:py-6"
                 >
                   {i < processSteps.length - 1 && (
                     <span
-                      className="absolute left-[25px] top-[calc(36px+28px)] h-[calc(100%-36px-28px)] w-px bg-white/10 max-[680px]:left-[18px]"
+                      className="absolute left-[18px] top-[calc(36px+24px)] h-[calc(100%-36px-24px)] w-px bg-white/10 max-[680px]:left-[15px]"
                       aria-hidden="true"
                     />
                   )}
                   {/* Number circle */}
-                  <div className="flex size-[34px] shrink-0 items-center justify-center rounded-full border border-[var(--amla)]/40 bg-[var(--amla)]/10 max-[680px]:size-[26px]">
-                    <span className="font-serif text-[0.7rem] text-[var(--amla)] max-[680px]:text-[0.58rem]">{step.number}</span>
+                  <div className="flex size-[36px] shrink-0 items-center justify-center rounded-full border border-[var(--amla)]/40 bg-[var(--amla)]/10 max-[680px]:size-[30px]">
+                    <span className="font-mono text-[0.76rem] font-bold text-[var(--amla)] max-[680px]:text-[0.68rem]">{step.number}</span>
                   </div>
                   {/* Text */}
                   <div className="min-w-0">
-                    <h4 className="m-0 font-serif text-[clamp(1.6rem,2.4vw,2.6rem)] font-normal leading-[1.02] tracking-[-0.04em] text-white max-[680px]:text-[clamp(1.2rem,5.5vw,1.75rem)] max-[680px]:leading-[1.06]">
+                    <h4 className="m-0 font-serif text-[clamp(1.5rem,2.2vw,2.4rem)] font-normal leading-[1.12] tracking-[-0.035em] text-white max-[680px]:text-[clamp(1.2rem,5.5vw,1.65rem)] max-[680px]:leading-[1.12]">
                       {step.title}
                     </h4>
-                    <p className="mb-0 mt-4 max-w-[580px] text-[0.88rem] leading-[1.78] text-white/52 max-[680px]:mt-2.5 max-[680px]:text-[0.74rem] max-[680px]:leading-[1.62]">
+                    <p className="mb-0 mt-3 max-w-[580px] text-[0.88rem] leading-[1.74] text-white/60 max-[680px]:mt-2 max-[680px]:text-[0.8rem] max-[680px]:leading-[1.62]">
                       {step.copy}
                     </p>
                   </div>
@@ -376,15 +376,15 @@ export default async function OurStoryPage() {
             {/* Header */}
             <div className="mb-[clamp(60px,7vw,96px)] grid grid-cols-[0.55fr_1.45fr] gap-[clamp(40px,7vw,100px)] max-[800px]:grid-cols-1 max-[800px]:gap-6 max-[680px]:mb-10 max-[680px]:gap-4">
               <div>
-                <p className="m-0 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.58rem]">
+                <p className="m-0 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.66rem]">
                   The botanical cabinet
                 </p>
-                <h2 className="mb-0 mt-5 max-w-[9ch] font-serif text-[clamp(3rem,5vw,6rem)] font-normal leading-[0.88] tracking-[-0.065em] text-[var(--forest)] max-[680px]:mt-3 max-[680px]:text-[clamp(2rem,9vw,3.2rem)] max-[680px]:leading-[0.92]">
+                <h2 className="mb-0 mt-5 max-w-[9ch] font-serif text-[clamp(3rem,5vw,6rem)] font-normal leading-[0.92] tracking-[-0.06em] text-[var(--forest)] max-[680px]:mt-3 max-[680px]:text-[clamp(2rem,9vw,3.2rem)] max-[680px]:leading-[0.96]">
                   Six plants. Six distinct journeys.
                 </h2>
               </div>
               <div className="self-end">
-                <p className="mb-0 max-w-[580px] text-[1rem] leading-[1.8] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.65]">
+                <p className="mb-0 max-w-[580px] text-[1rem] leading-[1.8] text-[var(--muted)] max-[680px]:text-[0.84rem] max-[680px]:leading-[1.65]">
                   Each botanical arrives with its own plant part, colour, texture and ritual role. We keep those differences visible—because identity is the foundation of honest beauty.
                 </p>
               </div>
@@ -396,11 +396,11 @@ export default async function OurStoryPage() {
                 <Link
                   key={product.slug}
                   href={`/shop/${product.slug}`}
-                  className="group relative flex min-h-[160px] items-center gap-[clamp(16px,4vw,56px)] overflow-hidden bg-[var(--paper)] px-[clamp(20px,4vw,52px)] py-6 transition-[background-color] duration-500 hover:bg-[var(--surface-warm)] max-[680px]:min-h-0 max-[680px]:gap-3 max-[680px]:px-4 max-[680px]:py-4"
+                  className="group relative flex min-h-[160px] items-center gap-[clamp(16px,4vw,56px)] overflow-hidden bg-[var(--paper)] px-[clamp(20px,4vw,52px)] py-6 transition-[background-color] duration-500 hover:bg-[var(--surface-warm)] max-[680px]:min-h-0 max-[680px]:gap-3.5 max-[680px]:px-4 max-[680px]:py-4"
                   style={{ borderLeft: `3px solid ${product.accent}` }}
                 >
                   {/* Collection number */}
-                  <span className="shrink-0 font-serif text-[1rem] text-[var(--forest)]/32 max-[680px]:hidden">
+                  <span className="shrink-0 font-mono text-[0.86rem] font-bold text-[var(--forest)]/40 max-[680px]:hidden">
                     {product.collectionNumber}
                   </span>
 
@@ -439,27 +439,27 @@ export default async function OurStoryPage() {
                   {/* Details */}
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2.5 max-[680px]:gap-1.5">
-                      <h3 className="m-0 font-serif text-[clamp(1.6rem,2.5vw,2.6rem)] font-normal leading-[0.98] tracking-[-0.045em] text-[var(--forest)] max-[680px]:text-[clamp(1.15rem,5vw,1.6rem)]">
+                      <h3 className="m-0 font-serif text-[clamp(1.5rem,2.2vw,2.4rem)] font-normal leading-[1.08] tracking-[-0.04em] text-[var(--forest)] max-[680px]:text-[clamp(1.15rem,5vw,1.5rem)]">
                         {product.name.replace(" Powder", "")}
                       </h3>
                       <span
-                        className="rounded-full px-2.5 py-0.5 text-[0.56rem] font-bold uppercase tracking-[0.15em] max-[680px]:px-2 max-[680px]:text-[0.48rem]"
+                        className="rounded-full px-2.5 py-0.5 text-[0.66rem] font-bold uppercase tracking-[0.14em] max-[680px]:px-2 max-[680px]:text-[0.62rem]"
                         style={{ backgroundColor: product.accentSoft, color: product.accent }}
                       >
                         {product.ritualStep}
                       </span>
                     </div>
-                    <p className="mb-0 mt-1 text-[0.78rem] italic leading-none text-[var(--forest)]/50 max-[680px]:text-[0.62rem]">
+                    <p className="mb-0 mt-1 text-[0.82rem] italic leading-none text-[var(--forest)]/60 max-[680px]:text-[0.72rem]">
                       {product.botanical}
                     </p>
-                    <p className="mb-0 mt-3 max-w-[520px] text-[0.84rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:line-clamp-2 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.55]">
+                    <p className="mb-0 mt-3 max-w-[520px] text-[0.86rem] leading-[1.65] text-[var(--muted)] max-[680px]:mt-2 max-[680px]:line-clamp-2 max-[680px]:text-[0.78rem] max-[680px]:leading-[1.55]">
                       {product.shortDescription}
                     </p>
                   </div>
 
                   {/* Right side — desktop */}
                   <div className="ml-auto flex shrink-0 flex-col items-end gap-4 max-[680px]:hidden">
-                    <span className="text-right text-[0.58rem] font-bold uppercase tracking-[0.16em] text-[var(--forest)]/40">
+                    <span className="text-right text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[var(--forest)]/50">
                       {product.plantPart}
                     </span>
                     <span
@@ -471,7 +471,7 @@ export default async function OurStoryPage() {
 
                   {/* Mobile arrow */}
                   <span
-                    className="ml-auto hidden shrink-0 text-[0.9rem] text-[var(--forest)]/40 transition-transform duration-300 group-hover:translate-x-0.5 max-[680px]:block"
+                    className="ml-auto hidden shrink-0 text-[1rem] text-[var(--forest)]/50 transition-transform duration-300 group-hover:translate-x-0.5 max-[680px]:block"
                     aria-hidden="true"
                   >→</span>
 
@@ -489,7 +489,7 @@ export default async function OurStoryPage() {
             <div className="mt-10 text-center max-[680px]:mt-7">
               <Link
                 href="/shop"
-                className="inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full border border-[var(--forest)] px-8 py-3.5 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)] transition-[transform,background-color,color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:text-white max-[680px]:min-h-[44px] max-[680px]:px-6 max-[680px]:text-[0.62rem]"
+                className="inline-flex min-h-[50px] items-center justify-center gap-3 rounded-full border border-[var(--forest)] px-8 py-3.5 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)] transition-[transform,background-color,color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:text-white max-[680px]:min-h-[44px] max-[680px]:px-6 max-[680px]:text-[0.7rem]"
               >
                 Explore the full collection <span aria-hidden="true">↗</span>
               </Link>
@@ -505,10 +505,10 @@ export default async function OurStoryPage() {
         <div className="mx-auto w-full max-w-[1440px] px-[var(--page-pad)] py-[clamp(90px,9vw,140px)] max-[680px]:px-4 max-[680px]:py-14">
 
           <div className="mb-[clamp(56px,6vw,84px)] grid grid-cols-[0.5fr_1.5fr] items-end gap-[clamp(40px,7vw,100px)] max-[800px]:grid-cols-1 max-[800px]:gap-5 max-[680px]:mb-10 max-[680px]:gap-3">
-            <p className="m-0 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.58rem]">
+            <p className="m-0 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.66rem]">
               What we protect
             </p>
-            <h2 className="m-0 max-w-[840px] font-serif text-[clamp(2.8rem,5vw,5.8rem)] font-normal leading-[0.9] tracking-[-0.06em] text-balance max-[680px]:text-[clamp(2rem,9vw,3.2rem)] max-[680px]:leading-[0.93]">
+            <h2 className="m-0 max-w-[840px] font-serif text-[clamp(2.8rem,5vw,5.8rem)] font-normal leading-[0.94] tracking-[-0.055em] text-balance max-[680px]:text-[clamp(2rem,9vw,3.2rem)] max-[680px]:leading-[0.98]">
               Premium means knowing{" "}
               <em className="font-normal text-[#c8d88e]">what matters.</em>
             </h2>
@@ -522,13 +522,13 @@ export default async function OurStoryPage() {
                   }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[0.64rem] font-bold tracking-[0.18em] text-[var(--amla)] max-[680px]:text-[0.54rem]">{s.number}</span>
-                  <span className="text-[1.3rem] text-[var(--amla)] opacity-55 max-[680px]:text-[1rem]" aria-hidden="true">{s.icon}</span>
+                  <span className="font-mono text-[0.74rem] font-bold tracking-[0.16em] text-[var(--amla)] max-[680px]:text-[0.68rem]">{s.number}</span>
+                  <span className="text-[1.3rem] text-[var(--amla)] opacity-70 max-[680px]:text-[1.1rem]" aria-hidden="true">{s.icon}</span>
                 </div>
-                <h3 className="mb-0 mt-auto max-w-[11ch] font-serif text-[clamp(1.75rem,2.5vw,2.5rem)] font-normal leading-[0.96] tracking-[-0.04em] max-[680px]:mt-6 max-[680px]:text-[clamp(1.35rem,6vw,1.9rem)]">
+                <h3 className="mb-0 mt-auto max-w-[11ch] font-serif text-[clamp(1.65rem,2.4vw,2.4rem)] font-normal leading-[1.06] tracking-[-0.035em] max-[680px]:mt-6 max-[680px]:text-[clamp(1.35rem,6vw,1.8rem)]">
                   {s.title}
                 </h3>
-                <p className="mb-0 mt-5 text-[0.82rem] leading-[1.72] text-white/55 max-[680px]:mt-3 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.62]">
+                <p className="mb-0 mt-5 text-[0.84rem] leading-[1.72] text-white/65 max-[680px]:mt-3 max-[680px]:text-[0.78rem] max-[680px]:leading-[1.62]">
                   {s.copy}
                 </p>
               </article>
@@ -552,7 +552,7 @@ export default async function OurStoryPage() {
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(8,26,19,0.62))]" />
           <div className="absolute inset-x-0 bottom-0 p-7 max-[680px]:p-4">
-            <p className="m-0 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/50 max-[680px]:text-[0.5rem]">
+            <p className="m-0 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white/70 max-[680px]:text-[0.64rem]">
               Botanical ritual · prepared fresh
             </p>
           </div>
@@ -561,32 +561,32 @@ export default async function OurStoryPage() {
         {/* Copy */}
         <div className="flex items-center px-[clamp(44px,8vw,120px)] py-[100px] max-[900px]:px-[clamp(24px,6vw,72px)] max-[900px]:py-[80px] max-[680px]:px-4 max-[680px]:py-12">
           <div className="max-w-[580px]">
-            <p className="m-0 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.56rem]">
+            <p className="m-0 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.66rem]">
               The final transformation
             </p>
-            <h2 className="mb-0 mt-7 max-w-[11ch] font-serif text-[clamp(3rem,5.5vw,6.5rem)] font-normal leading-[0.85] tracking-[-0.065em] text-balance max-[680px]:mt-4 max-[680px]:text-[clamp(2.1rem,9.5vw,3.2rem)] max-[680px]:leading-[0.9]">
+            <h2 className="mb-0 mt-7 max-w-[11ch] font-serif text-[clamp(3rem,5.5vw,6.5rem)] font-normal leading-[0.92] tracking-[-0.06em] text-balance max-[680px]:mt-4 max-[680px]:text-[clamp(2.1rem,9.5vw,3.2rem)] max-[680px]:leading-[0.96]">
               The last step happens{" "}
               <em className="font-normal text-[#c8d88e]">in your bowl.</em>
             </h2>
-            <p className="mb-0 mt-8 text-[1rem] leading-[1.82] text-white/58 max-[680px]:mt-5 max-[680px]:text-[0.78rem] max-[680px]:leading-[1.68]">
+            <p className="mb-0 mt-8 text-[1rem] leading-[1.82] text-white/70 max-[680px]:mt-5 max-[680px]:text-[0.84rem] max-[680px]:leading-[1.68]">
               Water turns powder into paste. Time turns preparation into ritual. Clear directions give you the confidence to make that moment your own—without losing respect for the ingredient.
             </p>
 
             {/* Steps */}
-            <div className="mt-9 space-y-3 max-[680px]:mt-6 max-[680px]:space-y-2.5">
+            <div className="mt-9 space-y-3.5 max-[680px]:mt-6 max-[680px]:space-y-3">
               {["Mix with water to a smooth paste", "Apply and follow pack timing", "Rinse thoroughly and restore"].map((step, i) => (
                 <div key={step} className="flex items-center gap-4 max-[680px]:gap-3">
-                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full border border-[var(--amla)]/40 text-[0.6rem] font-bold text-[var(--amla)] max-[680px]:size-5 max-[680px]:text-[0.52rem]">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-[var(--amla)]/40 font-mono text-[0.72rem] font-bold text-[var(--amla)] max-[680px]:size-6 max-[680px]:text-[0.66rem]">
                     {i + 1}
                   </span>
-                  <p className="m-0 text-[0.84rem] text-white/62 max-[680px]:text-[0.72rem]">{step}</p>
+                  <p className="m-0 text-[0.88rem] text-white/75 max-[680px]:text-[0.78rem]">{step}</p>
                 </div>
               ))}
             </div>
 
             <Link
               href="/rituals"
-              className="mt-10 inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full border border-white/22 px-7 py-3 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white transition-[transform,background-color,color,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--amla)] hover:bg-[var(--amla)] hover:text-[var(--forest)] max-[680px]:mt-7 max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.62rem]"
+              className="mt-10 inline-flex min-h-[50px] items-center justify-center gap-3 rounded-full border border-white/25 px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-white transition-[transform,background-color,color,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--amla)] hover:bg-[var(--amla)] hover:text-[var(--forest)] max-[680px]:mt-7 max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
             >
               Find your ritual <span aria-hidden="true">↗</span>
             </Link>
@@ -606,27 +606,27 @@ export default async function OurStoryPage() {
           />
           <div className="relative z-[2] grid grid-cols-[1.3fr_0.7fr] items-center gap-[clamp(40px,7vw,100px)] max-[900px]:grid-cols-1 max-[900px]:gap-8 max-[680px]:gap-6">
             <div>
-              <p className="m-0 text-[0.66rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.56rem]">
+              <p className="m-0 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--amla)] max-[680px]:text-[0.66rem]">
                 Continue the story
               </p>
-              <h2 className="mb-0 mt-6 max-w-[12ch] font-serif text-[clamp(2.8rem,5vw,6rem)] font-normal leading-[0.88] tracking-[-0.06em] text-balance max-[680px]:mt-4 max-[680px]:text-[clamp(2rem,9vw,3.2rem)] max-[680px]:leading-[0.92]">
+              <h2 className="mb-0 mt-6 max-w-[12ch] font-serif text-[clamp(2.8rem,5vw,6rem)] font-normal leading-[0.94] tracking-[-0.055em] text-balance max-[680px]:mt-4 max-[680px]:text-[clamp(2rem,9vw,3.2rem)] max-[680px]:leading-[0.98]">
                 Care begins long before the bowl.
               </h2>
             </div>
             <div>
-              <p className="m-0 max-w-[400px] text-[0.95rem] leading-[1.78] text-white/58 max-[680px]:text-[0.78rem] max-[680px]:leading-[1.65]">
+              <p className="m-0 max-w-[400px] text-[0.95rem] leading-[1.78] text-white/70 max-[680px]:text-[0.84rem] max-[680px]:leading-[1.65]">
                 Meet each ingredient, understand its purpose and choose the botanical that belongs in your next ritual.
               </p>
               <div className="mt-8 flex flex-wrap gap-4 max-[680px]:mt-6 max-[680px]:gap-3">
                 <Link
                   href="/shop"
-                  className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full bg-white px-7 py-3 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)] shadow-[0_10px_28px_rgba(0,0,0,0.22)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.62rem]"
+                  className="inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-full bg-white px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)] shadow-[0_10px_28px_rgba(0,0,0,0.22)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
                 >
                   Explore botanicals <span aria-hidden="true">↗</span>
                 </Link>
                 <Link
                   href="/rituals"
-                  className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full border border-white/25 px-7 py-3 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-white/55 max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.62rem]"
+                  className="inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-full border border-white/25 px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-white/55 max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
                 >
                   Build a ritual
                 </Link>

@@ -76,17 +76,17 @@ export function ReviewCard({
           </div>
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <h3 className="m-0 truncate text-[0.82rem] font-bold text-[var(--forest)]">
+              <h3 className="m-0 truncate text-[0.86rem] font-bold text-[var(--forest)]">
                 {review.author}
               </h3>
               {review.verified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#eaf3e7] px-2 py-0.5 text-[0.52rem] font-bold uppercase tracking-[0.07em] text-[#397228]">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#eaf3e7] px-2 py-0.5 text-[0.66rem] font-bold uppercase tracking-[0.07em] text-[#397228]">
                   <span aria-hidden="true">&#10003;</span> Verified purchase
                 </span>
               )}
             </div>
             {supportingDetails.length > 0 && (
-              <p className="m-0 mt-0.5 truncate text-[0.64rem] text-[var(--muted)]">
+              <p className="m-0 mt-0.5 truncate text-[0.72rem] text-[var(--muted)]">
                 {supportingDetails.join(" · ")}
               </p>
             )}
@@ -95,7 +95,7 @@ export function ReviewCard({
         {date && (
           <time
             dateTime={date.dateTime}
-            className="shrink-0 text-[0.62rem] text-[var(--muted)]"
+            className="shrink-0 text-[0.72rem] text-[var(--muted)]"
           >
             {date.label}
           </time>
@@ -112,23 +112,23 @@ export function ReviewCard({
       </div>
 
       {review.headline && (
-        <h4 className="mb-0 mt-3 [font-family:var(--font-display)] text-[1.08rem] font-normal leading-[1.25] text-[var(--forest)]">
+        <h4 className="mb-0 mt-3 [font-family:var(--font-display)] text-[1.12rem] font-normal leading-[1.3] text-[var(--forest)]">
           {review.headline}
         </h4>
       )}
-      <p className="mb-0 mt-2 flex-1 text-[0.78rem] leading-[1.7] text-[var(--muted)]">
+      <p className="mb-0 mt-2 flex-1 text-[0.84rem] leading-[1.65] text-[var(--muted)]">
         &ldquo;{review.quote}&rdquo;
       </p>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] pt-3">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {review.tag && (
-            <span className="rounded-full bg-[var(--sand)] px-2.5 py-1 text-[0.55rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)]">
+            <span className="rounded-full bg-[var(--sand)] px-2.5 py-1 text-[0.66rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)]">
               {review.tag}
             </span>
           )}
           {review.productName && (
-            <span className="text-[0.62rem] font-semibold text-[var(--muted)]">
+            <span className="text-[0.72rem] font-semibold text-[var(--muted)]">
               {review.productName}
             </span>
           )}
@@ -136,7 +136,7 @@ export function ReviewCard({
         {showProductLink && productSlug && (
           <Link
             href={`/shop/${productSlug}#customer-reviews`}
-            className="inline-flex min-h-8 items-center px-1 text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[var(--botanical)] underline decoration-transparent underline-offset-4 transition-colors hover:text-[var(--forest)] hover:decoration-current"
+            className="inline-flex min-h-8 items-center px-1 text-[0.72rem] font-bold uppercase tracking-[0.08em] text-[var(--botanical)] underline decoration-transparent underline-offset-4 transition-colors hover:text-[var(--forest)] hover:decoration-current"
           >
             View product
           </Link>

@@ -31,8 +31,8 @@ export function BrandMark({ variant = "default" }: BrandMarkProps) {
         NatureMist
       </span>
       <span
-        className={`mt-1.5 text-[0.48rem] font-bold tracking-[0.27em] uppercase opacity-[0.78] max-[900px]:text-[0.42rem] ${
-          isFooter ? "ml-0.5 opacity-[0.65]" : ""
+        className={`mt-1 text-[0.62rem] font-bold tracking-[0.2em] uppercase opacity-[0.82] max-[900px]:text-[0.56rem] max-[900px]:tracking-[0.16em] ${
+          isFooter ? "ml-0.5 opacity-[0.72]" : ""
         }`}
       >
         Botanical rituals

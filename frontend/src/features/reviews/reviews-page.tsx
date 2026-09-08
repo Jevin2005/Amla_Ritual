@@ -16,9 +16,9 @@ import { VideoReviewModal } from "@/features/reviews/video-review-modal";
 import { useStore } from "@/features/store/store-provider";
 
 const eyebrowClass =
-  "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
+  "mb-4 text-[0.72rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
 const buttonClass =
-  "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-8 py-[14px] text-[0.72rem] leading-none font-bold tracking-[0.14em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)]";
+  "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-8 py-[14px] text-[0.74rem] leading-none font-bold tracking-[0.14em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)]";
 
 type ReviewFilter = "All" | ReviewTag;
 const REVIEW_PAGE_SIZE = 8;
@@ -90,7 +90,7 @@ export function ReviewsPage() {
                 ) : (
                   <span className="[font-family:var(--font-display)] text-[2rem] text-[var(--forest)]">—</span>
                 )}
-                <p className="mb-0 mt-2 text-[0.65rem] font-bold uppercase tracking-[0.1em] text-[var(--muted)]">
+                <p className="mb-0 mt-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)]">
                   Written rating
                 </p>
               </div>
@@ -98,7 +98,7 @@ export function ReviewsPage() {
                 <p className="m-0 [font-family:var(--font-display)] text-[2.35rem] font-normal leading-none text-[var(--forest)]">
                   {videos.length}
                 </p>
-                <p className="mb-0 mt-2 text-[0.65rem] font-bold uppercase tracking-[0.1em] text-[var(--muted)]">
+                <p className="mb-0 mt-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)]">
                   Video {videos.length === 1 ? "story" : "stories"}
                 </p>
               </div>
@@ -106,7 +106,7 @@ export function ReviewsPage() {
                 <p className="m-0 [font-family:var(--font-display)] text-[2.35rem] font-normal leading-none text-[var(--forest)]">
                   {productCount}
                 </p>
-                <p className="mb-0 mt-2 text-[0.65rem] font-bold uppercase tracking-[0.1em] text-[var(--muted)]">
+                <p className="mb-0 mt-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)]">
                   {productCount === 1 ? "Botanical" : "Botanicals"} reviewed
                 </p>
               </div>
@@ -142,7 +142,7 @@ export function ReviewsPage() {
                   </h2>
                 </div>
                 <span
-                  className="text-[0.68rem] text-[var(--muted)]"
+                  className="text-[0.74rem] text-[var(--muted)]"
                   role="status"
                   aria-live="polite"
                   aria-atomic="true"
@@ -176,14 +176,14 @@ export function ReviewsPage() {
                         </span>
                       </span>
                       <span className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3 text-white">
-                        <strong className="text-[0.68rem] uppercase tracking-[0.08em]">{video.creator}</strong>
-                        <span className="text-[0.58rem] text-white/80">{video.duration}</span>
+                        <strong className="text-[0.74rem] uppercase tracking-[0.08em]">{video.creator}</strong>
+                        <span className="text-[0.66rem] text-white/90">{video.duration}</span>
                       </span>
                     </span>
                     <span className="block p-4">
-                      <strong className="block text-[0.82rem] leading-[1.35] text-[var(--forest)]">{video.title}</strong>
-                      <span className="mt-2 block line-clamp-2 text-[0.68rem] leading-[1.5] text-[var(--muted)]">{video.testimonial}</span>
-                      <span className="mt-3 block text-[0.58rem] font-bold uppercase tracking-[0.1em] text-[var(--botanical)]">{video.productTag}</span>
+                      <strong className="block text-[0.88rem] leading-[1.35] text-[var(--forest)]">{video.title}</strong>
+                      <span className="mt-2 block line-clamp-2 text-[0.78rem] leading-[1.55] text-[var(--muted)]">{video.testimonial}</span>
+                      <span className="mt-3 block text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--botanical)]">{video.productTag}</span>
                     </span>
                   </button>
                 ))}
@@ -195,7 +195,7 @@ export function ReviewsPage() {
                     onClick={() =>
                       setVisibleVideoCount((count) => count + VIDEO_PAGE_SIZE)
                     }
-                    className="inline-flex min-h-11 items-center rounded-full border border-[var(--forest)] px-6 py-2.5 text-[0.66rem] font-bold uppercase tracking-[0.09em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-white"
+                    className="inline-flex min-h-12 items-center rounded-full border border-[var(--forest)] px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-white"
                   >
                     Load more video stories
                   </button>
@@ -223,7 +223,7 @@ export function ReviewsPage() {
                         setActiveFilter(tag);
                         setVisibleReviewCount(REVIEW_PAGE_SIZE);
                       }}
-                      className={`rounded-full px-5 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.08em] transition-[background-color,color,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] ${
+                      className={`rounded-full px-5 py-2.5 text-[0.74rem] font-bold uppercase tracking-[0.1em] transition-[background-color,color,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] ${
                         activeFilter === tag
                           ? "bg-[var(--forest)] text-[var(--paper)] shadow-[0_6px_18px_rgba(21,59,45,0.15)]"
                           : "border border-[var(--line)] bg-[var(--paper)] text-[var(--muted)] hover:border-[var(--forest)] hover:text-[var(--forest)]"
@@ -254,7 +254,7 @@ export function ReviewsPage() {
                     onClick={() =>
                       setVisibleReviewCount((count) => count + REVIEW_PAGE_SIZE)
                     }
-                    className="inline-flex min-h-11 items-center rounded-full border border-[var(--forest)] px-6 py-2.5 text-[0.66rem] font-bold uppercase tracking-[0.09em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-white"
+                    className="inline-flex min-h-12 items-center rounded-full border border-[var(--forest)] px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-white"
                   >
                     Load more written reviews
                   </button>
@@ -262,7 +262,7 @@ export function ReviewsPage() {
               )}
 
               {filteredReviews.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-[var(--line-strong)] bg-[var(--paper)] p-8 text-center text-[0.8rem] text-[var(--muted)]">
+                <div className="rounded-2xl border border-dashed border-[var(--line-strong)] bg-[var(--paper)] p-8 text-center text-[0.86rem] text-[var(--muted)]">
                   No reviews are published in this category yet.
                 </div>
               )}

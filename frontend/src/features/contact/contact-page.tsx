@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useStore } from "@/features/store/store-provider";
 
 const eyebrowClass =
-  "mb-4 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
+  "mb-4 text-[0.72rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
 const buttonClass =
-  "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-8 py-[14px] text-[0.72rem] leading-none font-bold tracking-[0.14em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]";
+  "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-8 py-[14px] text-[0.74rem] leading-none font-bold tracking-[0.14em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]";
 const inputClass =
   "w-full rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--paper)] px-5 py-3.5 text-[0.92rem] text-[var(--forest)] transition-[border-color,box-shadow] duration-200 placeholder:text-[var(--muted)]/50 focus:border-[var(--forest)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--forest)]/10";
 
@@ -174,7 +174,7 @@ export function ContactPage() {
                   {isSubmitting ? "Sending note..." : "Send note to specialists"}
                 </button>
 
-                <p className="m-0 text-center text-[0.75rem] text-[var(--muted)]">
+                <p className="m-0 text-center text-[0.78rem] text-[var(--muted)]">
                   🔒 We respect your privacy and never share your consultation details.
                 </p>
               </form>
@@ -202,7 +202,7 @@ export function ContactPage() {
                     </a>
                   </div>
                 </div>
-                <p className="mt-3 text-[0.82rem] leading-relaxed text-[var(--muted)]">
+                <p className="mt-3 text-[0.84rem] leading-relaxed text-[var(--muted)]">
                   Guaranteed response within 24 hours on all ritual consultations and customer care notes.
                 </p>
               </div>
@@ -222,7 +222,7 @@ export function ContactPage() {
                     </p>
                   </div>
                 </div>
-                <p className="mt-3 text-[0.82rem] leading-relaxed text-[var(--muted)]">
+                <p className="mt-3 text-[0.84rem] leading-relaxed text-[var(--muted)]">
                   Need an immediate answer about your hair type or mixing ratios? Check our instant FAQ guide or reach out.
                 </p>
               </div>
@@ -234,13 +234,13 @@ export function ContactPage() {
                     <h3 className="m-0 font-serif text-[1.2rem] font-normal text-[var(--forest)]">
                       Looking for an Order?
                     </h3>
-                    <p className="mt-1 text-[0.82rem] text-[var(--muted)]">
+                    <p className="mt-1 text-[0.84rem] text-[var(--muted)]">
                       Track your dispatch status with real-time courier checkpoints.
                     </p>
                   </div>
                   <Link
                     href="/track-order"
-                    className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--forest)] px-4 text-[0.7rem] font-bold tracking-[0.1em] text-[var(--forest)] uppercase transition-colors hover:bg-[var(--forest)] hover:text-white"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--forest)] px-5 text-[0.74rem] font-bold tracking-[0.1em] text-[var(--forest)] uppercase transition-colors hover:bg-[var(--forest)] hover:text-white"
                   >
                     Track order →
                   </Link>

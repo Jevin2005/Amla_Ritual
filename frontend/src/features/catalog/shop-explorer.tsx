@@ -76,12 +76,12 @@ export function ShopExplorer() {
   return (
     <div className="mx-auto w-full max-w-[1440px] px-[clamp(18px,4vw,64px)] pt-4 pb-[80px] max-[680px]:px-2.5 max-[680px]:pt-1.5 max-[680px]:pb-12">
       {/* ── Mobile Compact Filter & Search Bar (Phone View Only) ── */}
-      <div className="mb-3 hidden max-[900px]:block">
+      <div className="mb-3.5 hidden max-[900px]:block">
         {/* Top Action Row: Search Input + Filter Drawer Button */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {/* Search Box */}
           <div className="relative flex-1">
-            <span className="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2 text-[0.7rem] text-[var(--muted)]" aria-hidden="true">
+            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[0.78rem] text-[var(--muted)]" aria-hidden="true">
               🔍
             </span>
             <input
@@ -89,13 +89,13 @@ export function ShopExplorer() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search botanicals..."
-              className="h-8.5 w-full rounded-full border border-[var(--line)] bg-[var(--paper)] pr-7 pl-7.5 text-[0.72rem] outline-none transition-colors focus:border-[var(--botanical)] placeholder:text-[var(--muted)]"
+              className="h-10 w-full rounded-full border border-[var(--line)] bg-[var(--paper)] pr-8 pl-8.5 text-[0.82rem] outline-none transition-colors focus:border-[var(--botanical)] placeholder:text-[var(--muted)]"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute top-1/2 right-2 -translate-y-1/2 grid size-4 place-items-center rounded-full text-[0.65rem] text-[var(--muted)] hover:text-[var(--forest)]"
+                className="absolute top-1/2 right-2.5 -translate-y-1/2 grid size-5 place-items-center rounded-full text-[0.72rem] text-[var(--muted)] hover:text-[var(--forest)]"
               >
                 ✕
               </button>
@@ -106,22 +106,22 @@ export function ShopExplorer() {
           <button
             type="button"
             onClick={() => setIsFilterDrawerOpen(true)}
-            className={`inline-flex h-8.5 items-center gap-1 rounded-full border px-3 text-[0.68rem] font-bold transition-all active:scale-95 cursor-pointer ${activeFilterCount > 0
+            className={`inline-flex h-10 items-center gap-1.5 rounded-full border px-3.5 text-[0.74rem] font-bold transition-all active:scale-95 cursor-pointer ${activeFilterCount > 0
                 ? "border-[var(--forest)] bg-[var(--forest)] text-white shadow-2xs"
                 : "border-[var(--line)] bg-[var(--paper)] text-[var(--forest)] hover:bg-[var(--beige)]"
               }`}
           >
             <span>⚙️ Filters</span>
             {activeFilterCount > 0 && (
-              <span className="grid size-4 place-items-center rounded-full bg-[#c8d88e] text-[0.52rem] font-bold text-[#0c2419]">
+              <span className="grid size-4.5 place-items-center rounded-full bg-[#c8d88e] text-[0.62rem] font-bold text-[#0c2419]">
                 {activeFilterCount}
               </span>
             )}
           </button>
         </div>
 
-        {/* Quick Goal Pills Row (Horizontal Scroll with compact padding) */}
-        <div className="mt-2 flex items-center gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Quick Goal Pills Row (Horizontal Scroll with comfortable padding) */}
+        <div className="mt-2.5 flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {["All", ...ritualGoals].map((option) => {
             const isSelected = goal === option;
             return (
@@ -129,7 +129,7 @@ export function ShopExplorer() {
                 key={option}
                 type="button"
                 onClick={() => chooseGoal(option as RitualGoal | "All")}
-                className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[0.62rem] font-medium transition-all active:scale-95 ${isSelected
+                className={`inline-flex shrink-0 items-center rounded-full px-3.5 py-1 text-[0.72rem] font-medium transition-all active:scale-95 ${isSelected
                     ? "bg-[var(--forest)] text-white font-semibold shadow-2xs"
                     : "border border-[var(--line)] bg-white text-[var(--forest)] hover:bg-[var(--beige)]"
                   }`}
@@ -150,7 +150,7 @@ export function ShopExplorer() {
         >
           {/* Ritual Goal */}
           <div className="border-b border-[var(--line)] pb-4">
-            <h2 className="mt-0 mb-2.5 text-[0.64rem] font-bold tracking-[0.14em] text-[var(--forest)] uppercase">
+            <h2 className="mt-0 mb-2.5 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--forest)] uppercase">
               Ritual Goal
             </h2>
             <div className="flex flex-col items-start gap-0.5">
@@ -158,7 +158,7 @@ export function ShopExplorer() {
                 <button
                   type="button"
                   key={option}
-                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.74rem] transition-colors cursor-pointer ${goal === option
+                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.8rem] transition-colors cursor-pointer ${goal === option
                       ? "bg-[var(--ivory)] font-bold text-[var(--forest)]"
                       : "text-[var(--muted)] hover:bg-white/60 hover:text-[var(--forest)]"
                     }`}
@@ -176,7 +176,7 @@ export function ShopExplorer() {
 
           {/* Ritual Step */}
           <div className="py-4 border-b border-[var(--line)]">
-            <h2 className="mt-0 mb-2.5 text-[0.64rem] font-bold tracking-[0.14em] text-[var(--forest)] uppercase">
+            <h2 className="mt-0 mb-2.5 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--forest)] uppercase">
               Ritual Step
             </h2>
             <div className="flex flex-col items-start gap-0.5">
@@ -184,7 +184,7 @@ export function ShopExplorer() {
                 <button
                   type="button"
                   key={option}
-                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.74rem] transition-colors cursor-pointer ${step === option
+                  className={`relative w-full rounded-xl py-1.5 pr-2.5 pl-6 text-left text-[0.8rem] transition-colors cursor-pointer ${step === option
                       ? "bg-[var(--ivory)] font-bold text-[var(--forest)]"
                       : "text-[var(--muted)] hover:bg-white/60 hover:text-[var(--forest)]"
                     }`}
@@ -206,7 +206,7 @@ export function ShopExplorer() {
           {/* Clear Filters */}
           {activeFilterCount > 0 && (
             <button
-              className="mt-3.5 w-full rounded-xl border border-[var(--line)] py-1.5 text-center text-[0.64rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase hover:bg-[var(--beige)] cursor-pointer"
+              className="mt-3.5 w-full rounded-xl border border-[var(--line)] py-2 text-center text-[0.72rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase hover:bg-[var(--beige)] cursor-pointer"
               type="button"
               onClick={clear}
             >
@@ -221,7 +221,7 @@ export function ShopExplorer() {
           <div className="mb-5 grid grid-cols-[1fr_200px] items-end gap-3 rounded-xl bg-[var(--paper)] p-3 shadow-xs ring-1 ring-[var(--line)] max-[900px]:hidden">
             <div>
               <label
-                className="mb-1 block text-[0.62rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase"
+                className="mb-1 block text-[0.7rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase"
                 htmlFor="desktop-search"
               >
                 Search this collection
@@ -231,7 +231,7 @@ export function ShopExplorer() {
                   🔍
                 </span>
                 <input
-                  className="h-9.5 w-full rounded-lg border border-[var(--line)] bg-[var(--ivory)] pr-7 pl-8 text-[0.78rem] outline-none transition-colors focus:border-[var(--botanical)]"
+                  className="h-10 w-full rounded-lg border border-[var(--line)] bg-[var(--ivory)] pr-7 pl-8 text-[0.82rem] outline-none transition-colors focus:border-[var(--botanical)]"
                   id="desktop-search"
                   type="search"
                   value={query}
@@ -251,13 +251,13 @@ export function ShopExplorer() {
             </div>
             <div>
               <label
-                className="mb-1 block text-[0.62rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase"
+                className="mb-1 block text-[0.7rem] font-bold tracking-[0.12em] text-[var(--forest)] uppercase"
                 htmlFor="desktop-sort"
               >
                 Sort by
               </label>
               <select
-                className="h-9.5 w-full rounded-lg border border-[var(--line)] bg-[var(--ivory)] px-2.5 text-[0.78rem] outline-none transition-colors focus:border-[var(--botanical)] cursor-pointer"
+                className="h-10 w-full rounded-lg border border-[var(--line)] bg-[var(--ivory)] px-2.5 text-[0.82rem] outline-none transition-colors focus:border-[var(--botanical)] cursor-pointer"
                 id="desktop-sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as typeof sort)}
@@ -275,12 +275,12 @@ export function ShopExplorer() {
             aria-live="polite"
           >
             <h2
-              className="m-0 [font-family:var(--font-display)] text-[1.4rem] font-normal text-[var(--forest)] max-[680px]:text-[1.12rem]"
+              className="m-0 [font-family:var(--font-display)] text-[1.4rem] font-normal text-[var(--forest)] max-[680px]:text-[1.18rem]"
               id="results-title"
             >
               {filtered.length} Botanical{filtered.length === 1 ? "" : "s"}
             </h2>
-            <span className="text-[0.62rem] font-medium tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.52rem]">
+            <span className="text-[0.72rem] font-semibold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.66rem]">
               {collectionTitle || (goal === "All" ? "Complete collection" : goal)}
             </span>
           </div>

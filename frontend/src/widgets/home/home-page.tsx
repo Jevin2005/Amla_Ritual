@@ -104,7 +104,7 @@ export function HomePage() {
           <div className="relative mx-auto grid w-full max-w-[1680px] grid-cols-[minmax(310px,1.15fr)_minmax(360px,1.25fr)_minmax(240px,0.85fr)] gap-x-[clamp(32px,3.5vw,64px)] gap-y-[clamp(20px,2vw,36px)] px-[clamp(24px,4vw,64px)] pt-[clamp(24px,2.5vw,38px)] pb-[clamp(24px,3vw,44px)] max-[1280px]:grid-cols-[minmax(280px,1.1fr)_minmax(340px,1.2fr)_minmax(220px,0.8fr)] max-[1280px]:gap-x-[clamp(28px,3vw,52px)] max-[1180px]:grid-cols-[minmax(260px,1fr)_minmax(320px,1.15fr)_minmax(200px,0.85fr)] max-[1080px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[1080px]:gap-[28px_20px] max-[1080px]:px-[4vw] max-[900px]:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] max-[900px]:gap-[20px_16px] max-[900px]:px-5 max-[900px]:pt-5 max-[900px]:pb-8 max-[680px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] max-[680px]:gap-x-3 max-[680px]:px-4 max-[680px]:pt-4 max-[680px]:pb-6 max-[420px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] max-[420px]:gap-x-2.5 max-[420px]:px-3">
             <div className="relative z-[4] w-full self-center [animation:hero-copy-enter_900ms_var(--ease)_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100 max-[680px]:pl-0 max-[680px]:pr-0">
               <h1
-                className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(3.2rem,3.8vw,4.6rem)] leading-[0.9] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.9rem,4vw,3.8rem)] max-[1080px]:max-w-[480px] max-[1080px]:text-[clamp(2.1rem,3.8vw,2.9rem)] max-[900px]:text-[clamp(1.65rem,4vw,2.3rem)] max-[680px]:text-[clamp(1.55rem,6.2vw,2.15rem)] max-[680px]:leading-[0.96] max-[420px]:text-[clamp(1.4rem,5.8vw,1.8rem)]"
+                className="relative z-[4] m-0 max-w-[520px] [color:var(--charcoal)] [font-family:var(--font-sans)] text-[clamp(3.2rem,3.8vw,4.6rem)] leading-[0.92] font-[620] tracking-[-0.055em] max-[1180px]:text-[clamp(2.9rem,4vw,3.8rem)] max-[1080px]:max-w-[480px] max-[1080px]:text-[clamp(2.4rem,3.8vw,3.2rem)] max-[900px]:text-[clamp(2.1rem,4.2vw,2.7rem)] max-[680px]:text-[clamp(1.75rem,6.8vw,2.3rem)] max-[680px]:leading-[0.98] max-[420px]:text-[clamp(1.5rem,6.2vw,1.95rem)]"
                 id="hero-title"
               >
                 <span className="block [animation:hero-title-enter_900ms_var(--ease)_80ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
@@ -113,7 +113,7 @@ export function HomePage() {
                 <span className="block [animation:hero-title-enter_900ms_var(--ease)_150ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                   {details.headlineMiddle}
                 </span>
-                <em className="mt-[0.05em] ml-[0.03em] block text-[0.9em] leading-[inherit] font-normal tracking-[-0.05em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] max-[680px]:mt-0.5 max-[680px]:text-[0.9em] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+                <em className="mt-1 block text-[0.92em] font-normal tracking-[-0.04em] text-[var(--botanical)] italic [font-family:var(--font-display)] [animation:hero-title-enter_900ms_var(--ease)_220ms_both] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
                   {details.headlineItalic}
                 </em>
               </h1>
@@ -126,7 +126,7 @@ export function HomePage() {
               />
             </div>
 
-            <div className="relative z-[2] h-[clamp(480px,60vh,640px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(440px,56vh,560px)] max-[1080px]:h-[clamp(360px,46vh,440px)] max-[900px]:h-[clamp(290px,40vh,370px)] max-[680px]:h-[clamp(270px,44vh,340px)] max-[420px]:h-[clamp(240px,42vh,300px)] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
+            <div className="relative z-[2] h-[clamp(480px,60vh,640px)] w-full min-w-0 self-center [animation:hero-portrait-enter_1s_var(--ease)_80ms_both] max-[1180px]:h-[clamp(440px,56vh,560px)] max-[1080px]:h-[clamp(360px,46vh,440px)] max-[900px]:h-[clamp(310px,42vh,390px)] max-[680px]:h-[clamp(270px,44vh,340px)] max-[420px]:h-[clamp(240px,42vh,300px)] motion-reduce:animate-none motion-reduce:transform-none motion-reduce:opacity-100">
               <span
                 className="pointer-events-none absolute top-[1%] right-[-5%] bottom-[-2%] left-[-5%] z-0 rounded-[50%_50%_12px_12px/32%_32%_2%_2%] bg-[linear-gradient(150deg,rgba(188,207,161,0.62),rgba(239,227,199,0.28)_58%,rgba(167,201,67,0.12))] shadow-[0_32px_90px_rgba(52,78,47,0.12)] max-[1080px]:hidden"
                 aria-hidden="true"
@@ -177,20 +177,20 @@ export function HomePage() {
                 />
               </div>
 
-              {/* Floating Link Badge - Contained inside phone display margins */}
+              {/* Floating Link Badge */}
               <Link
-                className="absolute bottom-[28%] left-[-68px] z-[5] flex min-h-[54px] w-[210px] items-center gap-[10px] rounded-full border border-[rgba(255,255,255,0.75)] bg-[rgba(248,245,234,0.94)] px-3 py-[7px] shadow-[0_18px_45px_rgba(28,46,31,0.16)] backdrop-blur-[16px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.98)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[190px] max-[1080px]:left-[-20px] max-[1080px]:w-[170px] max-[900px]:bottom-[12%] max-[900px]:left-[-8px] max-[900px]:min-h-[38px] max-[900px]:w-[min(155px,94%)] max-[900px]:gap-1.5 max-[900px]:px-2 max-[900px]:py-1 max-[680px]:bottom-[6%] max-[680px]:left-1 max-[680px]:min-h-[32px] max-[680px]:w-[min(138px,calc(100%-8px))] max-[680px]:gap-1.5 max-[680px]:px-2 max-[680px]:py-1 max-[420px]:bottom-[5%] max-[420px]:left-1 max-[420px]:w-[min(124px,calc(100%-8px))] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
+                className="absolute bottom-[28%] left-[-68px] z-[5] flex min-h-[54px] w-[218px] items-center gap-[10px] rounded-full border border-[rgba(255,255,255,0.75)] bg-[rgba(248,245,234,0.94)] px-3 py-[7px] shadow-[0_18px_45px_rgba(28,46,31,0.16)] backdrop-blur-[16px] [transition:transform_300ms_var(--ease),background-color_300ms_var(--ease)] hover:bg-[rgba(255,253,246,0.98)] hover:[transform:translateY(-3px)] max-[1180px]:left-[-34px] max-[1180px]:w-[195px] max-[1080px]:left-[-16px] max-[1080px]:w-[180px] max-[900px]:bottom-[12%] max-[900px]:left-[-4px] max-[900px]:min-h-[42px] max-[900px]:w-[min(168px,94%)] max-[900px]:gap-2 max-[900px]:px-2.5 max-[900px]:py-1.5 max-[680px]:bottom-[6%] max-[680px]:left-1 max-[680px]:min-h-[38px] max-[680px]:w-[min(150px,calc(100%-8px))] max-[680px]:gap-2 max-[680px]:px-2 max-[680px]:py-1 max-[420px]:bottom-[5%] max-[420px]:left-1 max-[420px]:w-[min(136px,calc(100%-8px))] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100"
                 href={`/shop/${activeProduct.slug}`}
                 aria-label={`View the ${activeProduct.name} ritual`}
               >
-                <span className="grid size-[34px] shrink-0 place-items-center rounded-full bg-[var(--forest)] text-[0.75rem] max-[900px]:size-[24px] max-[900px]:text-[0.55rem] max-[680px]:size-[20px] max-[680px]:text-[0.46rem] max-[420px]:size-[18px] max-[420px]:text-[0.4rem]">
+                <span className="grid size-[34px] shrink-0 place-items-center rounded-full bg-[var(--forest)] text-[0.75rem] max-[900px]:size-[26px] max-[900px]:text-[0.62rem] max-[680px]:size-[22px] max-[680px]:text-[0.52rem] max-[420px]:size-[20px] max-[420px]:text-[0.48rem]">
                   🌿
                 </span>
                 <div className="min-w-0 flex-1">
-                  <strong className="block truncate text-[0.72rem] font-semibold leading-[1.2] text-[var(--forest)] [font-family:var(--font-display)] max-[900px]:text-[0.58rem] max-[680px]:text-[0.52rem] max-[420px]:text-[0.46rem]">
+                  <strong className="block truncate text-[0.76rem] font-semibold leading-tight text-[var(--forest)] [font-family:var(--font-display)] max-[900px]:text-[0.68rem] max-[680px]:text-[0.62rem] max-[420px]:text-[0.56rem]">
                     {activeProduct.name}
                   </strong>
-                  <small className="mt-[1px] block truncate text-[0.44rem] leading-[1.3] text-[var(--muted)] max-[900px]:text-[0.36rem] max-[680px]:text-[0.34rem] max-[420px]:hidden">
+                  <small className="mt-[1px] block truncate text-[0.64rem] leading-tight text-[var(--muted)] max-[900px]:text-[0.58rem] max-[680px]:text-[0.52rem] max-[420px]:hidden">
                     {activeProduct.subtitle}
                   </small>
                 </div>
@@ -260,29 +260,29 @@ export function HomePage() {
                   className="size-full object-cover object-center transition-all duration-500 ease-out hover:scale-105"
                 />
               </div>
-              <div className="py-[17px_11px] max-[1080px]:col-start-2 max-[1080px]:row-start-2 max-[1080px]:py-[14px] max-[680px]:col-start-2 max-[680px]:row-start-2 max-[680px]:pt-0 max-[680px]:pb-1.5">
+              <div className="py-4 max-[1080px]:col-start-2 max-[1080px]:row-start-2 max-[1080px]:py-3 max-[680px]:col-start-2 max-[680px]:row-start-2 max-[680px]:pt-0 max-[680px]:pb-1.5">
                 <span className="text-[0.72rem] font-bold tracking-[0.14em] text-[var(--botanical)] uppercase max-[680px]:hidden">
                   Single-Origin Botanical
                 </span>
-                <h2 className="my-[4px_2px] [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2rem,2.7vw,3.15rem)] leading-none font-normal tracking-[-0.045em] max-[1180px]:text-[clamp(1.85rem,2.5vw,2.6rem)] max-[680px]:my-1 max-[680px]:text-[1.25rem] max-[420px]:text-[1.1rem]">
+                <h2 className="my-1 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(2rem,2.7vw,3.15rem)] leading-none font-normal tracking-[-0.045em] max-[1180px]:text-[clamp(1.85rem,2.5vw,2.6rem)] max-[680px]:my-1 max-[680px]:text-[1.3rem] max-[420px]:text-[1.15rem]">
                   {activeProduct.name}
                 </h2>
-                <p className="m-0 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--muted)] uppercase max-[680px]:hidden">
+                <p className="m-0 text-[0.76rem] font-semibold tracking-[0.12em] text-[var(--muted)] uppercase max-[680px]:hidden">
                   {activeProduct.subtitle} · 250g Jar
                 </p>
               </div>
               <div className="border-t border-[var(--line)] max-[1080px]:col-start-2 max-[1080px]:row-start-3 max-[680px]:col-start-2 max-[680px]:row-start-3 max-[680px]:border-t max-[680px]:border-[var(--line)]">
                 <details className="group/fact border-b border-[var(--line)]">
-                  <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[34px] max-[680px]:text-[0.76rem] max-[420px]:text-[0.7rem]">
-                    Why you&apos;ll love it{" "}
+                  <summary className="flex min-h-[46px] cursor-pointer list-none items-center justify-between text-[0.96rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[36px] max-[680px]:text-[0.82rem]">
+                    <span>Why you&apos;ll love it</span>
                     <span
-                      className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)] text-[0.75rem]"
+                      className="font-sans text-sm text-[var(--botanical)] transition-transform duration-300 motion-reduce:transition-none group-open/fact:rotate-45"
                       aria-hidden="true"
                     >
                       ＋
                     </span>
                   </summary>
-                  <div className="mt-[-1px] mb-0 pb-[14px] text-[0.74rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-2 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.54rem]">
+                  <div className="mt-0 mb-0 pb-3 text-[0.8rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.72rem] max-[680px]:leading-[1.45]">
                     {activeProduct.benefits && activeProduct.benefits.length > 0 ? (
                       <ul className="m-0 space-y-1.5 pl-4 list-disc marker:text-[var(--botanical)]">
                         {activeProduct.benefits.slice(0, 3).map((benefit, i) => (
@@ -295,16 +295,16 @@ export function HomePage() {
                   </div>
                 </details>
                 <details className="group/fact border-b border-[var(--line)]">
-                  <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[34px] max-[680px]:text-[0.76rem] max-[420px]:text-[0.7rem]">
-                    How to prepare{" "}
+                  <summary className="flex min-h-[46px] cursor-pointer list-none items-center justify-between text-[0.96rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[36px] max-[680px]:text-[0.82rem]">
+                    <span>How to prepare</span>
                     <span
-                      className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)] text-[0.75rem]"
+                      className="font-sans text-sm text-[var(--botanical)] transition-transform duration-300 motion-reduce:transition-none group-open/fact:rotate-45"
                       aria-hidden="true"
                     >
                       ＋
                     </span>
                   </summary>
-                  <div className="mt-[-1px] mb-0 pb-[14px] text-[0.74rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-2 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.54rem]">
+                  <div className="mt-0 mb-0 pb-3 text-[0.8rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.72rem] max-[680px]:leading-[1.45]">
                     {activeProduct.howTo && activeProduct.howTo.length > 1 ? (
                       <ol className="m-0 space-y-1 pl-4 list-decimal marker:font-bold marker:text-[var(--forest)]">
                         {activeProduct.howTo.slice(0, 3).map((step, i) => (
@@ -317,16 +317,16 @@ export function HomePage() {
                   </div>
                 </details>
                 <details className="group/fact border-b border-[var(--line)]" open>
-                  <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between text-[0.98rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[34px] max-[680px]:text-[0.76rem] max-[420px]:text-[0.7rem]">
-                    Ingredient clarity{" "}
+                  <summary className="flex min-h-[46px] cursor-pointer list-none items-center justify-between text-[0.96rem] text-[var(--forest)] [font-family:var(--font-display)] [&::-webkit-details-marker]:hidden max-[680px]:min-h-[36px] max-[680px]:text-[0.82rem]">
+                    <span>Ingredient clarity</span>
                     <span
-                      className="[font-family:var(--font-sans)] [transition:transform_300ms_var(--ease)] motion-reduce:transition-none group-open/fact:[transform:rotate(45deg)] text-[0.75rem]"
+                      className="font-sans text-sm text-[var(--botanical)] transition-transform duration-300 motion-reduce:transition-none group-open/fact:rotate-45"
                       aria-hidden="true"
                     >
                       ＋
                     </span>
                   </summary>
-                  <p className="mt-[-1px] mb-0 pb-[14px] text-[0.74rem] leading-[1.6] text-[var(--muted)] max-[680px]:pb-2 max-[680px]:text-[0.58rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.54rem]">
+                  <p className="mt-0 mb-0 pb-3 text-[0.8rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.72rem] max-[680px]:leading-[1.45]">
                     {activeProduct.ingredient}
                   </p>
                 </details>
@@ -391,37 +391,37 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ── The Benefit of This Products Section (Compact & Refined on Phone) ── */}
+      {/* ── The Benefit of This Products Section ── */}
       <section
-        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[960px]:py-10 max-[680px]:px-3.5 max-[680px]:py-6 max-[400px]:px-2.5 max-[400px]:py-5 ${revealClass}`}
+        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[960px]:py-10 max-[680px]:px-4 max-[680px]:py-8 ${revealClass}`}
         aria-labelledby="benefits-title"
       >
-        <div className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-x-[clamp(32px,5vw,80px)] gap-y-10 max-[960px]:grid-cols-1 max-[960px]:gap-y-6 max-[680px]:gap-y-4">
+        <div className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-x-[clamp(32px,5vw,80px)] gap-y-10 max-[960px]:grid-cols-1 max-[960px]:gap-y-8">
           {/* Left Column: Heading, description, CTA */}
           <div className="flex flex-col items-start">
-            <p className={`${eyebrowClass} max-[680px]:mb-0.5 max-[680px]:text-[0.52rem]`}>
+            <p className={eyebrowClass}>
               Botanical efficacy
             </p>
             <h2
               id="benefits-title"
-              className="m-0 text-[clamp(2.4rem,4.2vw,4.2rem)] font-normal leading-[0.96] tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.4rem,6.5vw,1.8rem)] max-[680px]:leading-[1.02]"
+              className="m-0 text-[clamp(2.4rem,4.2vw,4.2rem)] font-normal leading-[1.02] tracking-[-0.04em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.75rem,7vw,2.25rem)]"
             >
               The benefit of <br />
               this product.
             </h2>
-            <p className="mt-4 mb-7 max-w-[420px] text-[0.88rem] leading-[1.65] text-[#55635a] max-[680px]:hidden">
+            <p className="mt-4 mb-7 max-w-[420px] text-[0.92rem] leading-[1.7] text-[#55635a] max-[680px]:mt-2.5 max-[680px]:mb-5 max-[680px]:text-[0.84rem]">
               Proven botanical hair benefits formulated with pure, single-origin shade-dried herbs.
             </p>
             <Link
               href="/shop"
-              className="inline-flex items-center justify-center rounded-[8px] bg-[#5a9e32] px-7 py-3 text-[0.88rem] font-medium text-white shadow-[0_4px_14px_rgba(90,158,50,0.28)] transition-all duration-200 hover:bg-[#4a8528] hover:shadow-[0_6px_20px_rgba(90,158,50,0.36)] hover:-translate-y-0.5 active:scale-95 max-[680px]:px-5 max-[680px]:py-2 max-[680px]:text-[0.74rem] max-[680px]:rounded-md"
+              className="inline-flex items-center justify-center rounded-full bg-[#5a9e32] px-7 py-3 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_4px_14px_rgba(90,158,50,0.28)] transition-all duration-200 hover:bg-[#4a8528] hover:shadow-[0_6px_20px_rgba(90,158,50,0.36)] hover:-translate-y-0.5 active:scale-95 max-[680px]:px-6 max-[680px]:py-2.5 max-[680px]:text-[0.74rem]"
             >
               Explore Us
             </Link>
           </div>
 
-          {/* Right Column: 2x2 Grid of numbered benefits (Compact on mobile) */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-8 max-[680px]:grid-cols-2 max-[680px]:gap-2 max-[400px]:gap-1.5">
+          {/* Right Column: 2x2 Grid of numbered benefits */}
+          <div className="grid grid-cols-2 gap-x-5 gap-y-6 max-[820px]:gap-4 max-[680px]:grid-cols-1 max-[680px]:gap-3">
             {[
               { benefit: "Follicle Vitality: Delivers plant polyphenols and antioxidants to strengthen hair roots." },
               { benefit: "Natural Slip & Cuticle Seal: Gently detangles while imparting a reflective, silky sheen." },
@@ -434,23 +434,23 @@ export function HomePage() {
               return (
                 <div
                   key={idx}
-                  className="flex items-center gap-3.5 max-[680px]:flex-col max-[680px]:items-stretch max-[680px]:justify-between max-[680px]:gap-1.5 max-[680px]:rounded-xl max-[680px]:border max-[680px]:border-[#dedad0]/80 max-[680px]:bg-[rgba(255,253,248,0.7)] max-[680px]:p-2.5 max-[680px]:shadow-2xs max-[400px]:p-2"
+                  className="flex items-start gap-3.5 rounded-2xl border border-[#dedad0]/80 bg-[rgba(255,253,248,0.7)] p-4 shadow-2xs transition-all hover:border-[var(--botanical)] max-[680px]:p-3 max-[680px]:rounded-xl"
                 >
-                  <div className="flex items-center gap-3.5 max-[680px]:flex-row max-[680px]:items-center max-[680px]:justify-between max-[680px]:gap-1">
-                    <span className="shrink-0 text-[3.2rem] font-light leading-none tracking-tighter text-[#1a2e22] [font-family:var(--font-sans)] max-[680px]:text-[1.05rem] max-[680px]:font-bold max-[680px]:text-[var(--botanical)]">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="shrink-0 font-mono text-[1.8rem] font-medium leading-none tracking-tight text-[#1a2e22] max-[680px]:text-[1.3rem] max-[680px]:text-[var(--botanical)]">
                       {String(idx + 1).padStart(2, "0")}
                     </span>
-                    <div className="relative size-[84px] shrink-0 overflow-hidden rounded-2xl border border-[#dedad0] bg-[#f8f6f0] p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-[680px]:size-[38px] max-[680px]:rounded-lg max-[680px]:p-0.5 max-[400px]:size-[34px]">
+                    <div className="relative size-[64px] shrink-0 overflow-hidden rounded-xl border border-[#dedad0] bg-[#f8f6f0] p-1 shadow-2xs max-[680px]:size-[48px] max-[680px]:rounded-lg">
                       <Image
                         src={imgSrc}
                         alt={imgAlt}
                         fill
-                        sizes="(max-width: 680px) 50px, 100px"
-                        className="size-full object-cover object-center rounded-[10px] max-[680px]:rounded-[6px]"
+                        sizes="(max-width: 680px) 48px, 64px"
+                        className="size-full object-cover object-center rounded-lg max-[680px]:rounded-md"
                       />
                     </div>
                   </div>
-                  <p className="m-0 text-[0.82rem] leading-[1.4] text-[#4f5c53] max-[680px]:text-[0.62rem] max-[680px]:leading-[1.25] max-[400px]:text-[0.56rem]">
+                  <p className="m-0 self-center text-[0.82rem] leading-[1.55] text-[#4f5c53] max-[680px]:text-[0.76rem] max-[680px]:leading-[1.45]">
                     {benefit}
                   </p>
                 </div>
@@ -511,8 +511,8 @@ export function HomePage() {
         {/* 3-Column Grid matching desktop layout on phone view */}
         <div className="mt-[64px] grid grid-cols-3 border-y border-[var(--line)] max-[900px]:mt-10 max-[680px]:mt-6">
           {/* Step 01: Scoop */}
-          <article className="relative flex flex-col items-center justify-between border-r border-[var(--line)] px-8 py-10 text-center max-[900px]:px-4 max-[900px]:py-7 max-[680px]:px-2 max-[680px]:py-5">
-            <span className="self-start text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+          <article className="relative flex flex-col items-center justify-between border-r border-[var(--line)] px-8 py-10 text-center max-[900px]:px-4 max-[900px]:py-7 max-[680px]:px-2.5 max-[680px]:py-5">
+            <span className="self-start font-mono text-[0.76rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.68rem]">
               01
             </span>
 
@@ -534,18 +534,18 @@ export function HomePage() {
             </div>
 
             <div>
-              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.4rem,2.2vw,2.2rem)] font-normal max-[680px]:text-[1.1rem]">
+              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.4rem,2.2vw,2.2rem)] font-normal max-[680px]:text-[1.15rem]">
                 Scoop
               </h3>
-              <p className="mx-auto mt-2 max-w-[280px] text-[0.82rem] leading-[1.45] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.65rem] max-[680px]:leading-[1.3] max-[380px]:text-[0.58rem]">
+              <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
                 Begin with enough botanical powder for your hair length.
               </p>
             </div>
           </article>
 
           {/* Step 02: Mix */}
-          <article className="relative flex flex-col items-center justify-between border-r border-[var(--line)] px-8 py-10 text-center max-[900px]:px-4 max-[900px]:py-7 max-[680px]:px-2 max-[680px]:py-5">
-            <span className="self-start text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+          <article className="relative flex flex-col items-center justify-between border-r border-[var(--line)] px-8 py-10 text-center max-[900px]:px-4 max-[900px]:py-7 max-[680px]:px-2.5 max-[680px]:py-5">
+            <span className="self-start font-mono text-[0.76rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.68rem]">
               02
             </span>
 
@@ -567,18 +567,18 @@ export function HomePage() {
             </div>
 
             <div>
-              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.4rem,2.2vw,2.2rem)] font-normal max-[680px]:text-[1.1rem]">
+              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.4rem,2.2vw,2.2rem)] font-normal max-[680px]:text-[1.15rem]">
                 Mix
               </h3>
-              <p className="mx-auto mt-2 max-w-[280px] text-[0.82rem] leading-[1.45] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.65rem] max-[680px]:leading-[1.3] max-[380px]:text-[0.58rem]">
+              <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
                 Add water gradually until the texture is smooth and spreadable.
               </p>
             </div>
           </article>
 
           {/* Step 03: Apply */}
-          <article className="relative flex flex-col items-center justify-between px-8 py-10 text-center max-[900px]:px-4 max-[900px]:py-7 max-[680px]:px-2 max-[680px]:py-5">
-            <span className="self-start text-[0.63rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
+          <article className="relative flex flex-col items-center justify-between px-8 py-10 text-center max-[900px]:px-4 max-[900px]:py-7 max-[680px]:px-2.5 max-[680px]:py-5">
+            <span className="self-start font-mono text-[0.76rem] font-bold tracking-[0.15em] text-[var(--botanical)] max-[680px]:text-[0.68rem]">
               03
             </span>
 
@@ -602,10 +602,10 @@ export function HomePage() {
             </div>
 
             <div>
-              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.4rem,2.2vw,2.2rem)] font-normal max-[680px]:text-[1.1rem]">
+              <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.4rem,2.2vw,2.2rem)] font-normal max-[680px]:text-[1.15rem]">
                 Apply
               </h3>
-              <p className="mx-auto mt-2 max-w-[280px] text-[0.82rem] leading-[1.45] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.65rem] max-[680px]:leading-[1.3] max-[380px]:text-[0.58rem]">
+              <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
                 Follow the botanical directions, then rinse thoroughly.
               </p>
             </div>
@@ -615,13 +615,13 @@ export function HomePage() {
 
       {/* ── Ingredient Clarity (One ingredient. Nothing hidden) ── */}
       <section
-        className={`mx-auto grid w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] items-center gap-[clamp(32px,5.5vw,88px)] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[900px]:gap-8 max-[680px]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] max-[680px]:gap-3.5 max-[680px]:px-3 max-[680px]:py-7 max-[440px]:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] max-[440px]:gap-2.5 ${revealClass}`}
+        className={`mx-auto grid w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] items-center gap-[clamp(32px,5.5vw,88px)] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[900px]:gap-8 max-[768px]:grid-cols-1 max-[768px]:gap-8 max-[680px]:px-4 max-[680px]:py-9 ${revealClass}`}
         id="ingredient-standards"
         aria-labelledby="purity-title"
       >
         {/* Left Column: Arched Image with Badge */}
-        <div className="relative">
-          <div className="relative aspect-[0.72] w-full overflow-hidden rounded-[160px_160px_6px_6px] bg-[var(--beige)] shadow-[0_8px_24px_rgba(23,63,42,0.06)] max-[900px]:rounded-[110px_110px_4px_4px] max-[680px]:rounded-[56px_56px_4px_4px] max-[440px]:rounded-[40px_40px_4px_4px]">
+        <div className="relative mx-auto w-full max-w-[480px] max-[768px]:max-w-[340px]">
+          <div className="relative aspect-[0.72] w-full overflow-hidden rounded-[160px_160px_6px_6px] bg-[var(--beige)] shadow-[0_8px_24px_rgba(23,63,42,0.06)] max-[900px]:rounded-[110px_110px_4px_4px] max-[680px]:rounded-[90px_90px_4px_4px]">
             <Image
               src={ritualPoster.url}
               alt={
@@ -629,77 +629,77 @@ export function HomePage() {
                 "A botanical hair ritual being prepared in a bowl"
               }
               fill
-              sizes="(max-width: 680px) 45vw, (max-width: 900px) 45vw, 45vw"
+              sizes="(max-width: 680px) 80vw, (max-width: 900px) 45vw, 45vw"
               className="object-cover object-center"
             />
             {/* Dark circular brand badge 'N' */}
             <span
-              className="absolute bottom-3 left-3 grid size-7 place-items-center rounded-full bg-[#18281d] text-[0.66rem] font-serif font-bold text-[#faf8f4] shadow-md max-[680px]:bottom-1.5 max-[680px]:left-1.5 max-[680px]:size-4.5 max-[680px]:text-[0.42rem]"
+              className="absolute bottom-3.5 left-3.5 grid size-8 place-items-center rounded-full bg-[#18281d] text-[0.74rem] font-serif font-bold text-[#faf8f4] shadow-md max-[680px]:bottom-2.5 max-[680px]:left-2.5 max-[680px]:size-7 max-[680px]:text-[0.65rem]"
               aria-hidden="true"
             >
               N
             </span>
           </div>
-          <span className="mt-2.5 block text-[0.56rem] font-bold tracking-[0.14em] text-[var(--muted)] uppercase max-[680px]:mt-1 max-[680px]:text-[0.42rem] max-[440px]:text-[0.38rem]">
+          <span className="mt-3 block text-[0.72rem] font-bold tracking-[0.16em] text-[var(--muted)] uppercase max-[680px]:mt-2 max-[680px]:text-[0.68rem] text-center sm:text-left">
             Botanical ritual · prepared fresh
           </span>
         </div>
 
         {/* Right Column: Heading, description, 3 numbered points, CTA */}
         <div>
-          <p className="mb-2 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[var(--botanical)] max-[680px]:mb-0.5 max-[680px]:text-[0.44rem]">
+          <p className="mb-2 text-[0.74rem] font-bold uppercase tracking-[0.18em] text-[var(--botanical)] max-[680px]:mb-1 max-[680px]:text-[0.68rem]">
             Ingredient clarity
           </p>
           <h2
-            className="m-0 [font-family:var(--font-display)] text-[clamp(2.2rem,3.4vw,3.6rem)] font-normal leading-[0.98] tracking-[-0.04em] text-[var(--forest)] max-[900px]:text-[1.8rem] max-[680px]:text-[0.96rem] max-[680px]:leading-[1.04] max-[440px]:text-[0.88rem]"
+            className="m-0 [font-family:var(--font-display)] text-[clamp(2.2rem,3.4vw,3.6rem)] font-normal leading-[1.0] tracking-[-0.035em] text-[var(--forest)] max-[900px]:text-[2rem] max-[680px]:text-[1.75rem]"
             id="purity-title"
           >
             One ingredient. <br />
             Nothing hidden.
           </h2>
-          <p className="my-4 max-w-[540px] text-[0.85rem] leading-[1.65] text-[var(--muted)] max-[680px]:my-1.5 max-[680px]:text-[0.52rem] max-[680px]:leading-[1.3] max-[440px]:text-[0.48rem]">
+          <p className="my-4 max-w-[540px] text-[0.92rem] leading-[1.65] text-[var(--muted)] max-[900px]:text-[0.88rem] max-[680px]:my-3 max-[680px]:text-[0.84rem] max-[680px]:leading-[1.5]">
             NatureMist translates a time-honoured practice into a ritual you can understand from first scoop to final rinse.
           </p>
 
           {/* 3 Points List */}
           <div className="border-t border-[var(--line)]">
-            <article className="grid grid-cols-[26px_1fr] items-baseline gap-2 border-b border-[var(--line)] py-3 max-[680px]:grid-cols-[14px_1fr] max-[680px]:gap-1 max-[680px]:py-1">
-              <span className="text-[0.62rem] font-bold text-[var(--botanical)] max-[680px]:text-[0.42rem]">
+            <article className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3">
+              <span className="font-mono text-[0.82rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none max-[680px]:text-[0.76rem]">
                 01
               </span>
               <div>
-                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[1.15rem] font-normal leading-tight max-[680px]:text-[0.66rem] max-[440px]:text-[0.6rem]">
+                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.15rem,1.4vw,1.35rem)] font-medium leading-[1.25] max-[680px]:text-[1.08rem]">
                   Name the botanical
                 </h3>
-                <p className="mt-0.5 mb-0 text-[0.76rem] leading-[1.4] text-[var(--muted)] max-[680px]:mt-0 max-[680px]:text-[0.48rem] max-[680px]:leading-[1.2] max-[440px]:text-[0.44rem]">
+                <p className="mt-1 mb-0 text-[0.86rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.45]">
                   Common name, botanical identity and plant part—clearly stated on the final pack.
                 </p>
               </div>
             </article>
 
-            <article className="grid grid-cols-[26px_1fr] items-baseline gap-2 border-b border-[var(--line)] py-3 max-[680px]:grid-cols-[14px_1fr] max-[680px]:gap-1 max-[680px]:py-1">
-              <span className="text-[0.62rem] font-bold text-[var(--botanical)] max-[680px]:text-[0.42rem]">
+            <article className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3">
+              <span className="font-mono text-[0.82rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none max-[680px]:text-[0.76rem]">
                 02
               </span>
               <div>
-                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[1.15rem] font-normal leading-tight max-[680px]:text-[0.66rem] max-[440px]:text-[0.6rem]">
+                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.15rem,1.4vw,1.35rem)] font-medium leading-[1.25] max-[680px]:text-[1.08rem]">
                   Explain the ritual
                 </h3>
-                <p className="mt-0.5 mb-0 text-[0.76rem] leading-[1.4] text-[var(--muted)] max-[680px]:mt-0 max-[680px]:text-[0.48rem] max-[680px]:leading-[1.2] max-[440px]:text-[0.44rem]">
+                <p className="mt-1 mb-0 text-[0.86rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.45]">
                   Preparation, pairing and safety guidance written for beginners as well as familiar users.
                 </p>
               </div>
             </article>
 
-            <article className="grid grid-cols-[26px_1fr] items-baseline gap-2 border-b border-[var(--line)] py-3 max-[680px]:grid-cols-[14px_1fr] max-[680px]:gap-1 max-[680px]:py-1">
-              <span className="text-[0.62rem] font-bold text-[var(--botanical)] max-[680px]:text-[0.42rem]">
+            <article className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3">
+              <span className="font-mono text-[0.82rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none max-[680px]:text-[0.76rem]">
                 03
               </span>
               <div>
-                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[1.15rem] font-normal leading-tight max-[680px]:text-[0.66rem] max-[440px]:text-[0.6rem]">
+                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.15rem,1.4vw,1.35rem)] font-medium leading-[1.25] max-[680px]:text-[1.08rem]">
                   Keep claims honest
                 </h3>
-                <p className="mt-0.5 mb-0 text-[0.76rem] leading-[1.4] text-[var(--muted)] max-[680px]:mt-0 max-[680px]:text-[0.48rem] max-[680px]:leading-[1.2] max-[440px]:text-[0.44rem]">
+                <p className="mt-1 mb-0 text-[0.86rem] leading-[1.6] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.45]">
                   Thoughtful cosmetic language without miracle promises or invented proof.
                 </p>
               </div>
@@ -708,7 +708,7 @@ export function HomePage() {
 
           {/* Philosophy CTA Button */}
           <Link
-            className="mt-6 inline-flex min-h-[46px] items-center justify-center gap-1.5 rounded-full border border-[var(--forest)] bg-transparent px-6 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[var(--forest)] transition-all hover:bg-[var(--forest)] hover:text-[var(--paper)] max-[680px]:mt-2 max-[680px]:min-h-[26px] max-[680px]:px-3 max-[680px]:py-1 max-[680px]:text-[0.48rem] max-[680px]:tracking-[0.04em]"
+            className="mt-7 inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full border border-[var(--forest)] bg-transparent px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.1em] text-[var(--forest)] transition-all hover:bg-[var(--forest)] hover:text-[var(--paper)] max-[680px]:mt-5 max-[680px]:min-h-[40px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
             href="/our-story"
           >
             Read our philosophy <span aria-hidden="true">↗</span>
@@ -717,12 +717,12 @@ export function HomePage() {
       </section>
 
       <section
-        className={`${sectionClass} ${revealClass} max-[680px]:py-8 max-[680px]:px-3.5`}
+        className={`${sectionClass} ${revealClass} max-[680px]:py-8 max-[680px]:px-4`}
         aria-labelledby="family-title"
       >
         <div className={`${centeredHeadingClass} max-[680px]:mb-5`}>
-          <p className={`${eyebrowClass} max-[680px]:mb-1 max-[680px]:text-[0.52rem]`}>The Botanical Family</p>
-          <h2 className={`${sectionTitleClass} max-[680px]:!text-[clamp(1.35rem,5.5vw,1.85rem)] max-[680px]:!leading-[1.08]`} id="family-title">
+          <p className={`${eyebrowClass} max-[680px]:mb-1.5 max-[680px]:text-[0.68rem]`}>The Botanical Family</p>
+          <h2 className={`${sectionTitleClass} max-[680px]:!text-[clamp(1.4rem,5.5vw,1.95rem)] max-[680px]:!leading-[1.12]`} id="family-title">
             Same ritual language. <br className="hidden max-[680px]:inline" />
             A different botanical note.
           </h2>
@@ -735,7 +735,7 @@ export function HomePage() {
 
       {/* ── The NatureMist Philosophy (Ancient botanicals. Modern care.) ── */}
       <section
-        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(40px,6vw,80px)] max-[680px]:px-3.5 max-[680px]:py-6 ${revealClass}`}
+        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(40px,6vw,80px)] max-[680px]:px-4 max-[680px]:py-8 ${revealClass}`}
         aria-labelledby="story-title"
       >
         <div className="relative overflow-hidden rounded-[32px] border border-[#1b3d2b] bg-[#0c2419] bg-[radial-gradient(ellipse_at_50%_35%,rgba(167,201,67,0.2),transparent_65%),linear-gradient(160deg,#0e2a1e_0%,#071710_100%)] px-6 py-20 text-center shadow-[0_24px_64px_rgba(0,0,0,0.25)] max-[680px]:px-4 max-[680px]:py-12 max-[680px]:rounded-2xl">
@@ -765,7 +765,7 @@ export function HomePage() {
           </div>
 
           <div className="relative z-10 mx-auto flex max-w-[840px] flex-col items-center">
-            <p className="mb-3 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#c8d88e] max-[680px]:mb-1.5 max-[680px]:text-[0.52rem]">
+            <p className="mb-3 text-[0.74rem] font-bold uppercase tracking-[0.22em] text-[#c8d88e] max-[680px]:mb-1.5 max-[680px]:text-[0.66rem]">
               The NatureMist philosophy
             </p>
             <h2
@@ -778,14 +778,14 @@ export function HomePage() {
               Beauty begins at the root—with ingredients we can name, rituals we can understand and enough time to care for ourselves well.
             </p>
             <Link
-              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#fbfaf6] px-8 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[#0c2419] shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-[#c8d88e] hover:shadow-[0_12px_32px_rgba(200,216,142,0.3)] hover:-translate-y-0.5 active:scale-95 max-[680px]:min-h-[38px] max-[680px]:px-6 max-[680px]:py-2 max-[680px]:text-[0.62rem]"
+              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#fbfaf6] px-8 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[#0c2419] shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-[#c8d88e] hover:shadow-[0_12px_32px_rgba(200,216,142,0.3)] hover:-translate-y-0.5 active:scale-95 max-[680px]:min-h-[40px] max-[680px]:px-6 max-[680px]:py-2.5 max-[680px]:text-[0.68rem]"
               href="/our-story"
             >
               Our story <span aria-hidden="true">↗</span>
             </Link>
 
             {/* 3 Pillars Footer Bar */}
-            <div className="mt-14 flex w-full items-center justify-between border-t border-white/12 pt-6 text-[0.68rem] font-medium tracking-[0.16em] uppercase text-white/65 max-[680px]:mt-6 max-[680px]:pt-4 max-[680px]:flex-col max-[680px]:gap-2 max-[680px]:text-[0.52rem]">
+            <div className="mt-14 flex w-full items-center justify-between border-t border-white/12 pt-6 text-[0.76rem] font-medium tracking-[0.16em] uppercase text-white/70 max-[680px]:mt-8 max-[680px]:pt-5 max-[680px]:flex-col max-[680px]:gap-2 max-[680px]:text-[0.68rem]">
               <span>Tradition, refined</span>
               <span className="max-[680px]:hidden text-white/30">·</span>
               <span>Education before expectation</span>
@@ -798,13 +798,13 @@ export function HomePage() {
 
       {/* ── Botanicals that belong together (Ritual Sets) ── */}
       <section
-        className={`${sectionClass} ${revealClass} max-[680px]:py-8 max-[680px]:px-3.5`}
+        className={`${sectionClass} ${revealClass} max-[680px]:py-8 max-[680px]:px-4`}
         aria-labelledby="bundles-title"
       >
-        <div className={`${splitHeadingClass} max-[680px]:mb-4 max-[680px]:gap-2`}>
+        <div className={`${splitHeadingClass} max-[680px]:mb-5 max-[680px]:gap-2`}>
           <div>
-            <p className={`${eyebrowClass} max-[680px]:hidden`}>Rituals in company</p>
-            <h2 className={`${sectionTitleClass} max-[680px]:!text-[clamp(1.35rem,5.5vw,1.85rem)] max-[680px]:!leading-[1.08]`} id="bundles-title">
+            <p className={`${eyebrowClass} max-[680px]:block max-[680px]:text-[0.68rem] max-[680px]:mb-1`}>Rituals in company</p>
+            <h2 className={`${sectionTitleClass} max-[680px]:!text-[clamp(1.4rem,5.5vw,1.95rem)] max-[680px]:!leading-[1.12]`} id="bundles-title">
               Botanicals that belong together.
             </h2>
           </div>
@@ -855,8 +855,8 @@ export function HomePage() {
                 key={faq.question}
                 open={index === 0}
               >
-                <summary className="grid min-h-[74px] cursor-pointer list-none grid-cols-[36px_1fr_28px] items-center gap-4 text-[clamp(1.15rem,1.7vw,1.48rem)] font-normal text-[#fbfaf6] [font-family:var(--font-display)] transition-colors duration-200 hover:text-[#c8d88e] [&::-webkit-details-marker]:hidden max-[680px]:grid-cols-[28px_1fr_24px] max-[680px]:text-[1.1rem] max-[680px]:min-h-[60px] max-[680px]:gap-3">
-                  <span className="font-sans text-[0.74rem] font-bold text-[#c8d88e] max-[680px]:text-[0.68rem]">
+                <summary className="grid min-h-[74px] cursor-pointer list-none grid-cols-[38px_1fr_28px] items-center gap-4 text-[clamp(1.15rem,1.7vw,1.48rem)] font-normal text-[#fbfaf6] [font-family:var(--font-display)] transition-colors duration-200 hover:text-[#c8d88e] [&::-webkit-details-marker]:hidden max-[680px]:grid-cols-[28px_1fr_24px] max-[680px]:text-[1.1rem] max-[680px]:min-h-[60px] max-[680px]:gap-3">
+                  <span className="font-mono text-[0.78rem] font-bold text-[#c8d88e] max-[680px]:text-[0.72rem]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span>{faq.question}</span>
@@ -864,7 +864,7 @@ export function HomePage() {
                     ＋
                   </i>
                 </summary>
-                <p className="m-0 max-w-[680px] pt-0 pr-6 pb-6 pl-13 text-[0.92rem] leading-[1.7] text-white/80 max-[680px]:pl-10 max-[680px]:pb-4 max-[680px]:text-[0.82rem] max-[680px]:leading-[1.6]">
+                <p className="m-0 max-w-[680px] pt-0 pr-6 pb-6 pl-13 text-[0.92rem] leading-[1.7] text-white/80 max-[680px]:pl-10 max-[680px]:pb-4 max-[680px]:text-[0.84rem] max-[680px]:leading-[1.6]">
                   {faq.answer}
                 </p>
               </details>

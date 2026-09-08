@@ -109,7 +109,7 @@ export function CheckoutOrderSummary({
                 >
                   {product?.name || item.productName}
                 </Link>
-                <span className="text-[0.68rem] text-[var(--muted)] line-clamp-1">
+                <span className="text-[0.74rem] text-[var(--muted)] line-clamp-1">
                   {variantLabel || product?.subtitle || item.variantTitle}
                 </span>
 
@@ -125,7 +125,7 @@ export function CheckoutOrderSummary({
                     >
                       −
                     </button>
-                    <span className="w-5 text-center text-[0.74rem] font-bold text-[var(--forest)] select-none">
+                    <span className="w-5 text-center text-[0.76rem] font-bold text-[var(--forest)] select-none">
                       {item.quantity}
                     </span>
                     <button
@@ -143,7 +143,7 @@ export function CheckoutOrderSummary({
                     type="button"
                     onClick={() => void removeFromCart(item.lineId)}
                     disabled={isCartBusy}
-                    className="text-[0.62rem] font-bold tracking-[0.08em] text-[var(--muted)] hover:text-red-600 transition-colors uppercase cursor-pointer"
+                    className="text-[0.68rem] font-bold tracking-[0.08em] text-[var(--muted)] hover:text-red-600 transition-colors uppercase cursor-pointer"
                   >
                     Remove
                   </button>
@@ -156,7 +156,7 @@ export function CheckoutOrderSummary({
                   {formatCurrency(item.lineTotalPaise, item.currencyCode)}
                 </span>
                 {item.discountAmountPaise > 0 && (
-                  <span className="block text-[0.58rem] font-bold text-[#529d38]">
+                  <span className="block text-[0.68rem] font-bold text-[#529d38]">
                     Save {formatCurrency(item.discountAmountPaise, item.currencyCode)}
                   </span>
                 )}
@@ -178,26 +178,26 @@ export function CheckoutOrderSummary({
               clearCartError();
             }}
             placeholder="Discount code / Gift card"
-            className="h-10 flex-1 rounded-xl border border-[var(--line)] bg-[var(--paper)] px-3 text-[0.76rem] uppercase tracking-wider text-[var(--forest)] placeholder:normal-case placeholder:tracking-normal placeholder:text-[var(--muted)] outline-none focus:border-[var(--botanical)]"
+            className="h-10 flex-1 rounded-xl border border-[var(--line)] bg-[var(--paper)] px-3 text-[0.8rem] uppercase tracking-wider text-[var(--forest)] placeholder:normal-case placeholder:tracking-normal placeholder:text-[var(--muted)] outline-none focus:border-[var(--botanical)]"
             disabled={isCartBusy}
           />
           <button
             type="submit"
             disabled={isCartBusy || !discountInput.trim()}
-            className="h-10 rounded-xl bg-[var(--forest)] px-4 text-[0.68rem] font-bold uppercase tracking-wider text-[var(--paper)] transition-colors hover:bg-[var(--forest-dark)] disabled:opacity-50 cursor-pointer"
+            className="h-10 rounded-xl bg-[var(--forest)] px-4 text-[0.72rem] font-bold uppercase tracking-wider text-[var(--paper)] transition-colors hover:bg-[var(--forest-dark)] disabled:opacity-50 cursor-pointer"
           >
             Apply
           </button>
         </form>
 
         {discountStatus && (
-          <p className="mt-2 text-[0.68rem] font-semibold text-[#529d38]" role="status">
+          <p className="mt-2 text-[0.74rem] font-semibold text-[#529d38]" role="status">
             ✓ {discountStatus}
           </p>
         )}
 
         {cartError && (
-          <p className="mt-2 text-[0.68rem] font-semibold text-[#9a3d2b]" role="alert">
+          <p className="mt-2 text-[0.74rem] font-semibold text-[#9a3d2b]" role="alert">
             {cartError}
           </p>
         )}
@@ -207,7 +207,7 @@ export function CheckoutOrderSummary({
             {discountCodes.map((d) => (
               <span
                 key={d.code}
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#edf3dd] px-2.5 py-1 text-[0.62rem] font-bold uppercase tracking-wider text-[var(--forest)] border border-[#529d38]/30"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#edf3dd] px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wider text-[var(--forest)] border border-[#529d38]/30"
               >
                 <span>🏷️ {d.code}</span>
                 <button
@@ -225,7 +225,7 @@ export function CheckoutOrderSummary({
       </div>
 
       {/* ── Financial Breakdown ── */}
-      <dl className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-4 text-[0.78rem] text-[var(--muted)]">
+      <dl className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-4 text-[0.84rem] text-[var(--muted)]">
         <div className="flex items-center justify-between">
           <dt>Subtotal</dt>
           <dd className="font-semibold text-[var(--forest)]">
@@ -259,7 +259,7 @@ export function CheckoutOrderSummary({
         </div>
 
         <div className="mt-2 flex items-baseline justify-between border-t border-[var(--line)] pt-3.5 text-[var(--forest)]">
-          <dt className="text-[0.92rem] font-bold">Total Payable</dt>
+          <dt className="text-[0.96rem] font-bold">Total Payable</dt>
           <dd className="[font-family:var(--font-display)] text-[1.75rem] font-bold">
             {formatCurrency(finalTotalPaise, currencyCode)}
           </dd>
