@@ -1,3 +1,5 @@
+import { isGlbUrl, type HomepageHeroEntry } from "./hero";
+
 export type ProductFaq = {
   question: string;
   answer: string;
@@ -8,6 +10,13 @@ export type StoreImage = {
   altText: string;
   width: number;
   height: number;
+};
+
+export type ProductModelMedia = {
+  id: string;
+  url: string;
+  altText: string;
+  previewImage: StoreImage | null;
 };
 
 export type ProductVariant = {
@@ -76,26 +85,59 @@ export type Product = {
   availableForSale?: boolean;
   featuredImage?: StoreImage | null;
   heroPoster?: StoreImage | null;
+  heroBackground?: StoreImage | null;
+  heroModel?: { url: string; altText: string } | null;
+  heroEnabled?: boolean;
+  heroOrder?: number;
+  heroDurationSeconds?: number;
   images?: StoreImage[];
+  models?: ProductModelMedia[];
   variants?: ProductVariant[];
   collections?: ProductCollection[];
   tags?: string[];
   hero?: ProductHeroContent;
 };
 
-export type HomepageHeroProduct = Product & { heroPoster: StoreImage };
+export type HomepageHeroProduct = Product & {
+  heroEntryId: string;
+  heroPoster: StoreImage;
+  heroBackground: StoreImage;
+  heroModel: { url: string; altText: string };
+};
 
 export function getHomepageHeroProducts(
   catalog: readonly Product[],
+  entries: readonly HomepageHeroEntry[] = [],
 ): HomepageHeroProduct[] {
-  return catalog
-    .filter(
-      (product): product is HomepageHeroProduct =>
-        Boolean(product.heroPoster?.url),
-    )
+  // Only published homepage entries select hero content. Product metafields
+  // are never a fallback, so drafts and cleared entries cannot reappear.
+  const byId = new Map(catalog.filter((product) => product.id).map((product) => [product.id, product]));
+  return entries.flatMap<HomepageHeroProduct>((entry) => {
+    const product = entry.productId ? byId.get(entry.productId) : undefined;
+    if (!product || !entry.poster?.url?.trim() || !entry.background?.url?.trim() || !entry.model || !isGlbUrl(entry.model.url)) return [];
+    return [{
+      ...product,
+      heroEntryId: entry.id,
+      heroModel: entry.model,
+      heroPoster: entry.poster,
+      heroBackground: entry.background,
+      heroOrder: entry.order,
+      heroDurationSeconds: entry.durationSeconds,
+      hero: {
+        eyebrow: entry.copy.eyebrow || "",
+        headlineFirst: entry.copy.headlineFirst || "",
+        headlineMiddle: entry.copy.headlineMiddle || "",
+        headlineItalic: entry.copy.headlineItalic || "",
+        description: entry.copy.description || "",
+        badgeText: entry.copy.badgeText || "",
+        badgeSubtitle: entry.copy.badgeSubtitle || "",
+        howToText: entry.copy.howToText || "",
+      },
+    }];
+  })
     .sort((left, right) => {
-      const leftOrder = Number(left.collectionNumber);
-      const rightOrder = Number(right.collectionNumber);
+      const leftOrder = left.heroOrder ?? Number(left.collectionNumber);
+      const rightOrder = right.heroOrder ?? Number(right.collectionNumber);
       const normalizedLeft = Number.isFinite(leftOrder)
         ? leftOrder
         : Number.MAX_SAFE_INTEGER;

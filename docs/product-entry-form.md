@@ -11,10 +11,7 @@ For every definition below:
 - pin the definition so the team sees it on every product editor;
 - keep the definitions in the order below, which follows the website layout.
 
-For `hero_poster`, restrict the file definition to images and add useful alt
-text to the uploaded Shopify media. The image itself is the homepage opt-in:
-no separate featured-product switch is required. Featured products appear in
-ascending numeric `collection_number` order.
+Homepage content is separate: use **Content → Metaobjects → Homepage hero**. No homepage fields are required for a normal product listing. See [Homepage hero editor](homepage-hero-admin.md).
 
 ## Form fields in website order
 
@@ -44,15 +41,6 @@ ascending numeric `collection_number` order.
 | Colour considerations | `color_considerations` | List of single-line text | When relevant | Strand-test guidance |
 | Search terms | `search_terms` | List of single-line text | Recommended | Store search |
 | FAQs | `faqs` | JSON | Recommended | Product FAQ accordion |
-| Homepage hero poster | `hero_poster` | File reference, images only | Only to feature this product in the hero | Homepage hero poster; blank keeps the product in standard listings only |
-| Hero eyebrow | `hero_eyebrow` | Single-line text | No | Homepage featured-product slide |
-| Hero line 1 | `hero_headline_first` | Single-line text | No | Homepage featured-product slide |
-| Hero line 2 | `hero_headline_middle` | Single-line text | No | Homepage featured-product slide |
-| Hero italic line | `hero_headline_italic` | Single-line text | No | Homepage featured-product slide |
-| Hero description | `hero_description` | Multi-line text | No | Homepage featured-product slide |
-| Hero badge | `hero_badge_text` | Single-line text | No | Homepage product badge |
-| Hero badge detail | `hero_badge_subtitle` | Single-line text | No | Homepage product badge |
-| Hero preparation note | `hero_how_to_text` | Multi-line text | No | Homepage preparation card |
 
 For `ritual_step` and `experience`, add preset choices in the definition validation so staff cannot enter a spelling that breaks filtering.
 
@@ -78,6 +66,7 @@ Media
 Featured image filename:
 Featured image alt text:
 Gallery image filenames + alt text:
+Optional 3D model (.glb) filenames + alt text:
 
 Variants
 Option names and values:
@@ -89,7 +78,6 @@ Inventory per variant:
 Weight/shipping data per variant:
 
 NatureMist website form
-Homepage hero poster filename + alt text (optional; enables homepage hero):
 Botanical name:
 Plant part / form:
 Collection number:
@@ -114,14 +102,6 @@ Experience level: Beginner / Familiar / Advanced
 Colour considerations (one per line):
 Search terms (one per line):
 FAQs JSON:
-Hero eyebrow:
-Hero line 1:
-Hero line 2:
-Hero italic line:
-Hero description:
-Hero badge:
-Hero badge detail:
-Hero preparation note:
 ```
 
 ## Test product: Amla Powder
@@ -166,13 +146,11 @@ The remaining copy must match the approved pack and compliance review. Do not co
 
 1. Create the product as **Draft** and assign its category, vendor, type, tags, and collections.
 2. Add options/variants, SKUs, prices, inventory, shipping weight, and high-quality media with alt text.
-3. Complete the pinned NatureMist form from top to bottom. Upload a **Homepage hero poster** only when this product should join the homepage hero; leave it blank for a standard product listing.
+3. Complete the pinned product fields. These describe the standard product listing; homepage content is managed separately under Content → Metaobjects → Homepage hero.
 4. Preview the product and test every variant, sold-out state, quantity change, cart action, and checkout handoff.
 5. Publish it to the **Headless** sales channel and the intended Shopify Markets.
 6. Change the status to **Active**. The storefront refreshes automatically; allow up to five minutes if a webhook is not configured.
 
 To remove a product from the website without deleting its history, unpublish it from the Headless channel or set it to Draft. To reorder a ritual set, reorder products inside its Shopify collection.
 
-To remove only the homepage feature while keeping the product for sale, clear
-its `hero_poster` value. The product remains in the homepage collection, shop,
-search, and other standard product lines.
+To remove only a homepage feature, set its separate **Homepage hero** entry to **Draft**. The product remains in normal listings. See [Homepage hero editor](homepage-hero-admin.md).

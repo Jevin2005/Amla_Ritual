@@ -1,13 +1,13 @@
 import "server-only";
 
 import { cache } from "react";
+import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
 import {
   bundles as previewBundles,
   products as previewProducts,
   type Product,
   type ProductBundle,
   type ProductFaq,
-  type ProductHeroContent,
   type ProductVariant,
   type StoreImage,
 } from "@/domain/catalog/products";
@@ -52,21 +52,7 @@ const productMetafields = `
   colorConsiderations: metafield(namespace: "custom", key: "color_considerations") { value }
   searchTerms: metafield(namespace: "custom", key: "search_terms") { value }
   faqs: metafield(namespace: "custom", key: "faqs") { value }
-  heroEyebrow: metafield(namespace: "custom", key: "hero_eyebrow") { value }
-  heroHeadlineFirst: metafield(namespace: "custom", key: "hero_headline_first") { value }
-  heroHeadlineMiddle: metafield(namespace: "custom", key: "hero_headline_middle") { value }
-  heroHeadlineItalic: metafield(namespace: "custom", key: "hero_headline_italic") { value }
-  heroDescription: metafield(namespace: "custom", key: "hero_description") { value }
-  heroBadgeText: metafield(namespace: "custom", key: "hero_badge_text") { value }
-  heroBadgeSubtitle: metafield(namespace: "custom", key: "hero_badge_subtitle") { value }
-  heroHowToText: metafield(namespace: "custom", key: "hero_how_to_text") { value }
-  heroPoster: metafield(namespace: "custom", key: "hero_poster") {
-    reference {
-      ... on MediaImage {
-        image { url altText width height }
-      }
-    }
-  }
+
 `;
 
 const VARIANT_FRAGMENT = `
@@ -134,6 +120,13 @@ const PRODUCT_DETAIL_QUERY = `#graphql
   ) @inContext(country: $country, language: $language) {
     product(handle: $handle) {
       ${PRODUCT_BASE_FRAGMENT}
+      media(first: 250) {
+        nodes {
+          __typename
+          ... on Model3d { id alt previewImage { url altText width height } sources { url } }
+        }
+        pageInfo { hasNextPage endCursor }
+      }
       selectedOrFirstAvailableVariant { ${VARIANT_FRAGMENT} }
       variants(first: $variantFirst, after: $variantAfter) {
         nodes { ${VARIANT_FRAGMENT} }
@@ -154,6 +147,21 @@ const PRODUCT_VARIANTS_QUERY = `#graphql
     product(handle: $handle) {
       variants(first: $variantFirst, after: $variantAfter) {
         nodes { ${VARIANT_FRAGMENT} }
+        pageInfo { hasNextPage endCursor }
+      }
+    }
+  }
+`;
+
+const PRODUCT_MEDIA_QUERY = `#graphql
+  query NatureMistProductMedia($handle: String!, $after: String, $country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      media(first: 250, after: $after) {
+        nodes {
+          __typename
+          ... on Model3d { id alt previewImage { url altText width height } sources { url } }
+        }
         pageInfo { hasNextPage endCursor }
       }
     }
@@ -221,6 +229,12 @@ const SITE_CONTENT_QUERY = `#graphql
       }
     }
     metaobject(handle: { type: "storefront_content", handle: "main" }) {
+      heroAutoplay: field(key: "hero_autoplay") { value }
+      heroInterval: field(key: "hero_interval") { value }
+      heroAutoRotate: field(key: "hero_auto_rotate") { value }
+      heroRotationSpeed: field(key: "hero_rotation_speed") { value }
+      heroCursorMotion: field(key: "hero_cursor_motion") { value }
+      heroTransition: field(key: "hero_transition") { value }
       announcementText: field(key: "announcement_text") { value }
       announcementLinkLabel: field(key: "announcement_link_label") { value }
       announcementLinkUrl: field(key: "announcement_link_url") { value }
@@ -233,6 +247,27 @@ const SITE_CONTENT_QUERY = `#graphql
       storyPoster: field(key: "story_poster") {
         reference { ... on MediaImage { image { url altText width height } } }
       }
+    }
+  }
+`;
+
+const HOMEPAGE_HERO_QUERY = `#graphql
+  query NatureMistHomepageHeroes($first: Int!, $after: String, $country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    metaobjects(type: "homepage_hero", first: $first, after: $after) {
+      nodes {
+        id handle
+        fields {
+          key value
+          reference {
+            ... on Product { id }
+            ... on MediaImage { image { url altText width height } }
+            ... on Model3d { alt sources { url mimeType format } }
+            ... on GenericFile { url }
+          }
+        }
+      }
+      pageInfo { hasNextPage endCursor }
     }
   }
 `;
@@ -308,6 +343,14 @@ type GraphVariant = {
   compareAtPrice: Money | null;
   image: GraphImage | null;
 };
+type GraphProductMedia = {
+  __typename: string;
+  id?: string;
+  alt?: string | null;
+  previewImage?: GraphImage | null;
+  sources?: Array<{ url: string }>;
+};
+type GraphProductMediaConnection = { nodes: GraphProductMedia[]; pageInfo: PageInfo };
 type GraphProduct = {
   id: string;
   handle: string;
@@ -320,6 +363,7 @@ type GraphProduct = {
   seo: { title: string | null; description: string | null };
   featuredImage: GraphImage | null;
   images: { nodes: GraphImage[] };
+  media?: GraphProductMediaConnection;
   priceRange: { minVariantPrice: Money; maxVariantPrice: Money };
   compareAtPriceRange: { minVariantPrice: Money };
   collections: {
@@ -327,11 +371,7 @@ type GraphProduct = {
   };
   selectedOrFirstAvailableVariant: GraphVariant | null;
   variants: { nodes: GraphVariant[]; pageInfo?: PageInfo };
-  heroPoster: GraphImageMetafield;
 };
-type GraphImageMetafield = {
-  reference?: { image?: GraphImage | null } | null;
-} | null;
 type GraphCollection = {
   id: string;
   handle: string;
@@ -382,6 +422,8 @@ type GraphMetaobjectField = {
   key: string;
   value?: string | null;
   reference?: {
+    id?: string;
+    alt?: string | null;
     image?: GraphImage | null;
     url?: string | null;
     sources?: Array<{ url: string; mimeType: string; format: string }>;
@@ -401,6 +443,7 @@ type GraphMetaobjectConnection = {
 };
 
 type ContentResponse = {
+  heroEntries?: GraphMetaobjectNode[];
   metaobject: GraphSiteContent | null;
   mainMenu: { items: GraphMenuItem[] } | null;
   footerMenu: { items: GraphMenuItem[] } | null;
@@ -422,6 +465,8 @@ export type StorefrontVideoReview = VideoReview;
 export type StorefrontCustomerReview = CustomerReview;
 
 export type StorefrontContent = {
+  heroEntries: HomepageHeroEntry[];
+  heroSettings: HeroSettings;
   announcementText: string;
   announcementLinkLabel: string;
   announcementLinkUrl: string;
@@ -461,6 +506,8 @@ export const previewVideoReviews: StorefrontVideoReview[] = customVideoReviews;
 export const previewCustomerReviews: StorefrontCustomerReview[] = customReviews;
 
 export const previewContent: StorefrontContent = {
+  heroEntries: [],
+  heroSettings: defaultHeroSettings,
   announcementText: "Rooted in Ayurveda · Made for modern rituals",
   announcementLinkLabel: "Find your ritual",
   announcementLinkUrl: "/rituals",
@@ -666,34 +713,6 @@ function cleanShortSummary(rawText: string | null | undefined, fallback: string)
   return (lastSpace > 60 ? truncated.slice(0, lastSpace) : truncated) + "…";
 }
 
-function defaultHero(product: GraphProduct): ProductHeroContent {
-  const customShort = meta(product, "shortDescription");
-  const heroDesc =
-    meta(product, "heroDescription") ||
-    customShort ||
-    cleanShortSummary(product.description, "Traditional Indian botanical powder, translated into a clear and considered ritual for modern hair care.");
-
-  return {
-    eyebrow:
-      meta(product, "heroEyebrow") ||
-      `The ${product.title.replace(/ Powder$/i, "")} Ritual`,
-    headlineFirst: meta(product, "heroHeadlineFirst") || "Discover",
-    headlineMiddle:
-      meta(product, "heroHeadlineMiddle") || product.title.replace(/ Powder$/i, ""),
-    headlineItalic: meta(product, "heroHeadlineItalic") || "Botanical ritual.",
-    description: heroDesc,
-    badgeText:
-      meta(product, "heroBadgeText") ||
-      `${product.title.replace(/ Powder$/i, "")} · ${meta(product, "ritualStep") || "ritual"}`,
-    badgeSubtitle:
-      meta(product, "heroBadgeSubtitle") || meta(product, "subtitle") || product.productType || "",
-    howToText:
-      meta(product, "heroHowToText") ||
-      listMeta(product, "howToUse", [])[0] ||
-      listMeta(product, "howTo", ["Follow the directions on the product pack."])[0],
-  };
-}
-
 function mapVariant(variant: GraphVariant): ProductVariant {
   return {
     id: variant.id,
@@ -832,12 +851,15 @@ function mapProduct(product: GraphProduct, index: number): Product {
     searchTerms: listMeta(product, "searchTerms", matchingPreview?.searchTerms || product.tags),
     faqs: faqMeta(product, matchingPreview?.faqs || []),
     featuredImage,
-    heroPoster: toImage(product.heroPoster?.reference?.image),
     images: product.images.nodes.map(toImage).filter((image): image is StoreImage => Boolean(image)),
+    models: (product.media?.nodes || []).flatMap((media) => {
+      const url = media.sources?.find((source) => isGlbUrl(source.url))?.url;
+      if (media.__typename !== "Model3d" || !media.id || !url) return [];
+      return [{ id: media.id, url, altText: media.alt || `${product.title} in 3D`, previewImage: toImage(media.previewImage) }];
+    }),
     variants,
     collections: product.collections.nodes,
     tags: product.tags,
-    hero: defaultHero(product),
   };
 }
 
@@ -1149,9 +1171,37 @@ function mapCustomerReviews(nodes: GraphMetaobjectNode[] | undefined | null): St
   return [...mapped, ...staticOnly];
 }
 
+function mapHeroEntry(entry: GraphMetaobjectNode): HomepageHeroEntry {
+  const fields = new Map(entry.fields.map((field) => [field.key, field]));
+  const text = (key: string) => fields.get(key)?.value?.trim() || "";
+  const model = fields.get("model")?.reference;
+  const modelUrl = model?.sources?.find((source) => isGlbUrl(source.url))?.url || model?.url;
+  return {
+    id: entry.id,
+    // Only a resolved, market-visible product can be featured.
+    productId: fields.get("product")?.reference?.id || null,
+    model: isGlbUrl(modelUrl) ? { url: modelUrl, altText: model?.alt || text("name") || "Product in 3D" } : null,
+    poster: toImage(fields.get("poster")?.reference?.image),
+    background: toImage(fields.get("background")?.reference?.image),
+    order: text("order") ? boundedNumber(text("order"), Number.MAX_SAFE_INTEGER, 0, 9999) : undefined,
+    durationSeconds: text("duration") ? boundedNumber(text("duration"), 8, 3, 60) : undefined,
+    copy: {
+      eyebrow: text("eyebrow"),
+      headlineFirst: text("headline_first"),
+      headlineMiddle: text("headline_middle"),
+      headlineItalic: text("headline_italic"),
+      description: text("description"),
+      badgeText: text("badge_text"),
+      badgeSubtitle: text("badge_subtitle"),
+    },
+  };
+}
+
 function mapContent(response: ContentResponse): StorefrontContent {
   const content = response.metaobject;
   return {
+    heroEntries: (response.heroEntries || []).map(mapHeroEntry),
+    heroSettings: parseHeroSettings(content),
     announcementText: contentText(content, "announcementText", previewContent.announcementText),
     announcementLinkLabel: contentText(
       content,
@@ -1351,6 +1401,27 @@ async function loadAllReviewMetaobjects(marketContext: MarketContext) {
   } satisfies Pick<ContentResponse, "videoReviews" | "customerReviews">;
 }
 
+async function loadHomepageHeroEntries(marketContext: MarketContext) {
+  const entries: GraphMetaobjectNode[] = [];
+  let after: string | null = null;
+  const seen = new Set<string>();
+  // Shopify's publishable capability excludes drafts from Storefront API results.
+  while (true) {
+    const response: { metaobjects: GraphMetaobjectConnection } = await shopifyStorefrontRequest(
+      HOMEPAGE_HERO_QUERY,
+      { ...marketContext, first: 100, after },
+      { revalidate: 120, tags: ["shopify-storefront"] },
+    );
+    const page = response.metaobjects;
+    entries.push(...page.nodes);
+    if (!page.pageInfo.hasNextPage) return entries;
+    const cursor = page.pageInfo.endCursor;
+    if (!cursor || seen.has(cursor)) throw new Error("Shopify returned a non-advancing homepage hero cursor.");
+    seen.add(cursor);
+    after = cursor;
+  }
+}
+
 async function loadSiteContent(marketContext: MarketContext) {
   const content = await shopifyStorefrontRequest<ContentResponse>(
     SITE_CONTENT_QUERY,
@@ -1362,13 +1433,17 @@ async function loadSiteContent(marketContext: MarketContext) {
     },
   );
 
-  try {
-    const reviews = await loadAllReviewMetaobjects(marketContext);
-    return { ...content, ...reviews };
-  } catch (reason) {
-    warnStorefrontPart("review metaobject", reason);
-    return content;
-  }
+  const [reviews, heroes] = await Promise.allSettled([
+    loadAllReviewMetaobjects(marketContext),
+    loadHomepageHeroEntries(marketContext),
+  ]);
+  if (reviews.status === "rejected") warnStorefrontPart("review metaobject", reviews.reason);
+  if (heroes.status === "rejected") warnStorefrontPart("homepage hero", heroes.reason);
+  return {
+    ...content,
+    ...(reviews.status === "fulfilled" ? reviews.value : {}),
+    heroEntries: heroes.status === "fulfilled" ? heroes.value : [],
+  };
 }
 
 function warnStorefrontPart(part: string, reason: unknown) {
@@ -1542,6 +1617,24 @@ async function loadStorefrontProduct(handle: string) {
       throw new Error("Shopify returned a non-advancing variant cursor.");
     }
     pageInfo = nextPageInfo;
+  }
+
+  const media = firstPage.product.media;
+  if (media) {
+    const seenCursors = new Set<string>();
+    while (media.pageInfo.hasNextPage) {
+      const after = media.pageInfo.endCursor;
+      if (!after || seenCursors.has(after)) throw new Error("Shopify returned a non-advancing product media cursor.");
+      seenCursors.add(after);
+      const page = await shopifyStorefrontRequest<{ product: { media: GraphProductMediaConnection } | null }>(
+        PRODUCT_MEDIA_QUERY,
+        { handle, after, ...marketContext },
+        { revalidate: 300, tags: ["shopify-storefront"] },
+      );
+      if (!page.product) return undefined;
+      media.nodes.push(...page.product.media.nodes);
+      media.pageInfo = page.product.media.pageInfo;
+    }
   }
 
   const storefront = await getStorefront();

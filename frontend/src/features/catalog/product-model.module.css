@@ -1,0 +1,8 @@
+.stage { position: relative; width: 100%; height: 100%; min-height: 0; isolation: isolate; background: transparent; }
+.viewer { display: block; position: absolute; inset: 0; width: 100%; height: 100%; background: transparent; --poster-color: transparent; transform: translate(var(--model-x, 0px), var(--model-y, 0px)); transition: transform .35s ease-out, opacity .45s ease; }
+.hint, .pause { position: absolute; bottom: 10px; z-index: 2; border-radius: 100px; color: var(--forest); background: rgba(255,255,255,.92); }
+.hint { left: 10px; max-width: calc(100% - 20px); padding: 8px 10px; font-size: .75rem; line-height: 1.4; pointer-events: none; }
+.pause { display: grid; place-items: center; right: 10px; width: 44px; height: 44px; border: 1px solid var(--line); cursor: pointer; }
+.pause:hover { background: var(--forest); color: var(--paper); }
+.pause:focus-visible { outline: 2px solid var(--forest); outline-offset: -4px; }
+@media (prefers-reduced-motion: reduce) { .viewer { transition: none; transform: none; } }

@@ -83,21 +83,10 @@ Use the [product entry form](product-entry-form.md) as the merchant-facing check
 | `color_considerations` | List of single-line text | Hair-colour cautions |
 | `search_terms` | List of single-line text | Extra storefront search words |
 | `faqs` | JSON | Array of `{ "question": "…", "answer": "…" }` |
-| `hero_poster` | File reference, restricted to images | Uploading an image includes the product in the homepage hero; blank keeps it in standard listings only |
-| `hero_eyebrow` | Single-line text | Homepage featured-slide eyebrow |
-| `hero_headline_first` | Single-line text | First headline line |
-| `hero_headline_middle` | Single-line text | Middle headline line |
-| `hero_headline_italic` | Single-line text | Italic headline line |
-| `hero_description` | Multi-line text | Featured-slide body copy |
-| `hero_badge_text` | Single-line text | Featured product badge |
-| `hero_badge_subtitle` | Single-line text | Featured product badge detail |
-| `hero_how_to_text` | Multi-line text | Featured preparation summary |
 
 When Shopify is connected, deleted or empty metafields stay empty or use a neutral product-derived label; the original preview claims are never substituted into a live product. Complete every customer-facing and safety field before publishing.
 
-Homepage hero products appear in ascending numeric `custom.collection_number`
-order. Uploading or clearing `custom.hero_poster` controls inclusion without
-changing the product's normal storefront visibility.
+Homepage content is managed separately under **Content → Metaobjects → Homepage hero** (`homepage_hero`). Product creation requires no homepage fields. Only Active entries with a published product, GLB model, poster and background appear. Legacy `custom.hero_*` fields are unpinned and retained only as a backup. See [Homepage hero editor](homepage-hero-admin.md).
 
 ## 4. Site content, page posters, and announcement bar
 
@@ -118,7 +107,7 @@ Create one published entry with handle `main` and these fields:
 | `ritual_poster` | File reference, restricted to images |
 | `story_poster` | File reference, restricted to images |
 
-Upload/choose the images through Shopify Files and add useful alt text to each image. `ritual_poster` and `story_poster` control their named page posters. The existing `home_hero_poster` remains the site social-preview fallback; visible homepage hero posters now come from each product's `custom.hero_poster` field. Metaobject content is refreshed within two minutes even if no webhook reaches the active runtime.
+Upload/choose the images through Shopify Files and add useful alt text to each image. `ritual_poster` and `story_poster` control their named page posters. The existing `home_hero_poster` remains the site social-preview fallback; visible homepage hero posters come from the separate `homepage_hero` entries. Metaobject content is refreshed within two minutes even if no webhook reaches the active runtime.
 
 ## 5. Collections, listings, and ritual sets
 
@@ -167,7 +156,7 @@ The storefront supports one-time purchases, Shopify's standard options/variants,
 ## 9. Launch checklist
 
 - Replace preview prices, sizes, and imagery with verified Shopify product data.
-- Confirm every product intended for the homepage hero has an image-only `custom.hero_poster` value with useful alt text, and that catalogue-only products leave it blank.
+- Confirm every intended Homepage hero entry is Active and has a published product, GLB model, poster and background.
 - Test every variant, sold-out state, quantity change, discount, market/currency, and checkout on a test order.
 - Confirm shipping profiles, taxes, payments, email receipts, fulfilment, returns, and legal policies in Shopify.
 - Add the production domain to the Headless storefront and Shopify checkout/domain configuration.
@@ -179,7 +168,7 @@ Reference: [Shopify Storefront API setup](https://shopify.dev/docs/storefronts/h
 ## 10. Everyday store management
 
 - **Add or edit a product:** Shopify Admin → Products. Use the pinned NatureMist fields and the [product entry form](product-entry-form.md).
-- **Feature or remove a product in the homepage hero:** Shopify Admin → Products → open the product → **Homepage hero poster**. Upload/select an image to feature it; clear the image to remove only the hero feature. An active product remains in all standard listings either way.
+- **Feature or remove a product in the homepage hero:** Content → Metaobjects → Homepage hero. Choose a product, upload its model, poster and background, then set the entry Active. Use Draft to hide it. Normal product listings remain independent. See [Homepage hero editor](homepage-hero-admin.md).
 - **Change the Rituals/Our Story poster or site social fallback:** Shopify Admin → Content → Metaobjects → Storefront content → `main`. Choose a new image from Shopify Files and save.
 - **Change the announcement:** edit the same `main` metaobject entry.
 - **Change header/footer links:** Shopify Admin → Content → Menus; edit `main-menu` or `footer`.

@@ -15,10 +15,12 @@
     "preview:site": "vinext start",
     "check:site": "vinext check && npm run build:site",
     "lint": "eslint",
+    "test:hero": "node --test tests/hero.test.mjs",
     "typecheck": "next typegen && tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run build && npm run check:site"
   },
   "dependencies": {
+    "@google/model-viewer": "4.2.0",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"

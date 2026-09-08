@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { Product } from "@/domain/catalog/products";
+import { ProductModel } from "./product-model";
 
 interface ProductGalleryProps {
   product: Product;
@@ -18,19 +19,24 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         height: 800,
       };
 
-  // Shopify product media is the only source for gallery slides. A listing
-  // with one uploaded photo must stay a one-photo gallery.
+  // Photos and 3D models use the product's Media list, independently of its hero entry.
   const images = product.images?.length ? product.images : [baseImage];
 
+  const slides = [
+    ...images.map((image) => ({ ...image, kind: "image" as const })),
+    ...(product.models || []).map((model) => ({ ...model, kind: "model" as const })),
+  ];
+
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeImage = images[activeIndex] || images[0];
+  const selectedIndex = Math.min(activeIndex, slides.length - 1);
+  const activeImage = slides[selectedIndex];
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+    setActiveIndex(selectedIndex > 0 ? selectedIndex - 1 : slides.length - 1);
   };
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+    setActiveIndex(selectedIndex < slides.length - 1 ? selectedIndex + 1 : 0);
   };
 
   return (
@@ -46,7 +52,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         </div>
 
         {/* Top-Right: Premium Photo Showcase Counter Notation */}
-        {images.length > 1 && (
+        {slides.length > 1 && (
           <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-white shadow-md backdrop-blur-md max-[680px]:top-2.5 max-[680px]:right-2.5 max-[680px]:px-2.5 max-[680px]:py-0.5">
             <svg
               className="size-3.5 text-white/90 max-[680px]:size-3"
@@ -62,33 +68,37 @@ export function ProductGallery({ product }: ProductGalleryProps) {
               <path d="M21 15l-5-5L5 21" />
             </svg>
             <span className="font-mono text-[0.68rem] font-bold tracking-wider max-[680px]:text-[0.58rem]">
-              {activeIndex + 1} / {images.length}
+              {selectedIndex + 1} / {slides.length}
             </span>
           </div>
         )}
 
         {/* Master Image View */}
         <div className="relative size-full flex items-center justify-center">
+          {activeImage.kind === "model" ? (
+            <ProductModel key={activeImage.url} model={activeImage} eager />
+          ) : (
           <Image
             src={activeImage.url}
             alt={activeImage.altText || product.name}
             fill
             loading="eager"
-            fetchPriority={activeIndex === 0 ? "high" : "auto"}
+            fetchPriority={selectedIndex === 0 ? "high" : "auto"}
             quality={82}
             sizes="(max-width: 960px) 95vw, 48vw"
             className="size-full object-contain object-center transition-all duration-300 ease-out"
           />
+          )}
         </div>
 
         {/* Left & Right Chevrons */}
-        {images.length > 1 && (
+        {slides.length > 1 && (
           <>
             <button
               type="button"
               onClick={handlePrev}
               className="absolute left-3 top-1/2 -translate-y-1/2 z-10 grid size-9 place-items-center rounded-full border border-black/5 bg-white/85 text-[1.1rem] text-[var(--forest)] shadow-md backdrop-blur-md transition-all hover:bg-white hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-7.5 max-[680px]:text-[0.95rem]"
-              aria-label="Previous photo"
+              aria-label="Previous product media"
             >
               ‹
             </button>
@@ -96,7 +106,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
               type="button"
               onClick={handleNext}
               className="absolute right-3 top-1/2 -translate-y-1/2 z-10 grid size-9 place-items-center rounded-full border border-black/5 bg-white/85 text-[1.1rem] text-[var(--forest)] shadow-md backdrop-blur-md transition-all hover:bg-white hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-7.5 max-[680px]:text-[0.95rem]"
-              aria-label="Next photo"
+              aria-label="Next product media"
             >
               ›
             </button>
@@ -104,19 +114,20 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         )}
 
         {/* Bottom Pagination Dots / Progress Indicator */}
-        {images.length > 1 && (
+        {slides.length > 1 && (
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1 backdrop-blur-md max-[680px]:bottom-2 max-[680px]:px-2 max-[680px]:py-0.5">
-            {images.map((_, i) => (
+            {slides.map((slide, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => setActiveIndex(i)}
                 className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  i === activeIndex
+                  i === selectedIndex
                     ? "w-5 bg-white shadow-xs"
                     : "w-1.5 bg-white/45 hover:bg-white/80"
                 }`}
-                aria-label={`Jump to photo ${i + 1}`}
+                aria-label={slide.kind === "model" ? `Jump to 3D model ${i - images.length + 1}` : `Jump to photo ${i + 1}`}
+                aria-pressed={i === selectedIndex}
               />
             ))}
           </div>
@@ -124,14 +135,15 @@ export function ProductGallery({ product }: ProductGalleryProps) {
       </div>
 
       {/* ── Multi-Photo Thumbnails Track ── */}
-      {images.length > 1 && (
+      {slides.length > 1 && (
         <div
           className="grid grid-cols-4 gap-2.5 max-[680px]:gap-1.5"
-          aria-label={`${product.name} photo showcase`}
+          aria-label={`${product.name} photos and 3D models`}
         >
-          {images.map((img, idx) => {
-            const isSelected = idx === activeIndex;
-            const label = img.altText || `Photo ${idx + 1}`;
+          {slides.map((img, idx) => {
+            const isSelected = idx === selectedIndex;
+            const label = img.kind === "model" ? "Explore in 3D" : img.altText || `Photo ${idx + 1}`;
+            const thumbnail = img.kind === "model" ? img.previewImage || baseImage : img;
             return (
               <button
                 key={img.url + idx}
@@ -142,19 +154,20 @@ export function ProductGallery({ product }: ProductGalleryProps) {
                     ? "border-[var(--botanical)] bg-[var(--paper)] ring-2 ring-[var(--botanical)]/40 shadow-sm"
                     : "border-[var(--line)] bg-[rgba(255,255,255,0.7)] opacity-75 hover:opacity-100 hover:border-black/20"
                 }`}
-                aria-label={`View photo ${idx + 1}: ${label}`}
+                aria-label={img.kind === "model" ? `View 3D model: ${img.altText}` : `View photo ${idx + 1}: ${label}`}
+                aria-pressed={isSelected}
               >
                 <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-white max-[680px]:rounded-lg">
                   <Image
-                    src={img.url}
-                    alt={img.altText || `${product.name} thumbnail ${idx + 1}`}
+                    src={thumbnail.url}
+                    alt={thumbnail.altText || `${product.name} thumbnail ${idx + 1}`}
                     fill
                     sizes="120px"
                     className="object-contain p-1 transition-transform duration-300 group-hover:scale-105"
                   />
                   {/* Number Notation Pill (01, 02, 03, 04) */}
                   <span className="absolute top-1 left-1 rounded bg-black/60 px-1 py-0.2 font-mono text-[0.52rem] font-bold text-white max-[680px]:text-[0.44rem]">
-                    0{idx + 1}
+                    {img.kind === "model" ? "3D" : String(idx + 1).padStart(2, "0")}
                   </span>
                 </div>
                 <span className="truncate text-center text-[0.62rem] font-semibold text-[var(--forest)] max-[680px]:text-[0.5rem] max-[420px]:hidden">

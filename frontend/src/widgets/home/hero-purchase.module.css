@@ -1,0 +1,17 @@
+.purchase { width: 100%; max-width: 430px; }
+.priceRow { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; border-top: 1px solid var(--line); padding: 14px 0; }
+.price { color: var(--forest); font-family: var(--font-display); font-size: 1.45rem; line-height: 1.3; }
+.tax { color: var(--muted); font-size: .75rem; line-height: 1.5; letter-spacing: .02em; }
+.actions { display: flex; align-items: center; gap: 10px; }
+.add { display: inline-flex; flex: 1 1 0; min-width: 0; max-width: 245px; min-height: 52px; align-items: center; justify-content: center; gap: 9px; padding: 12px 16px; border: 1px solid transparent; border-radius: 100px; background: var(--forest); color: var(--paper); font-size: .75rem; line-height: 1.4; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 26px rgb(21 59 45 / 20%); transition: transform .25s, background .25s; }
+.add:hover:enabled { background: var(--forest-dark); transform: translateY(-2px); }
+.add:disabled { opacity: .55; cursor: not-allowed; }
+.wishlist { display: grid; flex: 0 0 48px; height: 48px; place-items: center; border: 1px solid rgb(23 63 42 / 40%); border-radius: 50%; background: rgb(255 253 246 / 85%); color: var(--forest); font-size: 1.3rem; cursor: pointer; transition: background .25s, color .25s; }
+.wishlist:hover, .wishlist[data-saved="true"] { background: var(--forest); color: var(--paper); }
+.explore { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; color: var(--forest); font-size: .75rem; line-height: 1.5; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
+.explore span { transition: transform .2s; }
+.explore:hover span { transform: translateY(3px); }
+.purchase button:focus-visible, .explore:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; }
+@media (max-width: 1000px) { .add { min-height: 46px; } .wishlist { flex-basis: 44px; height: 44px; } .price { font-size: 1.25rem; } }
+@media (max-width: 600px) { .priceRow { padding: 10px 0; } .actions { gap: 6px; } .add { min-height: 44px; padding: 10px 8px; letter-spacing: .025em; gap: 5px; } .explore { letter-spacing: .035em; gap: 4px; } }
+@media (prefers-reduced-motion: reduce) { .add, .wishlist, .explore span { transition: none; } .add:hover:enabled, .explore:hover span { transform: none; } }
