@@ -2,6 +2,8 @@ import "server-only";
 
 import { cache } from "react";
 import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
+import { defaultMotionSettings, parseMotionSettings, type MotionSettings } from "@/domain/motion";
+import { defaultIngredientPosterSettings, parseIngredientPosterSettings, posterImages, type IngredientPosterSettings } from "@/domain/ingredient-poster";
 import {
   bundles as previewBundles,
   products as previewProducts,
@@ -235,6 +237,10 @@ const SITE_CONTENT_QUERY = `#graphql
       heroRotationSpeed: field(key: "hero_rotation_speed") { value }
       heroCursorMotion: field(key: "hero_cursor_motion") { value }
       heroTransition: field(key: "hero_transition") { value }
+      motionEnabled: field(key: "motion_enabled") { value }
+      motionCursor: field(key: "motion_cursor") { value }
+      motionDuration: field(key: "motion_duration") { value }
+      motionIntensity: field(key: "motion_intensity") { value }
       announcementText: field(key: "announcement_text") { value }
       announcementLinkLabel: field(key: "announcement_link_label") { value }
       announcementLinkUrl: field(key: "announcement_link_url") { value }
@@ -244,6 +250,14 @@ const SITE_CONTENT_QUERY = `#graphql
       ritualPoster: field(key: "ritual_poster") {
         reference { ... on MediaImage { image { url altText width height } } }
       }
+      ritualPosters: field(key: "ritual_posters") {
+        references(first: 8) { nodes { ... on MediaImage { image { url altText width height } } } }
+      }
+      ritualPosterGooey: field(key: "ritual_poster_gooey") { value }
+      ritualPosterAutoplay: field(key: "ritual_poster_autoplay") { value }
+      ritualPosterInterval: field(key: "ritual_poster_interval") { value }
+      ritualPosterStrength: field(key: "ritual_poster_strength") { value }
+      ritualPosterConfig: field(key: "ritual_poster_config") { value }
       storyPoster: field(key: "story_poster") {
         reference { ... on MediaImage { image { url altText width height } } }
       }
@@ -397,6 +411,7 @@ type GraphShop = {
 type GraphField = {
   value?: string | null;
   reference?: { image?: GraphImage | null } | null;
+  references?: { nodes: Array<{ image?: GraphImage | null }> } | null;
 } | null;
 type GraphSiteContent = Record<string, GraphField>;
 type GraphMenuItem = {
@@ -467,11 +482,14 @@ export type StorefrontCustomerReview = CustomerReview;
 export type StorefrontContent = {
   heroEntries: HomepageHeroEntry[];
   heroSettings: HeroSettings;
+  motionSettings: MotionSettings;
   announcementText: string;
   announcementLinkLabel: string;
   announcementLinkUrl: string;
   homeHeroPoster: StoreImage;
   ritualPoster: StoreImage;
+  ritualPosters: StoreImage[];
+  ritualPosterSettings: IngredientPosterSettings;
   storyPoster: StoreImage;
   primaryNavigation: NavigationItem[];
   footerNavigation: NavigationItem[];
@@ -505,9 +523,33 @@ export const previewVideoReviews: StorefrontVideoReview[] = customVideoReviews;
 
 export const previewCustomerReviews: StorefrontCustomerReview[] = customReviews;
 
+export const defaultRitualPosters: StoreImage[] = [
+  {
+    url: "/images/naturemist-ritual.png",
+    altText: "Preparing a NatureMist botanical ritual",
+    width: 1024,
+    height: 1536,
+  },
+  {
+    url: "/images/naturemist-process.png",
+    altText: "Botanical clarity and careful processing",
+    width: 1024,
+    height: 1536,
+  },
+  {
+    url: "/images/naturemist-hero.png",
+    altText: "Pure botanical hair rituals",
+    width: 1692,
+    height: 930,
+  },
+];
+
 export const previewContent: StorefrontContent = {
   heroEntries: [],
   heroSettings: defaultHeroSettings,
+  motionSettings: defaultMotionSettings,
+  ritualPosters: defaultRitualPosters,
+  ritualPosterSettings: defaultIngredientPosterSettings,
   announcementText: "Rooted in Ayurveda · Made for modern rituals",
   announcementLinkLabel: "Find your ritual",
   announcementLinkUrl: "/rituals",
@@ -1199,9 +1241,15 @@ function mapHeroEntry(entry: GraphMetaobjectNode): HomepageHeroEntry {
 
 function mapContent(response: ContentResponse): StorefrontContent {
   const content = response.metaobject;
+  const ritualPoster = contentImage(content, "ritualPoster", previewContent.ritualPoster);
+  const ritualPosters = (content?.ritualPosters?.references?.nodes || []).flatMap((node) => {
+    const image = toImage(node.image);
+    return image ? [image] : [];
+  });
   return {
     heroEntries: (response.heroEntries || []).map(mapHeroEntry),
     heroSettings: parseHeroSettings(content),
+    motionSettings: parseMotionSettings(content),
     announcementText: contentText(content, "announcementText", previewContent.announcementText),
     announcementLinkLabel: contentText(
       content,
@@ -1214,7 +1262,9 @@ function mapContent(response: ContentResponse): StorefrontContent {
       previewContent.announcementLinkUrl,
     ),
     homeHeroPoster: contentImage(content, "homeHeroPoster", previewContent.homeHeroPoster),
-    ritualPoster: contentImage(content, "ritualPoster", previewContent.ritualPoster),
+    ritualPoster,
+    ritualPosters: posterImages(ritualPosters.length ? ritualPosters : defaultRitualPosters, ritualPoster),
+    ritualPosterSettings: parseIngredientPosterSettings(content),
     storyPoster: contentImage(content, "storyPoster", previewContent.storyPoster),
     primaryNavigation:
       mapMenu(response.mainMenu?.items).length > 0

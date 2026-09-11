@@ -1,0 +1,17 @@
+.magnetic { position: relative; }
+.magneticContent { display: inline-flex; align-items: center; justify-content: inherit; gap: inherit; }
+.imageFrame { position: relative; overflow: hidden; }
+.imageContent { position: absolute; inset: 0; }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  /* The link's hit area stays still while its contents gently follow the cursor. */
+  .magneticContent { transition: transform calc(550ms * var(--motion-duration, 1)) cubic-bezier(.22, 1, .36, 1); }
+  .magnetic[data-pointer-motion="true"] .magneticContent {
+    transform: translate3d(calc(var(--pointer-x, 0) * 5px), calc(var(--pointer-y, 0) * 4px), 0);
+  }
+  .magnetic:focus-visible .magneticContent { transform: none; }
+  .imageContent { transition: transform calc(1000ms * var(--motion-duration, 1)) cubic-bezier(.22, 1, .36, 1); }
+  .imageFrame[data-pointer-motion="true"] .imageContent {
+    transform: translate3d(calc(var(--pointer-x, 0) * 1%), calc(var(--pointer-y, 0) * 1%), 0) scale(calc(1.01 + var(--motion-intensity, 1) * .025));
+  }
+}

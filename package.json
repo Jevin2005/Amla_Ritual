@@ -9,6 +9,7 @@
     "start": "npm run start --workspace=frontend",
     "lint": "npm run lint --workspace=frontend",
     "test:hero": "npm run test:hero --workspace=frontend",
+    "test:poster": "npm run test:poster --workspace=frontend",
     "typecheck": "npm run typecheck --workspace=frontend",
     "build:site": "npm run build:site --workspace=frontend",
     "preview:site": "npm run preview:site --workspace=frontend",

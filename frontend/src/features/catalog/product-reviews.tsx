@@ -13,6 +13,7 @@ import {
 } from "@/domain/reviews/custom-reviews";
 import { ReviewCard } from "@/features/reviews/review-card";
 import { StarRating } from "@/features/reviews/star-rating";
+import { VideoAutoplayPreview } from "@/features/reviews/video-autoplay-preview";
 import { VideoReviewModal } from "@/features/reviews/video-review-modal";
 
 type RatingFilter = "all" | 1 | 2 | 3 | 4 | 5;
@@ -200,47 +201,58 @@ export function ProductReviewsSection({
                   </span>
                 </div>
                 <div className="grid grid-cols-4 gap-4 max-[980px]:grid-cols-3 max-[760px]:flex max-[760px]:snap-x max-[760px]:snap-mandatory max-[760px]:overflow-x-auto max-[760px]:pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  {visibleVideos.map((video) => (
-                    <button
-                      key={video.id}
-                      type="button"
-                      onClick={() => setActiveVideo(video)}
-                      className="group overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] text-left shadow-[0_8px_24px_rgba(21,59,45,0.05)] transition-[transform,border-color] hover:-translate-y-1 hover:border-[var(--botanical)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[760px]:w-[72vw] max-[760px]:max-w-[270px] max-[760px]:shrink-0 max-[760px]:snap-start"
-                      aria-label={`${getPlayableVideoMedia(video) ? "Play" : "Open"} ${video.title} by ${video.creator}`}
-                    >
-                      <span className="relative block aspect-[4/5] overflow-hidden bg-[var(--sand)]">
-                        <Image
-                          src={video.image}
-                          alt=""
-                          fill
-                          sizes="(max-width: 760px) 72vw, (max-width: 980px) 33vw, 25vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.035]"
-                        />
-                        <span className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10" />
-                        <span className="absolute inset-0 grid place-items-center">
-                          <span className="grid size-12 place-items-center rounded-full border border-white/75 bg-white/25 text-white shadow-xl backdrop-blur-md transition-transform group-hover:scale-105">
-                            <span className={getPlayableVideoMedia(video) ? "ml-0.5 text-lg" : "text-xl"} aria-hidden="true">
-                              {getPlayableVideoMedia(video) ? "▶" : "“"}
+                  {visibleVideos.map((video) => {
+                    const media = getPlayableVideoMedia(video);
+                    const isDirectVideo = media?.kind === "video";
+                    return (
+                      <button
+                        key={video.id}
+                        type="button"
+                        onClick={() => setActiveVideo(video)}
+                        className="group overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] text-left shadow-[0_8px_24px_rgba(21,59,45,0.05)] transition-[transform,border-color] hover:-translate-y-1 hover:border-[var(--botanical)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[760px]:w-[72vw] max-[760px]:max-w-[270px] max-[760px]:shrink-0 max-[760px]:snap-start"
+                        aria-label={`${media ? "Play" : "Open"} ${video.title} by ${video.creator}`}
+                      >
+                        <span className="relative block aspect-[4/5] overflow-hidden bg-[var(--sand)]">
+                          <Image
+                            src={video.image}
+                            alt=""
+                            fill
+                            sizes="(max-width: 760px) 72vw, (max-width: 980px) 33vw, 25vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.035]"
+                          />
+                          {isDirectVideo && (
+                            <VideoAutoplayPreview
+                              url={media.url}
+                              poster={video.image}
+                              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.035]"
+                            />
+                          )}
+                          <span className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10 pointer-events-none" />
+                          <span className="absolute inset-0 grid place-items-center pointer-events-none">
+                            <span className="grid size-12 place-items-center rounded-full border border-white/75 bg-black/30 text-white shadow-xl backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:border-transparent group-hover:bg-[var(--botanical)] group-hover:text-[var(--forest-dark)]">
+                              <span className={media ? "ml-0.5 text-lg" : "text-xl"} aria-hidden="true">
+                                {media ? "▶" : "“"}
+                              </span>
                             </span>
                           </span>
-                        </span>
-                        <span className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2 text-white">
-                          <span className="text-[0.64rem] font-bold uppercase tracking-[0.08em]">
-                            {video.creator}
+                          <span className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2 text-white pointer-events-none">
+                            <span className="text-[0.64rem] font-bold uppercase tracking-[0.08em]">
+                              {video.creator}
+                            </span>
+                            <span className="text-[0.56rem] text-white/80">{video.duration}</span>
                           </span>
-                          <span className="text-[0.56rem] text-white/80">{video.duration}</span>
                         </span>
-                      </span>
-                      <span className="block p-3.5">
-                        <strong className="block text-[0.76rem] leading-[1.35] text-[var(--forest)]">
-                          {video.title}
-                        </strong>
-                        <span className="mt-1 block line-clamp-2 text-[0.65rem] leading-[1.45] text-[var(--muted)]">
-                          {video.testimonial}
+                        <span className="block p-3.5">
+                          <strong className="block text-[0.76rem] leading-[1.35] text-[var(--forest)]">
+                            {video.title}
+                          </strong>
+                          <span className="mt-1 block line-clamp-2 text-[0.65rem] leading-[1.45] text-[var(--muted)]">
+                            {video.testimonial}
+                          </span>
                         </span>
-                      </span>
-                    </button>
-                  ))}
+                      </button>
+                    );
+                  })}
                 </div>
                 {visibleVideos.length < productVideos.length && (
                   <div className="mt-5 flex justify-center">

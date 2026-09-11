@@ -6,7 +6,8 @@ import { getHomepageHeroProducts } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
 import { useStore } from "@/features/store/store-provider";
-import { BundleCards } from "./bundle-cards";
+import { MagneticLink } from "@/shared/ui/magnetic-link";
+import { IngredientPoster } from "@/features/poster/ingredient-poster";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { ProductHero } from "./product-hero";
 import { VideoReviewsSection } from "./video-reviews-section";
@@ -47,7 +48,6 @@ export function HomePage() {
   }
 
   const hasHero = getHomepageHeroProducts(products, content.heroEntries).length > 0;
-  const ritualPoster = content.ritualPoster;
   const CollectionHeading = hasHero ? "h2" : "h1";
   return (
     <main className="overflow-x-clip" id="main-content">
@@ -57,7 +57,7 @@ export function HomePage() {
         aria-labelledby="collection-title"
       >
         {/* ── Section heading ── */}
-        <div className="mb-[clamp(36px,4vw,60px)] grid grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] items-end gap-x-[clamp(24px,4vw,64px)] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[900px]:gap-x-6 max-[680px]:mb-5 max-[680px]:grid-cols-1 max-[680px]:gap-y-2">
+        <div data-motion-reveal className="mb-[clamp(36px,4vw,60px)] grid grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] items-end gap-x-[clamp(24px,4vw,64px)] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] max-[900px]:gap-x-6 max-[680px]:mb-5 max-[680px]:grid-cols-1 max-[680px]:gap-y-2">
           <div>
             <p className={`${eyebrowClass} max-[680px]:mb-1 max-[680px]:text-[0.54rem]`}>
               The botanical cabinet
@@ -74,12 +74,12 @@ export function HomePage() {
               Single origin botanicals. Distinct ritual paths. One calm,
               considered way to begin.
             </p>
-            <Link
+            <MagneticLink
               className={`${textLinkClass} max-[680px]:text-[0.6rem] max-[680px]:min-h-[34px]`}
               href="/shop"
             >
               View all botanicals <span aria-hidden="true">↗</span>
-            </Link>
+            </MagneticLink>
           </div>
         </div>
 
@@ -203,7 +203,7 @@ export function HomePage() {
         className={`${sectionClass} ${revealClass} max-[680px]:py-10 max-[680px]:px-3.5`}
         aria-labelledby="prepare-title"
       >
-        <div className={splitHeadingClass}>
+        <div data-motion-reveal className={splitHeadingClass}>
           <div>
             <p className={eyebrowClass}>The art of preparation</p>
             <h2 className={sectionTitleClass} id="prepare-title">
@@ -327,33 +327,10 @@ export function HomePage() {
         aria-labelledby="purity-title"
       >
         {/* Left Column: Arched Image with Badge */}
-        <div className="relative mx-auto w-full max-w-[480px] max-[768px]:max-w-[340px]">
-          <div className="relative aspect-[0.72] w-full overflow-hidden rounded-[160px_160px_6px_6px] bg-[var(--beige)] shadow-[0_8px_24px_rgba(23,63,42,0.06)] max-[900px]:rounded-[110px_110px_4px_4px] max-[680px]:rounded-[90px_90px_4px_4px]">
-            <Image
-              src={ritualPoster.url}
-              alt={
-                ritualPoster.altText ||
-                "A botanical hair ritual being prepared in a bowl"
-              }
-              fill
-              sizes="(max-width: 680px) 80vw, (max-width: 900px) 45vw, 45vw"
-              className="object-cover object-center"
-            />
-            {/* Dark circular brand badge 'N' */}
-            <span
-              className="absolute bottom-3.5 left-3.5 grid size-8 place-items-center rounded-full bg-[#18281d] text-[0.74rem] font-serif font-bold text-[#faf8f4] shadow-md max-[680px]:bottom-2.5 max-[680px]:left-2.5 max-[680px]:size-7 max-[680px]:text-[0.65rem]"
-              aria-hidden="true"
-            >
-              N
-            </span>
-          </div>
-          <span className="mt-3 block text-[0.72rem] font-bold tracking-[0.16em] text-[var(--muted)] uppercase max-[680px]:mt-2 max-[680px]:text-[0.68rem] text-center sm:text-left">
-            Botanical ritual · prepared fresh
-          </span>
-        </div>
+        <IngredientPoster images={content.ritualPosters} fallback={content.ritualPoster} settings={content.ritualPosterSettings} />
 
         {/* Right Column: Heading, description, 3 numbered points, CTA */}
-        <div>
+        <div data-motion-reveal>
           <p className="mb-2 text-[0.74rem] font-bold uppercase tracking-[0.18em] text-[var(--botanical)] max-[680px]:mb-1 max-[680px]:text-[0.68rem]">
             Ingredient clarity
           </p>
@@ -414,12 +391,12 @@ export function HomePage() {
           </div>
 
           {/* Philosophy CTA Button */}
-          <Link
+          <MagneticLink
             className="mt-7 inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full border border-[var(--forest)] bg-transparent px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.1em] text-[var(--forest)] transition-all hover:bg-[var(--forest)] hover:text-[var(--paper)] max-[680px]:mt-5 max-[680px]:min-h-[40px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
             href="/our-story"
           >
             Read our philosophy <span aria-hidden="true">↗</span>
-          </Link>
+          </MagneticLink>
         </div>
       </section>
 
@@ -501,25 +478,6 @@ export function HomePage() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* ── Botanicals that belong together (Ritual Sets) ── */}
-      <section
-        className={`${sectionClass} ${revealClass} max-[680px]:py-8 max-[680px]:px-4`}
-        aria-labelledby="bundles-title"
-      >
-        <div className={`${splitHeadingClass} max-[680px]:mb-5 max-[680px]:gap-2`}>
-          <div>
-            <p className={`${eyebrowClass} max-[680px]:block max-[680px]:text-[0.68rem] max-[680px]:mb-1`}>Rituals in company</p>
-            <h2 className={`${sectionTitleClass} max-[680px]:!text-[clamp(1.4rem,5.5vw,1.95rem)] max-[680px]:!leading-[1.12]`} id="bundles-title">
-              Botanicals that belong together.
-            </h2>
-          </div>
-          <p className="max-w-[460px] pb-1 leading-[1.75] text-[var(--muted)] max-[900px]:p-0 max-[680px]:hidden">
-            Build a wash day, deepen a conditioning mask or keep the full botanical cabinet close.
-          </p>
-        </div>
-        <BundleCards />
       </section>
 
       {/* ── Community Videos & Customer Reviews Section ── */}

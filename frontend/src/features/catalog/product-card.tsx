@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { formatCurrency, type Product } from "@/domain/catalog/products";
 import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
 import { StarRating } from "@/features/reviews/star-rating";
 import { useStore } from "@/features/store/store-provider";
+import styles from "./product-card.module.css";
 
 export function ProductCard({
   product,
@@ -38,6 +39,8 @@ export function ProductCard({
 
   const imageUrl = product.featuredImage?.url || "/images/amla-powder.jpg";
   const imageAlt = product.featuredImage?.altText || product.name;
+  const alternateImage = product.images?.find((image) => image.url !== imageUrl);
+  const [loadedAlternate, setLoadedAlternate] = useState<string | null>(null);
 
   return (
     <article
@@ -64,7 +67,8 @@ export function ProductCard({
         {/* Full-Cover listing product photo */}
         <Link
           href={`/shop/${product.slug}`}
-          className="relative block size-full overflow-hidden transition-transform duration-[520ms] ease-[var(--ease)] group-hover/card:scale-[1.04]"
+          className={styles.photoLink}
+          data-alternate={Boolean(alternateImage && loadedAlternate === alternateImage.url)}
           onClick={() => track("select_item", { item_id: product.slug, placement: "product_card" })}
           aria-label={`View ${product.name}`}
         >
@@ -75,8 +79,20 @@ export function ProductCard({
             loading={eagerImage ? "eager" : "lazy"}
             quality={eagerImage ? 82 : 75}
             sizes="(max-width: 680px) 50vw, (max-width: 900px) 50vw, 33vw"
-            className="size-full object-cover object-center"
+            className={styles.primary}
           />
+          {alternateImage && (
+            <Image
+              src={alternateImage.url}
+              alt=""
+              aria-hidden="true"
+              fill
+              loading="lazy"
+              onLoad={() => setLoadedAlternate(alternateImage.url)}
+              sizes="(max-width: 900px) 50vw, 33vw"
+              className={styles.alternate}
+            />
+          )}
         </Link>
       </div>
 

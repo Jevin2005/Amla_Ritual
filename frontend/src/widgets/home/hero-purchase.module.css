@@ -9,9 +9,9 @@
 .wishlist { display: grid; flex: 0 0 48px; height: 48px; place-items: center; border: 1px solid rgb(23 63 42 / 40%); border-radius: 50%; background: rgb(255 253 246 / 85%); color: var(--forest); font-size: 1.3rem; cursor: pointer; transition: background .25s, color .25s; }
 .wishlist:hover, .wishlist[data-saved="true"] { background: var(--forest); color: var(--paper); }
 .explore { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; color: var(--forest); font-size: .75rem; line-height: 1.5; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
-.explore span { transition: transform .2s; }
-.explore:hover span { transform: translateY(3px); }
+.explore::after { content: ""; position: absolute; left: 0; right: 0; bottom: 6px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform 450ms var(--ease); }
+.explore:hover::after, .explore:focus-visible::after { transform: scaleX(1); }
 .purchase button:focus-visible, .explore:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; }
 @media (max-width: 1000px) { .add { min-height: 46px; } .wishlist { flex-basis: 44px; height: 44px; } .price { font-size: 1.25rem; } }
 @media (max-width: 600px) { .priceRow { padding: 10px 0; } .actions { gap: 6px; } .add { min-height: 44px; padding: 10px 8px; letter-spacing: .025em; gap: 5px; } .explore { letter-spacing: .035em; gap: 4px; } }
-@media (prefers-reduced-motion: reduce) { .add, .wishlist, .explore span { transition: none; } .add:hover:enabled, .explore:hover span { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .add, .wishlist, .explore::after { transition: none; } .add:hover:enabled { transform: none; } }

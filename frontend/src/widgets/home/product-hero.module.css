@@ -7,6 +7,51 @@
 }
 .background { position: absolute; z-index: -2; inset: 0; overflow: hidden; }
 .backgroundImage { object-fit: cover; object-position: center top; }
+.refractionShimmer {
+  position: absolute;
+  inset: -15%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 65% 55% at 50% 40%,
+    rgb(255 255 255 / 42%) 0%,
+    rgb(213 224 177 / 24%) 28%,
+    rgb(142 178 126 / 12%) 52%,
+    transparent 72%
+  );
+  mix-blend-mode: overlay;
+  animation: refractionShimmerAnim calc(1150ms * var(--motion-duration, 1)) var(--ease) forwards;
+}
+.refractionRipples {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.rippleRing1, .rippleRing2, .rippleRing3 {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  margin: -90px 0 0 -90px;
+  border-radius: 50%;
+  border: 2px solid rgb(255 255 255 / 55%);
+  box-shadow: 0 0 40px rgb(183 212 90 / 28%), inset 0 0 30px rgb(255 255 255 / 20%);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+}
+.rippleRing1 {
+  animation: rippleSpread calc(1200ms * var(--motion-duration, 1)) cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
+}
+.rippleRing2 {
+  animation: rippleSpread calc(1300ms * var(--motion-duration, 1)) cubic-bezier(0.12, 0.8, 0.32, 1) calc(120ms * var(--motion-duration, 1)) forwards;
+}
+.rippleRing3 {
+  animation: rippleSpread calc(1400ms * var(--motion-duration, 1)) cubic-bezier(0.12, 0.8, 0.32, 1) calc(240ms * var(--motion-duration, 1)) forwards;
+}
 .hero::before {
   content: "";
   position: absolute;
@@ -37,6 +82,9 @@
   overflow-wrap: anywhere;
 }
 .copy h1 span { display: block; }
+.headlineLine { overflow: clip; padding: .12em .08em; margin: -.12em -.08em; }
+.headlineLine:nth-child(2) { --line-delay: 85ms; }
+.headlineLine:nth-child(3) { --line-delay: 170ms; }
 .copy h1 em {
   display: block;
   margin-top: 5px;
@@ -58,13 +106,81 @@
   background: var(--hero-soft, var(--surface-moss));
   box-shadow: 0 28px 55px rgb(35 52 25 / 22%), 0 0 0 13px rgb(213 224 177 / 20%);
 }
+.poster[role="button"] {
+  cursor: pointer;
+  user-select: none;
+}
+.poster[role="button"]:focus-visible {
+  outline: 3px solid var(--forest);
+  outline-offset: 6px;
+}
+.heroShery {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: inherit;
+  pointer-events: auto;
+}
+.posterBadge {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: rgb(255 252 245 / 92%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgb(82 119 68 / 25%);
+  color: var(--forest);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px rgb(35 52 25 / 14%);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 280ms var(--ease), transform 280ms var(--ease);
+}
+.poster[role="button"]:hover .posterBadge,
+.poster[role="button"]:focus-visible .posterBadge {
+  opacity: 1;
+  transform: translateY(0);
+}
+.posterBadgeArrow {
+  font-size: 0.875rem;
+  transition: transform 200ms ease;
+}
+.poster[role="button"]:hover .posterBadgeArrow {
+  transform: translateX(3px);
+}
 .posterImage {
   object-fit: cover;
   object-position: center;
-  transform: scale(1.025);
-  transition: transform 650ms var(--ease);
 }
-.scene[data-cursor-motion="true"] .posterImage { transform: translate(var(--poster-x, 0px), var(--poster-y, 0px)) scale(1.04); }
+.posterMotion { position: absolute; inset: 0; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .poster { transition: transform calc(950ms * var(--motion-duration, 1)) var(--ease); }
+  .posterMotion { transition: transform calc(850ms * var(--motion-duration, 1)) var(--ease); }
+  .scene[data-pointer-motion="true"] .poster {
+    transform: perspective(1400px) rotateX(calc(var(--pointer-y, 0) * -1.2deg)) rotateY(calc(var(--pointer-x, 0) * 1.5deg));
+  }
+  .scene[data-pointer-motion="true"] .posterMotion {
+    transform: translate3d(calc(var(--pointer-x, 0) * 1.2%), calc(var(--pointer-y, 0) * 1.2%), 0) scale(calc(1.01 + var(--motion-intensity, 1) * .03));
+  }
+  .caption { transition: translate 650ms var(--ease), box-shadow 400ms var(--ease); }
+  .scene[data-pointer-motion="true"] .caption {
+    translate: calc(var(--pointer-x, 0) * -4px) calc(var(--pointer-y, 0) * -3px);
+  }
+  .caption:hover { box-shadow: 0 16px 36px rgb(35 52 25 / 20%); }
+}
 .orbit, .orbit::after {
   position: absolute;
   pointer-events: none;
@@ -148,9 +264,54 @@
 .count { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .hero a:focus-visible, .hero button:focus-visible, .disclosures summary:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; }
 .progress { position: absolute; inset: auto 0 0; height: 2px; background: var(--botanical); transform-origin: left; animation: progress linear both; }
-.hero [data-transition="fade"] { animation: fade .8s ease both; }
-.copy[data-transition="slide"], .scene[data-transition="slide"], .model[data-transition="slide"], .productDetails[data-transition="slide"] { animation: slide .8s var(--ease) both; }
-.background[data-transition="slide"] { animation: fade .8s ease both; }
+.background[data-transition="fade"], .scene[data-transition="fade"], .productDetails[data-transition="fade"] { animation: fade calc(.85s * var(--motion-duration, 1)) ease backwards; }
+.background:is([data-transition="fade"], [data-transition="slide"]) .backgroundImage { animation: backgroundRefraction calc(1100ms * var(--motion-duration, 1)) var(--ease) backwards; }
+.scene[data-transition="slide"], .productDetails[data-transition="slide"] { animation: slide calc(.85s * var(--motion-duration, 1)) var(--ease) backwards; }
+.model:is([data-transition="fade"], [data-transition="slide"]) { animation: modelEntrance calc(880ms * var(--motion-duration, 1)) var(--ease) backwards; }
+.background[data-transition="slide"] { animation: fade calc(.8s * var(--motion-duration, 1)) ease backwards; }
+.copy:is([data-transition="fade"], [data-transition="slide"]) .headlineText {
+  animation: lineReveal calc(780ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards;
+}
+.copy:is([data-transition="fade"], [data-transition="slide"]) .purchase { animation: slide calc(700ms * var(--motion-duration, 1)) var(--ease) calc(210ms * var(--motion-duration, 1)) backwards; }
+.scene:is([data-transition="fade"], [data-transition="slide"]) .posterImage { animation: posterSettle calc(1100ms * var(--motion-duration, 1)) var(--ease) backwards; }
+.scene:is([data-transition="fade"], [data-transition="slide"]) .caption { animation: slide calc(700ms * var(--motion-duration, 1)) var(--ease) calc(260ms * var(--motion-duration, 1)) backwards; }
+.scene:is([data-transition="fade"], [data-transition="slide"]) .orbit { animation: fade calc(1100ms * var(--motion-duration, 1)) ease calc(160ms * var(--motion-duration, 1)) backwards; }
+.productDetails:is([data-transition="fade"], [data-transition="slide"]) { animation-delay: calc(170ms * var(--motion-duration, 1)); }
+.disclosures details[open] .disclosureBody { animation: slide 350ms var(--ease) backwards; }
+@keyframes backgroundRefraction {
+  0% {
+    opacity: 0;
+    transform: scale(1.07) translate3d(0, -6px, 0);
+    filter: blur(14px) brightness(1.16) saturate(1.28) contrast(1.08);
+  }
+  35% {
+    opacity: 0.85;
+    transform: scale(1.03) translate3d(0, 2px, 0);
+    filter: blur(5px) brightness(1.08) saturate(1.12) contrast(1.04);
+  }
+  70% {
+    opacity: 0.98;
+    transform: scale(1.008) translate3d(0, -1px, 0);
+    filter: blur(1px) brightness(1.02) saturate(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0px) brightness(1) saturate(1) contrast(1);
+  }
+}
+@keyframes modelEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.93) translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes lineReveal { from { opacity: 0; transform: translate3d(0, 105%, 0) rotate(1deg); } to { opacity: 1; transform: none; } }
+@keyframes posterSettle { from { transform: scale(1.09); opacity: .5; } to { transform: scale(1); opacity: 1; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
@@ -205,8 +366,10 @@
   .featured { column-gap: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero [data-transition], .progress { animation: none; }
-  .posterImage, .scene[data-cursor-motion="true"] .posterImage { transform: none; transition: none; }
+  .hero [data-transition], .hero [data-transition] *, .progress, .disclosureBody { animation: none !important; }
+  .backgroundImage { animation: none !important; filter: none !important; transform: none !important; }
+  .refractionShimmer, .refractionRipples, .heroShery { display: none !important; }
+  .poster, .posterMotion, .posterImage, .caption { transform: none; translate: none; transition: none; }
   .arrow, .dot, .scrollLink, .disclosures summary > span { transition: none; }
   .scrollLink:hover { transform: none; }
 }

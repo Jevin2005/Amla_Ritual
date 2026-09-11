@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductJar } from "@/features/catalog/product-jar";
 import { getStorefront } from "@/lib/shopify/storefront";
+import { MagneticLink } from "@/shared/ui/magnetic-link";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const processSteps = [
@@ -112,7 +113,7 @@ export default async function OurStoryPage() {
 
         {/* Content */}
         <div className="relative z-[2] mx-auto flex min-h-[100svh] w-full max-w-[1440px] flex-col justify-center px-[var(--page-pad)] py-[130px] text-[var(--paper)] max-[680px]:justify-end max-[680px]:px-4 max-[680px]:pb-[88px] max-[680px]:pt-[110px]">
-          <div className="max-w-[860px]">
+          <div className="atelier-hero-copy max-w-[860px]">
 
             {/* Eyebrow */}
             <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/18 bg-white/8 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[#c8d88e] backdrop-blur-md max-[680px]:mb-5 max-[680px]:gap-2 max-[680px]:px-3.5 max-[680px]:py-1.5 max-[680px]:text-[0.68rem]">
@@ -137,13 +138,13 @@ export default async function OurStoryPage() {
 
             {/* CTAs */}
             <div className="mt-10 flex flex-wrap items-center gap-5 max-[680px]:mt-7 max-[680px]:gap-3">
-              <a
+              <MagneticLink
                 href="#story"
                 className="inline-flex min-h-[50px] items-center justify-center gap-3 rounded-full bg-white px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[var(--forest-dark)] shadow-[0_16px_40px_rgba(0,0,0,0.26)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem] max-[680px]:tracking-[0.12em]"
               >
                 Follow the making
                 <span aria-hidden="true">↓</span>
-              </a>
+              </MagneticLink>
               <Link
                 href="/shop"
                 className="inline-flex min-h-[50px] items-center gap-2 border-b border-white/40 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-[var(--amla)] hover:text-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:text-[0.7rem]"
@@ -246,7 +247,7 @@ export default async function OurStoryPage() {
                   }`}
               >
                 {/* Text block */}
-                <div className={chapter.imageSide === "left" ? "order-2 max-[800px]:order-1" : ""}>
+                <div data-motion-reveal className={chapter.imageSide === "left" ? "order-2 max-[800px]:order-1" : ""}>
                   <p className="mb-4 font-mono text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:mb-2.5 max-[680px]:text-[0.66rem]">
                     {chapter.number}
                   </p>
@@ -267,7 +268,7 @@ export default async function OurStoryPage() {
                 </div>
 
                 {/* Visual panel */}
-                <div className={chapter.imageSide === "left" ? "order-1 max-[800px]:order-2" : ""}>
+                <div data-motion-reveal="image" className={chapter.imageSide === "left" ? "order-1 max-[800px]:order-2" : ""}>
                   <div
                     className="relative aspect-[0.82] w-full overflow-hidden rounded-[var(--radius-lg)] max-[800px]:aspect-[1.2] max-[680px]:aspect-[1.35] max-[680px]:rounded-[var(--radius-md)]"
                     style={{ backgroundColor: chapter.accent + "22" }}

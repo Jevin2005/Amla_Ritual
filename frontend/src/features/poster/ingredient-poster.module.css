@@ -1,0 +1,27 @@
+.gallery { width: 100%; max-width: 480px; margin-inline: auto; }
+.frame { position: relative; aspect-ratio: .72; overflow: hidden; isolation: isolate; border-radius: 160px 160px 6px 6px; background: var(--beige); box-shadow: 0 8px 24px rgb(23 63 42 / 6%); }
+.image { object-fit: cover; object-position: center; animation: imageIn calc(650ms * var(--motion-duration, 1)) var(--ease); }
+.sheryFrame { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; opacity: 0; transition: opacity 250ms ease; touch-action: pan-y; cursor: pointer; }
+.sheryFrame[data-ready="true"], .sheryFrame[data-debug="true"] { opacity: 1; }
+.brand { position: absolute; z-index: 2; left: 14px; bottom: 14px; display: grid; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: var(--forest-dark); color: var(--paper); font-family: var(--font-display); font-size: .875rem; pointer-events: none; }
+.controls { position: absolute; z-index: 3; right: 12px; bottom: 10px; display: flex; align-items: center; gap: 1px; border: 1px solid rgb(255 252 245 / 35%); border-radius: 100px; background: rgb(14 40 28 / 85%); color: var(--paper); padding-inline: 4px; box-shadow: 0 6px 20px rgb(0 0 0 / 12%); backdrop-filter: blur(8px); }
+.controls button { display: grid; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; font-size: 1.1rem; cursor: pointer; transition: background 200ms; }
+.controls button:hover { background: rgb(255 252 245 / 15%); }
+.controls button:focus-visible { outline: 2px solid var(--amla); outline-offset: -3px; }
+.count { min-width: 50px; text-align: center; font-size: .75rem; font-variant-numeric: tabular-nums; }
+.caption { margin: 12px 0 0; font-size: .75rem; font-weight: 700; letter-spacing: .13em; color: var(--muted); text-transform: uppercase; }
+@keyframes imageIn { from { opacity: .45; } to { opacity: 1; } }
+@media (max-width: 900px) { .frame { border-radius: 110px 110px 4px 4px; } }
+@media (max-width: 768px) { .gallery { max-width: 340px; } }
+@media (max-width: 680px) { .frame { border-radius: 90px 90px 4px 4px; } .controls { right: 8px; bottom: 8px; } .brand { left: 10px; bottom: 14px; } .caption { margin-top: 8px; text-align: center; letter-spacing: .08em; } }
+.debugTrigger { margin-top: 12px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--forest); border-radius: 8px; background: transparent; color: var(--forest); font-size: 12px; cursor: pointer; }
+.debugTrigger:disabled { opacity: .5; cursor: default; }
+.debugHint { font-size: 12px; color: var(--muted); }
+.editor { position: fixed; inset: 0; width: min(1280px, calc(100vw - 32px)); height: calc(100dvh - 32px); max-width: none; max-height: none; margin: auto; padding: 0; border: 1px solid #4b5851; border-radius: 14px; overflow: hidden; background: var(--paper); color: var(--forest); }
+.editor::backdrop { background: #0b201bba; }
+.editorHeader { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 100px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.editorHeader strong { font-size: 16px; }
+.editorHeader p { margin: 5px 0 0; font-size: 12px; line-height: 1.5; max-width: 750px; }
+.editorHeader button { flex-shrink: 0; min-height: 44px; padding: 8px 16px; border: 1px solid var(--forest); border-radius: 6px; cursor: pointer; }
+.editorPreview { position: relative; height: calc(100% - 100px); }
+@media (prefers-reduced-motion: reduce) { .image { animation: none; } .sheryFrame, .controls button { transition: none; } }

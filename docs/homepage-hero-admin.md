@@ -57,6 +57,62 @@ One complete Active entry stays on screen. Two or more change automatically in o
 
 Homepage changes refresh within approximately two minutes; product changes can take up to five minutes. Authenticated webhooks can invalidate the shared cache sooner. The collection is shown first when no complete Active hero entries exist.
 
+## Website animation controls
+
+The same **Storefront content → Homepage settings** entry also controls the new text, image and scroll effects:
+
+| Setting | Recommended value | What it controls |
+| --- | --- | --- |
+| Website animations | True | Headline, photo, gallery and scroll reveals. False makes CSS transitions immediate. |
+| Cursor effects | True | Magnetic link text and gently moving images on devices with a mouse. |
+| Animation timing | 1 | 0.6 is quicker; 1.5 is slower. This does not change the slideshow interval. |
+| Cursor movement strength | 1 | 0 disables decorative cursor motion; 0.5 is subtler; 1.5 is stronger. |
+
+The hero's existing **Product transition** still accepts `none` to disable its entrance sequence. **Move 3D products with cursor** must also be enabled for the hero poster and Explore link to follow the cursor. 3D rotation, model cursor motion and automatic slide changes keep their own controls above.
+
+The homepage has staggered headline lines, a gentle poster zoom and tilt, magnetic Explore links, individual catalog reveals, and masked ritual imagery. Catalog photos crossfade to the next available product photo on mouse hover after that photo loads. Product-page photos animate when selected; all photos and the 3D thumbnail remain available.
+
+Phones use shorter scroll reveals and no cursor effects. Operating-system reduced-motion preferences take priority. Content is visible without JavaScript; scroll reveals never hide already-visible content during loading, and keyboard focus immediately reveals its target.
+
+The shared effects use React, CSS and native browser animation APIs. The ingredient poster uses the installed Shery.js library for its native gooey effect and built-in debug panels.
+
+## Ingredient clarity: multiple posters and gooey effect
+
+Open **Content → Metaobjects → Storefront content → Homepage settings**. These fields manage only the poster beside **One ingredient. Nothing hidden.**
+
+1. In **Ingredient clarity — poster images**, upload or select **1–8 images**.
+2. Drag the selected images into the desired order. The first image appears first.
+3. Save. Allow approximately two minutes for the storefront cache to refresh.
+
+| Field | Initial value | Usage |
+| --- | --- | --- |
+| Ingredient clarity — poster images | Original ritual image, then the existing green lifestyle image | Ordered list of Shopify images; portrait images work best. |
+| Ingredient clarity — gooey effect | True | Cursor reveals the next image through an animated liquid mask. |
+| Ingredient clarity — automatically change images | True | Cycle images while the poster is visible. |
+| Ingredient clarity — image duration (seconds) | 6 | 3–30 seconds between automatic changes. |
+| Ingredient clarity — gooey strength | 1 | 0.5 subtle, 1 recommended, 1.5 stronger. |
+| Ingredient clarity — Shery preset (JSON) | `{}` | Paste the complete JSON from Shery's native Save To Clipboard button. Saved shader settings override the strength defaults. |
+
+Two or more images enable previous/next arrows, an image counter and a slideshow pause control. One image stays still. An empty list falls back to the original ritual poster. Removing an image here does not delete the file or change product galleries.
+
+The poster calls the original [Shery.js Dynamic Gooey Effect](https://github.com/sheryianscodingschool/sheryjs#dynamic-gooey-effect) with `style: 6` and `gooey: true`. The arch and cover crop are retained. The website supplies image selection and timed transitions through the library's exposed uniforms; it does not pass `slideStyle`, which would disable Shery's gooey shader.
+
+The effect loads when the poster first enters the viewport. Automatic changes pause on mouse hover, keyboard focus, hidden tabs, leaving the viewport or opening the editor. Reduced motion disables automatic changes and WebGL effects; manual navigation remains available. Website animations, Cursor effects, Animation timing and zero Cursor movement strength are respected. If WebGL or texture loading fails, the regular image gallery remains available. Shopify poster textures request a 1024px width. The library runs in its own iframe because it has no complete teardown API. Its animation callbacks pause offscreen, and removing the iframe releases its entire runtime without affecting the rest of the website.
+
+The source attribution and notices are served at `/THIRD_PARTY_NOTICES.md`. `npm run prepare:shery` copies the pinned, original browser distributions to `public/vendor/shery`; it runs automatically before development and both production builds. No CDN script is fetched at runtime. Run `npm run test:poster` for image ordering, preset parsing, iframe safety, animation scheduling and native panel construction checks.
+
+### Shery's built-in adjustment panel
+
+1. In the local development website (`npm run dev`), scroll to **One ingredient. Nothing hidden.** and click **Open Shery controls** beneath the poster.
+2. Expand the original **Gooey Panel**. It contains Speed, GooeyBall, Threshold, Antialias, Height and Scale, plus Shery's InfiniteGooey controls. The **Debug Panel** contains the base effect and shape controls.
+3. Hover over the image while adjusting. Both panels are created by the installed library through `Shery.imageEffect("#poster", { style: 6, gooey: true, debug: true, config })`. No replacement sliders are rendered by React.
+4. Expand **Debug Panel**, then click its built-in **Save To Clipboard** button.
+5. Paste that JSON into **Content → Metaobjects → Storefront content → Homepage settings → Ingredient clarity — Shery preset (JSON)**. Save and allow approximately two minutes for the storefront cache to refresh.
+
+Clear the preset to `{}` to restore defaults. Existing admin fields still control automatic image changes and timing. Native InfiniteGooey click cycling is available inside the editor; the storefront uses its existing previous/next buttons, counter and autoplay instead. The preset parser retains supported shader controls and discards runtime data such as textures, aspect ratio, time and canvas z-index. Closing the editor discards unsaved adjustments.
+
+The editor launcher is available only in development. The production poster runs with `debug: false`. The normal poster pauses while the separate native editor is open; closing it resumes the poster. The editor respects reduced motion and the animation master switch.
+
 ## Integration
 
 The merchant-owned `homepage_hero` definition is created before entries are written with `metaobjectUpsert`. It has public Storefront read access and the publishable capability. Storefront API returns Active entries only; the website additionally requires a resolved published product and three media references. Normal product queries do not load legacy `custom.hero_*` fields.

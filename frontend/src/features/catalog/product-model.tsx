@@ -35,6 +35,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     let disposed = false;
     const ready = () => setStatus("ready");
     const failed = () => setStatus("error");
+    if ((element as unknown as { loaded?: boolean }).loaded) setStatus("ready");
     element.addEventListener("load", ready);
     element.addEventListener("error", failed);
     const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));

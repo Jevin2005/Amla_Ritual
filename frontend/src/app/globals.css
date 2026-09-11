@@ -306,17 +306,30 @@
 
 body[data-motion-ready="true"] [data-reveal="pending"] {
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
 }
 
-[data-reveal="revealed"] {
-  animation: atelier-reveal 680ms var(--ease) both;
-  animation-delay: var(--reveal-delay, 0ms);
+/* Keyboard navigation never lands on an invisible reveal target. */
+body[data-motion-ready="true"] [data-reveal="pending"]:focus-within {
+  opacity: 1;
 }
 
 .atelier-hero-copy {
-  animation: atelier-hero-copy 720ms var(--ease) 80ms both;
+  animation: atelier-hero-copy calc(720ms * var(--motion-duration, 1)) var(--ease) 80ms backwards;
 }
+
+html[data-site-motion="off"],
+html[data-site-motion="off"] * {
+  scroll-behavior: auto !important;
+}
+
+html[data-site-motion="off"] *,
+html[data-site-motion="off"] *::before,
+html[data-site-motion="off"] *::after {
+  animation: none !important;
+  transition-duration: 0ms !important;
+}
+
+html[data-site-motion="off"] [data-reveal="pending"] { opacity: 1; }
 
 /* Mobile hero animated shapes */
 @keyframes mobile-float-a {

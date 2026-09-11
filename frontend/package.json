@@ -8,6 +8,10 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "prepare:shery": "node scripts/prepare-shery.mjs",
+    "predev": "npm run prepare:shery",
+    "prebuild": "npm run prepare:shery",
+    "prebuild:site": "npm run prepare:shery",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -16,6 +20,7 @@
     "check:site": "vinext check && npm run build:site",
     "lint": "eslint",
     "test:hero": "node --test tests/hero.test.mjs",
+    "test:poster": "node --test tests/ingredient-poster.test.mjs",
     "typecheck": "next typegen && tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run build && npm run check:site"
   },
@@ -23,7 +28,9 @@
     "@google/model-viewer": "4.2.0",
     "next": "16.3.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "sheryjs": "1.0.0-beta.0.1.8",
+    "three": "0.182.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.52.1",
@@ -31,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "0.182.0",
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.34",
     "eslint": "^9",

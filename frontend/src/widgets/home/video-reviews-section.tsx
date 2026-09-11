@@ -9,6 +9,7 @@ import {
   type VideoReview,
 } from "@/domain/reviews/custom-reviews";
 import { ReviewCard } from "@/features/reviews/review-card";
+import { VideoAutoplayPreview } from "@/features/reviews/video-autoplay-preview";
 import { VideoReviewModal } from "@/features/reviews/video-review-modal";
 import { useStore } from "@/features/store/store-provider";
 
@@ -183,34 +184,13 @@ function VideoStoryCard({
   video: VideoReview;
   onOpen: () => void;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const media = getPlayableVideoMedia(video);
   const isDirectVideo = media?.kind === "video";
-
-  useEffect(() => {
-    if (!isDirectVideo || !videoRef.current) return;
-    if (isHovered) {
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Autoplay on hover fallback
-        });
-      }
-    } else {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
-  }, [isHovered, isDirectVideo]);
 
   return (
     <button
       type="button"
       onClick={onOpen}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocus={() => setIsHovered(true)}
-      onBlur={() => setIsHovered(false)}
       className="group relative aspect-[3/4.2] w-[270px] min-w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl border border-black/5 bg-[#0b2117] text-left shadow-[0_8px_24px_rgba(21,59,45,0.08)] transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1.5 hover:border-[var(--botanical)] hover:shadow-[0_18px_40px_rgba(21,59,45,0.18)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:w-[78vw] max-[680px]:min-w-[240px] max-[680px]:max-w-[280px]"
       aria-label={`${isDirectVideo ? "Play" : "Open"} ${video.title} by ${video.creator}`}
     >
@@ -221,23 +201,15 @@ function VideoStoryCard({
           alt=""
           fill
           sizes="(max-width: 680px) 78vw, 270px"
-          className={`object-cover object-center transition-all duration-500 ${isDirectVideo && isHovered
-              ? "opacity-0 scale-105"
-              : "opacity-100 group-hover:scale-105"
-            }`}
+          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Video element for instant hover preview */}
+        {/* Video element: always starts and stays visible on display */}
         {isDirectVideo && (
-          <video
-            ref={videoRef}
-            src={media.url}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${isHovered ? "opacity-100 scale-105" : "opacity-0"
-              }`}
+          <VideoAutoplayPreview
+            url={media.url}
+            poster={video.image}
+            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         )}
 
@@ -246,10 +218,7 @@ function VideoStoryCard({
         {/* Play Icon Badge */}
         <span className="absolute inset-0 grid place-items-center pointer-events-none">
           <span
-            className={`grid size-14 place-items-center rounded-full border shadow-xl backdrop-blur-md transition-all duration-300 ${isHovered
-                ? "scale-110 bg-[var(--botanical)] text-[var(--forest-dark)] border-transparent"
-                : "border-white/80 bg-white/25 text-white group-hover:scale-105"
-              }`}
+            className="grid size-14 place-items-center rounded-full border border-white/80 bg-black/30 text-white shadow-xl backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:border-transparent group-hover:bg-[var(--botanical)] group-hover:text-[var(--forest-dark)]"
           >
             <span className="ml-1 text-xl" aria-hidden="true">
               ▶

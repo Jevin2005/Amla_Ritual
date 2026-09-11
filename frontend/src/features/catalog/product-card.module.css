@@ -1,0 +1,13 @@
+.photoLink { display: block; position: relative; width: 100%; height: 100%; overflow: hidden; }
+.primary, .alternate { object-fit: cover; object-position: center; }
+.alternate { opacity: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .primary, .alternate { transition: opacity calc(550ms * var(--motion-duration, 1)) ease, transform calc(850ms * var(--motion-duration, 1)) var(--ease); }
+  .photoLink:hover .primary, .photoLink:hover .alternate { transform: scale(1.045); }
+  .photoLink[data-alternate="true"]:hover .primary { opacity: 0; }
+  .photoLink[data-alternate="true"]:hover .alternate { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .primary, .alternate { transition: none; }
+  .photoLink:hover .primary, .photoLink:hover .alternate { transform: none; }
+}

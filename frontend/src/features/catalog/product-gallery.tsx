@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import type { Product } from "@/domain/catalog/products";
 import { ProductModel } from "./product-model";
+import styles from "./product-gallery.module.css";
 
 interface ProductGalleryProps {
   product: Product;
@@ -79,6 +80,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
             <ProductModel key={activeImage.url} model={activeImage} eager />
           ) : (
           <Image
+            key={activeImage.url}
             src={activeImage.url}
             alt={activeImage.altText || product.name}
             fill
@@ -86,7 +88,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
             fetchPriority={selectedIndex === 0 ? "high" : "auto"}
             quality={82}
             sizes="(max-width: 960px) 95vw, 48vw"
-            className="size-full object-contain object-center transition-all duration-300 ease-out"
+            className={`size-full object-contain object-center ${styles.photo}`}
           />
           )}
         </div>

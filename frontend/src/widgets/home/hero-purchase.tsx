@@ -3,15 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { formatCurrency, getDefaultVariant } from "@/domain/catalog/products";
 import { useStore } from "@/features/store/store-provider";
+import { MagneticLink } from "@/shared/ui/magnetic-link";
 import styles from "./hero-purchase.module.css";
 
 type HeroPurchaseProps = {
   slug: string;
   name: string;
   pricePaise: number;
+  cursorMotion?: boolean;
 };
 
-export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
+export function HeroPurchase({ slug, name, pricePaise, cursorMotion = true }: HeroPurchaseProps) {
   const {
     products,
     addToCart,
@@ -83,9 +85,10 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
           <span aria-hidden="true">{wished ? "♥" : "♡"}</span>
         </button>
       </div>
-      <a
+      <MagneticLink
         className={styles.explore}
         href="#featured-ritual"
+        motionEnabled={cursorMotion}
       >
         Explore the ritual{" "}
         <span
@@ -93,7 +96,7 @@ export function HeroPurchase({ slug, name, pricePaise }: HeroPurchaseProps) {
         >
           ↓
         </span>
-      </a>
+      </MagneticLink>
     </div>
   );
 }

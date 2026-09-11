@@ -25,6 +25,7 @@ frontend/out/
 /.wrangler
 frontend/dist/
 frontend/.wrangler/
+frontend/public/vendor/shery/
 
 # misc
 .DS_Store

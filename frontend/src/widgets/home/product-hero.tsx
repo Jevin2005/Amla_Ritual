@@ -2,38 +2,66 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
 import { nextHeroIndex, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
 import { ProductModel } from "@/features/catalog/product-model";
+import { SheryPoster } from "@/features/poster/shery-poster";
+import { defaultSheryConfig } from "@/domain/shery-config";
+import { useStore } from "@/features/store/store-provider";
 import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
+import { usePointerMotion } from "@/shared/hooks/use-pointer-motion";
 import { HeroPurchase } from "./hero-purchase";
 import styles from "./product-hero.module.css";
 
 export function ProductHero({ products, entries, settings }: { products: Product[]; entries: HomepageHeroEntry[]; settings: HeroSettings }) {
+  const { content: { motionSettings } } = useStore();
   const slides = getHomepageHeroProducts(products, entries);
   const [selected, setSelected] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [inView, setInView] = useState(false);
+  const [visited, setVisited] = useState(false);
   const [revision, setRevision] = useState(0);
   const root = useRef<HTMLElement>(null);
+  const posterPointer = usePointerMotion<HTMLDivElement>(settings.cursorMotion);
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisible();
   const index = nextHeroIndex(selected, slides.length, 0);
   const product = slides[index];
   const hasProduct = Boolean(product);
   const duration = product?.heroDurationSeconds ?? settings.intervalSeconds;
-  const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && !reducedMotion && pageVisible && inView;
+  const moving = motionSettings.enabled && !reducedMotion;
+  const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && moving && pageVisible && inView;
+  const heroPosters = slides.map((slide) => slide.heroPoster);
 
   useEffect(() => {
     const section = root.current;
     if (!section) return;
-    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.15 });
+    if (!("IntersectionObserver" in window)) {
+      const frame = requestAnimationFrame(() => {
+        setInView(true);
+        setVisited(true);
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+      if (entry.isIntersecting) setVisited(true);
+    }, { threshold: 0.15 });
     observer.observe(section);
     return () => observer.disconnect();
   }, [hasProduct]);
+
+  const goTo = (next: number) => {
+    setSelected((current) => {
+      const target = nextHeroIndex(next, slides.length, 0);
+      if (current === target) return current;
+      setRevision((rev) => rev + 1);
+      return target;
+    });
+  };
 
   useEffect(() => {
     if (!playing) return;
@@ -46,24 +74,8 @@ export function ProductHero({ products, entries, settings }: { products: Product
 
   if (!product) return null;
 
-  const goTo = (next: number) => {
-    setSelected(next);
-    setRevision((current) => current + 1);
-  };
   const name = product.name.replace(/ Powder$/i, "");
-  const animation = reducedMotion ? "none" : settings.transition;
-  const followPoster = (event: PointerEvent<HTMLDivElement>) => {
-    if (!settings.cursorMotion || reducedMotion || event.pointerType !== "mouse" || event.buttons) return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-    event.currentTarget.style.setProperty("--poster-x", `${x * 10}px`);
-    event.currentTarget.style.setProperty("--poster-y", `${y * 8}px`);
-  };
-  const resetPoster = (event: PointerEvent<HTMLDivElement>) => {
-    event.currentTarget.style.setProperty("--poster-x", "0px");
-    event.currentTarget.style.setProperty("--poster-y", "0px");
-  };
+  const animation = reducedMotion || !motionSettings.enabled ? "none" : settings.transition;
 
   return (
     <section ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
@@ -74,25 +86,63 @@ export function ProductHero({ products, entries, settings }: { products: Product
       style={{ "--hero-accent": product.accent, "--hero-soft": product.accentSoft } as CSSProperties}>
       <div className={styles.background} key={`background-${product.heroEntryId}`} data-transition={animation} aria-hidden="true">
         <Image src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
+        <div className={styles.refractionShimmer} />
+        <div className={styles.refractionRipples}>
+          <div className={styles.rippleRing1} />
+          <div className={styles.rippleRing2} />
+          <div className={styles.rippleRing3} />
+        </div>
       </div>
       <div className={styles.layout} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}: ${product.name}`}>
         <div className={styles.copy} key={`copy-${product.heroEntryId}`} data-transition={animation}>
           <h1 id="hero-title">
-            <span>{product.hero?.headlineFirst || "Discover"}</span>
-            <span>{product.hero?.headlineMiddle || name}</span>
-            <em>{product.hero?.headlineItalic || "Botanical ritual."}</em>
+            <span className={styles.headlineLine}><span className={styles.headlineText}>{product.hero?.headlineFirst || "Discover"}</span></span>
+            <span className={styles.headlineLine}><span className={styles.headlineText}>{product.hero?.headlineMiddle || name}</span></span>
+            <span className={styles.headlineLine}><em className={styles.headlineText}>{product.hero?.headlineItalic || "Botanical ritual."}</em></span>
           </h1>
           <div className={styles.purchase}>
-            <HeroPurchase key={product.slug} slug={product.slug} name={product.name} pricePaise={product.pricePaise} />
+            <HeroPurchase key={product.slug} slug={product.slug} name={product.name} pricePaise={product.pricePaise} cursorMotion={settings.cursorMotion} />
           </div>
         </div>
-        <div className={styles.scene} key={`scene-${product.heroEntryId}`} data-transition={animation}
-          data-cursor-motion={settings.cursorMotion && !reducedMotion}
-          onPointerMove={followPoster} onPointerLeave={resetPoster}>
+        <div key={`scene-${product.heroEntryId}`} {...posterPointer} className={styles.scene} data-transition={animation}>
           <div className={styles.orbit} aria-hidden="true" />
-          <div className={styles.poster}>
-            <Image src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
-              sizes="(max-width: 1000px) 48vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+          <div
+            className={styles.poster}
+            role={slides.length > 1 ? "button" : undefined}
+            tabIndex={slides.length > 1 ? 0 : undefined}
+            aria-label={slides.length > 1 ? `Next botanical ritual: ${slides[nextHeroIndex(index, slides.length)].name}` : undefined}
+            onClick={() => {
+              if (slides.length > 1) goTo(nextHeroIndex(index, slides.length));
+            }}
+            onKeyDown={(event) => {
+              if (slides.length > 1 && (event.key === "Enter" || event.key === " ")) {
+                event.preventDefault();
+                goTo(nextHeroIndex(index, slides.length));
+              }
+            }}
+          >
+            <div className={styles.posterMotion}>
+              <Image src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
+                sizes="(max-width: 1000px) 48vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+              {visited && slides.length > 1 && moving && (
+                <SheryPoster
+                  images={heroPosters}
+                  config={defaultSheryConfig}
+                  selected={index}
+                  active={inView && pageVisible}
+                  cursor={motionSettings.cursor && motionSettings.intensity > 0 && !focused}
+                  duration={1100 * motionSettings.duration}
+                  className={styles.heroShery}
+                  onSelect={goTo}
+                />
+              )}
+            </div>
+            {slides.length > 1 && (
+              <span className={styles.posterBadge} aria-hidden="true">
+                <span>Next ritual</span>
+                <span className={styles.posterBadgeArrow}>→</span>
+              </span>
+            )}
           </div>
           <Link href={`/shop/${product.slug}`} className={styles.caption}>
             <span className={styles.captionMark} aria-hidden="true">N</span>
