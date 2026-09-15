@@ -1,0 +1,163 @@
+{
+  "date": "2026-09-11",
+  "productId": "gid://shopify/Product/8531585368250",
+  "cause": "Product homepage fields were populated, but no corresponding homepage_hero metaobject entry existed.",
+  "before": {
+    "nodes": [
+      {
+        "id": "gid://shopify/Metaobject/264714846394",
+        "handle": "wildcrafted-amla-powder",
+        "displayName": "Wildcrafted Amla Powder",
+        "capabilities": {
+          "publishable": {
+            "status": "ACTIVE"
+          }
+        },
+        "fields": [
+          {
+            "key": "name",
+            "value": "Wildcrafted Amla Powder"
+          },
+          {
+            "key": "product",
+            "value": "gid://shopify/Product/8498815107258"
+          },
+          {
+            "key": "model",
+            "value": "gid://shopify/Model3d/34152740651194"
+          },
+          {
+            "key": "poster",
+            "value": "gid://shopify/MediaImage/33856343113914"
+          },
+          {
+            "key": "background",
+            "value": "gid://shopify/MediaImage/34152862548154"
+          },
+          {
+            "key": "order",
+            "value": "1"
+          },
+          {
+            "key": "duration",
+            "value": "8"
+          },
+          {
+            "key": "eyebrow",
+            "value": "NatureMist Hair Care"
+          },
+          {
+            "key": "headline_first",
+            "value": "Discover"
+          },
+          {
+            "key": "headline_middle",
+            "value": "Shikakai"
+          },
+          {
+            "key": "headline_italic",
+            "value": "Your botanical ritual."
+          },
+          {
+            "key": "description",
+            "value": "Bring a botanical touch to your hair-care ritual with NatureMist Shikakai Powder."
+          },
+          {
+            "key": "badge_text",
+            "value": "Shikakai Powder"
+          },
+          {
+            "key": "badge_subtitle",
+            "value": "200 g · Herbal hair care"
+          }
+        ]
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "eyJsYXN0X2lkIjoyNjQ3MTQ4NDYzOTQsImxhc3RfdmFsdWUiOiIyNjQ3MTQ4NDYzOTQifQ=="
+    }
+  },
+  "created": {
+    "id": "gid://shopify/Metaobject/273585995962",
+    "handle": "reetha-powder",
+    "capabilities": {
+      "publishable": {
+        "status": "ACTIVE"
+      }
+    },
+    "fields": [
+      {
+        "key": "name",
+        "value": "Reetha Powder"
+      },
+      {
+        "key": "product",
+        "value": "gid://shopify/Product/8531585368250"
+      },
+      {
+        "key": "model",
+        "value": "gid://shopify/Model3d/34257032773818"
+      },
+      {
+        "key": "poster",
+        "value": "gid://shopify/MediaImage/34257228005562"
+      },
+      {
+        "key": "background",
+        "value": "gid://shopify/MediaImage/34256933978298"
+      },
+      {
+        "key": "order",
+        "value": "2"
+      },
+      {
+        "key": "duration",
+        "value": "3"
+      },
+      {
+        "key": "eyebrow",
+        "value": "NatureMist Botanical Hair Care"
+      },
+      {
+        "key": "headline_first",
+        "value": "Discover"
+      },
+      {
+        "key": "headline_middle",
+        "value": "Reetha"
+      },
+      {
+        "key": "headline_italic",
+        "value": "Your wash-day ritual."
+      },
+      {
+        "key": "description",
+        "value": "Make preparation part of wash day with NatureMist Reetha Powder. Explore a botanical cleansing ritual, with product directions to guide each application."
+      },
+      {
+        "key": "badge_text",
+        "value": "Reetha Powder"
+      },
+      {
+        "key": "badge_subtitle",
+        "value": "250g"
+      }
+    ]
+  },
+  "verifiedPublished": {
+    "nodes": [
+      {
+        "isPublished": true,
+        "publication": {
+          "id": "gid://shopify/Publication/197683970234"
+        }
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "eyJsYXN0X2lkIjozODA0Njk4NzE5MDQ1OCwibGFzdF92YWx1ZSI6MzgwNDY5ODcxOTA0NTh9"
+    }
+  },
+  "applicationCodeChanged": false
+}

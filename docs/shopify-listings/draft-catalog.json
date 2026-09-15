@@ -1,0 +1,202 @@
+[
+  {
+    "key": "amla",
+    "title": "NatureMist Amla Powder",
+    "suggestedHandle": "amla-powder",
+    "seoTitle": "Amla Powder for Hair Rituals | NatureMist",
+    "seoDescription": "Explore NatureMist Amla Powder for a powder-based hair ritual. Read ingredient details, preparation guidance and pack information before choosing.",
+    "productType": "Botanical Hair Powder",
+    "tags": [
+      "Amla",
+      "Hair Care",
+      "Hair Powder",
+      "Conditioning Ritual"
+    ],
+    "shortDescription": "Bring Amla into a conditioning-focused hair-care routine with NatureMist Amla Powder. Its powder format makes preparation part of the ritual, with the product pack guiding each step.",
+    "descriptionHtml": "<h2>Amla for your hair-care ritual</h2><p>Bring Amla into a conditioning-focused hair-care routine with NatureMist Amla Powder. Its powder format makes preparation part of the ritual, with the product pack guiding each step.</p><h3>Product overview</h3><ul><li><strong>Format:</strong> Powder</li><li><strong>Intended routine:</strong> Conditioning-focused hair care</li></ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Check the product guidance before using on coloured or lightened hair.</p>",
+    "suggestedSubtitle": "Your conditioning ritual",
+    "ritualStep": "Condition",
+    "outstandingFacts": [
+      "Resolve the identity and intended role of the two existing Amla-labelled Shopify products before creating, renaming or linking any Amla listing.",
+      "The existing amla record has an unverified blank-jar image; the Wildcrafted Amla Powder record has photos labelled Shikakai 200 g but Amla 250 g metafields. Obtain the correct approved pack and product identity for each record.",
+      "Confirm full ingredient declaration, botanical identity, plant part and any additional ingredients from approved pack or supplier records.",
+      "Confirm net weight, pack options, price, any supported compare-at price, SKU, barcode, stock, shipping weight and fulfilment details.",
+      "Confirm intended cosmetic use, preparation method, application area, contact time, frequency, rinsing, compatibility, testing instructions, precautions and storage from approved directions.",
+      "Obtain matching real product and label photographs, with accurate image alt text.",
+      "Approve the final wording, category, collection membership and publication channels. Preserve existing URLs and review links until any handle migration is planned."
+    ],
+    "sourcesAndLimits": [
+      "Content proposal only; this is not an approved specification or a published listing.",
+      "Based on the intended Amla product and conditioning positioning in frontend/src/domain/catalog/products.ts and the listing structure in docs/product-entry-form.md.",
+      "Local product records explicitly use preview availability and unconfirmed net weights. Preview prices, label claims, directions and photographs are not accepted as verified facts.",
+      "Live-store identity conflicts are unresolved. The suggested handle is a proposal, not an instruction to replace an existing handle.",
+      "No purity, organic, wildcrafted, origin, certification, hair-growth, treatment or guaranteed-results claims are included. Publication requires the outstanding facts to be resolved."
+    ]
+  },
+  {
+    "key": "reetha",
+    "title": "NatureMist Reetha Powder",
+    "suggestedHandle": "reetha-powder",
+    "seoTitle": "Reetha Powder for Hair-Cleansing Rituals | NatureMist",
+    "seoDescription": "Explore NatureMist Reetha Powder for a hair-cleansing ritual. Review the ingredients, pack details and preparation instructions before use.",
+    "productType": "Botanical Hair Powder",
+    "tags": [
+      "Reetha",
+      "Hair Care",
+      "Hair Powder",
+      "Cleansing Ritual"
+    ],
+    "shortDescription": "Explore a powder-based cleansing routine with NatureMist Reetha Powder. Intended for hair-cleansing rituals, it brings a preparation step to wash day that you can plan around your usual hair care.",
+    "descriptionHtml": "<h2>A botanical step for wash day</h2><p>Explore a powder-based cleansing routine with NatureMist Reetha Powder. Intended for hair-cleansing rituals, it brings a preparation step to wash day that you can plan around your usual hair care.</p><h3>Product overview</h3><ul><li><strong>Format:</strong> Powder</li><li><strong>Intended routine:</strong> Hair-cleansing rituals</li></ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Read the handling precautions carefully, including the guidance on avoiding eye contact.</p>",
+    "suggestedSubtitle": "Your cleansing ritual",
+    "ritualStep": "Cleanse",
+    "outstandingFacts": [
+      "Confirm the product exists as a distinct saleable Reetha powder and approve its cosmetic cleansing use.",
+      "Confirm full ingredient declaration, botanical identity, exact plant part and any additional ingredients from approved records.",
+      "Confirm net weight, pack options, price, any supported compare-at price, SKU, barcode, stock, shipping weight and fulfilment details.",
+      "Confirm the approved preparation, quantity, application, contact time if relevant, frequency and rinsing directions.",
+      "Confirm eye-contact precautions, testing instructions, scalp and hair suitability, other precautions, product pairing guidance and storage.",
+      "Obtain real photographs of the correct product and final label; verify every visible claim and image alt text.",
+      "Approve category, collections, final copy and intended publication channels before activation."
+    ],
+    "sourcesAndLimits": [
+      "Content proposal only; this is not an approved specification or a published listing.",
+      "The intended Reetha product and cleansing positioning come from frontend/src/domain/catalog/products.ts. The required-field structure comes from docs/product-entry-form.md.",
+      "The repository provides a preview record, not verified commercial or pack data. No preview price, weight, preparation ratio or application time is carried into this proposal.",
+      "The description does not promise cleansing efficacy, mildness, compatibility, purity, organic status, origin, certification or medical benefits. Confirm the intended use and all outstanding facts before publication."
+    ]
+  },
+  {
+    "key": "shikakai",
+    "title": "NatureMist Shikakai Powder",
+    "suggestedHandle": "shikakai-powder",
+    "seoTitle": "Shikakai Powder for Hair-Cleansing Rituals | NatureMist",
+    "seoDescription": "Discover NatureMist Shikakai Powder for a powder-based wash-day ritual. Check ingredients, preparation guidance and the selected pack details.",
+    "productType": "Botanical Hair Powder",
+    "tags": [
+      "Shikakai",
+      "Hair Care",
+      "Hair Powder",
+      "Cleansing Ritual"
+    ],
+    "shortDescription": "Make preparation part of wash day with NatureMist Shikakai Powder. Intended for a cleansing-focused hair ritual, this powder format has its own mixing, application and rinsing directions.",
+    "descriptionHtml": "<h2>Shikakai for your wash-day routine</h2><p>Make preparation part of wash day with NatureMist Shikakai Powder. Intended for a cleansing-focused hair ritual, this powder format has its own mixing, application and rinsing directions.</p><h3>Product overview</h3><ul><li><strong>Format:</strong> Powder</li><li><strong>Intended routine:</strong> Hair-cleansing rituals</li></ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Check the product guidance before combining it with other powders or using on colour-treated hair.</p>",
+    "suggestedSubtitle": "A considered wash-day ritual",
+    "ritualStep": "Cleanse",
+    "outstandingFacts": [
+      "Resolve whether the Shikakai 200 g photographs currently attached to Wildcrafted Amla Powder belong to this intended product; do not treat that record's Amla 250 g metafields as Shikakai facts.",
+      "Confirm a distinct Shikakai product identity, approved packaging and intended cosmetic cleansing use before creating or linking a record.",
+      "Confirm full ingredient declaration, botanical identity, exact plant part and any additional ingredients from approved records.",
+      "Confirm net weight, pack options, price, any supported compare-at price, SKU, barcode, stock, shipping weight and fulfilment details.",
+      "Confirm preparation method, amount, application, contact time if relevant, frequency, rinsing, testing, precautions, compatibility and storage.",
+      "Obtain or correctly assign matching real product photographs and label views; verify alt text against the approved pack.",
+      "Approve category, collections, final copy and publication channels; account for existing product IDs, URLs and reviews if correcting a mislabelled record."
+    ],
+    "sourcesAndLimits": [
+      "Content proposal only; this is not an approved specification or a published listing.",
+      "The intended Shikakai product and cleansing role come from frontend/src/domain/catalog/products.ts. Listing requirements come from docs/product-entry-form.md.",
+      "The live-store photo and metafield conflict has not been resolved. Neither the photographed net weight nor the conflicting Amla data is adopted as a verified Shikakai specification.",
+      "Local prices and preparation guidance are preview data. This proposal does not assert a price, net weight, botanical species, exact plant part, purity, organic status, mildness, compatibility or guaranteed hair results."
+    ]
+  },
+  {
+    "key": "bhringraj",
+    "title": "NatureMist Bhringraj Powder",
+    "suggestedHandle": "bhringraj-powder",
+    "seoTitle": "Bhringraj Powder for Hair Rituals | NatureMist",
+    "seoDescription": "Explore NatureMist Bhringraj Powder for a conditioning-focused hair ritual. Read ingredients, preparation guidance and pack details before choosing.",
+    "productType": "Botanical Hair Powder",
+    "tags": [
+      "Bhringraj",
+      "Hair Care",
+      "Hair Powder",
+      "Conditioning Ritual"
+    ],
+    "shortDescription": "Make room for a botanical step in your routine with NatureMist Bhringraj Powder. Intended for conditioning-focused hair care, its powder format lets you prepare an application by following the product's own directions.",
+    "descriptionHtml": "<h2>A Bhringraj hair-care ritual</h2><p>Make room for a botanical step in your routine with NatureMist Bhringraj Powder. Intended for conditioning-focused hair care, its powder format lets you prepare an application by following the product's own directions.</p><h3>Product overview</h3><ul><li><strong>Format:</strong> Powder</li><li><strong>Intended routine:</strong> Conditioning-focused hair care</li></ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Review the intended application areas and product-specific precautions before use.</p>",
+    "suggestedSubtitle": "A conditioning-focused ritual",
+    "ritualStep": "Condition",
+    "outstandingFacts": [
+      "Confirm a distinct Bhringraj product, approved intended cosmetic use and permitted application areas.",
+      "Confirm the full ingredient declaration, botanical species, exact plant part and any additional ingredients from approved pack or supplier records.",
+      "Confirm net weight, pack options, price, any supported compare-at price, SKU, barcode, stock, shipping weight and fulfilment details.",
+      "Confirm preparation, amount, application area, contact time, frequency, rinsing, testing, precautions, colour-related guidance and storage.",
+      "Verify any conditioning claims and any proposed product pairings before adding more specific benefits or suitability statements.",
+      "Obtain matching real product and final-label photographs, with accurate image alt text.",
+      "Approve category, collections, final copy and publication channels before activation."
+    ],
+    "sourcesAndLimits": [
+      "Content proposal only; this is not an approved specification or a published listing.",
+      "Based on the intended Bhringraj product and conditioning role in frontend/src/domain/catalog/products.ts, using the required-field structure in docs/product-entry-form.md.",
+      "The repository's botanical species, whole-plant declaration, price, image label and preparation timing remain preview material pending verification.",
+      "No hair-growth, hair-loss, scalp-treatment, purity, origin, organic, certification or guaranteed-results claims are made. All commercial and use specifications must be verified before publication."
+    ]
+  },
+  {
+    "key": "hibiscus",
+    "title": "NatureMist Hibiscus Powder",
+    "suggestedHandle": "hibiscus-powder",
+    "seoTitle": "Hibiscus Powder for Hair Rituals | NatureMist",
+    "seoDescription": "Discover NatureMist Hibiscus Powder for a conditioning-focused hair ritual. Explore ingredient information, preparation guidance and pack details.",
+    "productType": "Botanical Hair Powder",
+    "tags": [
+      "Hibiscus",
+      "Hair Care",
+      "Hair Powder",
+      "Conditioning Ritual"
+    ],
+    "shortDescription": "Explore a conditioning-focused ritual with NatureMist Hibiscus Powder. This powder format brings a preparation step to your routine, guided by the directions for the pack you choose.",
+    "descriptionHtml": "<h2>Hibiscus for your hair-care routine</h2><p>Explore a conditioning-focused ritual with NatureMist Hibiscus Powder. This powder format brings a preparation step to your routine, guided by the directions for the pack you choose.</p><h3>Product overview</h3><ul><li><strong>Format:</strong> Powder</li><li><strong>Intended routine:</strong> Conditioning-focused hair care</li></ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Read any colour-transfer guidance before use, especially on lightened or colour-treated hair.</p>",
+    "suggestedSubtitle": "Your Hibiscus conditioning ritual",
+    "ritualStep": "Condition",
+    "outstandingFacts": [
+      "Confirm a distinct Hibiscus product and approved intended cosmetic hair use.",
+      "Confirm full ingredient declaration, exact botanical species, plant part and any additional ingredients; do not infer flower-only composition from the product name.",
+      "Confirm net weight, pack options, price, any supported compare-at price, SKU, barcode, stock, shipping weight and fulfilment details.",
+      "Confirm preparation, amount, application, contact time, frequency, rinsing, testing, precautions and storage.",
+      "Confirm any colour-transfer or staining guidance and suitability for light, grey, bleached or colour-treated hair from approved product information.",
+      "Verify any specific softness, shine or conditioning benefit claims and product-pairing instructions before adding them.",
+      "Obtain matching real product and final-label photographs; approve alt text, category, collections, final wording and publication channels."
+    ],
+    "sourcesAndLimits": [
+      "Content proposal only; this is not an approved specification or a published listing.",
+      "The intended Hibiscus product and conditioning role come from frontend/src/domain/catalog/products.ts. Listing requirements come from docs/product-entry-form.md.",
+      "The repository's flower declaration, species, appearance, price, image label and application timing are preview information requiring verification.",
+      "No floral species, exact plant part, purity, organic status, origin, certification, hair-colour outcome, treatment benefit or guaranteed conditioning result is asserted. Confirm product-specific directions before publication."
+    ]
+  },
+  {
+    "key": "indigo",
+    "title": "NatureMist Indigo Powder",
+    "suggestedHandle": "indigo-powder",
+    "seoTitle": "Indigo Powder for Hair-Colour Rituals | NatureMist",
+    "seoDescription": "Explore NatureMist Indigo Powder for a hair-colour ritual. Review the complete colour-use directions, testing guidance and pack details before use.",
+    "productType": "Botanical Hair Colour Powder",
+    "tags": [
+      "Indigo",
+      "Hair Care",
+      "Hair Powder",
+      "Hair Colour",
+      "Colour Ritual"
+    ],
+    "shortDescription": "Explore a powder-based colour routine with NatureMist Indigo Powder. Intended for hair colouring, it requires a complete preparation and application process. Read the full directions before you begin.",
+    "descriptionHtml": "<h2>Plan your botanical hair-colour ritual</h2><p>Explore a powder-based colour routine with NatureMist Indigo Powder. Intended for hair colouring, it requires a complete preparation and application process. Read the full directions before you begin.</p><h3>Product overview</h3><ul><li><strong>Format:</strong> Powder</li><li><strong>Intended routine:</strong> Hair-colour rituals</li></ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Review the testing and colour-compatibility instructions, including any separate products or steps required. Colour results are not guaranteed.</p>",
+    "suggestedSubtitle": "A considered hair-colour ritual",
+    "ritualStep": "Colour",
+    "outstandingFacts": [
+      "Confirm a distinct Indigo product, approved cosmetic hair-colour use and applicable final-pack labelling.",
+      "Confirm full ingredient declaration, botanical identity, exact plant part and any additives or other ingredients; do not infer a single-ingredient composition.",
+      "Confirm net weight, pack options, price, any supported compare-at price, SKU, barcode, stock, shipping weight and fulfilment details.",
+      "Obtain complete approved colour-process directions: preparation method, quantity, mixing-to-application interval, application timing, rinsing, any separate product or step, and testing procedures.",
+      "Confirm all use restrictions, protective equipment, eye and skin precautions, compatibility with prior treatments, colour-result limitations, surface precautions and storage.",
+      "Verify any shade, coverage, processing or compatibility claim before using it in customer copy. Do not borrow timing or ratios from preview data.",
+      "Obtain matching real product and final-label photographs; approve alt text, category, collections, final copy and publication channels before activation."
+    ],
+    "sourcesAndLimits": [
+      "Content proposal only; this is not an approved specification or a published listing.",
+      "Based on the intended Indigo product and Colour ritual role in frontend/src/domain/catalog/products.ts, using the required-field structure in docs/product-entry-form.md.",
+      "The repository's leaf declaration, botanical species, price, image label, mixing window, pairing advice and colour-result statements remain preview material pending approval.",
+      "This proposal provides no preparation ratio, process timing, guaranteed shade, grey-coverage claim, compatibility assurance, purity claim, certification or treatment benefit. Complete approved colour-use directions are required before publication."
+    ]
+  }
+]

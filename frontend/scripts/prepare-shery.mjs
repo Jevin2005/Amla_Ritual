@@ -18,5 +18,6 @@ await Promise.all([
   copyFile(fromShery.resolve("gsap/dist/gsap.min.js"), join(output, "gsap.min.js")),
   build({ stdin: { contents: 'import ControlKit from "controlkit"; window.ControlKit = ControlKit;', resolveDir: shery }, bundle: true, minify: true, outfile: join(output, "controlkit.js"), platform: "browser", legalComments: "eof" }),
   build({ entryPoints: [join(root, "src/features/poster/shery-frame-runtime.ts")], bundle: true, minify: true, outfile: join(output, "runtime.js"), platform: "browser", target: "es2020" }),
+  build({ entryPoints: [join(root, "src/features/background/shery-background-runtime.ts")], bundle: true, minify: true, outfile: join(output, "background-runtime.js"), platform: "browser", target: "es2020" }),
 ]);
-console.log("Prepared original Shery.js browser distribution and native ControlKit panel.");
+console.log("Prepared original Shery.js browser distribution, poster runtime, and background runtime.");

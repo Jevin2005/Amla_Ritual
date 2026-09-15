@@ -1,0 +1,604 @@
+{
+  "capturedOn": "2026-09-11",
+  "amla": {
+    "id": "gid://shopify/Product/8494763311290",
+    "title": "NatureMist Amla Powder",
+    "vendor": "NatureMist",
+    "status": "ACTIVE",
+    "productType": "Botanical Powder",
+    "descriptionHtml": "<p>Amla powder from NatureMist.</p>",
+    "tags": [
+      "Amla",
+      "Botanical Powder"
+    ],
+    "totalInventory": 1000,
+    "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageJul5_2026_06_20_42PM.png?v=1787420413",
+    "images": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageJul5_2026_06_20_42PM.png?v=1787420413",
+        "altText": "",
+        "mediaId": "gid://shopify/MediaImage/33778363433146"
+      }
+    ],
+    "totalVariants": 1,
+    "variants": [
+      {
+        "id": "gid://shopify/ProductVariant/46431988940986",
+        "title": "Default Title",
+        "sku": null,
+        "price": "234.00",
+        "inventoryQuantity": 1000
+      }
+    ],
+    "currencyCode": "INR"
+  },
+  "createdDrafts": [
+    {
+      "key": "reetha",
+      "id": "gid://shopify/Product/8531585368250",
+      "title": "NatureMist Reetha Powder",
+      "vendor": "NatureMist",
+      "status": "DRAFT",
+      "productType": "Botanical Hair Powder",
+      "descriptionHtml": "<h2>A botanical step for wash day</h2><p>Explore a powder-based cleansing routine with NatureMist Reetha Powder. Intended for hair-cleansing rituals, it brings a preparation step to wash day that you can plan around your usual hair care.</p><h3>Product overview</h3><ul>\n<li>\n<strong>Format:</strong> Powder</li>\n<li>\n<strong>Intended routine:</strong> Hair-cleansing rituals</li>\n</ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Read the handling precautions carefully, including the guidance on avoiding eye contact.</p>",
+      "tags": [
+        "Cleansing Ritual",
+        "Hair Care",
+        "Hair Powder",
+        "listing-details-pending",
+        "price-required",
+        "Reetha"
+      ],
+      "totalInventory": 0,
+      "featuredImageUrl": null,
+      "images": [],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400329402",
+          "title": "Default Title",
+          "sku": null,
+          "price": "0.00",
+          "inventoryQuantity": 0
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "key": "bhringraj",
+      "id": "gid://shopify/Product/8531585433786",
+      "title": "NatureMist Bhringraj Powder",
+      "vendor": "NatureMist",
+      "status": "DRAFT",
+      "productType": "Botanical Hair Powder",
+      "descriptionHtml": "<h2>A Bhringraj hair-care ritual</h2><p>Make room for a botanical step in your routine with NatureMist Bhringraj Powder. Intended for conditioning-focused hair care, its powder format lets you prepare an application by following the product's own directions.</p><h3>Product overview</h3><ul>\n<li>\n<strong>Format:</strong> Powder</li>\n<li>\n<strong>Intended routine:</strong> Conditioning-focused hair care</li>\n</ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Review the intended application areas and product-specific precautions before use.</p>",
+      "tags": [
+        "Bhringraj",
+        "Conditioning Ritual",
+        "Hair Care",
+        "Hair Powder",
+        "listing-details-pending",
+        "price-required"
+      ],
+      "totalInventory": 0,
+      "featuredImageUrl": null,
+      "images": [],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400558778",
+          "title": "Default Title",
+          "sku": null,
+          "price": "0.00",
+          "inventoryQuantity": 0
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "key": "hibiscus",
+      "id": "gid://shopify/Product/8531585499322",
+      "title": "NatureMist Hibiscus Powder",
+      "vendor": "NatureMist",
+      "status": "DRAFT",
+      "productType": "Botanical Hair Powder",
+      "descriptionHtml": "<h2>Hibiscus for your hair-care routine</h2><p>Explore a conditioning-focused ritual with NatureMist Hibiscus Powder. This powder format brings a preparation step to your routine, guided by the directions for the pack you choose.</p><h3>Product overview</h3><ul>\n<li>\n<strong>Format:</strong> Powder</li>\n<li>\n<strong>Intended routine:</strong> Conditioning-focused hair care</li>\n</ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Read any colour-transfer guidance before use, especially on lightened or colour-treated hair.</p>",
+      "tags": [
+        "Conditioning Ritual",
+        "Hair Care",
+        "Hair Powder",
+        "Hibiscus",
+        "listing-details-pending",
+        "price-required"
+      ],
+      "totalInventory": 0,
+      "featuredImageUrl": null,
+      "images": [],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400722618",
+          "title": "Default Title",
+          "sku": null,
+          "price": "0.00",
+          "inventoryQuantity": 0
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "key": "indigo",
+      "id": "gid://shopify/Product/8531585597626",
+      "title": "NatureMist Indigo Powder",
+      "vendor": "NatureMist",
+      "status": "DRAFT",
+      "productType": "Botanical Hair Colour Powder",
+      "descriptionHtml": "<h2>Plan your botanical hair-colour ritual</h2><p>Explore a powder-based colour routine with NatureMist Indigo Powder. Intended for hair colouring, it requires a complete preparation and application process. Read the full directions before you begin.</p><h3>Product overview</h3><ul>\n<li>\n<strong>Format:</strong> Powder</li>\n<li>\n<strong>Intended routine:</strong> Hair-colour rituals</li>\n</ul><h3>How to use</h3><p>Follow the preparation, application and rinsing directions on the product pack, including any testing instructions and precautions. Use the stated amounts and timings for this product.</p><h3>Before you choose</h3><p>Check the full ingredient declaration, selected net weight and storage instructions. Review the testing and colour-compatibility instructions, including any separate products or steps required. Colour results are not guaranteed.</p>",
+      "tags": [
+        "Colour Ritual",
+        "Hair Care",
+        "Hair Colour",
+        "Hair Powder",
+        "Indigo",
+        "listing-details-pending",
+        "price-required"
+      ],
+      "totalInventory": 0,
+      "featuredImageUrl": null,
+      "images": [],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400853690",
+          "title": "Default Title",
+          "sku": null,
+          "price": "0.00",
+          "inventoryQuantity": 0
+        }
+      ],
+      "currencyCode": "INR"
+    }
+  ],
+  "verifiedProductMetadata": [
+    {
+      "key": "reetha",
+      "id": "gid://shopify/Product/8531585368250",
+      "title": "NatureMist Reetha Powder",
+      "handle": "reetha-powder",
+      "seo": {
+        "title": "Reetha Powder for Hair-Cleansing Rituals | NatureMist",
+        "description": "Explore NatureMist Reetha Powder for a hair-cleansing ritual. Review the ingredients, pack details and preparation instructions before use."
+      },
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "metafields": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Metafield/39475172245690",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Hair-cleansing ritual"
+          },
+          {
+            "id": "gid://shopify/Metafield/39475172278458",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Cleanse"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjozOTQ3NTE3MjI3ODQ1OCwibGFzdF92YWx1ZSI6IjM5NDc1MTcyMjc4NDU4In0="
+        }
+      }
+    },
+    {
+      "key": "bhringraj",
+      "id": "gid://shopify/Product/8531585433786",
+      "title": "NatureMist Bhringraj Powder",
+      "handle": "bhringraj-powder",
+      "seo": {
+        "title": "Bhringraj Powder for Hair Rituals | NatureMist",
+        "description": "Explore NatureMist Bhringraj Powder for a conditioning-focused hair ritual. Read ingredients, preparation guidance and pack details before choosing."
+      },
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "metafields": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Metafield/39475172311226",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Hair-conditioning ritual"
+          },
+          {
+            "id": "gid://shopify/Metafield/39475172343994",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Condition"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjozOTQ3NTE3MjM0Mzk5NCwibGFzdF92YWx1ZSI6IjM5NDc1MTcyMzQzOTk0In0="
+        }
+      }
+    },
+    {
+      "key": "hibiscus",
+      "id": "gid://shopify/Product/8531585499322",
+      "title": "NatureMist Hibiscus Powder",
+      "handle": "hibiscus-powder",
+      "seo": {
+        "title": "Hibiscus Powder for Hair Rituals | NatureMist",
+        "description": "Discover NatureMist Hibiscus Powder for a conditioning-focused hair ritual. Explore ingredient information, preparation guidance and pack details."
+      },
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "metafields": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Metafield/39475172376762",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Hair-conditioning ritual"
+          },
+          {
+            "id": "gid://shopify/Metafield/39475172409530",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Condition"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjozOTQ3NTE3MjQwOTUzMCwibGFzdF92YWx1ZSI6IjM5NDc1MTcyNDA5NTMwIn0="
+        }
+      }
+    },
+    {
+      "key": "indigo",
+      "id": "gid://shopify/Product/8531585597626",
+      "title": "NatureMist Indigo Powder",
+      "handle": "indigo-powder",
+      "seo": {
+        "title": "Indigo Powder for Hair-Colour Rituals | NatureMist",
+        "description": "Explore NatureMist Indigo Powder for a hair-colour ritual. Review the complete colour-use directions, testing guidance and pack details before use."
+      },
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "metafields": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Metafield/39475172442298",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Hair-colour ritual"
+          },
+          {
+            "id": "gid://shopify/Metafield/39475172475066",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Colour"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjozOTQ3NTE3MjQ3NTA2NiwibGFzdF92YWx1ZSI6IjM5NDc1MTcyNDc1MDY2In0="
+        }
+      }
+    }
+  ],
+  "catalogue": {
+    "data": {
+      "products": {
+        "edges": [
+          {
+            "node": {
+              "id": "gid://shopify/Product/8494763311290",
+              "title": "NatureMist Amla Powder",
+              "handle": "amla",
+              "status": "ACTIVE",
+              "createdAt": "2026-08-22T17:41:04Z",
+              "updatedAt": "2026-09-11T12:54:51Z",
+              "productType": "Botanical Powder",
+              "vendor": "NatureMist",
+              "tags": [
+                "Amla",
+                "Botanical Powder"
+              ],
+              "totalInventory": 1000,
+              "description": "amla powe very nice",
+              "featuredMedia": {
+                "preview": {
+                  "image": {
+                    "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageJul5_2026_06_20_42PM.png?v=1787420413"
+                  }
+                }
+              },
+              "priceRangeV2": {
+                "minVariantPrice": {
+                  "amount": "234.0",
+                  "currencyCode": "INR"
+                }
+              },
+              "variantsCount": {
+                "count": 1
+              },
+              "variants": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/ProductVariant/46431988940986",
+                      "title": "Default Title",
+                      "sku": null,
+                      "price": "234.00",
+                      "inventoryQuantity": 1000
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Product/8498815107258",
+              "title": "Wildcrafted Amla Powder",
+              "handle": "wildcrafted-amla-powder",
+              "status": "ACTIVE",
+              "createdAt": "2026-08-24T18:00:50Z",
+              "updatedAt": "2026-09-08T07:33:02Z",
+              "productType": "",
+              "vendor": "My Store",
+              "tags": [],
+              "totalInventory": 99,
+              "description": "The Living Botanical Ritual NatureMist Wildcrafted Amla Powder is 100% pure, single-origin Indian Gooseberry harvested at peak nutrient density, sh...",
+              "featuredMedia": {
+                "preview": {
+                  "image": {
+                    "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageAug24_2026_11_17_38PM.png?v=1787594097"
+                  }
+                }
+              },
+              "priceRangeV2": {
+                "minVariantPrice": {
+                  "amount": "325.0",
+                  "currencyCode": "INR"
+                }
+              },
+              "variantsCount": {
+                "count": 1
+              },
+              "variants": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/ProductVariant/46462270603450",
+                      "title": "Default Title",
+                      "sku": null,
+                      "price": "325.00",
+                      "inventoryQuantity": 99
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Product/8531585368250",
+              "title": "NatureMist Reetha Powder",
+              "handle": "reetha-powder",
+              "status": "DRAFT",
+              "createdAt": "2026-09-11T12:56:10Z",
+              "updatedAt": "2026-09-11T12:57:02Z",
+              "productType": "Botanical Hair Powder",
+              "vendor": "NatureMist",
+              "tags": [
+                "Cleansing Ritual",
+                "Hair Care",
+                "Hair Powder",
+                "listing-details-pending",
+                "price-required",
+                "Reetha"
+              ],
+              "totalInventory": 0,
+              "description": "A botanical step for wash dayExplore a powder-based cleansing routine with NatureMist Reetha Powder. Intended for hair-cleansing rituals, it brings...",
+              "featuredMedia": null,
+              "priceRangeV2": {
+                "minVariantPrice": {
+                  "amount": "0.0",
+                  "currencyCode": "INR"
+                }
+              },
+              "variantsCount": {
+                "count": 1
+              },
+              "variants": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/ProductVariant/46623400329402",
+                      "title": "Default Title",
+                      "sku": null,
+                      "price": "0.00",
+                      "inventoryQuantity": 0
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Product/8531585433786",
+              "title": "NatureMist Bhringraj Powder",
+              "handle": "bhringraj-powder",
+              "status": "DRAFT",
+              "createdAt": "2026-09-11T12:56:14Z",
+              "updatedAt": "2026-09-11T12:57:02Z",
+              "productType": "Botanical Hair Powder",
+              "vendor": "NatureMist",
+              "tags": [
+                "Bhringraj",
+                "Conditioning Ritual",
+                "Hair Care",
+                "Hair Powder",
+                "listing-details-pending",
+                "price-required"
+              ],
+              "totalInventory": 0,
+              "description": "A Bhringraj hair-care ritualMake room for a botanical step in your routine with NatureMist Bhringraj Powder. Intended for conditioning-focused hair...",
+              "featuredMedia": null,
+              "priceRangeV2": {
+                "minVariantPrice": {
+                  "amount": "0.0",
+                  "currencyCode": "INR"
+                }
+              },
+              "variantsCount": {
+                "count": 1
+              },
+              "variants": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/ProductVariant/46623400558778",
+                      "title": "Default Title",
+                      "sku": null,
+                      "price": "0.00",
+                      "inventoryQuantity": 0
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Product/8531585499322",
+              "title": "NatureMist Hibiscus Powder",
+              "handle": "hibiscus-powder",
+              "status": "DRAFT",
+              "createdAt": "2026-09-11T12:56:19Z",
+              "updatedAt": "2026-09-11T12:57:02Z",
+              "productType": "Botanical Hair Powder",
+              "vendor": "NatureMist",
+              "tags": [
+                "Conditioning Ritual",
+                "Hair Care",
+                "Hair Powder",
+                "Hibiscus",
+                "listing-details-pending",
+                "price-required"
+              ],
+              "totalInventory": 0,
+              "description": "Hibiscus for your hair-care routineExplore a conditioning-focused ritual with NatureMist Hibiscus Powder. This powder format brings a preparation s...",
+              "featuredMedia": null,
+              "priceRangeV2": {
+                "minVariantPrice": {
+                  "amount": "0.0",
+                  "currencyCode": "INR"
+                }
+              },
+              "variantsCount": {
+                "count": 1
+              },
+              "variants": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/ProductVariant/46623400722618",
+                      "title": "Default Title",
+                      "sku": null,
+                      "price": "0.00",
+                      "inventoryQuantity": 0
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Product/8531585597626",
+              "title": "NatureMist Indigo Powder",
+              "handle": "indigo-powder",
+              "status": "DRAFT",
+              "createdAt": "2026-09-11T12:56:23Z",
+              "updatedAt": "2026-09-11T12:57:02Z",
+              "productType": "Botanical Hair Colour Powder",
+              "vendor": "NatureMist",
+              "tags": [
+                "Colour Ritual",
+                "Hair Care",
+                "Hair Colour",
+                "Hair Powder",
+                "Indigo",
+                "listing-details-pending",
+                "price-required"
+              ],
+              "totalInventory": 0,
+              "description": "Plan your botanical hair-colour ritualExplore a powder-based colour routine with NatureMist Indigo Powder. Intended for hair colouring, it requires...",
+              "featuredMedia": null,
+              "priceRangeV2": {
+                "minVariantPrice": {
+                  "amount": "0.0",
+                  "currencyCode": "INR"
+                }
+              },
+              "variantsCount": {
+                "count": 1
+              },
+              "variants": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/ProductVariant/46623400853690",
+                      "title": "Default Title",
+                      "sku": null,
+                      "price": "0.00",
+                      "inventoryQuantity": 0
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo4NTMxNTg1NTk3NjI2LCJsYXN0X3ZhbHVlIjoiODUzMTU4NTU5NzYyNiJ9"
+        }
+      }
+    }
+  },
+  "notes": [
+    "New drafts have INR 0 placeholder prices and zero stock, pending confirmed details.",
+    "Wildcrafted Amla/Shikakai identity remains unresolved; that record was not mutated."
+  ]
+}

@@ -3,6 +3,7 @@
 import { createElement, useEffect, useRef, useState, type PointerEvent } from "react";
 import { defaultHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
+import { isWebGLAvailable, markWebGLUnavailable } from "@/shared/hooks/use-webgl";
 import styles from "./product-model.module.css";
 
 type Props = {
@@ -13,7 +14,7 @@ type Props = {
 };
 
 export function ProductModel(props: Props) {
-  return <ModelStage key={props.model.url} {...props} />;
+  return <ModelStage {...props} />;
 }
 
 function ModelStage({ model, settings = defaultHeroSettings, paused = false, eager = false }: Props) {
@@ -24,31 +25,65 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [visible, setVisible] = useState(false);
   const [rotationPaused, setRotationPaused] = useState(false);
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisible();
   const moving = !paused && !reducedMotion && pageVisible && visible;
 
   useEffect(() => {
+    const supported = isWebGLAvailable();
+    setWebglSupported(supported);
+    if (!supported) {
+      setStatus("error");
+      return;
+    }
+
     const element = viewer.current;
     const container = stage.current;
     if (!element || !container) return;
     let disposed = false;
     const ready = () => setStatus("ready");
     const failed = () => setStatus("error");
+    const onContextLost = (event: Event) => {
+      event.preventDefault();
+      markWebGLUnavailable();
+      setStatus("error");
+    };
+
     if ((element as unknown as { loaded?: boolean }).loaded) setStatus("ready");
     element.addEventListener("load", ready);
     element.addEventListener("error", failed);
+    element.addEventListener("webglcontextlost", onContextLost);
+
     const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
     observer.observe(container);
-    import("@google/model-viewer").catch(() => { if (!disposed) failed(); });
+
+    import("@google/model-viewer").catch(() => {
+      if (!disposed) failed();
+    });
+
     return () => {
       disposed = true;
       observer.disconnect();
       cancelAnimationFrame(frame.current);
       element.removeEventListener("load", ready);
       element.removeEventListener("error", failed);
+      element.removeEventListener("webglcontextlost", onContextLost);
     };
   }, []);
+
+  const prevUrl = useRef(model.url);
+  useEffect(() => {
+    if (prevUrl.current !== model.url) {
+      prevUrl.current = model.url;
+      const element = viewer.current;
+      if (element && (element as unknown as { loaded?: boolean }).loaded) {
+        setStatus("ready");
+      } else if (webglSupported !== false) {
+        setStatus("loading");
+      }
+    }
+  }, [model.url, webglSupported]);
 
   useEffect(() => {
     const element = viewer.current;
@@ -78,6 +113,14 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
       viewer.current?.setAttribute("camera-orbit", `${x * 25}deg ${75 + y * 12}deg 105%`);
     });
   };
+
+  if (webglSupported === false) {
+    return (
+      <div ref={stage} className={styles.stage} data-status="error">
+        <span className={styles.hint} role="status">3D view unavailable</span>
+      </div>
+    );
+  }
 
   return (
     <div ref={stage} className={styles.stage} data-status={status} onPointerMove={followCursor} onPointerLeave={resetPosition}>
@@ -109,9 +152,11 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
           </svg>
         </button>
       )}
-      {status !== "ready" && <span className={styles.hint} role="status">
-        {status === "error" ? "3D view unavailable" : "Loading 3D view…"}
-      </span>}
+      {status !== "ready" && (
+        <span className={styles.hint} role="status">
+          {status === "error" ? "3D view unavailable" : "Loading 3D view…"}
+        </span>
+      )}
     </div>
   );
 }

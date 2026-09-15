@@ -5,7 +5,21 @@ import type { SheryConfig } from "@/domain/shery-config";
 type Uniforms = Record<string, { value: number | boolean | Texture[] | { x: number; y: number } }>;
 type Attributes = { renderer: WebGLRenderer; scene: Scene; camera: Camera; meshes: Mesh[]; uniforms: Uniforms[] };
 declare global {
-  interface Window { Shery: { imageEffect: (selector: string, options: { style: number; gooey: boolean; debug: boolean; config: SheryConfig; setAttribute: (attributes: Attributes) => void }) => void }; }
+  interface Window {
+    Shery: {
+      imageEffect: (
+        selector: string,
+        options: {
+          style: number;
+          gooey?: boolean;
+          debug?: boolean;
+          config?: SheryConfig;
+          slideStyle?: (setScroll: (x: number) => void, setLerp?: (y: number) => void) => void;
+          setAttribute?: (attributes: Attributes) => void;
+        }
+      ) => void;
+    };
+  }
 }
 
 const data = JSON.parse(document.getElementById("shery-data")!.textContent!) as { images: { url: string; altText?: string }[]; config: SheryConfig; debug: boolean };
@@ -21,7 +35,22 @@ let textures: Texture[] = [];
 let pair: Texture[] | undefined;
 let selected = 0, current = 0, duration = 1100;
 let cursor = true, active = true, ready = false, disposed = false, failed = false;
-let transition: { start: number; target: number; duration: number; radius: number; growSize?: number } | undefined;
+let prevCursor = true;
+let cursorFadeStart: number | undefined;
+let cursorFadeFrom = 0;
+const CURSOR_FADE_MS = 500;
+let cursorFadeInStart: number | undefined;
+const CURSOR_FADE_IN_MS = 400;
+let transition:
+  | {
+      start: number;
+      target: number;
+      duration: number;
+      radius: number;
+      growSize: number;
+      swapped: boolean;
+    }
+  | undefined;
 let loadTimeout: ReturnType<typeof setTimeout> | undefined;
 let resizePending = false;
 const send = (type: string) => parent.postMessage({ channel: "naturemist-shery", type }, parentOrigin);
@@ -42,9 +71,13 @@ function watchLoading() {
   }
 }
 
-function setPair(index: number, next: number) {
+function setPair(fromIndex: number, toIndex: number) {
   if (!attributes || !textures.length) return;
-  pair = [textures[index % textures.length], textures[next % textures.length]];
+  const from = ((fromIndex % textures.length) + textures.length) % textures.length;
+  const to = ((toIndex % textures.length) + textures.length) % textures.length;
+  if (textures[from]) textures[from].needsUpdate = true;
+  if (textures[to]) textures[to].needsUpdate = true;
+  pair = [textures[from], textures[to]];
   attributes.uniforms[0].uTexture.value = pair;
 }
 function settle() {
@@ -55,13 +88,22 @@ function settle() {
   attributes.uniforms[0].uIntercept.value = 0;
 }
 function select(index: number) {
-  selected = ((index % data.images.length) + data.images.length) % data.images.length;
+  const next = ((index % data.images.length) + data.images.length) % data.images.length;
+  if (transition && transition.target === next) return;
+  selected = next;
   if (!ready || data.debug || !attributes) return;
   if (transition) settle();
   if (!active || current === selected) { settle(); return; }
   setPair(current, selected);
-  const growSize = Number(data.config?.growSize?.value) || 8;
-  transition = { start: performance.now(), target: selected, duration, radius: Number(attributes.uniforms[0].metaball.value), growSize };
+  const growSize = Math.max(4, Number(data.config?.growSize?.value) || 8);
+  transition = {
+    start: performance.now(),
+    target: selected,
+    duration,
+    radius: Number(attributes.uniforms[0].metaball?.value) || 0.2,
+    growSize,
+    swapped: false,
+  };
 }
 
 window.addEventListener("message", (event) => {
@@ -93,12 +135,25 @@ window.addEventListener("pagehide", () => {
   attributes?.renderer.dispose(); attributes?.renderer.forceContextLoss();
 });
 document.addEventListener("keydown", (event) => { if (event.key === "Escape") send("close"); });
+
+// Prevent Shery's uncoordinated native mousedown listener from starting an unsynced GSAP loop
+if (poster && typeof poster.addEventListener === "function") {
+  poster.addEventListener(
+    "mousedown",
+    (event) => {
+      if (!data.debug) event.stopImmediatePropagation();
+    },
+    true
+  );
+}
+
 window.addEventListener("click", (event) => {
   if (!ready || data.debug || data.images.length < 2) return;
   if (event?.target instanceof Element && event.target.closest("#controlKit")) return;
   const next = (selected + 1) % data.images.length;
   select(next);
-  parent.postMessage({ channel: "naturemist-shery", type: "index", selected: next }, parentOrigin);
+  // Do NOT send "index" here — settle() sends it after the bloom transition
+  // finishes so React's <Image> only swaps once, hidden at the bloom peak.
 });
 // Shery's shared image-loading flag cannot safely recrop half-loaded images.
 window.addEventListener("resize", (event) => {
@@ -136,51 +191,167 @@ async function start() {
     element.crossOrigin = "anonymous"; element.src = url.href; element.alt = image.altText || "Botanical ritual";
     poster.appendChild(element);
   }
-  await Promise.all(Array.from(poster.querySelectorAll("img"), (image) => image.decode()));
+  await Promise.all(Array.from(poster.querySelectorAll("img"), (image) => image.decode().catch(() => {})));
   if (disposed) return;
+
+  // Build uniform 1024x1280 textures with aspect-ratio cover to eliminate
+  // WebGL glTexSubImage2D dimension mismatch errors on posters.
+  const imgElements = Array.from(poster.querySelectorAll("img"));
+  const testCanvas = typeof document.createElement === "function" ? document.createElement("canvas") : null;
+  const has2D = testCanvas && typeof testCanvas.getContext === "function" && Boolean(testCanvas.getContext("2d"));
+
+  if (has2D && typeof (window as unknown as { THREE?: { Texture?: unknown } }).THREE?.Texture === "function" && imgElements.length > 0) {
+    const THREE = (window as unknown as { THREE: typeof import("three") }).THREE;
+    textures = imgElements.map((img) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024;
+      canvas.height = 1280;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const natW = img.naturalWidth || img.width || 1024;
+        const natH = img.naturalHeight || img.height || 1280;
+        const imgAspect = natW / natH;
+        const targetAspect = 1024 / 1280;
+        let sx = 0, sy = 0, sw = natW, sh = natH;
+        if (imgAspect > targetAspect) {
+          sw = natH * targetAspect;
+          sx = (natW - sw) / 2;
+        } else {
+          sh = natW / targetAspect;
+          sy = (natH - sh) / 2;
+        }
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 1024, 1280);
+      }
+      const tex = new THREE.Texture(canvas);
+      tex.needsUpdate = true;
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      return tex;
+    });
+  }
+
+  const canWebGL = (() => {
+    try {
+      const canvas = typeof document.createElement === "function" ? document.createElement("canvas") : null;
+      if (!canvas || typeof canvas.getContext !== "function") {
+        return true;
+      }
+      const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+      const ok = Boolean(gl);
+      if (gl && typeof (gl as unknown as { getExtension?: (name: string) => { loseContext?: () => void } }).getExtension === "function") {
+        (gl as unknown as { getExtension: (name: string) => { loseContext?: () => void } }).getExtension("WEBGL_lose_context")?.loseContext?.();
+      }
+      return ok;
+    } catch {
+      return false;
+    }
+  })();
+  if (!canWebGL) {
+    fail();
+    return;
+  }
+
   // The panels and their sliders are created by Shery itself, unchanged.
-  window.Shery.imageEffect("#poster", {
-    style: 6, gooey: true, debug: data.debug,
-    config: data.config,
-    setAttribute(value) {
-      attributes = value;
-      value.renderer.debug.onShaderError = fail;
-      value.renderer.domElement.addEventListener("webglcontextlost", fail);
-      const render = value.renderer.render.bind(value.renderer);
-      value.renderer.render = (scene, camera) => {
-        if (failed || disposed) return;
+  try {
+    window.Shery.imageEffect("#poster", {
+      style: 6, gooey: true, debug: data.debug,
+      config: data.config,
+      setAttribute(value) {
+        attributes = value;
+        value.renderer.debug.onShaderError = fail;
+        value.renderer.domElement.addEventListener("webglcontextlost", (event) => {
+          event.preventDefault();
+          fail();
+        });
+        const render = value.renderer.render.bind(value.renderer);
+        value.renderer.render = (scene, camera) => {
+          if (failed || disposed) return;
         const uniforms = value.uniforms[0];
         if (value.meshes[0].visible) {
           if (!ready) {
-            textures = [...uniforms.uTexture.value as Texture[]];
+            if (!textures.length && Array.isArray(uniforms.uTexture.value)) {
+              textures = [...uniforms.uTexture.value as Texture[]];
+            }
             ready = true;
             watchLoading();
             if (!data.debug) settle();
             send("ready");
             if (resizePending) { resizePending = false; queueMicrotask(() => window.dispatchEvent(new Event("resize"))); }
           }
-          if (!data.debug && transition) {
-            const progress = Math.min(1, (performance.now() - transition.start) / transition.duration);
-            uniforms.uIntercept.value = 1;
-            uniforms.mousei.value = { x: .5, y: .5 };
-            uniforms.metaball.value = progress * progress * (3 - 2 * progress) * (transition.growSize || 8);
-            if (progress === 1) {
-              settle();
-              parent.postMessage({ channel: "naturemist-shery", type: "index", selected: current }, parentOrigin);
-            }
-          } else if (!cursor) {
-            uniforms.uIntercept.value = 0;
+
+          // Keep active texture pair attached to avoid fallback
+          if (pair && uniforms.uTexture.value !== pair) {
+            uniforms.uTexture.value = pair;
           }
 
-          // Detect native Shery mousedown click transition to the next image
-          if (ready && !transition && Array.isArray(uniforms.uTexture.value) && uniforms.uTexture.value.length >= 2) {
-            const currentBase = uniforms.uTexture.value[0];
-            const activeIdx = textures.indexOf(currentBase);
-            if (activeIdx !== -1 && activeIdx !== current) {
-              current = activeIdx;
-              selected = activeIdx;
-              pair = [textures[current], textures[(current + 1) % textures.length]];
-              parent.postMessage({ channel: "naturemist-shery", type: "index", selected: current }, parentOrigin);
+          if (!data.debug && transition) {
+            const elapsed = performance.now() - transition.start;
+            const progress = Math.min(1, elapsed / transition.duration);
+            uniforms.uIntercept.value = 1;
+            uniforms.mousei.value = { x: .5, y: .5 };
+
+            if (progress < 0.5) {
+              // Phase 1: Bloom expands outward from center (0 -> 1)
+              const p = progress * 2;
+              const eased = p * p * (3 - 2 * p);
+              uniforms.metaball.value = transition.radius + eased * (transition.growSize - transition.radius);
+            } else {
+              // At halfway peak (progress >= 0.5): blob is at full size — swap textures
+              // and notify React to switch its <Image> while it is completely hidden.
+              if (!transition.swapped) {
+                transition.swapped = true;
+                current = transition.target;
+                setPair(current, (current + 1) % textures.length);
+                // Switch React's fallback <Image> now, hidden behind the full-size bloom.
+                // Phase 2 will shrink the blob over the already-correct image.
+                parent.postMessage({ channel: "naturemist-shery", type: "index", selected: current }, parentOrigin);
+              }
+              // Phase 2: Bloom contracts back down smoothly (1 -> 0)
+              const p = (progress - 0.5) * 2;
+              const eased = 1 - (p * p * (3 - 2 * p));
+              uniforms.metaball.value = transition.radius + eased * (transition.growSize - transition.radius);
+            }
+
+            if (progress >= 1) {
+              settle();
+              // postMessage already sent at the swap peak; settle() is a no-op for React here.
+            }
+          } else {
+            // Detect the moment cursor goes false and begin a smooth fade-out
+            if (prevCursor && !cursor) {
+              cursorFadeStart = performance.now();
+              cursorFadeFrom = Number(uniforms.uIntercept.value) || 0;
+            }
+            prevCursor = cursor;
+            if (!cursor) {
+              if (cursorFadeStart !== undefined && cursorFadeFrom > 0) {
+                const elapsed = performance.now() - cursorFadeStart;
+                const t = Math.min(1, elapsed / CURSOR_FADE_MS);
+                // ease-out cubic: fast start, gentle finish
+                const eased = 1 - Math.pow(1 - t, 3);
+                uniforms.uIntercept.value = cursorFadeFrom * (1 - eased);
+                if (t >= 1) { uniforms.uIntercept.value = 0; cursorFadeStart = undefined; }
+              } else {
+                uniforms.uIntercept.value = 0;
+              }
+            } else {
+              // Cursor active — reset fade-out bookkeeping
+              cursorFadeStart = undefined;
+              cursorFadeFrom = 0;
+              // Detect the moment cursor goes true and begin a smooth fade-in
+              if (!prevCursor && cursor) {
+                cursorFadeInStart = performance.now();
+              }
+              prevCursor = true;
+              // Scale Shery's uIntercept by the fade-in envelope (0 → 1)
+              if (cursorFadeInStart !== undefined) {
+                const elapsed = performance.now() - cursorFadeInStart;
+                const t = Math.min(1, elapsed / CURSOR_FADE_IN_MS);
+                // cubic ease-in: slow start, snappy finish
+                const scale = t * t * t;
+                uniforms.uIntercept.value = Number(uniforms.uIntercept.value) * scale;
+                if (t >= 1) cursorFadeInStart = undefined;
+              }
             }
           }
         }
@@ -188,5 +359,8 @@ async function start() {
       };
     },
   });
+} catch {
+  fail();
+}
 }
 start().catch(fail);

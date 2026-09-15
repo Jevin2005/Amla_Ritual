@@ -317,6 +317,48 @@ body[data-motion-ready="true"] [data-reveal="pending"]:focus-within {
   animation: atelier-hero-copy calc(720ms * var(--motion-duration, 1)) var(--ease) 80ms backwards;
 }
 
+@keyframes lineReveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.line-reveal-wrap {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.line-reveal-text {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+[data-reveal="revealed"] .line-reveal-wrap:nth-child(1) .line-reveal-text,
+.line-reveal-wrap:nth-child(1)[data-reveal="revealed"] .line-reveal-text,
+[data-reveal="revealed"].line-reveal-wrap:nth-child(1) .line-reveal-text {
+  animation: lineReveal calc(680ms * var(--motion-duration, 1)) cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+[data-reveal="revealed"] .line-reveal-wrap:nth-child(2) .line-reveal-text,
+.line-reveal-wrap:nth-child(2)[data-reveal="revealed"] .line-reveal-text,
+[data-reveal="revealed"].line-reveal-wrap:nth-child(2) .line-reveal-text {
+  animation: lineReveal calc(680ms * var(--motion-duration, 1)) cubic-bezier(0.22, 1, 0.36, 1) calc(120ms * var(--motion-duration, 1)) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-reveal-text {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 html[data-site-motion="off"],
 html[data-site-motion="off"] * {
   scroll-behavior: auto !important;

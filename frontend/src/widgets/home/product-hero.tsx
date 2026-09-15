@@ -6,11 +6,12 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
 import { nextHeroIndex, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
 import { ProductModel } from "@/features/catalog/product-model";
-import { SheryPoster } from "@/features/poster/shery-poster";
-import { defaultSheryConfig } from "@/domain/shery-config";
+import { SheryBackground } from "@/features/background/shery-background";
+import { defaultSheryBackgroundConfig } from "@/domain/shery-config";
 import { useStore } from "@/features/store/store-provider";
 import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { usePointerMotion } from "@/shared/hooks/use-pointer-motion";
+import { useWebGL } from "@/shared/hooks/use-webgl";
 import { HeroPurchase } from "./hero-purchase";
 import styles from "./product-hero.module.css";
 
@@ -28,13 +29,14 @@ export function ProductHero({ products, entries, settings }: { products: Product
   const posterPointer = usePointerMotion<HTMLDivElement>(settings.cursorMotion);
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisible();
+  const webgl = useWebGL();
   const index = nextHeroIndex(selected, slides.length, 0);
   const product = slides[index];
   const hasProduct = Boolean(product);
   const duration = product?.heroDurationSeconds ?? settings.intervalSeconds;
   const moving = motionSettings.enabled && !reducedMotion;
   const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && moving && pageVisible && inView;
-  const heroPosters = slides.map((slide) => slide.heroPoster);
+  const heroBackgrounds = slides.map((slide) => slide.heroBackground);
 
   useEffect(() => {
     const section = root.current;
@@ -55,12 +57,18 @@ export function ProductHero({ products, entries, settings }: { products: Product
   }, [hasProduct]);
 
   const goTo = (next: number) => {
+    const target = nextHeroIndex(next, slides.length, 0);
     setSelected((current) => {
-      const target = nextHeroIndex(next, slides.length, 0);
       if (current === target) return current;
       setRevision((rev) => rev + 1);
       return target;
     });
+  };
+
+  const handlePosterClick = () => {
+    if (slides.length > 1) {
+      goTo(nextHeroIndex(index, slides.length));
+    }
   };
 
   useEffect(() => {
@@ -84,14 +92,18 @@ export function ProductHero({ products, entries, settings }: { products: Product
       onFocusCapture={() => setFocused(true)}
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
       style={{ "--hero-accent": product.accent, "--hero-soft": product.accentSoft } as CSSProperties}>
-      <div className={styles.background} key={`background-${product.heroEntryId}`} data-transition={animation} aria-hidden="true">
-        <Image src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
-        <div className={styles.refractionShimmer} />
-        <div className={styles.refractionRipples}>
-          <div className={styles.rippleRing1} />
-          <div className={styles.rippleRing2} />
-          <div className={styles.rippleRing3} />
-        </div>
+      <div className={styles.background} data-transition={animation} aria-hidden="true">
+        <Image key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
+        {visited && slides.length > 1 && moving && webgl && (
+          <SheryBackground
+            images={heroBackgrounds}
+            config={defaultSheryBackgroundConfig}
+            selected={index}
+            active={inView && pageVisible}
+            duration={1100 * motionSettings.duration}
+            className={styles.heroSheryBackground}
+          />
+        )}
       </div>
       <div className={styles.layout} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}: ${product.name}`}>
         <div className={styles.copy} key={`copy-${product.heroEntryId}`} data-transition={animation}>
@@ -111,32 +123,19 @@ export function ProductHero({ products, entries, settings }: { products: Product
             role={slides.length > 1 ? "button" : undefined}
             tabIndex={slides.length > 1 ? 0 : undefined}
             aria-label={slides.length > 1 ? `Next botanical ritual: ${slides[nextHeroIndex(index, slides.length)].name}` : undefined}
-            onClick={() => {
-              if (slides.length > 1) goTo(nextHeroIndex(index, slides.length));
-            }}
+            onClick={handlePosterClick}
             onKeyDown={(event) => {
               if (slides.length > 1 && (event.key === "Enter" || event.key === " ")) {
                 event.preventDefault();
-                goTo(nextHeroIndex(index, slides.length));
+                handlePosterClick();
               }
             }}
           >
             <div className={styles.posterMotion}>
-              <Image src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
+              <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
                 sizes="(max-width: 1000px) 48vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
-              {visited && slides.length > 1 && moving && (
-                <SheryPoster
-                  images={heroPosters}
-                  config={defaultSheryConfig}
-                  selected={index}
-                  active={inView && pageVisible}
-                  cursor={motionSettings.cursor && motionSettings.intensity > 0 && !focused}
-                  duration={1100 * motionSettings.duration}
-                  className={styles.heroShery}
-                  onSelect={goTo}
-                />
-              )}
             </div>
+
             {slides.length > 1 && (
               <span className={styles.posterBadge} aria-hidden="true">
                 <span>Next ritual</span>
@@ -160,7 +159,7 @@ export function ProductHero({ products, entries, settings }: { products: Product
             <p id="featured-ritual-heading">Featured botanical ritual</p>
             <button type="button" className={styles.arrow} disabled={slides.length < 2} onClick={() => goTo(nextHeroIndex(index, slides.length))} aria-label="Next featured product">→</button>
           </div>
-          <div className={styles.model} key={`model-${product.heroEntryId}`} data-transition={animation}>
+          <div className={styles.model} data-transition={animation}>
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
               settings={settings} paused={paused || !inView} eager />
           </div>

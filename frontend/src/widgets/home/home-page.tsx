@@ -330,24 +330,38 @@ export function HomePage() {
         <IngredientPoster images={content.ritualPosters} fallback={content.ritualPoster} settings={content.ritualPosterSettings} />
 
         {/* Right Column: Heading, description, 3 numbered points, CTA */}
-        <div data-motion-reveal>
-          <p className="mb-2 text-[0.74rem] font-bold uppercase tracking-[0.18em] text-[var(--botanical)] max-[680px]:mb-1 max-[680px]:text-[0.68rem]">
+        <div>
+          <p
+            data-motion-reveal
+            className="mb-2 text-[0.74rem] font-bold uppercase tracking-[0.18em] text-[var(--botanical)] max-[680px]:mb-1 max-[680px]:text-[0.68rem]"
+          >
             Ingredient clarity
           </p>
           <h2
             className="m-0 [font-family:var(--font-display)] text-[clamp(2.2rem,3.4vw,3.6rem)] font-normal leading-[1.0] tracking-[-0.035em] text-[var(--forest)] max-[900px]:text-[2rem] max-[680px]:text-[1.75rem]"
             id="purity-title"
+            data-motion-reveal
           >
-            One ingredient. <br />
-            Nothing hidden.
+            <span className="line-reveal-wrap">
+              <span className="line-reveal-text">One ingredient.</span>
+            </span>
+            <span className="line-reveal-wrap">
+              <span className="line-reveal-text">Nothing hidden.</span>
+            </span>
           </h2>
-          <p className="my-4 max-w-[540px] text-[0.92rem] leading-[1.65] text-[var(--muted)] max-[900px]:text-[0.88rem] max-[680px]:my-3 max-[680px]:text-[0.84rem] max-[680px]:leading-[1.5]">
+          <p
+            data-motion-reveal
+            className="my-4 max-w-[540px] text-[0.92rem] leading-[1.65] text-[var(--muted)] max-[900px]:text-[0.88rem] max-[680px]:my-3 max-[680px]:text-[0.84rem] max-[680px]:leading-[1.5]"
+          >
             NatureMist translates a time-honoured practice into a ritual you can understand from first scoop to final rinse.
           </p>
 
           {/* 3 Points List */}
           <div className="border-t border-[var(--line)]">
-            <article className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3">
+            <article
+              data-motion-reveal
+              className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3"
+            >
               <span className="font-mono text-[0.82rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none max-[680px]:text-[0.76rem]">
                 01
               </span>
@@ -361,7 +375,10 @@ export function HomePage() {
               </div>
             </article>
 
-            <article className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3">
+            <article
+              data-motion-reveal
+              className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3"
+            >
               <span className="font-mono text-[0.82rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none max-[680px]:text-[0.76rem]">
                 02
               </span>
@@ -375,7 +392,10 @@ export function HomePage() {
               </div>
             </article>
 
-            <article className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3">
+            <article
+              data-motion-reveal
+              className="grid grid-cols-[34px_1fr] items-start gap-3 border-b border-[var(--line)] py-4 max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3"
+            >
               <span className="font-mono text-[0.82rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none max-[680px]:text-[0.76rem]">
                 03
               </span>
@@ -391,12 +411,14 @@ export function HomePage() {
           </div>
 
           {/* Philosophy CTA Button */}
-          <MagneticLink
-            className="mt-7 inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full border border-[var(--forest)] bg-transparent px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.1em] text-[var(--forest)] transition-all hover:bg-[var(--forest)] hover:text-[var(--paper)] max-[680px]:mt-5 max-[680px]:min-h-[40px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
-            href="/our-story"
-          >
-            Read our philosophy <span aria-hidden="true">↗</span>
-          </MagneticLink>
+          <div data-motion-reveal className="mt-7 max-[680px]:mt-5">
+            <MagneticLink
+              className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full border border-[var(--forest)] bg-transparent px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.1em] text-[var(--forest)] transition-all hover:bg-[var(--forest)] hover:text-[var(--paper)] max-[680px]:min-h-[40px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
+              href="/our-story"
+            >
+              Read our philosophy <span aria-hidden="true">↗</span>
+            </MagneticLink>
+          </div>
         </div>
       </section>
 

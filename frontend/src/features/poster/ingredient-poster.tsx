@@ -64,7 +64,7 @@ function PosterSequence({ images, settings }: { images: StoreImage[]; settings: 
           sizes="(max-width: 768px) 90vw, 480px" className={styles.image} loading={visited ? "eager" : "lazy"} />
         {visited && images.length > 1 && moving && settings.gooey && (
           <SheryPoster images={images} config={config} selected={selected} active={inView && pageVisible && !debugOpen}
-            cursor={motionSettings.cursor && motionSettings.intensity > 0 && !focused} duration={1100 * motionSettings.duration}
+            cursor={motionSettings.cursor && motionSettings.intensity > 0 && !focused && hovered} duration={1100 * motionSettings.duration}
             onSelect={setSelected} />
         )}
         <span className={styles.brand} aria-hidden="true">N</span>

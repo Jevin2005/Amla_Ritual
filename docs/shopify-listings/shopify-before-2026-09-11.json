@@ -1,0 +1,372 @@
+{
+  "capturedOn": "2026-09-11",
+  "purpose": "Read-only snapshot before listing work; no customer data.",
+  "products": [
+    {
+      "id": "gid://shopify/Product/8494763311290",
+      "title": "amla",
+      "vendor": "My Store",
+      "status": "ACTIVE",
+      "productType": "",
+      "descriptionHtml": "<p>amla powe very nice </p>\n<p> </p>",
+      "tags": [],
+      "totalInventory": 1000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageJul5_2026_06_20_42PM.png?v=1787420413",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageJul5_2026_06_20_42PM.png?v=1787420413",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/33778363433146"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46431988940986",
+          "title": "Default Title",
+          "sku": null,
+          "price": "234.00",
+          "inventoryQuantity": 1000
+        }
+      ],
+      "currencyCode": "INR",
+      "extended": {
+        "id": "gid://shopify/Product/8494763311290",
+        "title": "amla",
+        "handle": "amla",
+        "seo": {
+          "title": null,
+          "description": null
+        },
+        "options": [
+          {
+            "name": "Title",
+            "values": [
+              "Default Title"
+            ]
+          }
+        ],
+        "metafields": {
+          "nodes": [],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": null
+          }
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/8498815107258",
+      "title": "Wildcrafted Amla Powder",
+      "vendor": "My Store",
+      "status": "ACTIVE",
+      "productType": "",
+      "descriptionHtml": "<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;</span><span class=\"mtk6\">h3</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">The Living Botanical Ritual</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">h3</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;</span><span class=\"mtk6\">p</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">NatureMist Wildcrafted Amla Powder is 100% pure, single-origin Indian Gooseberry harvested at peak nutrient density, shade-dried to preserve delicate phytochemicals, and micro-sieved into a silk-fine botanical flour.</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">p</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"></span><br>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;</span><span class=\"mtk6\">p</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">Packed with natural bioflavonoids, amino acids, and concentrated Vitamin C, this weekly pre-wash mask purifies the scalp, reinforces hair follicles at the root, and gives your lengths an unhurried, weightless mirror shine without silicone build-up.</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">p</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"></span><br>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;</span><span class=\"mtk6\">hr</span><span class=\"mtk1\"> </span><span class=\"mtk14\">/&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"></span><br>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;</span><span class=\"mtk6\">h3</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">✨ Key Ritual Benefits</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">h3</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;</span><span class=\"mtk6\">ul</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"> </span><span class=\"mtk14\">&lt;</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;&lt;</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">Scalp Vitality:</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\"> Gently calms excess sebum, dryness, and flaking while promoting optimal scalp circulation.</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"> </span><span class=\"mtk14\">&lt;</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;&lt;</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">Root Strength:</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\"> Reinforces brittle hair fibers to minimize wash-day shedding and breakage.</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"> </span><span class=\"mtk14\">&lt;</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;&lt;</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">Natural Gloss </span><span class=\"mtk6\">&amp;amp;</span><span class=\"mtk1\"> Slip:</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\"> Restores healthy cuticle alignment for soft, glossy, touchable lengths.</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"> </span><span class=\"mtk14\">&lt;</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;&lt;</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\">Color-Safe Conditioning:</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">strong</span><span class=\"mtk14\">&gt;</span><span class=\"mtk1\"> Deeply hydrates natural or color-treated hair textures without chemical alteration.</span><span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">li</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;/</span><span class=\"mtk6\">ul</span><span class=\"mtk14\">&gt;</span>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk1\"></span><br>\n</div>\n</div>\n<div class=\"code-line\">\n<div class=\"line-content\">\n<span class=\"mtk14\">&lt;</span><span class=\"mtk6\">hr</span><span class=\"mtk1\"> </span><span class=\"mtk14\">/&gt;</span>\n</div>\n</div>",
+      "tags": [],
+      "totalInventory": 99,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageAug24_2026_11_17_38PM.png?v=1787594097",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ChatGPTImageAug24_2026_11_17_38PM.png?v=1787594097",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/33828629479610"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/9576ae33-32ce-4cc2-9696-db30a116c500.png?v=1787594097",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/33828629512378"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/09c37ba6-6af2-4fbe-b730-f4eba0ea8b9c.png?v=1787594097",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/33828629545146"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/8a445b5b-5772-49a7-8099-c847f8c3fd1e.png?v=1787594098",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/33828629577914"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46462270603450",
+          "title": "Default Title",
+          "sku": null,
+          "price": "325.00",
+          "inventoryQuantity": 99
+        }
+      ],
+      "currencyCode": "INR",
+      "extended": {
+        "id": "gid://shopify/Product/8498815107258",
+        "title": "Wildcrafted Amla Powder",
+        "handle": "wildcrafted-amla-powder",
+        "seo": {
+          "title": null,
+          "description": null
+        },
+        "options": [
+          {
+            "name": "Title",
+            "values": [
+              "Default Title"
+            ]
+          }
+        ],
+        "metafields": {
+          "nodes": [
+            {
+              "id": "gid://shopify/Metafield/38541077414074",
+              "key": "subtitle",
+              "type": "single_line_text_field",
+              "value": "Single-Origin Botanical Hair Mask"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077446842",
+              "key": "ingredient",
+              "type": "multi_line_text_field",
+              "value": "100% Pure Organic Amla Fruit Powder"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077479610",
+              "key": "how_to_use",
+              "type": "list.single_line_text_field",
+              "value": "[\"Mix 1-2 scoops with warm water into paste.\",\"Apply evenly to damp hair and scalp.\",\"Leave for 15-20 minutes and rinse.\"]"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077676218",
+              "key": "benefits",
+              "type": "list.single_line_text_field",
+              "value": "[\"Deeply conditions scalp and roots\",\"Promotes natural mirror shine\",\"Reduces breakage\"]"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077741754",
+              "key": "ritual_step",
+              "type": "single_line_text_field",
+              "value": "Condition, Cleanse, or Colour"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077774522",
+              "key": "formulation",
+              "type": "single_line_text_field",
+              "value": "Shade-Dried Micro-Fine Powder"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077807290",
+              "key": "net_quantity",
+              "type": "single_line_text_field",
+              "value": "250g Jar"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077840058",
+              "key": "plant_part",
+              "type": "single_line_text_field",
+              "value": "Organic Fruit Pulp"
+            },
+            {
+              "id": "gid://shopify/Metafield/38541077872826",
+              "key": "botanical_name",
+              "type": "single_line_text_field",
+              "value": "Phyllanthus emblica"
+            },
+            {
+              "id": "gid://shopify/Metafield/38661968363706",
+              "key": "hero_poster",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/33856343113914"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317007827130",
+              "key": "hero_badge_subtitle",
+              "type": "single_line_text_field",
+              "value": "200 g · Herbal hair care"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317007859898",
+              "key": "hero_badge_text",
+              "type": "single_line_text_field",
+              "value": "Shikakai Powder"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317007892666",
+              "key": "hero_description",
+              "type": "multi_line_text_field",
+              "value": "Bring a botanical touch to your hair-care ritual with NatureMist Shikakai Powder."
+            },
+            {
+              "id": "gid://shopify/Metafield/39317007925434",
+              "key": "hero_headline_italic",
+              "type": "single_line_text_field",
+              "value": "Your botanical ritual."
+            },
+            {
+              "id": "gid://shopify/Metafield/39317007958202",
+              "key": "hero_headline_middle",
+              "type": "single_line_text_field",
+              "value": "Shikakai"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317007990970",
+              "key": "hero_headline_first",
+              "type": "single_line_text_field",
+              "value": "Discover"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317008023738",
+              "key": "hero_eyebrow",
+              "type": "single_line_text_field",
+              "value": "NatureMist Hair Care"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317008056506",
+              "key": "hero_duration",
+              "type": "number_integer",
+              "value": "8"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317008089274",
+              "key": "hero_order",
+              "type": "number_integer",
+              "value": "1"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317008122042",
+              "key": "hero_enabled",
+              "type": "boolean",
+              "value": "true"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317008154810",
+              "key": "hero_model",
+              "type": "file_reference",
+              "value": "gid://shopify/Model3d/34152740651194"
+            },
+            {
+              "id": "gid://shopify/Metafield/39317026996410",
+              "key": "hero_background",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/34152862548154"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "eyJsYXN0X2lkIjozOTMxNzAyNjk5NjQxMCwibGFzdF92YWx1ZSI6IjM5MzE3MDI2OTk2NDEwIn0="
+          }
+        }
+      }
+    }
+  ],
+  "metafieldDefinitions": [
+    {
+      "id": "gid://shopify/MetafieldDefinition/195513385146",
+      "key": "botanical_name",
+      "name": "Botanical Name"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195516203194",
+      "key": "plant_part",
+      "name": "Plant Part"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195516793018",
+      "key": "net_quantity",
+      "name": "Net Quantity"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195517055162",
+      "key": "formulation",
+      "name": "Formulation"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195517120698",
+      "key": "subtitle",
+      "name": "Subtitle"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195517153466",
+      "key": "ritual_step",
+      "name": "Ritual Step"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195517186234",
+      "key": "ingredient",
+      "name": "Ingredient"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195518333114",
+      "key": "benefits",
+      "name": "Benefits"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195518365882",
+      "key": "how_to_use",
+      "name": "How To Use"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/195875012794",
+      "key": "hero_poster",
+      "name": "Homepage hero poster"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201887482042",
+      "key": "hero_model",
+      "name": "Homepage 3D model"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201887514810",
+      "key": "hero_background",
+      "name": "Homepage background image"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201887547578",
+      "key": "hero_enabled",
+      "name": "Show in homepage hero"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201887580346",
+      "key": "hero_order",
+      "name": "Homepage slide order"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201887613114",
+      "key": "hero_duration",
+      "name": "Homepage slide duration (seconds)"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201888432314",
+      "key": "hero_eyebrow",
+      "name": "Homepage eyebrow"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201888465082",
+      "key": "hero_headline_first",
+      "name": "Homepage headline line 1"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201888497850",
+      "key": "hero_headline_middle",
+      "name": "Homepage headline line 2"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201888530618",
+      "key": "hero_headline_italic",
+      "name": "Homepage italic headline"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201888563386",
+      "key": "hero_description",
+      "name": "Homepage description"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201888596154",
+      "key": "hero_badge_text",
+      "name": "Homepage product caption"
+    },
+    {
+      "id": "gid://shopify/MetafieldDefinition/201888628922",
+      "key": "hero_badge_subtitle",
+      "name": "Homepage caption detail"
+    }
+  ]
+}

@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    cpus: 4,
+  },
   async headers() {
     return [
       {

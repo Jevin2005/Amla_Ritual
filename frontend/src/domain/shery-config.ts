@@ -48,6 +48,17 @@ export const defaultSheryConfig: SheryConfig = {
   durationIn: { value: 1.5, range: [0.1, 5] },
 };
 
+export const defaultSheryBackgroundConfig: SheryConfig = {
+  scrollType: { value: 0 },
+  displaceAmount: { value: 0.08 },
+  noise_speed: { value: 0, range: [0, 10] },
+  noise_scale: { value: 10, range: [0, 100] },
+  shapeEdgeSoftness: { value: 0, range: [0, 0.5] },
+  onMouse: { value: 1 },
+  a: { value: 0 },
+  b: { value: 0 },
+};
+
 export function sheryPosterConfig(strength: number, preset: SheryConfig = {}): SheryConfig {
   return {
     ...defaultSheryConfig,
