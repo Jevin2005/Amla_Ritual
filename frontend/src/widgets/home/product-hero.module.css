@@ -68,10 +68,16 @@
   position: relative;
   height: clamp(560px, 52vw, 760px);
   overflow: hidden;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
   border: 1px solid rgb(82 119 68 / 24%);
   border-radius: 50% 50% 5px 5px / 30% 30% 5px 5px;
   background: var(--hero-soft, var(--surface-moss));
-  box-shadow: 0 28px 55px rgb(35 52 25 / 22%), 0 0 0 13px rgb(213 224 177 / 20%);
+  box-shadow: 0 28px 55px rgb(35 52 25 / 22%), 0 0 0 12px rgb(213 224 177 / 24%), 0 0 0 24px rgb(213 224 177 / 10%);
+  transition: box-shadow 400ms var(--ease), transform 400ms var(--ease);
+}
+.poster:hover {
+  box-shadow: 0 34px 64px rgb(35 52 25 / 28%), 0 0 0 14px var(--hero-accent, rgb(183 212 90 / 30%)), 0 0 0 28px var(--hero-soft, rgb(183 212 90 / 14%));
 }
 .poster[role="button"] {
   cursor: pointer;
@@ -80,6 +86,22 @@
 .poster[role="button"]:focus-visible {
   outline: 3px solid var(--forest);
   outline-offset: 6px;
+}
+.heroShery {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 250ms ease;
+  touch-action: pan-y;
+  cursor: pointer;
+}
+.heroShery[data-ready="true"] {
+  opacity: 1;
 }
 .posterBadge {
   position: absolute;
@@ -131,19 +153,29 @@
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .poster { transform: none; }
-  .posterMotion { transform: none; }
+  .poster {
+    transition: transform calc(500ms * var(--motion-duration, 1)) var(--ease), box-shadow 400ms var(--ease);
+    will-change: transform;
+  }
+  .posterMotion {
+    transition: transform calc(600ms * var(--motion-duration, 1)) var(--ease);
+    will-change: transform;
+  }
   .scene[data-pointer-motion="true"] .poster {
-    transform: none;
+    transform: perspective(1200px) rotateX(calc(var(--pointer-y, 0) * -4deg)) rotateY(calc(var(--pointer-x, 0) * 6deg)) translate3d(calc(var(--pointer-x, 0) * 4px), calc(var(--pointer-y, 0) * 3px), 0);
   }
   .scene[data-pointer-motion="true"] .posterMotion {
-    transform: none;
+    transform: scale(1.05) translate3d(calc(var(--pointer-x, 0) * -1.5%), calc(var(--pointer-y, 0) * -1.5%), 0);
   }
-  .caption { transition: box-shadow 400ms var(--ease); }
+  .caption {
+    transition: translate calc(500ms * var(--motion-duration, 1)) var(--ease), box-shadow 400ms var(--ease);
+  }
   .scene[data-pointer-motion="true"] .caption {
-    translate: none;
+    translate: calc(var(--pointer-x, 0) * -5px) calc(var(--pointer-y, 0) * -3px);
   }
-  .caption:hover { box-shadow: 0 16px 36px rgb(35 52 25 / 20%); }
+  .caption:hover {
+    box-shadow: 0 16px 36px rgb(35 52 25 / 20%);
+  }
 }
 .orbit, .orbit::after {
   display: none;
@@ -181,7 +213,25 @@
 .captionCopy { display: flex; flex-direction: column; min-width: 0; }
 .captionCopy strong { font-size: .8125rem; font-weight: 600; color: var(--charcoal); white-space: nowrap; }
 .captionCopy span { font-size: .6875rem; color: var(--muted); white-space: nowrap; }
-.captionDot { flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--hero-accent, var(--botanical)); transition: background-color 500ms var(--ease); }
+.captionDot {
+  flex: 0 0 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hero-accent, var(--botanical));
+  box-shadow: 0 0 8px var(--hero-accent, var(--amla));
+  animation: captionPulse 2s ease-in-out infinite;
+  transition: background-color 500ms var(--ease);
+}
+@keyframes captionPulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
 .scrollLink {
   position: absolute;
   right: 28px;
@@ -257,16 +307,13 @@
 .hero a:focus-visible, .hero button:focus-visible, .disclosures summary:focus-visible { outline: 2px solid var(--hero-accent, var(--forest)); outline-offset: 4px; }
 .progress { position: absolute; inset: auto 0 0; height: 2px; background: var(--hero-accent, var(--botanical)); transform-origin: left; animation: progress linear both; transition: background-color 500ms var(--ease); }
 
-.background[data-transition="fade"], .scene[data-transition="fade"], .productDetails[data-transition="fade"] { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
-.background[data-transition="slide"], .scene[data-transition="slide"], .productDetails[data-transition="slide"] { animation: fade calc(.45s * var(--motion-duration, 1)) var(--ease) backwards; }
+.background[data-transition="fade"], .productDetails[data-transition="fade"] { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
+.background[data-transition="slide"], .productDetails[data-transition="slide"] { animation: fade calc(.45s * var(--motion-duration, 1)) var(--ease) backwards; }
 .model:is([data-transition="fade"], [data-transition="slide"]) { animation: modelEntrance calc(500ms * var(--motion-duration, 1)) var(--ease) backwards; }
 .copy:is([data-transition="fade"], [data-transition="slide"]) .headlineText {
   animation: lineReveal calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards;
 }
 .copy:is([data-transition="fade"], [data-transition="slide"]) .purchase { animation: fade calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
-.scene:is([data-transition="fade"], [data-transition="slide"]) .posterImage { animation: fade calc(450ms * var(--motion-duration, 1)) var(--ease) backwards; }
-.scene:is([data-transition="fade"], [data-transition="slide"]) .caption { animation: fade calc(450ms * var(--motion-duration, 1)) var(--ease) calc(120ms * var(--motion-duration, 1)) backwards; }
-.scene:is([data-transition="fade"], [data-transition="slide"]) .orbit { animation: fade calc(500ms * var(--motion-duration, 1)) ease calc(80ms * var(--motion-duration, 1)) backwards; }
 .productDetails:is([data-transition="fade"], [data-transition="slide"]) { animation-delay: calc(100ms * var(--motion-duration, 1)); }
 .disclosures details[open] .disclosureBody { animation: slide 350ms var(--ease) backwards; }
 
@@ -338,6 +385,8 @@
 @media (prefers-reduced-motion: reduce) {
   .hero [data-transition], .hero [data-transition] *, .progress, .disclosureBody { animation: none !important; }
   .poster, .posterMotion, .posterImage, .caption { transform: none; translate: none; transition: none; }
+  .heroShery { display: none !important; }
+  .captionDot { animation: none !important; }
   .arrow, .dot, .scrollLink, .disclosures summary > span { transition: none; }
   .scrollLink:hover { transform: none; }
 }

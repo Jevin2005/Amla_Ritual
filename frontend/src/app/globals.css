@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -20,6 +20,9 @@
   --font-sans: "Plus Jakarta Sans", "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, Baskerville, Georgia, serif;
   --font-display: var(--font-serif);
+  --font-instrument: "Instrument Serif", "Playfair Display", Georgia, serif;
+  --font-cormorant: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-manrope: "Manrope", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-script: "Caveat", "Dancing Script", cursive;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-snappy: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -423,6 +426,123 @@ html[data-site-motion="off"] [data-reveal="pending"] { opacity: 1; }
   }
 }
 
+@keyframes benefit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes benefit-ticker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-benefit-spin {
+  animation: benefit-spin 14s linear infinite;
+}
+
+.animate-benefit-ticker {
+  animation: benefit-ticker 28s linear infinite;
+}
+
+.benefit-entrance-item {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.benefit-divider-item {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+[data-benefit-visible="true"] .benefit-entrance-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-benefit-visible="true"] .benefit-divider-item {
+  transform: scaleX(1);
+}
+
+@keyframes ambient-drift-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(45px, -35px, 0) scale(1.08) rotate(18deg);
+  }
+}
+
+@keyframes ambient-drift-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-40px, 35px, 0) scale(0.92) rotate(-16deg);
+  }
+}
+
+@keyframes ambient-drift-3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(30px, 25px, 0) scale(1.05) rotate(12deg);
+  }
+}
+
+@keyframes ink-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+  }
+}
+
+.animate-ambient-1 {
+  animation: ambient-drift-1 9s ease-in-out infinite;
+}
+
+.animate-ambient-2 {
+  animation: ambient-drift-2 11s ease-in-out infinite;
+}
+
+.animate-ambient-3 {
+  animation: ambient-drift-3 14s ease-in-out infinite;
+}
+
+.animate-ink-ripple {
+  animation: ink-ripple 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.quiz-entrance-item {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+[data-quiz-visible="true"] .quiz-entrance-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -439,8 +559,21 @@ html[data-site-motion="off"] [data-reveal="pending"] { opacity: 1; }
   }
 
   body[data-motion-ready="true"] [data-reveal="pending"],
-  [data-reveal="revealed"] {
+  [data-reveal="revealed"],
+  .benefit-entrance-item,
+  .benefit-divider-item,
+  .quiz-entrance-item {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
+  }
+
+  .animate-benefit-spin,
+  .animate-benefit-ticker,
+  .animate-ambient-1,
+  .animate-ambient-2,
+  .animate-ambient-3,
+  .animate-ink-ripple {
+    animation: none !important;
   }
 }

@@ -7,7 +7,8 @@ import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products
 import { nextHeroIndex, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
 import { ProductModel } from "@/features/catalog/product-model";
 import { SheryBackground } from "@/features/background/shery-background";
-import { defaultSheryBackgroundConfig } from "@/domain/shery-config";
+import { SheryPoster } from "@/features/poster/shery-poster";
+import { defaultSheryBackgroundConfig, sheryPosterConfig } from "@/domain/shery-config";
 import { useStore } from "@/features/store/store-provider";
 import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { usePointerMotion } from "@/shared/hooks/use-pointer-motion";
@@ -37,6 +38,8 @@ export function ProductHero({ products, entries, settings }: { products: Product
   const moving = motionSettings.enabled && !reducedMotion;
   const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && moving && pageVisible && inView;
   const heroBackgrounds = slides.map((slide) => slide.heroBackground);
+  const heroPosters = slides.map((slide) => slide.heroPoster);
+  const heroPosterConfig = sheryPosterConfig(1);
 
   useEffect(() => {
     const section = root.current;
@@ -116,7 +119,7 @@ export function ProductHero({ products, entries, settings }: { products: Product
             <HeroPurchase key={product.slug} slug={product.slug} name={product.name} pricePaise={product.pricePaise} cursorMotion={settings.cursorMotion} />
           </div>
         </div>
-        <div key={`scene-${product.heroEntryId}`} {...posterPointer} className={styles.scene} data-transition={animation}>
+        <div {...posterPointer} className={styles.scene}>
           <div className={styles.orbit} aria-hidden="true" />
           <div
             className={styles.poster}
@@ -132,9 +135,22 @@ export function ProductHero({ products, entries, settings }: { products: Product
             }}
           >
             <div className={styles.posterMotion}>
-              <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
+              <Image src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
                 sizes="(max-width: 1000px) 48vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
             </div>
+
+            {visited && slides.length > 1 && moving && webgl && (
+              <SheryPoster
+                images={heroPosters}
+                config={heroPosterConfig}
+                selected={index}
+                active={inView && pageVisible}
+                cursor={false}
+                duration={1100 * motionSettings.duration}
+                onSelect={(newIndex) => goTo(newIndex)}
+                className={styles.heroShery}
+              />
+            )}
 
             {slides.length > 1 && (
               <span className={styles.posterBadge} aria-hidden="true">
