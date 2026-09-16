@@ -1,15 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { getHomepageHeroProducts } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
-import { RitualFinder } from "@/features/rituals/ritual-finder";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
 import { IngredientPoster } from "@/features/poster/ingredient-poster";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { ProductHero } from "./product-hero";
+import { ProductBenefits } from "./product-benefits";
+import { BuildYourRitual } from "./build-your-ritual";
 import { VideoReviewsSection } from "./video-reviews-section";
 import { homeFaqs } from "./content";
 
@@ -98,105 +98,9 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ── The Benefit of This Products Section ── */}
-      <section
-        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[960px]:py-10 max-[680px]:px-4 max-[680px]:py-8 ${revealClass}`}
-        aria-labelledby="benefits-title"
-      >
-        <div className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-x-[clamp(32px,5vw,80px)] gap-y-10 max-[960px]:grid-cols-1 max-[960px]:gap-y-8">
-          {/* Left Column: Heading, description, CTA */}
-          <div className="flex flex-col items-start">
-            <p className={eyebrowClass}>
-              Botanical efficacy
-            </p>
-            <h2
-              id="benefits-title"
-              className="m-0 text-[clamp(2.4rem,4.2vw,4.2rem)] font-normal leading-[1.02] tracking-[-0.04em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.75rem,7vw,2.25rem)]"
-            >
-              The benefit of <br />
-              this product.
-            </h2>
-            <p className="mt-4 mb-7 max-w-[420px] text-[0.92rem] leading-[1.7] text-[#55635a] max-[680px]:mt-2.5 max-[680px]:mb-5 max-[680px]:text-[0.84rem]">
-              Proven botanical hair benefits formulated with pure, single-origin shade-dried herbs.
-            </p>
-            <Link
-              href="/shop"
-              className="inline-flex items-center justify-center rounded-full bg-[#5a9e32] px-7 py-3 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_4px_14px_rgba(90,158,50,0.28)] transition-all duration-200 hover:bg-[#4a8528] hover:shadow-[0_6px_20px_rgba(90,158,50,0.36)] hover:-translate-y-0.5 active:scale-95 max-[680px]:px-6 max-[680px]:py-2.5 max-[680px]:text-[0.74rem]"
-            >
-              Explore Us
-            </Link>
-          </div>
+      <ProductBenefits products={products} motionSettings={content.motionSettings} />
 
-          {/* Right Column: 2x2 Grid of numbered benefits */}
-          <div className="grid grid-cols-2 gap-x-5 gap-y-6 max-[820px]:gap-4 max-[680px]:grid-cols-1 max-[680px]:gap-3">
-            {[
-              { benefit: "Follicle Vitality: Delivers plant polyphenols and antioxidants to strengthen hair roots." },
-              { benefit: "Natural Slip & Cuticle Seal: Gently detangles while imparting a reflective, silky sheen." },
-              { benefit: "Sebum Balance: Purifies the scalp without stripping its essential natural moisture barrier." },
-              { benefit: "Pure Pigment Depth: Enhances rich natural hair tones with zero synthetic dyes or ammonia." },
-            ].map(({ benefit }, idx) => {
-              const p = products[idx];
-              const imgSrc = p?.featuredImage?.url ?? `/images/${["amla-powder", "reetha-powder", "shikakai-powder", "bhringraj-powder"][idx]}.jpg`;
-              const imgAlt = p?.featuredImage?.altText || p?.name || benefit;
-              return (
-                <div
-                  key={idx}
-                  className="flex items-start gap-3.5 rounded-2xl border border-[#dedad0]/80 bg-[rgba(255,253,248,0.7)] p-4 shadow-2xs transition-all hover:border-[var(--botanical)] max-[680px]:p-3 max-[680px]:rounded-xl"
-                >
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="shrink-0 font-mono text-[1.8rem] font-medium leading-none tracking-tight text-[#1a2e22] max-[680px]:text-[1.3rem] max-[680px]:text-[var(--botanical)]">
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <div className="relative size-[64px] shrink-0 overflow-hidden rounded-xl border border-[#dedad0] bg-[#f8f6f0] p-1 shadow-2xs max-[680px]:size-[48px] max-[680px]:rounded-lg">
-                      <Image
-                        src={imgSrc}
-                        alt={imgAlt}
-                        fill
-                        sizes="(max-width: 680px) 48px, 64px"
-                        className="size-full object-cover object-center rounded-lg max-[680px]:rounded-md"
-                      />
-                    </div>
-                  </div>
-                  <p className="m-0 self-center text-[0.82rem] leading-[1.55] text-[#4f5c53] max-[680px]:text-[0.76rem] max-[680px]:leading-[1.45]">
-                    {benefit}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Build your ritual / Botanical Starting Point ── */}
-      <section
-        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(40px,5vw,80px)] max-[680px]:px-3.5 max-[680px]:py-6 ${revealClass}`}
-        aria-labelledby="builder-title"
-      >
-        <div className="relative overflow-hidden rounded-[24px] border border-[#1b3d2b] bg-[radial-gradient(ellipse_at_top_left,rgba(111,143,47,0.2),transparent_65%),linear-gradient(145deg,#132c20,#0b1a13)] p-[clamp(24px,4vw,44px)] shadow-[0_20px_50px_rgba(11,26,19,0.18)] max-[680px]:p-4 max-[680px]:rounded-2xl">
-          <div className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-x-[clamp(28px,4vw,60px)] gap-y-6 max-[920px]:grid-cols-1">
-            {/* Left Header */}
-            <div>
-              <p className="mb-2 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#c8d88e]">
-                Build your ritual
-              </p>
-              <h2
-                className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,3.2vw,3.4rem)] leading-[0.98] font-normal tracking-[-0.04em] text-[#fdfbf6] max-[680px]:text-[1.65rem]"
-                id="builder-title"
-              >
-                A botanical starting point, chosen with care.
-              </h2>
-              <p className="mt-3.5 max-w-[440px] text-[0.82rem] leading-[1.6] text-white/70 max-[680px]:hidden">
-                Tell us your ritual goal and how your hair feels today. We&apos;ll suggest a simple place to begin—never a diagnosis or a promise.
-              </p>
-            </div>
-
-            {/* Right Interactive Card */}
-            <div>
-              <RitualFinder />
-            </div>
-          </div>
-        </div>
-      </section>
+      <BuildYourRitual />
 
       {/* ── The Art of Preparation (Three steps. One unhurried ritual) ── */}
       <section
