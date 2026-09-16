@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
 import { nextHeroIndex, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
+import { getHeroTheme } from "@/domain/catalog/hero-theme";
 import { ProductModel } from "@/features/catalog/product-model";
 import { SheryBackground } from "@/features/background/shery-background";
 import { defaultSheryBackgroundConfig } from "@/domain/shery-config";
@@ -82,7 +83,9 @@ export function ProductHero({ products, entries, settings }: { products: Product
 
   if (!product) return null;
 
-  const name = product.name.replace(/ Powder$/i, "");
+  const theme = getHeroTheme(product);
+  const tagline = theme.tagline || product.hero?.headlineItalic || "Botanical ritual.";
+  const description = product.hero?.description || product.shortDescription;
   const animation = reducedMotion || !motionSettings.enabled ? "none" : settings.transition;
 
   return (
@@ -91,7 +94,16 @@ export function ProductHero({ products, entries, settings }: { products: Product
       onPointerLeave={() => setHovered(false)}
       onFocusCapture={() => setFocused(true)}
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
-      style={{ "--hero-accent": product.accent, "--hero-soft": product.accentSoft } as CSSProperties}>
+      data-theme={theme.key}
+      style={{
+        "--hero-heading": theme.heading,
+        "--hero-body": theme.body,
+        "--hero-accent": theme.accent,
+        "--hero-button-bg": theme.buttonBackground,
+        "--hero-button-text": theme.buttonText,
+        "--hero-surface": theme.surface,
+        "--hero-soft": product.accentSoft,
+      } as CSSProperties}>
       <div className={styles.background} data-transition={animation} aria-hidden="true">
         <Image key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
         {visited && slides.length > 1 && moving && webgl && (
@@ -107,14 +119,15 @@ export function ProductHero({ products, entries, settings }: { products: Product
       </div>
       <div className={styles.layout} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}: ${product.name}`}>
         <div className={styles.copy} key={`copy-${product.heroEntryId}`} data-transition={animation}>
+          <p className={styles.introEyebrow}>NATUREMIST · BOTANICAL HAIR CARE</p>
           <h1 id="hero-title">
-            <span className={styles.headlineLine}><span className={styles.headlineText}>{product.hero?.headlineFirst || "Discover"}</span></span>
-            <span className={styles.headlineLine}><span className={styles.headlineText}>{product.hero?.headlineMiddle || name}</span></span>
-            <span className={styles.headlineLine}><em className={styles.headlineText}>{product.hero?.headlineItalic || "Botanical ritual."}</em></span>
+            <span className={styles.headlineLine}><span className={styles.headlineText}>Discover</span></span>
+            <span className={`${styles.headlineLine} ${styles.productHeadline}`} data-long-name={theme.name.length > 7}>
+              <span className={styles.headlineText}>{theme.name.replace(/\.$/, "")}.</span>
+            </span>
           </h1>
-          <div className={styles.purchase}>
-            <HeroPurchase key={product.slug} slug={product.slug} name={product.name} pricePaise={product.pricePaise} cursorMotion={settings.cursorMotion} />
-          </div>
+          <p className={styles.tagline}><em className={styles.headlineText}>{tagline}</em></p>
+          {description && <p className={styles.description}>{description}</p>}
         </div>
         <div key={`scene-${product.heroEntryId}`} {...posterPointer} className={styles.scene} data-transition={animation}>
           <div className={styles.orbit} aria-hidden="true" />
@@ -133,7 +146,7 @@ export function ProductHero({ products, entries, settings }: { products: Product
           >
             <div className={styles.posterMotion}>
               <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
-                sizes="(max-width: 1000px) 48vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+                sizes="(max-width: 680px) calc(100vw - 40px), (max-width: 1100px) 600px, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
             </div>
 
             {slides.length > 1 && (
@@ -153,6 +166,10 @@ export function ProductHero({ products, entries, settings }: { products: Product
           </Link>
           <a className={styles.scrollLink} href="#featured-ritual" aria-label={`Explore ${product.name}`}><span aria-hidden="true">↓</span></a>
         </div>
+        <div className={styles.purchase} key={`purchase-${product.heroEntryId}`} data-transition={animation}>
+          <HeroPurchase slug={product.slug} name={product.name} pricePaise={product.pricePaise}
+            size={product.size} currencyCode={product.currencyCode} cursorMotion={settings.cursorMotion && moving} />
+        </div>
         <aside className={styles.featured} id="featured-ritual" aria-labelledby="featured-ritual-heading">
           <div className={styles.featuredHeader} aria-label="Hero slideshow controls">
             <button type="button" className={styles.arrow} disabled={slides.length < 2} onClick={() => goTo(nextHeroIndex(index, slides.length, -1))} aria-label="Previous featured product">←</button>
@@ -161,7 +178,7 @@ export function ProductHero({ products, entries, settings }: { products: Product
           </div>
           <div className={styles.model} data-transition={animation}>
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={settings} paused={paused || !inView} eager />
+              settings={settings} paused={paused || !inView} cameraDistancePercent={85} eager />
           </div>
           <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>
             <p className={styles.eyebrow}>{product.hero?.eyebrow || "Single-origin botanical"}</p>
@@ -169,20 +186,20 @@ export function ProductHero({ products, entries, settings }: { products: Product
             <p className={styles.subtitle}>{[product.subtitle, product.size].filter(Boolean).join(" · ")}</p>
             <div className={styles.disclosures}>
               <details name="hero-product-details">
-                <summary>Why you’ll love it <span aria-hidden="true">+</span></summary>
+                <summary>Why you’ll love it <span className={styles.accordionIcon} aria-hidden="true" /></summary>
                 <div className={styles.disclosureBody}>
                   {(product.hero?.description || product.shortDescription) && <p>{product.hero?.description || product.shortDescription}</p>}
                   {product.benefits.length > 0 && <ul>{product.benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>}
                 </div>
               </details>
               <details name="hero-product-details">
-                <summary>How to prepare <span aria-hidden="true">+</span></summary>
+                <summary>How to prepare <span className={styles.accordionIcon} aria-hidden="true" /></summary>
                 <div className={styles.disclosureBody}>
                   {product.howTo.length > 0 ? <ol>{product.howTo.map((step) => <li key={step}>{step}</li>)}</ol> : <Link href={`/shop/${product.slug}`}>View preparation details</Link>}
                 </div>
               </details>
               <details name="hero-product-details" open>
-                <summary>Ingredient clarity <span aria-hidden="true">+</span></summary>
+                <summary>Ingredient clarity <span className={styles.accordionIcon} aria-hidden="true" /></summary>
                 <div className={styles.disclosureBody}><p>{product.ingredient}</p></div>
               </details>
             </div>

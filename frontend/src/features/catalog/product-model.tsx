@@ -11,13 +11,14 @@ type Props = {
   settings?: HeroSettings;
   paused?: boolean;
   eager?: boolean;
+  cameraDistancePercent?: number;
 };
 
 export function ProductModel(props: Props) {
   return <ModelStage {...props} />;
 }
 
-function ModelStage({ model, settings = defaultHeroSettings, paused = false, eager = false }: Props) {
+function ModelStage({ model, settings = defaultHeroSettings, paused = false, eager = false, cameraDistancePercent = 105 }: Props) {
   const viewer = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const frame = useRef(0);
@@ -97,7 +98,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     cancelAnimationFrame(frame.current);
     stage.current?.style.setProperty("--model-x", "0px");
     stage.current?.style.setProperty("--model-y", "0px");
-    viewer.current?.setAttribute("camera-orbit", "0deg 75deg 105%");
+    viewer.current?.setAttribute("camera-orbit", `0deg 75deg ${cameraDistancePercent}%`);
   };
 
   const followCursor = (event: PointerEvent<HTMLDivElement>) => {
@@ -110,7 +111,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     frame.current = requestAnimationFrame(() => {
       stage.current?.style.setProperty("--model-x", `${x * 12}px`);
       stage.current?.style.setProperty("--model-y", `${y * 8}px`);
-      viewer.current?.setAttribute("camera-orbit", `${x * 25}deg ${75 + y * 12}deg 105%`);
+      viewer.current?.setAttribute("camera-orbit", `${x * 25}deg ${75 + y * 12}deg ${cameraDistancePercent}%`);
     });
   };
 
@@ -136,7 +137,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
         "disable-zoom": "",
         "disable-pan": "",
         "touch-action": "pan-y",
-        "camera-orbit": "0deg 75deg 105%",
+        "camera-orbit": `0deg 75deg ${cameraDistancePercent}%`,
         "rotation-per-second": `${settings.rotationSpeed}deg`,
         "auto-rotate-delay": "0",
         "shadow-intensity": "0.7",

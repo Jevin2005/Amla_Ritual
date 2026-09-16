@@ -9,11 +9,20 @@ import styles from "./hero-purchase.module.css";
 type HeroPurchaseProps = {
   slug: string;
   name: string;
-  pricePaise: number;
+  pricePaise?: number | null;
+  size?: string;
+  currencyCode?: string;
   cursorMotion?: boolean;
 };
 
-export function HeroPurchase({ slug, name, pricePaise, cursorMotion = true }: HeroPurchaseProps) {
+export function HeroPurchase({
+  slug,
+  name,
+  pricePaise,
+  size,
+  currencyCode: suppliedCurrencyCode,
+  cursorMotion = true,
+}: HeroPurchaseProps) {
   const {
     products,
     addToCart,
@@ -28,7 +37,10 @@ export function HeroPurchase({ slug, name, pricePaise, cursorMotion = true }: He
   const variant = product ? getDefaultVariant(product) : null;
   const currentPricePaise =
     variant?.pricePaise ?? product?.pricePaise ?? pricePaise;
-  const currencyCode = variant?.currencyCode || product?.currencyCode || "INR";
+  const hasPrice = typeof currentPricePaise === "number" &&
+    Number.isFinite(currentPricePaise) && currentPricePaise >= 0;
+  const productSize = product?.size?.trim() || size?.trim();
+  const currencyCode = variant?.currencyCode || product?.currencyCode || suppliedCurrencyCode || "INR";
   const available =
     variant?.availableForSale ?? product?.availableForSale ?? true;
 
@@ -49,12 +61,16 @@ export function HeroPurchase({ slug, name, pricePaise, cursorMotion = true }: He
   return (
     <div className={styles.purchase}>
       <div className={styles.priceRow}>
-        <span className={styles.price}>
-          {formatCurrency(currentPricePaise, currencyCode)}
+        <span className={hasPrice ? styles.price : styles.weight}>
+          {hasPrice
+            ? formatCurrency(currentPricePaise, currencyCode)
+            : productSize || "See product details"}
         </span>
-        <small className={styles.tax}>
-          Tax included · {product?.size || "See product details"}
-        </small>
+        {hasPrice && (
+          <small className={styles.tax}>
+            Tax included{productSize ? ` · ${productSize}` : ""}
+          </small>
+        )}
       </div>
       <div className={styles.actions}>
         <button
@@ -69,8 +85,8 @@ export function HeroPurchase({ slug, name, pricePaise, cursorMotion = true }: He
               ? "Sold out"
               : added
                 ? "Added"
-                : "Add to Bag"}
-          <span aria-hidden="true">{added ? "✓" : "↗"}</span>
+                : "Add to bag"}
+          <span aria-hidden="true">{added ? "✓" : "→"}</span>
         </button>
         <button
           className={styles.wishlist}
@@ -82,7 +98,9 @@ export function HeroPurchase({ slug, name, pricePaise, cursorMotion = true }: He
           aria-pressed={wished}
           onClick={() => toggleWishlist(slug)}
         >
-          <span aria-hidden="true">{wished ? "♥" : "♡"}</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />
+          </svg>
         </button>
       </div>
       <MagneticLink
@@ -94,7 +112,7 @@ export function HeroPurchase({ slug, name, pricePaise, cursorMotion = true }: He
         <span
           aria-hidden="true"
         >
-          ↓
+          ↗
         </span>
       </MagneticLink>
     </div>
