@@ -1,4 +1,4 @@
-import { isGlbUrl, type HomepageHeroEntry } from "./hero";
+import { isGlbUrl } from "./hero";
 
 export type ProductFaq = {
   question: string;
@@ -108,32 +108,17 @@ export type HomepageHeroProduct = Product & {
 
 export function getHomepageHeroProducts(
   catalog: readonly Product[],
-  entries: readonly HomepageHeroEntry[] = [],
 ): HomepageHeroProduct[] {
-  // Only published homepage entries select hero content. Product metafields
-  // are never a fallback, so drafts and cleared entries cannot reappear.
-  const byId = new Map(catalog.filter((product) => product.id).map((product) => [product.id, product]));
-  return entries.flatMap<HomepageHeroProduct>((entry) => {
-    const product = entry.productId ? byId.get(entry.productId) : undefined;
-    if (!product || !entry.poster?.url?.trim() || !entry.background?.url?.trim() || !entry.model || !isGlbUrl(entry.model.url)) return [];
+  // Each explicitly enabled, storefront-visible product owns one slide.
+  // Missing references never borrow another product's media.
+  return catalog.flatMap<HomepageHeroProduct>((product) => {
+    if (product.heroEnabled !== true || !product.heroPoster?.url?.trim() || !product.heroBackground?.url?.trim() || !product.heroModel || !isGlbUrl(product.heroModel.url)) return [];
     return [{
       ...product,
-      heroEntryId: entry.id,
-      heroModel: entry.model,
-      heroPoster: entry.poster,
-      heroBackground: entry.background,
-      heroOrder: entry.order,
-      heroDurationSeconds: entry.durationSeconds,
-      hero: {
-        eyebrow: entry.copy.eyebrow || "",
-        headlineFirst: entry.copy.headlineFirst || "",
-        headlineMiddle: entry.copy.headlineMiddle || "",
-        headlineItalic: entry.copy.headlineItalic || "",
-        description: entry.copy.description || "",
-        badgeText: entry.copy.badgeText || "",
-        badgeSubtitle: entry.copy.badgeSubtitle || "",
-        howToText: entry.copy.howToText || "",
-      },
+      heroEntryId: product.id || product.slug,
+      heroModel: product.heroModel,
+      heroPoster: product.heroPoster,
+      heroBackground: product.heroBackground,
     }];
   })
     .sort((left, right) => {
@@ -528,6 +513,14 @@ export const ritualGoals = [
 ] as const;
 
 export type RitualGoal = (typeof ritualGoals)[number];
+
+export function matchesRitualGoal(product: Pick<Product, "concerns" | "ritualStep">, goal: RitualGoal) {
+  if (product.concerns.some((concern) => concern.trim().toLowerCase() === goal.toLowerCase())) return true;
+  const step = goal === "Cleanse" ? "Cleanse"
+    : goal === "Softness + Shine" ? "Condition"
+    : goal === "Botanical Colour" ? "Colour" : null;
+  return step !== null && product.ritualStep === step;
+}
 
 export type ProductBundle = {
   id: string;

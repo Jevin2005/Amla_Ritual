@@ -109,7 +109,10 @@ export function ProductBenefits({ products, motionSettings }: {
         <div className={styles.divider} data-benefit-reveal data-benefits-divider />
         <ol className={styles.rows}>
           {benefits.map(({ title, description, productSlug }, index) => {
-            const product = products.find(({ slug }) => slug === productSlug);
+            // Handles can survive a rename; resolve the displayed botanical
+            // from the current product name before linking its live handle.
+            const botanical = productSlug.replace(/-powder$/, "");
+            const product = products.find(({ name }) => name.toLowerCase().split(/[^a-z]+/).includes(botanical));
             const imageSrc = product?.featuredImage?.url || `/images/${productSlug}.jpg`;
             return (
               <li key={title} className={styles.row} data-benefit-row data-benefit-reveal>

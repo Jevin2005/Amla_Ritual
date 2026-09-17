@@ -57,7 +57,7 @@ export function FeaturedProductSwitcher() {
           {/* Left Column: Product Photo */}
           <div className="relative aspect-[0.84] w-full overflow-hidden rounded-lg border border-black/5 bg-white/70 shadow-inner">
             <Image
-              src={product.featuredImage?.url || "/images/amla-powder.jpg"}
+              src={product.featuredImage?.url || "/images/product-placeholder.svg"}
               alt={product.name}
               fill
               sizes="45vw"
@@ -150,7 +150,7 @@ export function FeaturedProductSwitcher() {
           {/* Left Column: Product Photo */}
           <div className="relative aspect-[0.9] w-full overflow-hidden rounded-xl border border-black/5 bg-white/70 shadow-inner">
             <Image
-              src={product.featuredImage?.url || "/images/amla-powder.jpg"}
+              src={product.featuredImage?.url || "/images/product-placeholder.svg"}
               alt={product.name}
               fill
               sizes="40vw"
@@ -245,7 +245,7 @@ export function FeaturedProductSwitcher() {
             key={product.slug}
           >
             <Image
-              src={product.featuredImage?.url || "/images/amla-powder.jpg"}
+              src={product.featuredImage?.url || "/images/product-placeholder.svg"}
               alt={product.name}
               fill
               sizes="33vw"

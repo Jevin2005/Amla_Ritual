@@ -37,7 +37,7 @@ export function ProductCard({
     "--product-soft": product.accentSoft,
   } as CSSProperties;
 
-  const imageUrl = product.featuredImage?.url || "/images/amla-powder.jpg";
+  const imageUrl = product.featuredImage?.url || product.images?.[0]?.url || "/images/product-placeholder.svg";
   const imageAlt = product.featuredImage?.altText || product.name;
   const alternateImage = product.images?.find((image) => image.url !== imageUrl);
   const [loadedAlternate, setLoadedAlternate] = useState<string | null>(null);
@@ -99,7 +99,7 @@ export function ProductCard({
       {/* Info area */}
       <div className="flex flex-1 flex-col border-t border-[var(--line)] px-5 pt-4 pb-5 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5 max-[420px]:px-2.5 max-[420px]:py-2.5">
         <p className="mb-1 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.1em]">
-          {product.ritualStep} Ritual
+          {product.ritualStep ? `${product.ritualStep} Ritual` : "Botanical hair care"}
         </p>
 
         <Link
@@ -111,7 +111,7 @@ export function ProductCard({
         </Link>
 
         <p className="mb-0 text-[0.82rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-2 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.68rem]">
-          {product.subtitle}
+          {[product.subtitle, product.size].filter(Boolean).join(" · ")}
         </p>
 
         {reviewSummary && (

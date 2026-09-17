@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
-import { nextHeroIndex, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
+import { nextHeroIndex, type HeroSettings } from "@/domain/catalog/hero";
 import { getHeroPresentation } from "./hero-presentation";
 import { ProductModel } from "@/features/catalog/product-model";
 import { SheryBackground } from "@/features/background/shery-background";
@@ -16,9 +16,9 @@ import { useWebGL } from "@/shared/hooks/use-webgl";
 import { HeroPurchase } from "./hero-purchase";
 import styles from "./product-hero.module.css";
 
-export function ProductHero({ products, entries, settings }: { products: Product[]; entries: HomepageHeroEntry[]; settings: HeroSettings }) {
+export function ProductHero({ products, settings }: { products: Product[]; settings: HeroSettings }) {
   const { content: { motionSettings } } = useStore();
-  const slides = useMemo(() => getHomepageHeroProducts(products, entries), [products, entries]);
+  const slides = useMemo(() => getHomepageHeroProducts(products), [products]);
   const [selected, setSelected] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -120,7 +120,7 @@ export function ProductHero({ products, entries, settings }: { products: Product
       </div>
       <div className={styles.layout} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}: ${product.name}`}>
         <div className={styles.copy} key={`copy-${product.heroEntryId}`} data-transition={animation}>
-          <p className={styles.introEyebrow}>NATUREMIST · BOTANICAL HAIR CARE</p>
+          <p className={styles.introEyebrow}>{product.hero?.eyebrow || "NATUREMIST · BOTANICAL HAIR CARE"}</p>
           <h1 id="hero-title">
             <span className={styles.headlineLine}><span className={styles.headlineText}>{firstLine}</span></span>
             <span className={`${styles.headlineLine} ${styles.productHeadline}`} data-long-name={productLine.length > 8}>

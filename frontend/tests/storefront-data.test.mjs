@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 // framework's server marker/render cache and the network boundary are stubbed.
 const bundle = await build({
   stdin: {
-    contents: 'export * from "./src/lib/shopify/storefront.ts"; export { formatCurrency } from "./src/domain/catalog/products.ts";',
+    contents: 'export * from "./src/lib/shopify/storefront.ts"; export { formatCurrency, getHomepageHeroProducts } from "./src/domain/catalog/products.ts";',
     resolveDir: fileURLToPath(new URL("../", import.meta.url)),
   },
   tsconfig: fileURLToPath(new URL("../tsconfig.json", import.meta.url)),
@@ -25,7 +25,7 @@ const bundle = await build({
     },
   }],
 });
-const { getStorefront, getStorefrontProduct, formatCurrency } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { getStorefront, getStorefrontProduct, formatCurrency, getHomepageHeroProducts } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 
 const pageInfo = { hasNextPage: false, endCursor: null };
 const connection = (nodes = []) => ({ nodes, pageInfo });
@@ -86,6 +86,31 @@ async function withShopify({ products = [], product = null, catalogError = false
     Object.assign(process.env, savedEnv);
   }
 }
+
+test("product metafields control hero selection, references, all copy, order and timing", async () => {
+  const image = { url: "https://cdn.shopify.com/hero.png", width: 900, height: 900, altText: "Saved poster" };
+  const saved = {
+    heroEnabled: field("true"), heroOrder: field("2"), heroDuration: field("3"),
+    heroPoster: { reference: { image } }, heroBackground: { reference: { image: { ...image, url: "https://cdn.shopify.com/background.png" } } },
+    heroModel: { reference: { alt: "Saved model", sources: [{ url: "https://cdn.shopify.com/model.usdz" }, { url: "https://cdn.shopify.com/model.glb" }] } },
+    ...Object.fromEntries(["Eyebrow", "HeadlineFirst", "HeadlineMiddle", "HeadlineItalic", "Description", "BadgeText", "BadgeSubtitle"].map((key) => [`hero${key}`, field(`Saved ${key}`)])),
+  };
+  const first = rawProduct({ ...saved, id: "first", heroOrder: field("1"), heroDuration: field("12"), heroModel: { reference: { url: "https://cdn.shopify.com/file.glb" } } });
+  await withShopify({ products: [rawProduct(saved), first, rawProduct({ ...saved, id: "hidden", heroEnabled: field("false") }), rawProduct({ ...saved, id: "missing", heroModel: { reference: null } })] }, async (requests) => {
+    const catalog = (await getStorefront()).products;
+    const slides = getHomepageHeroProducts(catalog);
+    assert.equal(catalog.length, 4);
+    assert.deepEqual(slides.map((slide) => slide.id), ["first", "gid://shopify/Product/1"]);
+    assert.deepEqual(slides.map((slide) => slide.heroDurationSeconds), [12, 3]);
+    assert.equal(slides[0].heroModel.url, "https://cdn.shopify.com/file.glb");
+    assert.equal(slides[1].heroModel.url, "https://cdn.shopify.com/model.glb");
+    assert.equal(slides[1].heroBackground.url, "https://cdn.shopify.com/background.png");
+    for (const key of ["eyebrow", "headlineFirst", "headlineMiddle", "headlineItalic", "description", "badgeText", "badgeSubtitle"]) assert.equal(slides[1].hero[key], `Saved ${key[0].toUpperCase()}${key.slice(1)}`);
+    const query = requests.find((request) => request.query.includes("NatureMistCatalog")).query;
+    for (const key of ["hero_enabled", "hero_order", "hero_duration", "hero_poster", "hero_background", "hero_model", "hero_eyebrow"]) assert.ok(query.includes(`key: "${key}"`));
+    assert.ok(!requests.some((request) => request.query.includes("NatureMistHomepageHeroes")));
+  });
+});
 
 test("published product facts, formulation and SEO come from Shopify", async () => {
   const product = rawProduct({
@@ -159,6 +184,40 @@ test("legacy authored fields still map without inventing new values", async () =
     assert.equal(product.size, "100 g");
     assert.deepEqual(product.howTo, ["First pack instruction", "Second pack instruction"]);
     assert.equal(product.metaDescription, "Metafield search copy");
+  });
+});
+
+test("all catalog consumers receive the saved numeric collection order, independently of hero order", async () => {
+  await withShopify({ products: [
+    rawProduct({ id: "tenth", collectionNumber: field("10"), heroOrder: field("1") }),
+    rawProduct({ id: "second", collectionNumber: field("2"), heroOrder: field("20"), heroEnabled: field("false") }),
+  ] }, async () => {
+    const { products } = await getStorefront();
+    assert.deepEqual(products.map((product) => product.id), ["second", "tenth"]);
+  });
+});
+
+test("listing media uses the product's own gallery when featured media is absent", async () => {
+  const image = { url: "https://cdn.shopify.com/indigo.jpg", altText: "Indigo", width: 800, height: 800 };
+  await withShopify({ products: [rawProduct({ images: connection([image]) }), rawProduct({ id: "empty" })] }, async () => {
+    const { products } = await getStorefront();
+    assert.deepEqual(products[0].featuredImage, image);
+    assert.equal(products[1].featuredImage, null);
+  });
+});
+
+test("metafield bullets and JSON lists preserve authored sentences and trim whitespace", async () => {
+  await withShopify({ products: [rawProduct({
+    benefits: field("Soft, smooth lengths • Natural shine"),
+    howToUse: field("Mix with water, then apply. • Rinse well."),
+    concerns: field("Cleanse, Scalp Ritual"),
+    safety: field('["  Avoid eyes.  ", " "]'),
+  })] }, async () => {
+    const [product] = (await getStorefront()).products;
+    assert.deepEqual(product.benefits, ["Soft, smooth lengths", "Natural shine"]);
+    assert.deepEqual(product.howTo, ["Mix with water, then apply.", "Rinse well."]);
+    assert.deepEqual(product.concerns, ["Cleanse", "Scalp Ritual"]);
+    assert.deepEqual(product.safety, ["Avoid eyes."]);
   });
 });
 

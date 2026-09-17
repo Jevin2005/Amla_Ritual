@@ -45,9 +45,15 @@ test("partial names and ambiguous blends cannot acquire another product's identi
     { slug: "indigofera", name: "Indigofera Powder" },
     { slug: "reethal", name: "Reethal Powder" },
     { slug: "reetha-shikakai-blend", name: "Botanical Blend" },
-    { slug: "indigo", name: "Hibiscus Powder" },
+    { slug: "indigo", name: "Hibiscus and Indigo Blend" },
     { slug: "constructor", name: "toString" },
   ]) assert.equal(getHeroTheme(product).key, "default");
+});
+
+test("current product names take priority over old Shopify handles", () => {
+  assert.equal(getHeroTheme({ slug: "reetha-powder", name: "NatureMist Indigo Powder" }).key, "indigo");
+  assert.equal(getHeroTheme({ slug: "indigo-powder", name: "NatureMist Shikakai Powder" }).key, "shikakai");
+  assert.equal(getHeroTheme({ slug: "reetha-powder", name: "Amla Powder" }).key, "default");
 });
 
 test("Amla and unknown products retain the light palette and catalogue name without invented copy", () => {

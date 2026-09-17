@@ -88,15 +88,20 @@ const aliases: Readonly<Record<string, Exclude<HeroThemeKey, "default">>> = {
 };
 
 export function getHeroTheme(product: Pick<Product, "slug" | "name">): HeroTheme {
-  const tokens = `${product.slug} ${product.name}`
+  const identify = (value: string) => value
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .split(/[^a-z0-9]+/);
-  const matches = new Set(tokens.flatMap((token) => Object.hasOwn(aliases, token) ? [aliases[token]] : []));
+  const nameTokens = identify(product.name);
+  // Product names can change without changing existing Shopify URLs.
+  const tokens = nameTokens.some((token) => token === "amla" || Object.hasOwn(aliases, token))
+    ? nameTokens : identify(product.slug);
+  const matches = new Set(tokens.flatMap((token) => token === "amla" ? ["default" as const] : Object.hasOwn(aliases, token) ? [aliases[token]] : []));
 
-  // A blend or conflicting identifiers must not receive a single-botanical label.
-  if (matches.size === 1) return themes[Array.from(matches)[0]];
+  // A blend must not receive a single-botanical label.
+  const match = Array.from(matches)[0];
+  if (matches.size === 1 && match !== "default") return themes[match];
 
   return {
     key: "default",

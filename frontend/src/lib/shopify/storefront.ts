@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
+import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { defaultMotionSettings, parseMotionSettings, type MotionSettings } from "@/domain/motion";
 import { defaultIngredientPosterSettings, parseIngredientPosterSettings, posterImages, type IngredientPosterSettings } from "@/domain/ingredient-poster";
 import {
@@ -26,6 +26,28 @@ const DEFAULT_API_VERSION = "2026-07";
 const DEFAULT_PRODUCT_LIMIT = 50;
 
 const productMetafields = `
+  heroEnabled: metafield(namespace: "custom", key: "hero_enabled") { value }
+  heroOrder: metafield(namespace: "custom", key: "hero_order") { value }
+  heroDuration: metafield(namespace: "custom", key: "hero_duration") { value }
+  heroEyebrow: metafield(namespace: "custom", key: "hero_eyebrow") { value }
+  heroHeadlineFirst: metafield(namespace: "custom", key: "hero_headline_first") { value }
+  heroHeadlineMiddle: metafield(namespace: "custom", key: "hero_headline_middle") { value }
+  heroHeadlineItalic: metafield(namespace: "custom", key: "hero_headline_italic") { value }
+  heroDescription: metafield(namespace: "custom", key: "hero_description") { value }
+  heroBadgeText: metafield(namespace: "custom", key: "hero_badge_text") { value }
+  heroBadgeSubtitle: metafield(namespace: "custom", key: "hero_badge_subtitle") { value }
+  heroPoster: metafield(namespace: "custom", key: "hero_poster") {
+    reference { ... on MediaImage { image { url altText width height } } }
+  }
+  heroBackground: metafield(namespace: "custom", key: "hero_background") {
+    reference { ... on MediaImage { image { url altText width height } } }
+  }
+  heroModel: metafield(namespace: "custom", key: "hero_model") {
+    reference {
+      ... on Model3d { alt sources { url mimeType format } }
+      ... on GenericFile { url }
+    }
+  }
   botanical: metafield(namespace: "custom", key: "botanical") { value }
   botanicalName: metafield(namespace: "custom", key: "botanical_name") { value }
   plantPart: metafield(namespace: "custom", key: "plant_part") { value }
@@ -265,27 +287,6 @@ const SITE_CONTENT_QUERY = `#graphql
   }
 `;
 
-const HOMEPAGE_HERO_QUERY = `#graphql
-  query NatureMistHomepageHeroes($first: Int!, $after: String, $country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    metaobjects(type: "homepage_hero", first: $first, after: $after) {
-      nodes {
-        id handle
-        fields {
-          key value
-          reference {
-            ... on Product { id }
-            ... on MediaImage { image { url altText width height } }
-            ... on Model3d { alt sources { url mimeType format } }
-            ... on GenericFile { url }
-          }
-        }
-      }
-      pageInfo { hasNextPage endCursor }
-    }
-  }
-`;
-
 const REVIEWS_QUERY = `#graphql
   query NatureMistReviews(
     $videoFirst: Int!
@@ -458,7 +459,6 @@ type GraphMetaobjectConnection = {
 };
 
 type ContentResponse = {
-  heroEntries?: GraphMetaobjectNode[];
   metaobject: GraphSiteContent | null;
   mainMenu: { items: GraphMenuItem[] } | null;
   footerMenu: { items: GraphMenuItem[] } | null;
@@ -480,7 +480,6 @@ export type StorefrontVideoReview = VideoReview;
 export type StorefrontCustomerReview = CustomerReview;
 
 export type StorefrontContent = {
-  heroEntries: HomepageHeroEntry[];
   heroSettings: HeroSettings;
   motionSettings: MotionSettings;
   announcementText: string;
@@ -545,7 +544,6 @@ export const defaultRitualPosters: StoreImage[] = [
 ];
 
 export const previewContent: StorefrontContent = {
-  heroEntries: [],
   heroSettings: defaultHeroSettings,
   motionSettings: defaultMotionSettings,
   ritualPosters: defaultRitualPosters,
@@ -702,13 +700,16 @@ function listMeta(product: GraphProduct, key: string, fallback: string[]) {
   try {
     const parsed = JSON.parse(value) as unknown;
     if (Array.isArray(parsed)) {
-      return parsed.filter((item): item is string => typeof item === "string" && Boolean(item.trim()));
+      return parsed.filter((item): item is string => typeof item === "string" && Boolean(item.trim())).map((item) => item.trim());
     }
   } catch {
-    // Plain text metafields are supported as a newline- or comma-separated fallback.
+    // Merchant-authored paragraphs may contain commas; only explicit bullets
+    // and line breaks separate benefit or preparation items.
   }
+  const separator = ["benefits", "howTo", "howToUse", "safety"].includes(key)
+    ? /\r?\n|[•●]/ : /\r?\n|[•●,]/;
   return value
-    .split(/\r?\n|,/)
+    .split(separator)
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -802,7 +803,11 @@ function mapProduct(product: GraphProduct, index: number): Product {
   const experience = (["Beginner", "Familiar", "Advanced"] as const)
     .find((level) => level.toLowerCase() === experienceValue) || "";
   const howToUse = listMeta(product, "howToUse", []);
-  const featuredImage = toImage(product.featuredImage);
+  const featuredImage = toImage(product.featuredImage) || product.images.nodes.map(toImage).find(Boolean) || null;
+  const heroReference = (key: string) =>
+    (product as unknown as Record<string, GraphMetaobjectField | undefined>)[key]?.reference;
+  const model = heroReference("heroModel");
+  const modelUrl = model?.sources?.find((source) => isGlbUrl(source.url))?.url || model?.url;
 
   return {
     id: product.id,
@@ -863,6 +868,22 @@ function mapProduct(product: GraphProduct, index: number): Product {
     searchTerms: listMeta(product, "searchTerms", product.tags),
     faqs: faqMeta(product, []),
     featuredImage,
+    heroEnabled: meta(product, "heroEnabled") === "true",
+    heroOrder: meta(product, "heroOrder") ? boundedNumber(meta(product, "heroOrder"), Number.MAX_SAFE_INTEGER, 0, 9999) : undefined,
+    heroDurationSeconds: meta(product, "heroDuration") ? boundedNumber(meta(product, "heroDuration"), 8, 3, 60) : undefined,
+    heroPoster: toImage(heroReference("heroPoster")?.image),
+    heroBackground: toImage(heroReference("heroBackground")?.image),
+    heroModel: isGlbUrl(modelUrl) ? { url: modelUrl, altText: model?.alt || `${product.title} in 3D` } : null,
+    hero: {
+      eyebrow: meta(product, "heroEyebrow") || "",
+      headlineFirst: meta(product, "heroHeadlineFirst") || "",
+      headlineMiddle: meta(product, "heroHeadlineMiddle") || "",
+      headlineItalic: meta(product, "heroHeadlineItalic") || "",
+      description: meta(product, "heroDescription") || "",
+      badgeText: meta(product, "heroBadgeText") || "",
+      badgeSubtitle: meta(product, "heroBadgeSubtitle") || "",
+      howToText: "",
+    },
     images: product.images.nodes.map(toImage).filter((image): image is StoreImage => Boolean(image)),
     models: (product.media?.nodes || []).flatMap((media) => {
       const url = media.sources?.find((source) => isGlbUrl(source.url))?.url;
@@ -1183,32 +1204,6 @@ function mapCustomerReviews(nodes: GraphMetaobjectNode[] | undefined | null): St
   return [...mapped, ...staticOnly];
 }
 
-function mapHeroEntry(entry: GraphMetaobjectNode): HomepageHeroEntry {
-  const fields = new Map(entry.fields.map((field) => [field.key, field]));
-  const text = (key: string) => fields.get(key)?.value?.trim() || "";
-  const model = fields.get("model")?.reference;
-  const modelUrl = model?.sources?.find((source) => isGlbUrl(source.url))?.url || model?.url;
-  return {
-    id: entry.id,
-    // Only a resolved, market-visible product can be featured.
-    productId: fields.get("product")?.reference?.id || null,
-    model: isGlbUrl(modelUrl) ? { url: modelUrl, altText: model?.alt || text("name") || "Product in 3D" } : null,
-    poster: toImage(fields.get("poster")?.reference?.image),
-    background: toImage(fields.get("background")?.reference?.image),
-    order: text("order") ? boundedNumber(text("order"), Number.MAX_SAFE_INTEGER, 0, 9999) : undefined,
-    durationSeconds: text("duration") ? boundedNumber(text("duration"), 8, 3, 60) : undefined,
-    copy: {
-      eyebrow: text("eyebrow"),
-      headlineFirst: text("headline_first"),
-      headlineMiddle: text("headline_middle"),
-      headlineItalic: text("headline_italic"),
-      description: text("description"),
-      badgeText: text("badge_text"),
-      badgeSubtitle: text("badge_subtitle"),
-    },
-  };
-}
-
 function mapContent(response: ContentResponse): StorefrontContent {
   const content = response.metaobject;
   const ritualPoster = contentImage(content, "ritualPoster", previewContent.ritualPoster);
@@ -1217,7 +1212,6 @@ function mapContent(response: ContentResponse): StorefrontContent {
     return image ? [image] : [];
   });
   return {
-    heroEntries: (response.heroEntries || []).map(mapHeroEntry),
     heroSettings: parseHeroSettings(content),
     motionSettings: parseMotionSettings(content),
     announcementText: contentText(content, "announcementText", previewContent.announcementText),
@@ -1421,27 +1415,6 @@ async function loadAllReviewMetaobjects(marketContext: MarketContext) {
   } satisfies Pick<ContentResponse, "videoReviews" | "customerReviews">;
 }
 
-async function loadHomepageHeroEntries(marketContext: MarketContext) {
-  const entries: GraphMetaobjectNode[] = [];
-  let after: string | null = null;
-  const seen = new Set<string>();
-  // Shopify's publishable capability excludes drafts from Storefront API results.
-  while (true) {
-    const response: { metaobjects: GraphMetaobjectConnection } = await shopifyStorefrontRequest(
-      HOMEPAGE_HERO_QUERY,
-      { ...marketContext, first: 100, after },
-      { revalidate: 120, tags: ["shopify-storefront"] },
-    );
-    const page = response.metaobjects;
-    entries.push(...page.nodes);
-    if (!page.pageInfo.hasNextPage) return entries;
-    const cursor = page.pageInfo.endCursor;
-    if (!cursor || seen.has(cursor)) throw new Error("Shopify returned a non-advancing homepage hero cursor.");
-    seen.add(cursor);
-    after = cursor;
-  }
-}
-
 async function loadSiteContent(marketContext: MarketContext) {
   const content = await shopifyStorefrontRequest<ContentResponse>(
     SITE_CONTENT_QUERY,
@@ -1453,16 +1426,13 @@ async function loadSiteContent(marketContext: MarketContext) {
     },
   );
 
-  const [reviews, heroes] = await Promise.allSettled([
+  const [reviews] = await Promise.allSettled([
     loadAllReviewMetaobjects(marketContext),
-    loadHomepageHeroEntries(marketContext),
   ]);
   if (reviews.status === "rejected") warnStorefrontPart("review metaobject", reviews.reason);
-  if (heroes.status === "rejected") warnStorefrontPart("homepage hero", heroes.reason);
   return {
     ...content,
     ...(reviews.status === "fulfilled" ? reviews.value : {}),
-    heroEntries: heroes.status === "fulfilled" ? heroes.value : [],
   };
 }
 
@@ -1541,7 +1511,9 @@ async function loadStorefront(): Promise<StorefrontData> {
       "Shopify is connected but returned no published products for this market.",
     );
   }
-  const products = rawProducts;
+  const products = rawProducts.sort((a, b) =>
+    a.collectionNumber.localeCompare(b.collectionNumber, undefined, { numeric: true }),
+  );
 
   if (collectionsResult.status === "rejected") {
     warnStorefrontPart("collection", collectionsResult.reason);

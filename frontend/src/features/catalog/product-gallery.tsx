@@ -14,7 +14,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
   const baseImage = product.featuredImage?.url
     ? product.featuredImage
     : {
-        url: "/images/amla-powder.jpg",
+        url: "/images/product-placeholder.svg",
         altText: `${product.name} Primary View`,
         width: 800,
         height: 800,

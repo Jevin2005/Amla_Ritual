@@ -66,7 +66,7 @@ export function BundleCards() {
                       <Image
                         src={
                           product.featuredImage?.url ||
-                          "/images/amla-powder.jpg"
+                          "/images/product-placeholder.svg"
                         }
                         alt={product.name}
                         fill

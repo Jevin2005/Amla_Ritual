@@ -34,9 +34,25 @@ test("available matching products retain priority over a sold-out preferred prod
   assert.equal(recommendRitual([reetha, alternative], "Cleanse", "Oily").product, alternative);
 });
 
-test("explicit preferred products and merchant concerns still provide recommendations", () => {
-  const amla = product({ slug: "amla-powder" });
+test("conditioning steps and merchant concerns provide recommendations", () => {
+  const amla = product({ slug: "amla-powder", ritualStep: "Condition" });
   const scalp = product({ concerns: ["Scalp Ritual"] });
   assert.equal(recommendRitual([amla], "Softness + Shine", "Balanced").product, amla);
+  assert.equal(recommendRitual([scalp], "Scalp Ritual", "Balanced").product, scalp);
+});
+
+test("renamed product handles cannot override saved ritual metadata", () => {
+  const indigo = product({ slug: "reetha-powder", ritualStep: "Colour" });
+  const reetha = product({ slug: "wildcrafted-amla-powder", ritualStep: "Cleanse" });
+  assert.equal(recommendRitual([indigo, reetha], "Cleanse", "Oily").product, reetha);
+  assert.equal(recommendRitual([indigo, reetha], "Botanical Colour", "Balanced").product, indigo);
+  assert.equal(recommendRitual([product({ slug: "amla-powder" })], "Softness + Shine", "Balanced"), null);
+});
+
+test("saved steps work without concerns and named concerns ignore casing", () => {
+  const conditioner = product({ ritualStep: "Condition" });
+  assert.equal(recommendRitual([conditioner], "Softness + Shine", "Balanced").product, conditioner);
+  assert.equal(recommendRitual([conditioner], "Scalp Ritual", "Balanced"), null);
+  const scalp = product({ concerns: [" scalp ritual "] });
   assert.equal(recommendRitual([scalp], "Scalp Ritual", "Balanced").product, scalp);
 });

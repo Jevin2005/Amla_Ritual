@@ -1,4 +1,4 @@
-import type { Product, RitualGoal } from "@/domain/catalog/products";
+import { matchesRitualGoal, type Product, type RitualGoal } from "@/domain/catalog/products";
 
 export const goalOptions: Array<{
   goal: RitualGoal;
@@ -43,12 +43,12 @@ function selectProduct(
   return (
     products.find(
       (product) =>
-        product.slug === preferredSlug && product.availableForSale !== false,
+        product.slug === preferredSlug && matches(product) && product.availableForSale !== false,
     ) ??
     products.find(
       (product) => matches(product) && product.availableForSale !== false,
     ) ??
-    products.find((product) => product.slug === preferredSlug) ??
+    products.find((product) => product.slug === preferredSlug && matches(product)) ??
     products.find(matches) ??
     null
   );
@@ -64,9 +64,7 @@ export function recommendRitual(
     const product = selectProduct(
       products,
       "indigo-powder",
-      (item) =>
-        item.ritualStep === "Colour" ||
-        item.concerns.includes("Botanical Colour"),
+      (item) => matchesRitualGoal(item, goal),
     );
     if (!product) return null;
 
@@ -81,7 +79,7 @@ export function recommendRitual(
     const product = selectProduct(
       products,
       "bhringraj-powder",
-      (item) => item.concerns.includes("Scalp Ritual"),
+      (item) => matchesRitualGoal(item, goal),
     );
     return product ? recommendation(product) : null;
   }
@@ -89,14 +87,14 @@ export function recommendRitual(
     const product = selectProduct(
       products,
       hairFeel === "Oily" ? "reetha-powder" : "shikakai-powder",
-      (item) => item.ritualStep === "Cleanse",
+      (item) => matchesRitualGoal(item, goal),
     );
     return product ? recommendation(product) : null;
   }
   const product = selectProduct(
     products,
     hairFeel === "Dry / textured" ? "hibiscus-powder" : "amla-powder",
-    (item) => item.concerns.includes("Softness + Shine"),
+    (item) => matchesRitualGoal(item, goal),
   );
   return product ? recommendation(product) : null;
 }

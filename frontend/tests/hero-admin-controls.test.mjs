@@ -50,7 +50,7 @@ const motionDefaults = { enabled: true, cursor: true, duration: 1, intensity: 1 
 const reetha = { id: "p1", slug: "reetha-powder", name: "Reetha Powder", collectionNumber: "1", shortDescription: "Approved description", subtitle: "Wash-day ritual", size: "250 g", ingredient: "Reetha fruit powder", formulation: "Ground fruit", benefits: ["Approved benefit"], howTo: ["Follow pack directions"], pricePaise: 24000 };
 const second = { ...reetha, id: "p2", slug: "indigo-powder", name: "Indigo Powder" };
 const image = { url: "/poster.png", altText: "Poster", width: 600, height: 800 };
-const entry = (product, copy = {}) => ({ id: `hero-${product.id}`, productId: product.id, model: { url: "/jar.glb", altText: "Jar" }, poster: image, background: image, copy });
+const heroProduct = (product, copy = {}) => ({ ...product, heroEnabled: true, heroModel: { url: "/jar.glb", altText: "Jar" }, heroPoster: image, heroBackground: image, hero: copy });
 
 function environment(kind, motion = {}, reduced = false) {
   const frames = new Map(); let next = 0;
@@ -81,12 +81,13 @@ function text(node) {
 }
 function renderHero(options = {}) {
   const env = environment("hero", options.motion, options.reduced);
-  const tree = env.components.ProductHero({ products: [reetha, second], entries: [entry(reetha, options.copy), entry(second)], settings: { ...defaults, ...options.settings } });
+  const tree = env.components.ProductHero({ products: [heroProduct(reetha, options.copy), heroProduct(second)], settings: { ...defaults, ...options.settings } });
   return { ...env, tree };
 }
 
 test("saved Shopify copy takes priority for a recognized botanical without changing its theme", () => {
-  const { tree } = renderHero({ copy: { headlineFirst: "Meet", headlineMiddle: "Our Reetha", headlineItalic: "Your saved ritual.", description: "Saved hero description" } });
+  const { tree } = renderHero({ copy: { eyebrow: "SAVED BOTANICAL LABEL", headlineFirst: "Meet", headlineMiddle: "Our Reetha", headlineItalic: "Your saved ritual.", description: "Saved hero description" } });
+  assert.equal(all(tree).find((node) => node.props?.className === "introEyebrow").props.children, "SAVED BOTANICAL LABEL");
   assert.equal(text(all(tree).find((node) => node.type === "h1")), "MeetOur Reetha");
   assert.ok(text(tree).includes("Your saved ritual."));
   assert.ok(text(tree).includes("Saved hero description"));

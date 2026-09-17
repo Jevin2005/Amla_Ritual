@@ -47,11 +47,11 @@ export function HomePage() {
     );
   }
 
-  const hasHero = getHomepageHeroProducts(products, content.heroEntries).length > 0;
+  const hasHero = getHomepageHeroProducts(products).length > 0;
   const CollectionHeading = hasHero ? "h2" : "h1";
   return (
     <main className="overflow-x-clip" id="main-content">
-      <ProductHero products={products} entries={content.heroEntries} settings={content.heroSettings} />
+      <ProductHero products={products} settings={content.heroSettings} />
       <section
         className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(70px,7vw,110px)] max-[680px]:px-3 max-[680px]:py-8 max-[420px]:px-2.5 max-[420px]:py-6 ${revealClass}`}
         aria-labelledby="collection-title"

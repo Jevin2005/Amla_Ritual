@@ -85,7 +85,7 @@ export function CheckoutOrderSummary({
               >
                 {item.image?.url || product?.featuredImage?.url ? (
                   <img
-                    src={item.image?.url || product?.featuredImage?.url || "/images/amla-powder.jpg"}
+                    src={item.image?.url || product?.featuredImage?.url || "/images/product-placeholder.svg"}
                     alt={item.productName}
                     className="size-full object-cover object-center"
                   />

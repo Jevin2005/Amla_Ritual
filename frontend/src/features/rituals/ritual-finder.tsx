@@ -17,15 +17,6 @@ const feelDescriptions: Record<HairFeel, string> = {
   "Very light / coloured": "Extra care for your existing colour",
 };
 
-const localProductImages: Record<string, string> = {
-  "amla-powder": "/images/amla-powder.jpg",
-  "bhringraj-powder": "/images/bhringraj-powder.jpg",
-  "hibiscus-powder": "/images/hibiscus-powder.jpg",
-  "indigo-powder": "/images/indigo-powder.jpg",
-  "reetha-powder": "/images/reetha-powder.jpg",
-  "shikakai-powder": "/images/shikakai-powder.jpg",
-};
-
 export function RitualFinder() {
   const [state, setState] = useState<QuizState>({ step: 1, focus: null, feel: null });
   const [hasNavigated, setHasNavigated] = useState(false);
@@ -42,7 +33,7 @@ export function RitualFinder() {
     [focus, feel, products],
   );
   const resultImage = result
-    ? result.product.featuredImage?.url || result.product.images?.[0]?.url || localProductImages[result.product.slug]
+    ? result.product.featuredImage?.url || result.product.images?.[0]?.url
     : undefined;
 
   // Keep intentional step changes in reach without stealing focus on hydration.

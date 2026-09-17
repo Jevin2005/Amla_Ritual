@@ -1,3 +1,15 @@
+# Latest hero update — product metafields
+
+The latest requested update replaces the separate hero editor with Products → Metafields. See [current hero instructions](homepage-hero-admin.md). All 13 Shopify definitions now have current names and instructions. Only explicitly enabled, storefront-published products with complete media qualify. Saved order, duration, copy and media come from the same product. Layout is unchanged.
+
+Verified on 17 September: the live loader returns Amla, Reetha and Indigo, ordered 1–3, each with its saved 3-second duration. Bhringraj, Hibiscus and Shikakai are enabled in Admin but absent from this website’s publication. Bhringraj and Hibiscus currently have zero prices; publication awaits the merchant’s decision. Reetha’s saved caption contains “Shikakai PowderReetha Powder” and needs a content correction. Product values have not been overwritten.
+
+Validation: 130 tests pass, both Next and Vinext production builds pass, and changed files pass ESLint. Full-project lint reports the pre-existing synchronous state update in src/shared/hooks/use-webgl.ts:35 and an image warning in checkout-order-summary.tsx. The Storefront query validates against the Shopify schema. Sandboxed builds could not fetch Shopify; live data was verified separately through the read-only loader. Production still needs deployment through the existing Vercel project.
+
+---
+
+## Earlier repair record (superseded hero-editor instructions)
+
 # Homepage and Shopify fixes — 17 September 2026
 
 ## Where to make future edits
