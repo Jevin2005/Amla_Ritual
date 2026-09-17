@@ -89,21 +89,37 @@ test("the installed Shery distribution creates its own Gooey Panel, sliders and 
 
 test("srcdoc controller uses parent origin, survives paused loading, and keeps all three images", async () => {
   const runtime = buildSync({ entryPoints: [`${root}src/features/poster/shery-frame-runtime.ts`], bundle: true, platform: "browser", format: "iife", write: false }).outputFiles[0].text;
-  const events = new Map(), timers = new Map(), frames = new Map(), sent = [], images = [];
+  const events = new Map(), documentEvents = new Map(), timers = new Map(), frames = new Map(), sent = [], images = [];
+  const textureCanvases = [], drawCalls = [];
+  const bounds = { width: 480, height: 667 };
+  let textureDisposals = 0;
+  class FrameTexture {
+    constructor(canvas) { this.image = canvas; textureCanvases.push(canvas); }
+    get id() { return this.image.source?.src.split("/").at(-1).replace(".png", ""); }
+    dispose() { textureDisposals++; }
+  }
   let next = 0, now = 0, options;
   const textures = ["a", "b", "c"].map((id) => ({ id, dispose() {} }));
   const uniforms = { uTexture: { value: textures }, metaball: { value: .2 }, uIntercept: { value: 0 }, mousei: { value: { x: .5, y: .5 } } };
   const attrs = { meshes: [{ visible: false, geometry: { dispose() {} }, material: { dispose() {} } }], uniforms: [uniforms],
     renderer: { debug: {}, domElement: { addEventListener() {} }, render() {}, dispose() {}, forceContextLoss() {} } };
   const parent = { location: { origin: "https://naturemist.test", href: "https://naturemist.test/" }, postMessage: (message, origin) => sent.push({ message, origin }) };
-  const poster = { appendChild: (image) => images.push(image), querySelectorAll: () => images };
+  const poster = { appendChild: (image) => images.push(image), querySelectorAll: () => images, getBoundingClientRect: () => bounds };
   const document = { hidden: false, getElementById: (id) => id === "poster" ? poster : id === "shery-data" ? { textContent: JSON.stringify({ debug: false, images: ["/a.png", "/b.png", "/c.png"].map((url) => ({ url })), config: { infiniteGooey: { value: true } } }) } : {},
-    addEventListener() {}, createElement: () => ({ decode: async () => {} }), head: { appendChild: (script) => queueMicrotask(() => script.onload()) } };
+    addEventListener: (name, callback) => documentEvents.set(name, callback), createElement: (tag) => {
+      if (tag === "canvas") {
+        const canvas = { width: 0, height: 0, getContext: (kind) => kind === "2d" ? {
+          drawImage: (...args) => { canvas.source = args[0]; drawCalls.push(args); },
+        } : {} };
+        return canvas;
+      }
+      return { naturalWidth: 1600, naturalHeight: 2000, decode: async () => {} };
+    }, head: { appendChild: (script) => queueMicrotask(() => script.onload()) } };
   const context = { document, parent, location: { origin: "null", href: "about:srcdoc" }, URL, console, queueMicrotask,
-    performance: { now: () => now }, Shery: { imageEffect: (_, config) => { options = config; config.setAttribute(attrs); } },
+    performance: { now: () => now }, THREE: { Texture: FrameTexture, LinearFilter: 1 }, Shery: { imageEffect: (_, config) => { options = config; config.setAttribute(attrs); } },
     requestAnimationFrame: (callback) => { frames.set(++next, callback); return next; }, cancelAnimationFrame: (id) => frames.delete(id),
     setTimeout: (callback) => { timers.set(++next, callback); return next; }, clearTimeout: (id) => timers.delete(id),
-    addEventListener: (name, callback) => events.set(name, callback), dispatchEvent() {}, Event: class {} };
+    addEventListener: (name, callback) => events.set(name, callback), dispatchEvent() {}, Event: class {}, Element: class {} };
   context.window = context;
   vm.createContext(context); vm.runInContext(runtime, context);
   await new Promise((resolve) => setImmediate(resolve));
@@ -117,9 +133,114 @@ test("srcdoc controller uses parent origin, survives paused loading, and keeps a
   state(true, 0); attrs.renderer.render();
   assert.ok(sent.some(({ message, origin }) => message.type === "ready" && origin === parent.location.origin));
   assert.equal(timers.size, 0);
-  state(true, 2); now = 1001; attrs.renderer.render();
+  assert.equal(textureCanvases.length, 3);
+  assert.deepEqual(textureCanvases.map(({ width, height }) => [width, height]), [[737, 1024], [737, 1024], [737, 1024]]);
+  assert.equal(drawCalls[0][4], 2000);
+  assert.ok(drawCalls[0][3] < 1600, "portrait cover crop trims sides without stretching");
+  const beforeResize = textureDisposals;
+  bounds.width = 600; bounds.height = 400;
+  events.get("resize")({ stopImmediatePropagation() {} });
+  assert.equal(textureCanvases.length, 3, "resize reuses Texture objects");
+  assert.equal(textureDisposals, beforeResize + 3, "old GPU allocations are released before resize");
+  assert.deepEqual(textureCanvases.map(({ width, height }) => [width, height]), [[1024, 683], [1024, 683], [1024, 683]]);
+  // Explicit frame enter/leave fades both ways even when the parent cursor flag
+  // stays true, as it does when crossing an iframe boundary.
+  events.get("pointerenter")(); attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 0);
+  now += 200; attrs.renderer.render();
+  assert.ok(uniforms.uIntercept.value > 0 && uniforms.uIntercept.value < 1);
+  now += 200; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 1);
+  events.get("pointerleave")({ relatedTarget: null }); attrs.renderer.render();
+  now += 250; attrs.renderer.render();
+  assert.ok(uniforms.uIntercept.value > 0 && uniforms.uIntercept.value < 1);
+  now += 250; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 0);
+  events.get("mousemove")(); attrs.renderer.render();
+  now += 400; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 1, "movement recovers a missed iframe enter event");
+  const parentPointer = (inside, origin = parent.location.origin) => events.get("message")({
+    source: parent, origin, data: { channel: "naturemist-shery", type: "pointer", inside },
+  });
+  parentPointer(false, "https://wrong.test"); attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 1, "foreign pointer messages are ignored");
+  parentPointer(false); attrs.renderer.render();
+  now += 500; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 0, "parent leave clears a missed iframe exit event");
+  parentPointer(true); attrs.renderer.render();
+  now += 400; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 1);
+  events.get("blur")(); attrs.renderer.render();
+  now += 500; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 0);
+
+  state(true, 2); now += 1001; attrs.renderer.render();
   assert.equal(uniforms.uTexture.value[0].id, "c");
-  state(true, 1); now = 2002; attrs.renderer.render();
+  state(true, 1); now += 1001; attrs.renderer.render();
   assert.equal(uniforms.uTexture.value[0].id, "b");
+
+  // Default 1s expansion / 1.5s contraction becomes a 40% / 60% split.
+  const click = (button = 0) => events.get("click")({ button });
+  const indexMessages = () => sent.filter(({ message }) => message.type === "index");
+  const beforeClick = indexMessages().length;
+  click(); now += 399; attrs.renderer.render();
+  assert.equal(indexMessages().length, beforeClick);
+  now += 1; attrs.renderer.render();
+  assert.deepEqual(Array.from(uniforms.uTexture.value, (texture) => texture.id), ["c", "c"]);
+  assert.equal(indexMessages().at(-1).message.selected, 2);
+  state(true, 2); // Parent acknowledges the peak without restarting the bloom.
+  now += 350; attrs.renderer.render();
+  assert.deepEqual(Array.from(uniforms.uTexture.value, (texture) => texture.id), ["c", "c"]);
+  now += 251; attrs.renderer.render();
+  assert.deepEqual(Array.from(uniforms.uTexture.value, (texture) => texture.id), ["c", "a"]);
+  click(2); now += 1001; attrs.renderer.render();
+  assert.equal(uniforms.uTexture.value[0].id, "c");
+
+  // A rapid second selection starts from the image actually displayed and
+  // settles the latest target when the frame goes offscreen before its peak.
+  click(); now += 100; attrs.renderer.render(); click();
+  assert.deepEqual(Array.from(uniforms.uTexture.value, (texture) => texture.id), ["c", "b"]);
+  events.get("message")({ source: parent, origin: parent.location.origin,
+    data: { channel: "naturemist-shery", type: "state", active: false, selected: 2, cursor: false, duration: 1000 } });
+  assert.equal(uniforms.uTexture.value[0].id, "b");
+  assert.equal(indexMessages().at(-1).message.selected, 1);
+  const pausedCount = indexMessages().length;
+  click(); now += 1001; attrs.renderer.render();
+  assert.equal(indexMessages().length, pausedCount);
+  assert.equal(uniforms.uTexture.value[0].id, "b");
+  state(true, 1); state(true, 999); state(true, -1);
+  assert.equal(uniforms.uTexture.value[0].id, "b");
+  click(); document.hidden = true; documentEvents.get("visibilitychange")();
+  assert.equal(uniforms.uTexture.value[0].id, "c");
+  assert.equal(indexMessages().at(-1).message.selected, 2);
   events.get("pagehide")(); assert.equal(frames.size, 0); assert.equal(timers.size, 0);
+});
+
+test("a broken alternate image fails back to the HTML poster before starting WebGL", async () => {
+  const runtime = buildSync({ entryPoints: [`${root}src/features/poster/shery-frame-runtime.ts`], bundle: true, platform: "browser", format: "iife", write: false }).outputFiles[0].text;
+  const images = [], sent = [], timers = new Map();
+  let next = 0;
+  const parent = { location: { origin: "https://naturemist.test", href: "https://naturemist.test/" }, postMessage: (message) => sent.push(message) };
+  const poster = { appendChild: (image) => images.push(image), querySelectorAll: () => images };
+  const document = {
+    hidden: false,
+    getElementById: (id) => id === "poster" ? poster : id === "shery-data" ? {
+      textContent: JSON.stringify({ debug: false, images: [{ url: "/a.png" }, { url: "/broken.png" }], config: {} }),
+    } : {},
+    addEventListener() {},
+    createElement: () => ({ naturalWidth: 0, naturalHeight: 0, decode: async () => { throw new Error("broken image"); } }),
+    head: { appendChild: (script) => queueMicrotask(() => script.onload()) },
+  };
+  const context = {
+    document, parent, URL, console, queueMicrotask, performance,
+    Shery: { imageEffect: () => assert.fail("WebGL must not start with missing images") },
+    requestAnimationFrame: () => 1, cancelAnimationFrame() {},
+    setTimeout: (callback) => { timers.set(++next, callback); return next; }, clearTimeout: (id) => timers.delete(id),
+    addEventListener() {},
+  };
+  context.window = context;
+  vm.createContext(context); vm.runInContext(runtime, context);
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(sent.map(({ type }) => type), ["error"]);
+  assert.equal(timers.size, 0);
 });

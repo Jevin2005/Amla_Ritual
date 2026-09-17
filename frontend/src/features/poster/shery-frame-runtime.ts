@@ -34,13 +34,16 @@ let attributes: Attributes | undefined;
 let textures: Texture[] = [];
 let pair: Texture[] | undefined;
 let selected = 0, current = 0, duration = 1100;
+let parentSelected: number | undefined;
 let cursor = true, active = true, ready = false, disposed = false, failed = false;
-let prevCursor = true;
+let pointerInside = false;
+let prevCursor = false;
+let cursorVisibility = 0;
 let cursorFadeStart: number | undefined;
 let cursorFadeFrom = 0;
 const CURSOR_FADE_MS = 500;
-let cursorFadeInStart: number | undefined;
 const CURSOR_FADE_IN_MS = 400;
+let repaintTextures: (() => void) | undefined;
 let transition:
   | {
       start: number;
@@ -48,6 +51,7 @@ let transition:
       duration: number;
       radius: number;
       growSize: number;
+      expansionFraction: number;
       swapped: boolean;
     }
   | undefined;
@@ -57,6 +61,7 @@ const send = (type: string) => parent.postMessage({ channel: "naturemist-shery",
 const fail = () => {
   if (disposed || failed) return;
   failed = true;
+  clearTimeout(loadTimeout); loadTimeout = undefined;
   clock.setActive(false);
   const error = document.getElementById("error")!;
   error.textContent = "The Shery preview could not load. Refresh to retry, or use the regular poster gallery.";
@@ -80,28 +85,38 @@ function setPair(fromIndex: number, toIndex: number) {
   pair = [textures[from], textures[to]];
   attributes.uniforms[0].uTexture.value = pair;
 }
-function settle() {
+function settle(notify = false) {
   if (!attributes || !textures.length) return;
+  const notifySelection = notify && transition && !transition.swapped;
   if (transition) attributes.uniforms[0].metaball.value = transition.radius;
   transition = undefined; current = selected;
   setPair(current, (current + 1) % textures.length);
   attributes.uniforms[0].uIntercept.value = 0;
+  cursorVisibility = 0; prevCursor = false; cursorFadeStart = undefined;
+  if (notifySelection) parent.postMessage({ channel: "naturemist-shery", type: "index", selected: current }, parentOrigin);
 }
 function select(index: number) {
+  if (!Number.isInteger(index) || index < 0 || index >= data.images.length) return;
   const next = ((index % data.images.length) + data.images.length) % data.images.length;
   if (transition && transition.target === next) return;
+  if (transition && attributes) {
+    attributes.uniforms[0].metaball.value = transition.radius;
+    transition = undefined;
+  }
   selected = next;
   if (!ready || data.debug || !attributes) return;
-  if (transition) settle();
   if (!active || current === selected) { settle(); return; }
   setPair(current, selected);
   const growSize = Math.max(4, Number(data.config?.growSize?.value) || 8);
+  const out = Math.max(.1, Number(data.config?.durationOut?.value) || 1);
+  const inside = Math.max(.1, Number(data.config?.durationIn?.value) || 1.5);
   transition = {
     start: performance.now(),
     target: selected,
     duration,
     radius: Number(attributes.uniforms[0].metaball?.value) || 0.2,
     growSize,
+    expansionFraction: out / (out + inside),
     swapped: false,
   };
 }
@@ -109,20 +124,33 @@ function select(index: number) {
 window.addEventListener("message", (event) => {
   if (event.source !== parent || event.origin !== parentOrigin || event.data?.channel !== "naturemist-shery") return;
   const state = event.data;
+  if (state.type === "pointer") {
+    if (!data.debug && typeof state.inside === "boolean") pointerInside = state.inside;
+    return;
+  }
   if (state.type !== "state") return;
   cursor = state.cursor === true;
   active = state.active === true;
   duration = Number.isFinite(state.duration) ? Math.max(100, Math.min(5500, state.duration)) : 1100;
-  if (Number.isInteger(state.selected) && selected !== state.selected) select(state.selected);
-  if (!active && ready && !data.debug) settle();
+  // Cursor/visibility updates repeat the parent's last committed index while a
+  // local click is still blooming. Only a changed parent index is a new command.
+  if (Number.isInteger(state.selected) && state.selected >= 0 && state.selected < data.images.length && state.selected !== parentSelected) {
+    parentSelected = state.selected;
+    if (selected !== state.selected) select(state.selected);
+  }
+  if (!active && ready && !data.debug) settle(true);
   clock.setActive(active && !document.hidden && !failed);
   watchLoading();
 });
-document.addEventListener("visibilitychange", () => { clock.setActive(active && !document.hidden && !failed); watchLoading(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && ready && !data.debug) settle(true);
+  clock.setActive(active && !document.hidden && !failed); watchLoading();
+});
 window.addEventListener("error", fail);
 window.addEventListener("unhandledrejection", fail);
 window.addEventListener("pagehide", () => {
   disposed = true; clock.dispose();
+  repaintTextures = undefined; pointerInside = false;
   clearTimeout(loadTimeout);
   const seen = new Set<Texture>(textures);
   for (const mesh of attributes?.meshes || []) {
@@ -148,16 +176,27 @@ if (poster && typeof poster.addEventListener === "function") {
 }
 
 window.addEventListener("click", (event) => {
-  if (!ready || data.debug || data.images.length < 2) return;
+  if (!ready || data.debug || !active || document.hidden || failed || disposed || event.button !== 0 || data.images.length < 2) return;
   if (event?.target instanceof Element && event.target.closest("#controlKit")) return;
   const next = (selected + 1) % data.images.length;
   select(next);
-  // Do NOT send "index" here — settle() sends it after the bloom transition
-  // finishes so React's <Image> only swaps once, hidden at the bloom peak.
+  // Notify the parent at the expansion peak, when the new image fills the frame.
 });
+window.addEventListener("pointerenter", () => { pointerInside = true; }, true);
+// An iframe can become interactive under an already stationary pointer, so its
+// first movement may arrive without a matching pointerenter event.
+window.addEventListener("mousemove", () => { if (active && !document.hidden) pointerInside = true; }, true);
+window.addEventListener("pointerleave", (event) => {
+  if (!event.relatedTarget) pointerInside = false;
+}, true);
+window.addEventListener("mouseleave", (event) => {
+  if (!event.relatedTarget) pointerInside = false;
+}, true);
+window.addEventListener("blur", () => { pointerInside = false; });
 // Shery's shared image-loading flag cannot safely recrop half-loaded images.
 window.addEventListener("resize", (event) => {
   if (!ready) { resizePending = true; event.stopImmediatePropagation(); }
+  else repaintTextures?.();
 }, true);
 
 // Shery 1.0.0-beta.0.1.8 reads the legacy window.event in one mouse listener.
@@ -194,24 +233,43 @@ async function start() {
   await Promise.all(Array.from(poster.querySelectorAll("img"), (image) => image.decode().catch(() => {})));
   if (disposed) return;
 
-  // Build uniform 1024x1280 textures with aspect-ratio cover to eliminate
-  // WebGL glTexSubImage2D dimension mismatch errors on posters.
+  // All textures share the actual frame aspect, preserving the same cover crop
+  // as the HTML fallback without stretching jars or labels.
   const imgElements = Array.from(poster.querySelectorAll("img"));
+  if (!imgElements.length || imgElements.some((image) => !image.naturalWidth || !image.naturalHeight)) {
+    fail();
+    return;
+  }
   const testCanvas = typeof document.createElement === "function" ? document.createElement("canvas") : null;
   const has2D = testCanvas && typeof testCanvas.getContext === "function" && Boolean(testCanvas.getContext("2d"));
 
   if (has2D && typeof (window as unknown as { THREE?: { Texture?: unknown } }).THREE?.Texture === "function" && imgElements.length > 0) {
     const THREE = (window as unknown as { THREE: typeof import("three") }).THREE;
-    textures = imgElements.map((img) => {
+    const surfaces = imgElements.map((img) => {
       const canvas = document.createElement("canvas");
-      canvas.width = 1024;
-      canvas.height = 1280;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
+      const tex = new THREE.Texture(canvas);
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      return { img, canvas, tex };
+    });
+    let paintedWidth = 0, paintedHeight = 0;
+    repaintTextures = () => {
+      const bounds = poster.getBoundingClientRect();
+      const aspect = bounds.width > 0 && bounds.height > 0 ? bounds.width / bounds.height : .8;
+      const width = Math.max(1, Math.round(1024 * Math.min(1, aspect)));
+      const height = Math.max(1, Math.round(1024 / Math.max(1, aspect)));
+      if (width === paintedWidth && height === paintedHeight) return;
+      paintedWidth = width; paintedHeight = height;
+      surfaces.forEach(({ img, canvas, tex }) => {
+        // Dispose the old GPU allocation before changing source dimensions.
+        if (canvas.width !== width || canvas.height !== height) tex.dispose();
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx || !img.naturalWidth || !img.naturalHeight) return;
         const natW = img.naturalWidth || img.width || 1024;
         const natH = img.naturalHeight || img.height || 1280;
         const imgAspect = natW / natH;
-        const targetAspect = 1024 / 1280;
+        const targetAspect = width / height;
         let sx = 0, sy = 0, sw = natW, sh = natH;
         if (imgAspect > targetAspect) {
           sw = natH * targetAspect;
@@ -220,14 +278,12 @@ async function start() {
           sh = natW / targetAspect;
           sy = (natH - sh) / 2;
         }
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 1024, 1280);
-      }
-      const tex = new THREE.Texture(canvas);
-      tex.needsUpdate = true;
-      tex.minFilter = THREE.LinearFilter;
-      tex.magFilter = THREE.LinearFilter;
-      return tex;
-    });
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, width, height);
+        tex.needsUpdate = true;
+      });
+    };
+    repaintTextures();
+    textures = surfaces.map(({ tex }) => tex);
   }
 
   const canWebGL = (() => {
@@ -258,6 +314,21 @@ async function start() {
       config: data.config,
       setAttribute(value) {
         attributes = value;
+        if (!data.debug) {
+          // Shery's reversed/equal smoothstep edges are undefined in GLSL;
+          // make the same mask well-defined, especially at zero hover radius.
+          for (const mesh of value.meshes) {
+            const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+            for (const material of materials) {
+              const shader = material as typeof material & { fragmentShader?: string };
+              if (typeof shader.fragmentShader !== "string") continue;
+              shader.fragmentShader = shader.fragmentShader
+                .replace("smoothstep(interpole.x,.0,distance(mouse,pos))", "(1.0 - smoothstep(0.0, max(interpole.x, 0.00001), distance(mouse,pos)))")
+                .replace("smoothstep(discard_threshold-antialias_threshold,discard_threshold,val)", "(uIntercept > 0.0 ? smoothstep(discard_threshold-max(antialias_threshold,0.0001),discard_threshold,val) : 0.0)");
+              shader.needsUpdate = true;
+            }
+          }
+        }
         value.renderer.debug.onShaderError = fail;
         value.renderer.domElement.addEventListener("webglcontextlost", (event) => {
           event.preventDefault();
@@ -290,25 +361,28 @@ async function start() {
             uniforms.uIntercept.value = 1;
             uniforms.mousei.value = { x: .5, y: .5 };
 
-            if (progress < 0.5) {
+            const split = transition.expansionFraction;
+            const ease = (value: number) => value < .5 ? 16 * value ** 5 : 1 - (-2 * value + 2) ** 5 / 2;
+            if (progress < split) {
               // Phase 1: Bloom expands outward from center (0 -> 1)
-              const p = progress * 2;
-              const eased = p * p * (3 - 2 * p);
+              const p = progress / split;
+              const eased = ease(p);
               uniforms.metaball.value = transition.radius + eased * (transition.growSize - transition.radius);
             } else {
-              // At halfway peak (progress >= 0.5): blob is at full size — swap textures
+              // At the configured expansion peak the blob fills the frame.
+              // Both slots then hold the selected image throughout contraction.
               // and notify React to switch its <Image> while it is completely hidden.
               if (!transition.swapped) {
                 transition.swapped = true;
                 current = transition.target;
-                setPair(current, (current + 1) % textures.length);
+                setPair(current, current);
                 // Switch React's fallback <Image> now, hidden behind the full-size bloom.
                 // Phase 2 will shrink the blob over the already-correct image.
                 parent.postMessage({ channel: "naturemist-shery", type: "index", selected: current }, parentOrigin);
               }
               // Phase 2: Bloom contracts back down smoothly (1 -> 0)
-              const p = (progress - 0.5) * 2;
-              const eased = 1 - (p * p * (3 - 2 * p));
+              const p = (progress - split) / (1 - split);
+              const eased = 1 - ease(p);
               uniforms.metaball.value = transition.radius + eased * (transition.growSize - transition.radius);
             }
 
@@ -316,43 +390,21 @@ async function start() {
               settle();
               // postMessage already sent at the swap peak; settle() is a no-op for React here.
             }
-          } else {
-            // Detect the moment cursor goes false and begin a smooth fade-out
-            if (prevCursor && !cursor) {
+          } else if (!data.debug) {
+            const showCursor = cursor && pointerInside && active && !document.hidden;
+            if (prevCursor !== showCursor) {
               cursorFadeStart = performance.now();
-              cursorFadeFrom = Number(uniforms.uIntercept.value) || 0;
+              cursorFadeFrom = cursorVisibility;
+              prevCursor = showCursor;
             }
-            prevCursor = cursor;
-            if (!cursor) {
-              if (cursorFadeStart !== undefined && cursorFadeFrom > 0) {
-                const elapsed = performance.now() - cursorFadeStart;
-                const t = Math.min(1, elapsed / CURSOR_FADE_MS);
-                // ease-out cubic: fast start, gentle finish
-                const eased = 1 - Math.pow(1 - t, 3);
-                uniforms.uIntercept.value = cursorFadeFrom * (1 - eased);
-                if (t >= 1) { uniforms.uIntercept.value = 0; cursorFadeStart = undefined; }
-              } else {
-                uniforms.uIntercept.value = 0;
-              }
-            } else {
-              // Cursor active — reset fade-out bookkeeping
-              cursorFadeStart = undefined;
-              cursorFadeFrom = 0;
-              // Detect the moment cursor goes true and begin a smooth fade-in
-              if (!prevCursor && cursor) {
-                cursorFadeInStart = performance.now();
-              }
-              prevCursor = true;
-              // Scale Shery's uIntercept by the fade-in envelope (0 → 1)
-              if (cursorFadeInStart !== undefined) {
-                const elapsed = performance.now() - cursorFadeInStart;
-                const t = Math.min(1, elapsed / CURSOR_FADE_IN_MS);
-                // cubic ease-in: slow start, snappy finish
-                const scale = t * t * t;
-                uniforms.uIntercept.value = Number(uniforms.uIntercept.value) * scale;
-                if (t >= 1) cursorFadeInStart = undefined;
-              }
+            if (cursorFadeStart !== undefined) {
+              const elapsed = performance.now() - cursorFadeStart;
+              const t = Math.min(1, elapsed / (showCursor ? CURSOR_FADE_IN_MS : CURSOR_FADE_MS));
+              const eased = 1 - (1 - t) ** 3;
+              cursorVisibility = cursorFadeFrom + ((showCursor ? 1 : 0) - cursorFadeFrom) * eased;
+              if (t >= 1) cursorFadeStart = undefined;
             }
+            uniforms.uIntercept.value = cursorVisibility;
           }
         }
         render(scene, camera);

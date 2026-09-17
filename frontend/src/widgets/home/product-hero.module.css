@@ -71,6 +71,7 @@
 .scene { grid-area: scene; position: relative; align-self: center; justify-self: center; width: 100%; max-width: 640px; min-width: 0; margin-block: 24px; }
 .poster {
   position: relative;
+  isolation: isolate;
   height: clamp(560px, 52vw, 760px);
   overflow: hidden;
   border: 1px solid transparent;
@@ -92,7 +93,9 @@
 .poster[role="button"]:hover .posterBadge, .poster[role="button"]:focus-visible .posterBadge { opacity: 1; transform: none; }
 .posterBadgeArrow { font-size: 16px; }
 .posterImage { object-fit: cover; object-position: center; }
-.posterMotion { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; }
+.posterMotion { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black); }
+.heroPosterEffect { border-radius: inherit; pointer-events: none; }
+.heroPosterEffect[data-ready="true"] { pointer-events: auto; }
 .orbit { display: none; }
 .caption {
   position: absolute; z-index: 2; left: -24px; bottom: 28%;

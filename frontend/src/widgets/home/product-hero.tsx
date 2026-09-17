@@ -2,23 +2,23 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
 import { nextHeroIndex, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
 import { getHeroTheme } from "@/domain/catalog/hero-theme";
 import { ProductModel } from "@/features/catalog/product-model";
 import { SheryBackground } from "@/features/background/shery-background";
-import { defaultSheryBackgroundConfig } from "@/domain/shery-config";
+import { SheryPoster } from "@/features/poster/shery-poster";
+import { defaultSheryBackgroundConfig, heroPosterGooeyConfig } from "@/domain/shery-config";
 import { useStore } from "@/features/store/store-provider";
-import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
-import { usePointerMotion } from "@/shared/hooks/use-pointer-motion";
+import { useFinePointer, usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { useWebGL } from "@/shared/hooks/use-webgl";
 import { HeroPurchase } from "./hero-purchase";
 import styles from "./product-hero.module.css";
 
 export function ProductHero({ products, entries, settings }: { products: Product[]; entries: HomepageHeroEntry[]; settings: HeroSettings }) {
   const { content: { motionSettings } } = useStore();
-  const slides = getHomepageHeroProducts(products, entries);
+  const slides = useMemo(() => getHomepageHeroProducts(products, entries), [products, entries]);
   const [selected, setSelected] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -27,7 +27,7 @@ export function ProductHero({ products, entries, settings }: { products: Product
   const [visited, setVisited] = useState(false);
   const [revision, setRevision] = useState(0);
   const root = useRef<HTMLElement>(null);
-  const posterPointer = usePointerMotion<HTMLDivElement>(settings.cursorMotion);
+  const finePointer = useFinePointer();
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisible();
   const webgl = useWebGL();
@@ -37,7 +37,9 @@ export function ProductHero({ products, entries, settings }: { products: Product
   const duration = product?.heroDurationSeconds ?? settings.intervalSeconds;
   const moving = motionSettings.enabled && !reducedMotion;
   const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && moving && pageVisible && inView;
-  const heroBackgrounds = slides.map((slide) => slide.heroBackground);
+  const heroBackgrounds = useMemo(() => slides.map((slide) => slide.heroBackground), [slides]);
+  const heroPosters = useMemo(() => slides.map((slide) => slide.heroPoster), [slides]);
+  const posterCursor = finePointer && settings.cursorMotion && motionSettings.cursor && motionSettings.intensity > 0;
 
   useEffect(() => {
     const section = root.current;
@@ -57,14 +59,13 @@ export function ProductHero({ products, entries, settings }: { products: Product
     return () => observer.disconnect();
   }, [hasProduct]);
 
-  const goTo = (next: number) => {
+  const goTo = useCallback((next: number) => {
+    if (!Number.isInteger(next)) return;
     const target = nextHeroIndex(next, slides.length, 0);
-    setSelected((current) => {
-      if (current === target) return current;
-      setRevision((rev) => rev + 1);
-      return target;
-    });
-  };
+    if (target === index) return;
+    setSelected(target);
+    setRevision((rev) => rev + 1);
+  }, [index, slides.length]);
 
   const handlePosterClick = () => {
     if (slides.length > 1) {
@@ -129,7 +130,7 @@ export function ProductHero({ products, entries, settings }: { products: Product
           <p className={styles.tagline}><em className={styles.headlineText}>{tagline}</em></p>
           {description && <p className={styles.description}>{description}</p>}
         </div>
-        <div key={`scene-${product.heroEntryId}`} {...posterPointer} className={styles.scene} data-transition={animation}>
+        <div className={styles.scene} data-transition={animation}>
           <div className={styles.orbit} aria-hidden="true" />
           <div
             className={styles.poster}
@@ -147,6 +148,19 @@ export function ProductHero({ products, entries, settings }: { products: Product
             <div className={styles.posterMotion}>
               <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
                 sizes="(max-width: 680px) calc(100vw - 40px), (max-width: 1100px) 600px, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+              {visited && slides.length > 1 && moving && posterCursor && webgl && (
+                <SheryPoster
+                  key={heroPosters.map((image) => image.url).join("|")}
+                  images={heroPosters}
+                  config={heroPosterGooeyConfig}
+                  selected={index}
+                  active={inView && pageVisible}
+                  cursor={posterCursor}
+                  duration={1400 * motionSettings.duration}
+                  className={styles.heroPosterEffect}
+                  onSelect={goTo}
+                />
+              )}
             </div>
 
             {slides.length > 1 && (
