@@ -51,6 +51,7 @@ export function HeroPurchase({
   }, []);
 
   const add = async () => {
+    setAdded(false);
     const nextCart = await addToCart(slug, 1, true, variant?.id);
     if (!nextCart) return;
     setAdded(true);
@@ -66,9 +67,9 @@ export function HeroPurchase({
             ? formatCurrency(currentPricePaise, currencyCode)
             : productSize || "See product details"}
         </span>
-        {hasPrice && (
+        {hasPrice && productSize && (
           <small className={styles.tax}>
-            Tax included{productSize ? ` · ${productSize}` : ""}
+            {productSize}
           </small>
         )}
       </div>

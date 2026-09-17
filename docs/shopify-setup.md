@@ -59,19 +59,20 @@ Use the [product entry form](product-entry-form.md) as the merchant-facing check
 
 | Key | Suggested type | Purpose |
 | --- | --- | --- |
-| `botanical` | Single-line text | Botanical name |
+| `botanical_name` | Single-line text | Botanical name; preferred over the legacy `botanical` key |
 | `plant_part` | Single-line text | Plant part/form |
 | `collection_number` | Single-line text | Display order/ritual number |
 | `subtitle` | Single-line text | Product card subtitle |
 | `accent` | Color | Product accent colour |
 | `accent_soft` | Color | Soft background colour |
-| `size` | Single-line text | Display format/size label |
+| `net_quantity` | Single-line text | Display format/size label; preferred over the legacy `size` key |
+| `formulation` | Single-line text | Formulation displayed in the hero's Ingredient clarity panel |
 | `availability_label` | Single-line text | Optional custom availability copy |
 | `short_description` | Multi-line text | Short merchandising description |
 | `meta_description` | Multi-line text | Optional SEO fallback |
 | `ingredient` | Multi-line text | Ingredient statement |
 | `benefits` | List of single-line text | Benefit bullets |
-| `how_to` | List of single-line text | Ordered preparation steps |
+| `how_to_use` | List of single-line text | Ordered preparation steps; preferred over the legacy `how_to` key |
 | `mixers` | List of single-line text | Suggested mixers |
 | `suitable_for` | List of single-line text | Suitability bullets |
 | `safety` | List of single-line text | Safety bullets |
@@ -86,7 +87,7 @@ Use the [product entry form](product-entry-form.md) as the merchant-facing check
 
 When Shopify is connected, deleted or empty metafields stay empty or use a neutral product-derived label; the original preview claims are never substituted into a live product. Complete every customer-facing and safety field before publishing.
 
-Homepage content is managed separately under **Content → Metaobjects → Homepage hero** (`homepage_hero`). Product creation requires no homepage fields. Only Active entries with a published product, GLB model, poster and background appear. Legacy `custom.hero_*` fields are unpinned and retained only as a backup. See [Homepage hero editor](homepage-hero-admin.md).
+Homepage content is managed separately under **Content → Metaobjects → Homepage hero** (`homepage_hero`). Product creation requires no homepage fields. Only Active entries with a published product, GLB model, poster and background appear. Legacy `custom.hero_*` fields are unpinned, labelled **Legacy**, and retained only as a backup. See [Homepage hero editor](homepage-hero-admin.md).
 
 ## 4. Site content, page posters, and announcement bar
 

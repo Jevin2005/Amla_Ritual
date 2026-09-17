@@ -53,7 +53,7 @@
 .headlineLine, .headlineText { display: block; }
 .headlineLine { padding-block: .08em; margin-block: -.08em; }
 .headlineLine:nth-child(2) { --line-delay: 85ms; }
-.productHeadline { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+.productHeadline { white-space: normal; overflow-wrap: anywhere; word-break: normal; }
 .productHeadline[data-long-name="true"] { font-size: clamp(calc(var(--hero-title-size) * .85), 18cqi, var(--hero-title-size)); }
 .tagline {
   --line-delay: 170ms;
@@ -133,6 +133,8 @@
 .disclosures details[open] .accordionIcon::after { transform: rotate(90deg) scaleX(0); }
 .disclosureBody { padding: 0 0 16px; color: var(--hero-body); font-size: clamp(14px, calc(8px + .416667vw), 16px); font-weight: 400; line-height: 1.6; }
 .disclosureBody p { margin: 0; }
+.disclosureBody .formulation { margin-top: 8px; }
+.formulation span { font-weight: 500; }
 .disclosureBody ul, .disclosureBody ol { margin: 8px 0 0; padding-left: 20px; }
 .disclosureBody li + li { margin-top: 8px; }
 .disclosureBody a { color: var(--hero-accent); font-weight: 500; text-underline-offset: 4px; }
@@ -145,14 +147,21 @@
 .count { color: var(--hero-body); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .hero a:focus-visible, .hero button:focus-visible, .disclosures summary:focus-visible { outline: 2px solid var(--hero-heading); outline-offset: 4px; }
 .progress { position: absolute; inset: auto 0 0; height: 2px; background: var(--hero-accent); transform-origin: left; animation: progress linear both; }
-.background:is([data-transition="fade"], [data-transition="slide"]),
-.scene:is([data-transition="fade"], [data-transition="slide"]),
-.productDetails:is([data-transition="fade"], [data-transition="slide"]) { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
-.model:is([data-transition="fade"], [data-transition="slide"]) { animation: modelEntrance calc(500ms * var(--motion-duration, 1)) var(--ease) backwards; }
-.copy:is([data-transition="fade"], [data-transition="slide"]) .headlineText { animation: lineReveal calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
-.purchase:is([data-transition="fade"], [data-transition="slide"]) { animation: fade calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
+.background[data-transition="fade"] .backgroundImage,
+.scene[data-transition="fade"],
+.productDetails[data-transition="fade"],
+.model[data-transition="fade"] { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
+.background[data-transition="slide"] .backgroundImage,
+.scene[data-transition="slide"],
+.productDetails[data-transition="slide"] { animation: slide calc(.45s * var(--motion-duration, 1)) var(--ease) backwards; }
+.model[data-transition="slide"] { animation: modelEntrance calc(500ms * var(--motion-duration, 1)) var(--ease) backwards; }
+.copy[data-transition="fade"] .headlineText { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.copy[data-transition="slide"] .headlineText { animation: lineReveal calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.purchase[data-transition="fade"] { animation: fade calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
+.purchase[data-transition="slide"] { animation: slide calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
 .productDetails:is([data-transition="fade"], [data-transition="slide"]) { animation-delay: calc(100ms * var(--motion-duration, 1)); }
 .disclosures details[open] .disclosureBody { animation: slide 350ms var(--ease) backwards; }
+.hero[data-transition="none"] .disclosureBody { animation: none; }
 @keyframes modelEntrance { from { opacity: 0; transform: scale(.96) translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes lineReveal { from { opacity: 0; transform: translate3d(0, 28px, 0); } to { opacity: 1; transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }

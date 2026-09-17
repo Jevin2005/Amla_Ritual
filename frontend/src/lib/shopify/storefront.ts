@@ -791,26 +791,17 @@ function mapProduct(product: GraphProduct, index: number): Product {
   const defaultVariant =
     selectedVariant || variants.find((variant) => variant.availableForSale) || variants[0] || null;
 
-  // Match known botanical profile if specific metafields haven't been entered in Shopify Admin yet
-  const matchingPreview = previewProducts.find(
-    (p) =>
-      p.slug === product.handle ||
-      product.handle.toLowerCase().includes(p.slug) ||
-      p.slug.includes(product.handle.toLowerCase()) ||
-      product.title.toLowerCase().includes(p.name.toLowerCase().replace(/ powder$/i, "")) ||
-      product.title.toLowerCase().includes(p.slug.toLowerCase()),
-  );
-
-  const fallbackDescription =
-    matchingPreview?.shortDescription || `Discover the pure ${product.title} botanical ritual.`;
-  const ritualStepValue = meta(product, "ritualStep") || matchingPreview?.ritualStep || "Condition";
-  const ritualStep = ["Cleanse", "Condition", "Colour"].includes(ritualStepValue)
-    ? (ritualStepValue as Product["ritualStep"])
-    : "Condition";
-  const experienceValue = meta(product, "experience") || matchingPreview?.experience || "Beginner";
-  const experience = ["Beginner", "Familiar", "Advanced"].includes(experienceValue)
-    ? (experienceValue as Product["experience"])
-    : "Beginner";
+  // Live product facts come only from Shopify. Preview profiles must never
+  // supply ingredients, claims, directions or quantities for a published item.
+  const fallbackDescription = `Explore ${product.title}.`;
+  const ritualStepValue = meta(product, "ritualStep")?.toLowerCase();
+  const canonicalStep = ritualStepValue === "color" ? "colour" : ritualStepValue;
+  const ritualStep = (["Cleanse", "Condition", "Colour"] as const)
+    .find((step) => step.toLowerCase() === canonicalStep) || "";
+  const experienceValue = meta(product, "experience")?.toLowerCase();
+  const experience = (["Beginner", "Familiar", "Advanced"] as const)
+    .find((level) => level.toLowerCase() === experienceValue) || "";
+  const howToUse = listMeta(product, "howToUse", []);
   const featuredImage = toImage(product.featuredImage);
 
   return {
@@ -820,31 +811,24 @@ function mapProduct(product: GraphProduct, index: number): Product {
     botanical:
       meta(product, "botanicalName") ||
       meta(product, "botanical") ||
-      matchingPreview?.botanical ||
-      (product.productType && product.productType !== "Default" ? product.productType : "Phyllanthus emblica"),
+      "",
     plantPart:
-      meta(product, "plantPart") ||
-      matchingPreview?.plantPart ||
-      "Organic Fruit Pulp",
+      meta(product, "plantPart") || "",
     collectionNumber:
       meta(product, "collectionNumber") ||
-      matchingPreview?.collectionNumber ||
       String(index + 1).padStart(2, "0"),
     subtitle:
       meta(product, "subtitle") ||
-      matchingPreview?.subtitle ||
-      (product.productType && product.productType !== "Default" ? product.productType : "100% Pure Botanical Ritual"),
-    accent: validHex(meta(product, "accent"), matchingPreview?.accent || palette[0]),
-    accentSoft: validHex(meta(product, "accentSoft"), matchingPreview?.accentSoft || palette[1]),
-    pricePaise: defaultVariant?.pricePaise || toPaise(product.priceRange.minVariantPrice.amount),
-    compareAtPricePaise: defaultVariant?.compareAtPricePaise || null,
+      (product.productType && product.productType !== "Default" ? product.productType : ""),
+    accent: validHex(meta(product, "accent"), palette[0]),
+    accentSoft: validHex(meta(product, "accentSoft"), palette[1]),
+    pricePaise: defaultVariant?.pricePaise ?? toPaise(product.priceRange.minVariantPrice.amount),
+    compareAtPricePaise: defaultVariant?.compareAtPricePaise ?? null,
     currencyCode: defaultVariant?.currencyCode || product.priceRange.minVariantPrice.currencyCode,
     size:
       meta(product, "netQuantity") ||
       meta(product, "size") ||
-      (defaultVariant?.title && defaultVariant.title !== "Default Title" ? defaultVariant.title : null) ||
-      matchingPreview?.size ||
-      "250g Jar",
+      "",
     availability:
       meta(product, "availability") ||
       (product.availableForSale ? "In stock" : "Sold out"),
@@ -859,39 +843,25 @@ function mapProduct(product: GraphProduct, index: number): Product {
     seoTitle: product.seo.title || product.title,
     metaDescription:
       meta(product, "metaDescription") ||
+      product.seo.description?.trim() ||
       cleanShortSummary(product.description, fallbackDescription),
-    ingredient:
-      meta(product, "ingredient") ||
-      matchingPreview?.ingredient ||
-      `100% Pure Organic ${product.title.replace(/ Powder$/i, "")} Powder (Zero fillers, zero synthetic additives).`,
-    benefits: listMeta(product, "benefits", matchingPreview?.benefits || [
-      "Deeply conditions scalp and lengths",
-      "Strengthens hair roots and minimizes breakage",
-      "Restores natural mirror shine without chemical build-up"
-    ]),
-    howTo: (
-      // Prefer the "How To Use" metafield key (how_to_use) which is what
-      // Shopify Admin creates when the field is named "How To Use".
-      // Fall back to the legacy "how_to" key, then to the local preview data.
-      listMeta(product, "howToUse", []).length > 0
-        ? listMeta(product, "howToUse", [])
-        : listMeta(product, "howTo", matchingPreview?.howTo || [
-            "Mix 1-2 scoops with warm water into a smooth paste.",
-            "Apply evenly from roots to ends on damp hair.",
-            "Leave on for 15-20 minutes, then rinse thoroughly with cool water.",
-          ])
-    ),
-    mixers: listMeta(product, "mixers", matchingPreview?.mixers || ["Warm water", "Castor oil", "Yogurt"]),
-    suitableFor: listMeta(product, "suitableFor", matchingPreview?.suitableFor || ["All hair types", "Color-treated hair", "Sensitive scalps"]),
-    safety: listMeta(product, "safety", matchingPreview?.safety || ["Patch test before first use", "For external cosmetic use only", "Avoid contact with eyes"]),
-    storage: meta(product, "storage") || matchingPreview?.storage || "Store in a cool, dry place away from moisture and direct sunlight.",
-    texture: meta(product, "texture") || matchingPreview?.texture || "Micro-milled, ultra-sifted botanical powder.",
-    concerns: listMeta(product, "concerns", matchingPreview?.concerns || product.tags),
+    ingredient: meta(product, "ingredient") || "",
+    formulation: meta(product, "formulation") || undefined,
+    benefits: listMeta(product, "benefits", []),
+    // Prefer the current Shopify field, while retaining explicitly authored
+    // directions from the legacy key when the current field is absent.
+    howTo: howToUse.length ? howToUse : listMeta(product, "howTo", []),
+    mixers: listMeta(product, "mixers", []),
+    suitableFor: listMeta(product, "suitableFor", []),
+    safety: listMeta(product, "safety", []),
+    storage: meta(product, "storage") || "",
+    texture: meta(product, "texture") || "",
+    concerns: listMeta(product, "concerns", product.tags),
     ritualStep,
     experience,
-    colorConsiderations: listMeta(product, "colorConsiderations", matchingPreview?.colorConsiderations || []),
-    searchTerms: listMeta(product, "searchTerms", matchingPreview?.searchTerms || product.tags),
-    faqs: faqMeta(product, matchingPreview?.faqs || []),
+    colorConsiderations: listMeta(product, "colorConsiderations", []),
+    searchTerms: listMeta(product, "searchTerms", product.tags),
+    faqs: faqMeta(product, []),
     featuredImage,
     images: product.images.nodes.map(toImage).filter((image): image is StoreImage => Boolean(image)),
     models: (product.media?.nodes || []).flatMap((media) => {
@@ -1550,8 +1520,8 @@ async function loadStorefront(): Promise<StorefrontData> {
   if (catalogResult.status === "rejected") {
     warnStorefrontPart("catalog", catalogResult.reason);
     return {
-      products: strict ? [] : previewProducts,
-      bundles: strict ? [] : previewBundles,
+      products: [],
+      bundles: [],
       content,
       shopName: shop?.name || "NatureMist",
       shopUrl: shop?.primaryDomain.url || null,
@@ -1571,7 +1541,7 @@ async function loadStorefront(): Promise<StorefrontData> {
       "Shopify is connected but returned no published products for this market.",
     );
   }
-  const products = rawProducts.length ? rawProducts : (strict ? [] : previewProducts);
+  const products = rawProducts;
 
   if (collectionsResult.status === "rejected") {
     warnStorefrontPart("collection", collectionsResult.reason);
@@ -1585,9 +1555,7 @@ async function loadStorefront(): Promise<StorefrontData> {
 
   const collections =
     collectionsResult.status === "fulfilled" ? collectionsResult.value : [];
-  const bundles = rawProducts.length
-    ? mapBundles(collections, products)
-    : (strict ? [] : previewBundles);
+  const bundles = mapBundles(collections, products);
 
   return {
     products,
@@ -1631,13 +1599,11 @@ async function loadStorefrontProduct(handle: string) {
     );
   } catch (error) {
     if (strict) throw error;
-    return previewStorefront.products.find((product) => product.slug === handle);
+    warnStorefrontPart("product detail", error);
+    return undefined;
   }
 
   if (!firstPage?.product) {
-    if (!strict) {
-      return previewStorefront.products.find((product) => product.slug === handle);
-    }
     return undefined;
   }
 

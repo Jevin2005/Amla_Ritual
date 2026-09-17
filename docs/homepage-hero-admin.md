@@ -28,9 +28,9 @@ Set an entry to **Draft** to hide it. Removing an entry or clearing its assets a
 
 ## Desktop and phone layout
 
-Desktop shows the headline and purchase controls on the left, the tall poster in the center, and the 3D product with its details on the right. At 1000px and below, the headline and poster stay side by side, with the featured product panel beneath them. The background spans both rows.
+Desktop shows the headline and purchase controls on the left, the tall poster in the center, and the 3D product with its details on the right. At 1100px and below, these become one column: headline, poster, purchase controls, then the featured product. The background spans the section.
 
-The taller poster stays visible while the separate model rotates directly over the full hero background. The model has no card background, border or product photo behind it; a short status message appears while loading or if 3D is unavailable. No fourth hero upload is required. Headline fields control the left title, eyebrow controls the label above the product name, and caption fields control the poster badge. The optional homepage description appears inside **Why you'll love it**. Benefits, preparation, ingredient, name, size and price come from the linked product. Both **Explore the ritual** arrows scroll to the featured panel.
+The taller poster stays visible while the separate model rotates directly over the full hero background. The model has no card background, border or product photo behind it; a short status message appears while loading or if 3D is unavailable. No fourth hero upload is required. Saved headline fields take priority over the design defaults, eyebrow controls the label above the product name, and caption fields control the poster caption. The optional homepage description appears below the headline and inside **Why you'll love it**. Benefits, preparation, ingredient, formulation, name, size and price come from the linked product. **Explore the ritual** scrolls to the featured panel. Background images retain their original colours without a filter or tint.
 
 ## Migrated Amla entry
 
@@ -38,7 +38,7 @@ The taller poster stays visible while the separate model rotates directly over t
 
 If a hero does not appear, check this entry rather than the old product fields: it must be Active, include all three processed assets, and link to a product published to Headless. Allow approximately two minutes for cached content to refresh. The website must also be running the update that reads these separate entries.
 
-The 13 old Homepage product fields are unpinned so they no longer clutter the normal product form. Their saved values remain as a backup under View all. The updated website reads the separate Homepage hero entries; the old product fields no longer control the new hero.
+The 13 old Homepage product fields are unpinned and labelled **Legacy**. Their descriptions point to the active editor. Their saved values remain as a backup under View all; they do not control the website. Edit **Content → Metaobjects → Homepage hero** instead, and use the entry's Active/Draft status to show or hide a slide.
 
 ## Global slideshow settings
 
@@ -63,14 +63,14 @@ The same **Storefront content → Homepage settings** entry also controls the ne
 
 | Setting | Recommended value | What it controls |
 | --- | --- | --- |
-| Website animations | True | Headline, photo, gallery and scroll reveals. False makes CSS transitions immediate. |
+| Website animations | True | Headline, photo, gallery and scroll reveals. False also stops automatic hero changes, 3D rotation and decorative cursor motion. |
 | Cursor effects | True | Magnetic link text and gently moving images on devices with a mouse. |
 | Animation timing | 1 | 0.6 is quicker; 1.5 is slower. This does not change the slideshow interval. |
 | Cursor movement strength | 1 | 0 disables decorative cursor motion; 0.5 is subtler; 1.5 is stronger. |
 
-The hero's existing **Product transition** still accepts `none` to disable its entrance sequence. **Move 3D products with cursor** must also be enabled for the hero poster and Explore link to follow the cursor. 3D rotation, model cursor motion and automatic slide changes keep their own controls above.
+The hero's **Product transition** supports a fade, a directional slide, or `none`. Choosing `none` makes hero image and text changes immediate and disables its Shery effects. **Move 3D products with cursor** must also be enabled for the hero poster and Explore link to follow the cursor. Global Website animations, Cursor effects and Cursor movement strength also govern decorative 3D cursor movement. The separate 3D rotation and automatic slideshow controls remain available.
 
-The homepage has staggered headline lines, a gentle poster zoom and tilt, magnetic Explore links, individual catalog reveals, and masked ritual imagery. Catalog photos crossfade to the next available product photo on mouse hover after that photo loads. Product-page photos animate when selected; all photos and the 3D thumbnail remain available.
+The homepage has staggered headline lines, an organic hover reveal inside the arched hero poster, magnetic Explore links, individual catalog reveals, and masked ritual imagery. Clicking the hero poster selects the next entry and keeps its product, purchase controls, background and model synchronized. Catalog photos crossfade to the next available product photo on mouse hover after that photo loads. Product-page photos animate when selected; all photos and the 3D thumbnail remain available.
 
 Phones use shorter scroll reveals and no cursor effects. Operating-system reduced-motion preferences take priority. Content is visible without JavaScript; scroll reveals never hide already-visible content during loading, and keyboard focus immediately reveals its target.
 

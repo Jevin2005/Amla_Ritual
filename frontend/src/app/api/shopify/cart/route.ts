@@ -663,8 +663,25 @@ export async function POST(request: NextRequest) {
         { buyerIp: ip },
       );
       if (!data.cartLinesAdd.cart) {
-        // Carts can expire between page hydration and an add. Starting a fresh cart
-        // is safe here because no existing checkout state can still be recovered.
+        // A null mutation cart can also mean validation failed. Only replace the
+        // customer's bag after a separate read confirms it no longer exists.
+        const existing = await shopifyStorefrontRequest<CartQueryResponse>(
+          CART_QUERY,
+          { cartId },
+          { buyerIp: ip },
+        );
+        if (existing.cart) {
+          return payloadResponse({
+            ...data.cartLinesAdd,
+            cart: existing.cart,
+            userErrors: data.cartLinesAdd.userErrors.length
+              ? data.cartLinesAdd.userErrors
+              : [{ field: null, message: "Shopify did not confirm this bag update. Please try again." }],
+          }, ip);
+        }
+        if (existing.cart !== null) {
+          throw new Error("Shopify did not confirm whether the existing bag expired.");
+        }
         return payloadResponse(await createCart(lines, [], ip), ip);
       }
       return payloadResponse(data.cartLinesAdd, ip);

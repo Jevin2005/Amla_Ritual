@@ -111,6 +111,7 @@ type StoreContextValue = {
     quantity?: number,
     openDrawer?: boolean,
     variantId?: string,
+    productContext?: Product,
   ) => Promise<StoreCart | null>;
   buyNow: (
     slug: string,
@@ -374,6 +375,7 @@ export function StoreProvider({
   const [cartWarnings, setCartWarnings] = useState<CartNotice[]>([]);
   const [isCartBusy, setIsCartBusy] = useState(false);
   const busyRef = useRef(false);
+  const cartMutationRevision = useRef(0);
   const [hydrated, setHydrated] = useState(false);
 
   const productsBySlug = useMemo(
@@ -391,6 +393,13 @@ export function StoreProvider({
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
+    const hydrationRevision = cartMutationRevision.current;
+    const startedDuringMutation = busyRef.current;
+
+    const canRestoreCart = () =>
+      active &&
+      !startedDuringMutation &&
+      hydrationRevision === cartMutationRevision.current;
 
     async function hydrate() {
       const savedWishlist = readStoredArray<string>(WISHLIST_KEY).filter(
@@ -405,18 +414,24 @@ export function StoreProvider({
         try {
           const payload = await fetchCart(controller.signal);
           if (!active) return;
-          commitCart(payload.cart || emptyCart(fallbackCurrency));
-          setCartWarnings(payload.warnings || []);
-          if (payload.userErrors?.length) {
-            setCartError(payload.userErrors[0].message);
+          // A cart action owns the newer state, including its warnings/errors.
+          // Ignore this initial snapshot once an action has started.
+          if (canRestoreCart()) {
+            commitCart(payload.cart || emptyCart(fallbackCurrency));
+            setCartWarnings(payload.warnings || []);
+            if (payload.userErrors?.length) {
+              setCartError(payload.userErrors[0].message);
+            }
           }
         } catch (error) {
           if (!active || controller.signal.aborted) return;
-          setCartError(
-            error instanceof Error
-              ? error.message
-              : "Your Shopify bag could not be restored.",
-          );
+          if (canRestoreCart()) {
+            setCartError(
+              error instanceof Error
+                ? error.message
+                : "Your Shopify bag could not be restored.",
+            );
+          }
         }
       }
 
@@ -483,6 +498,7 @@ export function StoreProvider({
       setCartError("Please wait for the current bag update to finish.");
       return false;
     }
+    cartMutationRevision.current += 1;
     busyRef.current = true;
     setIsCartBusy(true);
     setCartError("");
@@ -505,6 +521,9 @@ export function StoreProvider({
         setCartError(userErrors[0].message);
         setAnnouncement(userErrors[0].message);
       } else {
+        if (!payload.cart) {
+          throw new Error("Shopify did not return an updated bag. Please try again.");
+        }
         setAnnouncement(warnings[0]?.message || successMessage);
       }
       return userErrors.length ? null : payload.cart;
@@ -533,15 +552,31 @@ export function StoreProvider({
       quantity = 1,
       openDrawer = true,
       variantId?: string,
+      productContext?: Product,
     ) => {
-      const product = productsBySlug.get(slug);
-      if (!product) {
+      const catalogProduct = productsBySlug.get(slug);
+      if (!catalogProduct) {
         setCartError("This product is no longer available in the catalogue.");
         return null;
       }
+      // Product pages have the complete variant list; the global catalogue is
+      // intentionally compact. Only accept detail data for the same product.
+      if (productContext && (
+        productContext.slug !== catalogProduct.slug ||
+        productContext.id !== catalogProduct.id ||
+        (source === "shopify" && !productContext.id)
+      )) {
+        const message = "The selected product option is no longer available. Please refresh and try again.";
+        setCartError(message);
+        setAnnouncement(message);
+        return null;
+      }
+      const product = productContext || catalogProduct;
       const variant = selectVariant(product, variantId);
-      if (variantId && !variant && source === "preview") {
-        setCartError("The selected product option is no longer available.");
+      if ((variantId && !variant) || (source === "shopify" && !/^gid:\/\/shopify\/ProductVariant\/\d+$/.test(variant?.id || ""))) {
+        const message = "The selected product option is no longer available. Please refresh and try again.";
+        setCartError(message);
+        setAnnouncement(message);
         return null;
       }
       if (!productAvailability(product, variant)) {
@@ -579,22 +614,16 @@ export function StoreProvider({
       const currencyCode = variant?.currencyCode || product.currencyCode || "INR";
       try {
         let nextCart: StoreCart | null = null;
-        if (source === "shopify" && merchandiseId?.startsWith("gid://shopify/ProductVariant/")) {
-          try {
-            const payload = await mutateCart({
-              action: "add",
-              lines: [{ merchandiseId, quantity: safeQuantity }],
-            });
-            nextCart = handleApiPayload(
-              payload,
-              `${product.name} added to your bag.`,
-            );
-          } catch {
-            // Fallback to local cart if Shopify cart mutation fails
-          }
-        }
-
-        if (!nextCart) {
+        if (source === "shopify") {
+          const payload = await mutateCart({
+            action: "add",
+            lines: [{ merchandiseId, quantity: safeQuantity }],
+          });
+          nextCart = handleApiPayload(
+            payload,
+            `${product.name} added to your bag.`,
+          );
+        } else {
           const newLine = previewLine(product, safeQuantity, variant);
           const existing = cartRef.current.items.find(
             (item) => item.lineId === newLine.lineId,
@@ -656,6 +685,12 @@ export function StoreProvider({
       });
       if (!selections.length) {
         const message = "None of the selected ritual jars are currently available.";
+        setCartError(message);
+        setAnnouncement(message);
+        return null;
+      }
+      if (source === "shopify" && selections.some(({ variant }) => !/^gid:\/\/shopify\/ProductVariant\/\d+$/.test(variant?.id || ""))) {
+        const message = "The selected products do not have purchasable Shopify variants. Please refresh and try again.";
         setCartError(message);
         setAnnouncement(message);
         return null;
@@ -739,21 +774,16 @@ export function StoreProvider({
       if (!item || !beginOperation()) return;
 
       try {
-        let updated = false;
-        if (source === "shopify" && item.lineId.startsWith("gid://shopify/")) {
-          try {
-            const payload = await mutateCart({
-              action: "remove",
-              lineIds: [item.lineId],
-            });
-            handleApiPayload(payload, `${item.productName} removed from your bag.`);
-            updated = true;
-          } catch {
-            // Fallback to local removal
+        if (source === "shopify") {
+          if (!item.lineId.startsWith("gid://shopify/")) {
+            throw new Error("This bag item could not be matched to Shopify. Please refresh and try again.");
           }
-        }
-
-        if (!updated) {
+          const payload = await mutateCart({
+            action: "remove",
+            lineIds: [item.lineId],
+          });
+          if (!handleApiPayload(payload, `${item.productName} removed from your bag.`)) return;
+        } else {
           const nextCart = previewCart(
             cartRef.current.items.filter((entry) => entry.lineId !== item.lineId),
             fallbackCurrency,
@@ -802,21 +832,16 @@ export function StoreProvider({
       if (safeQuantity === item.quantity || !beginOperation()) return;
 
       try {
-        let updated = false;
-        if (source === "shopify" && item.lineId.startsWith("gid://shopify/")) {
-          try {
-            const payload = await mutateCart({
-              action: "update",
-              lines: [{ id: item.lineId, quantity: safeQuantity }],
-            });
-            handleApiPayload(payload, `${item.productName} quantity updated.`);
-            updated = true;
-          } catch {
-            // Fallback to local quantity update
+        if (source === "shopify") {
+          if (!item.lineId.startsWith("gid://shopify/")) {
+            throw new Error("This bag item could not be matched to Shopify. Please refresh and try again.");
           }
-        }
-
-        if (!updated) {
+          const payload = await mutateCart({
+            action: "update",
+            lines: [{ id: item.lineId, quantity: safeQuantity }],
+          });
+          handleApiPayload(payload, `${item.productName} quantity updated.`);
+        } else {
           const nextCart = previewCart(
             cartRef.current.items.map((entry) =>
               entry.lineId === item.lineId
@@ -851,23 +876,18 @@ export function StoreProvider({
     if (!current.items.length || !beginOperation()) return;
     try {
       if (source === "shopify") {
-        try {
-          const shopifyLineIds = current.items
-            .filter((i) => i.lineId.startsWith("gid://shopify/"))
-            .map((i) => i.lineId);
-          if (shopifyLineIds.length) {
-            const payload = await mutateCart({
-              action: "remove",
-              lineIds: shopifyLineIds,
-            });
-            handleApiPayload(payload, "Your bag is now empty.");
-          }
-        } catch {
-          // Handled by local emptyCart below
+        if (current.items.some((item) => !item.lineId.startsWith("gid://shopify/"))) {
+          throw new Error("Your bag could not be matched to Shopify. Please refresh and try again.");
         }
+        const payload = await mutateCart({
+          action: "remove",
+          lineIds: current.items.map((item) => item.lineId),
+        });
+        handleApiPayload(payload, "Your bag is now empty.");
+      } else {
+        commitCart(emptyCart(fallbackCurrency));
+        setAnnouncement("Your bag is now empty.");
       }
-      commitCart(emptyCart(fallbackCurrency));
-      setAnnouncement("Your bag is now empty.");
     } catch (error) {
       handleOperationError(error);
     } finally {
@@ -898,35 +918,32 @@ export function StoreProvider({
 
       try {
         if (source === "shopify") {
-          try {
-            const currentCodes = cartRef.current.discountCodes.map(
-              (discount) => discount.code,
-            );
-            const codes = currentCodes.some(
-              (existing) => existing.toLocaleLowerCase() === code.toLocaleLowerCase(),
-            )
-              ? currentCodes
-              : [...currentCodes, code];
-            const payload = await mutateCart({ action: "discount", discountCodes: codes });
-            const updated = handleApiPayload(payload, `Discount code ${code} checked.`);
-            const discount = updated?.discountCodes.find(
-              (entry) => entry.code.toLocaleLowerCase() === code.toLocaleLowerCase(),
-            );
-            if (!discount?.applicable) {
-              const message = `${code} is not valid for the items in this bag.`;
-              setCartError(message);
-              setAnnouncement(message);
-              return false;
-            }
-            setAnnouncement(`${discount.code} applied to your bag.`);
-            track("apply_discount", { code: discount.code });
-            return true;
-          } catch {
-            // Fallback to local promo code calculation
+          const currentCodes = cartRef.current.discountCodes.map(
+            (discount) => discount.code,
+          );
+          const codes = currentCodes.some(
+            (existing) => existing.toLocaleLowerCase() === code.toLocaleLowerCase(),
+          )
+            ? currentCodes
+            : [...currentCodes, code];
+          const payload = await mutateCart({ action: "discount", discountCodes: codes });
+          const updated = handleApiPayload(payload, `Discount code ${code} checked.`);
+          if (!updated) return false;
+          const discount = updated.discountCodes.find(
+            (entry) => entry.code.toLocaleLowerCase() === code.toLocaleLowerCase(),
+          );
+          if (!discount?.applicable) {
+            const message = `${code} is not valid for the items in this bag.`;
+            setCartError(message);
+            setAnnouncement(message);
+            return false;
           }
+          setAnnouncement(`${discount.code} applied to your bag.`);
+          track("apply_discount", { code: discount.code });
+          return true;
         }
 
-        // Promotional codes fallback support
+        // Demo discounts are only available in the local preview catalogue.
         const upperCode = code.toUpperCase();
         let discountPercent = 0;
         let fixedDiscountPaise = 0;

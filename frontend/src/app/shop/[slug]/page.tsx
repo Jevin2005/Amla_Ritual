@@ -59,13 +59,13 @@ export async function generateMetadata(
   const image = product.featuredImage;
 
   return {
-    title: `${product.name} | 100% Pure Botanical | NatureMist`,
+    title: product.seoTitle || product.name,
     description: product.metaDescription,
     alternates: { canonical: `/shop/${slug}` },
     openGraph: {
       type: "website",
       siteName: "NatureMist",
-      title: `${product.name} | Pure Botanical Powder`,
+      title: product.seoTitle || product.name,
       description: product.metaDescription,
       url: `/shop/${slug}`,
       images: image
@@ -106,6 +106,12 @@ export default async function ProductPage(props: ProductPageProps) {
   const fullDescription =
     product.description?.trim() || product.shortDescription.trim();
   const descriptionBlocks = productDescriptionBlocks(fullDescription);
+  const specifications = [
+    { label: "Botanical Name", value: product.botanical, italic: true },
+    { label: "Plant Part", value: product.plantPart },
+    { label: "Net Quantity", value: product.size },
+    { label: "Formulation", value: product.formulation },
+  ].filter((item) => item.value?.trim());
   const reviewSummary = getProductReviewSummary(
     storefront.content.customerReviews,
     product.slug,
@@ -122,7 +128,7 @@ export default async function ProductPage(props: ProductPageProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: `NatureMist ${product.name}`,
+    name: product.name,
     description: product.metaDescription || product.shortDescription,
     brand: { "@type": "Brand", name: "NatureMist" },
     category: "Botanical hair care powder",
@@ -142,10 +148,9 @@ export default async function ProductPage(props: ProductPageProps) {
         url: siteUrl,
       },
     },
-    additionalProperty: [
-      { "@type": "PropertyValue", name: "Botanical", value: product.botanical },
-      { "@type": "PropertyValue", name: "Plant part", value: product.plantPart },
-    ],
+    additionalProperty: specifications.map(({ label, value }) => ({
+      "@type": "PropertyValue", name: label, value,
+    })),
   };
 
   return (
@@ -191,9 +196,9 @@ export default async function ProductPage(props: ProductPageProps) {
             <h1 className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,3.8vw,3.4rem)] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--forest)] max-[680px]:text-[1.85rem]">
               {product.name}
             </h1>
-            <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
+            {product.subtitle && <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
               {product.subtitle}
-            </p>
+            </p>}
             {reviewSummary && (
               <Link
                 href="#customer-reviews"
@@ -221,32 +226,22 @@ export default async function ProductPage(props: ProductPageProps) {
           </Link>
 
           {/* Amazon-Style Specifications Table */}
-          <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
+          {specifications.length > 0 && <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
             <span className="mb-2.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
               Botanical Specifications
             </span>
             <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-[0.8rem] max-[680px]:grid-cols-1 max-[680px]:gap-y-1.5 max-[680px]:text-[0.74rem]">
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Botanical Name:</span>
-                <span className="font-semibold text-[var(--forest)] italic text-right">{product.botanical}</span>
-              </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Plant Part:</span>
-                <span className="font-semibold text-[var(--forest)] text-right">{product.plantPart}</span>
-              </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Net Quantity:</span>
-                <span className="font-semibold text-[var(--forest)] text-right">{product.size}</span>
-              </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Formulation:</span>
-                <span className="font-semibold text-[var(--forest)] text-right">Shade-Dried Powder</span>
-              </div>
+              {specifications.map(({ label, value, italic }) => (
+                <div key={label} className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
+                  <span className="text-[var(--muted)] shrink-0">{label}:</span>
+                  <span className={`font-semibold text-[var(--forest)] text-right${italic ? " italic" : ""}`}>{value}</span>
+                </div>
+              ))}
             </div>
-          </div>
+          </div>}
 
           {/* About This Item (Key Benefits) */}
-          <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
+          {product.benefits.length > 0 && <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
             <span className="mb-2.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)]">
               About this item
             </span>
@@ -258,7 +253,7 @@ export default async function ProductPage(props: ProductPageProps) {
                 </li>
               ))}
             </ul>
-          </div>
+          </div>}
 
           {/* Main Purchase Actions (Inline & Seamless) */}
           <div className="pt-1">
@@ -267,7 +262,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
           {/* Preparation & Storage Accordions */}
           <div className="space-y-2">
-            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl" open>
+            {product.howTo.length > 0 && <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl" open>
               <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.12rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[1rem]">
                 <span>How to prepare & apply</span>
                 <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
@@ -279,7 +274,7 @@ export default async function ProductPage(props: ProductPageProps) {
                   </li>
                 ))}
               </ol>
-            </details>
+            </details>}
 
             <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl">
               <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.12rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[1rem]">
@@ -287,7 +282,7 @@ export default async function ProductPage(props: ProductPageProps) {
                 <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
               </summary>
               <div className="mt-2.5 text-[0.82rem] text-[var(--muted)] leading-relaxed max-[680px]:text-[0.75rem]">
-                <p className="m-0 font-medium text-[var(--forest)]">{product.storage}</p>
+                {product.storage && <p className="m-0 font-medium text-[var(--forest)]">{product.storage}</p>}
                 <p className="mt-1.5 mb-0 text-[0.74rem] text-[var(--muted)]">
                   {globalSafety}
                 </p>
@@ -362,7 +357,7 @@ export default async function ProductPage(props: ProductPageProps) {
       />
 
       {/* ── Product-Specific FAQ Section ── */}
-      <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="product-faq-title">
+      {product.faqs.length > 0 && <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="product-faq-title">
         <div className="mb-4 flex items-end justify-between max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-0.5">
           <div>
             <p className="mb-0.5 text-[0.64rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
@@ -404,7 +399,7 @@ export default async function ProductPage(props: ProductPageProps) {
             </details>
           ))}
         </div>
-      </section>
+      </section>}
 
       {/* ── Related Botanicals Carousel ("Customers also bought") ── */}
       <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="related-title">

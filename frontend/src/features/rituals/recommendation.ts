@@ -50,7 +50,6 @@ function selectProduct(
     ) ??
     products.find((product) => product.slug === preferredSlug) ??
     products.find(matches) ??
-    products[0] ??
     null
   );
 }

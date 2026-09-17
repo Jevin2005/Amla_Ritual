@@ -67,6 +67,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
       quantity,
       openDrawer,
       selectedVariant?.id,
+      product,
     );
     if (!nextCart) return null;
     setAdded(true);
@@ -78,7 +79,8 @@ export function ProductDetailActions({ product }: { product: Product }) {
   const buyNow = async () => {
     setIsBuyingNow(true);
     try {
-      await add(false);
+      const nextCart = await add(false);
+      if (!nextCart) return;
       track("begin_checkout", {
         item_id: selectedVariant?.id || product.slug,
         quantity,

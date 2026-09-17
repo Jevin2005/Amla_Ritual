@@ -67,6 +67,7 @@ export type Product = {
   metaDescription: string;
   seoTitle?: string;
   ingredient: string;
+  formulation?: string;
   benefits: string[];
   howTo: string[];
   mixers: string[];
@@ -75,8 +76,8 @@ export type Product = {
   storage: string;
   texture: string;
   concerns: string[];
-  ritualStep: "Cleanse" | "Condition" | "Colour";
-  experience: "Beginner" | "Familiar" | "Advanced";
+  ritualStep: "Cleanse" | "Condition" | "Colour" | "";
+  experience: "Beginner" | "Familiar" | "Advanced" | "";
   colorConsiderations: string[];
   searchTerms: string[];
   faqs: ProductFaq[];
@@ -583,7 +584,7 @@ export function formatCurrency(pricePaise: number, currencyCode = "INR") {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: currencyCode,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: Number.isInteger(pricePaise / 100) ? 0 : undefined,
   }).format(pricePaise / 100);
 }
 
