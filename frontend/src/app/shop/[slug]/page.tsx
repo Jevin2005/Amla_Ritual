@@ -305,17 +305,17 @@ export default async function ProductPage(props: ProductPageProps) {
       >
         <div className="grid grid-cols-[minmax(180px,0.42fr)_minmax(0,1.58fr)] gap-[clamp(28px,5vw,72px)] border-t border-[var(--line)] pt-10 max-[760px]:grid-cols-1 max-[760px]:gap-4 max-[680px]:pt-7">
           <div>
-            <p className="mb-1 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)]">
+            <p className="mb-2 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)]">
               Complete product details
             </p>
             <h2
               id="product-description-title"
-              className="m-0 [font-family:var(--font-display)] text-[clamp(1.7rem,3vw,2.45rem)] font-normal leading-[1.05] text-[var(--forest)]"
+              className="m-0 [font-family:var(--font-display)] text-[clamp(1.7rem,3vw,2.45rem)] font-normal leading-[1.12] text-[var(--forest)]"
             >
               Product description
             </h2>
           </div>
-          <div className="max-w-[78ch] space-y-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-[clamp(20px,3vw,34px)] text-[0.86rem] leading-[1.85] text-[var(--muted)] shadow-[0_10px_32px_rgba(21,59,45,0.04)] max-[680px]:rounded-2xl max-[680px]:text-[0.76rem] max-[680px]:leading-[1.72]">
+          <div className="w-full min-w-0 space-y-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-[clamp(20px,3vw,34px)] text-[1rem] font-normal leading-[1.8] text-[var(--charcoal)] shadow-[0_10px_32px_rgba(21,59,45,0.04)] max-[680px]:rounded-2xl max-[680px]:text-[0.9375rem] max-[680px]:leading-[1.75]">
             {descriptionHtml ? (
               <div className={descriptionStyles.content} dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
             ) : descriptionBlocks.map((block, index) =>
