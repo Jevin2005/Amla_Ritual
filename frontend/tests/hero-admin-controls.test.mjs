@@ -36,7 +36,7 @@ const result = await build({
       if (path === "react") return { contents: hooks };
       if (path === "react/jsx-runtime") return { contents: 'export function jsx(type, props) { return typeof type === "function" ? type(props) : {type, props}; } export const jsxs = jsx;' };
       if (path.includes("store-provider")) return { contents: 'export const useStore = () => globalThis.harness.store;' };
-      if (path.includes("use-motion-preferences")) return { contents: 'export const useReducedMotion = () => globalThis.harness.reduced; export const usePageVisible = () => true; export const useFinePointer = () => true;' };
+      if (path.includes("use-motion-preferences")) return { contents: 'export const useReducedMotion = () => globalThis.harness.reduced; export const usePageVisible = () => true; export const useFinePointer = () => !globalThis.harness.compact; export const useCompactViewport = () => Boolean(globalThis.harness.compact);' };
       if (path.includes("use-webgl")) return { contents: 'export const useWebGL = () => true; export const isWebGLAvailable = () => true; export const markWebGLUnavailable = () => {};' };
       if (path === "@google/model-viewer") return { contents: "export {};" };
       const name = path === "ModelPlaceholder" ? "ProductModel" : path === "PurchasePlaceholder" ? "HeroPurchase" : path.includes("magnetic-link") ? "MagneticLink" : path.includes("shery-background") ? "SheryBackground" : path.includes("shery-poster") ? "SheryPoster" : null;
@@ -81,6 +81,7 @@ function text(node) {
 }
 function renderHero(options = {}) {
   const env = environment("hero", options.motion, options.reduced);
+  env.harness.compact = options.compact;
   const tree = env.components.ProductHero({ products: [heroProduct(reetha, options.copy), heroProduct(second)], settings: { ...defaults, ...options.settings } });
   return { ...env, tree };
 }
@@ -96,6 +97,41 @@ test("saved Shopify copy takes priority for a recognized botanical without chang
   const blank = renderHero({ copy: { headlineFirst: "  ", headlineMiddle: "", headlineItalic: " " } }).tree;
   assert.equal(text(all(blank).find((node) => node.type === "h1")), "DiscoverReetha.");
   assert.ok(text(blank).includes("Your wash-day ritual."));
+});
+
+test("phone hero animates the complete Shopify background and poster without requiring a mouse", () => {
+  const env = environment("hero");
+  env.harness.compact = true;
+  const tree = env.components.ProductHero({ products: [{ ...heroProduct(reetha), featuredImage: image }, heroProduct(second)], settings: defaults });
+  assert.equal(tree.props["data-transition"], "fade");
+  const background = all(tree).find((node) => node.type === "SheryBackground");
+  const poster = all(tree).find((node) => node.type === "SheryPoster");
+  assert.equal(background.props.fit, "edges");
+  assert.equal(poster.props.cursor, false);
+  assert.equal(poster.props.active, true);
+  assert.equal(all(tree).find((node) => node.type === "ProductModel").props.poster.url, image.url);
+  assert.ok(all(tree).some((node) => node.props?.["aria-label"] === "Pause slideshow"));
+  const desktop = all(renderHero().tree);
+  assert.equal(desktop.find((node) => node.type === "ProductModel").props.poster, undefined);
+  assert.equal(desktop.find((node) => node.type === "SheryBackground").props.fit, "cover");
+  assert.equal(desktop.find((node) => node.type === "SheryPoster").props.cursor, true);
+  for (const options of [{ reduced: true }, { motion: { enabled: false } }, { settings: { transition: "none" } }]) {
+    assert.ok(!all(renderHero({ compact: true, ...options }).tree).some((node) => node.type === "SheryBackground" || node.type === "SheryPoster"));
+  }
+});
+
+test("touch focus pauses for reading disclosures and releases when another hero control is tapped", () => {
+  const { tree, harness } = renderHero({ compact: true });
+  const focus = (keyboard, disclosure) => tree.props.onFocusCapture({ target: { matches: () => keyboard, closest: () => disclosure ? {} : null } });
+  focus(false, true);
+  assert.equal(harness.values.get(3), true);
+  focus(false, false);
+  assert.equal(harness.values.get(3), false);
+  focus(true, false);
+  assert.equal(harness.values.get(3), true, "keyboard navigation still pauses autoplay");
+  const desktop = renderHero();
+  desktop.tree.props.onFocusCapture({ target: { matches: () => false, closest: () => null } });
+  assert.equal(desktop.harness.values.get(3), true, "desktop focus behavior is unchanged");
 });
 
 test("transition none removes both Shery effects while keeping static images and navigation", () => {

@@ -20,12 +20,15 @@ export function installRitualSectionMotion(panel: HTMLElement, settings: MotionS
     const pending = target.dataset.ritualReveal === "pending";
     target.dataset.ritualReveal = "done";
     if (!animate || !pending || reduced.matches || !target.animate) return;
+    const compact = window.innerWidth <= 680;
+    const targetIndex = targets.indexOf(target);
     const animation = target.animate([
-      { opacity: 0, transform: "translate3d(0, 28px, 0)" },
+      { opacity: 0, transform: `translate3d(0, ${compact ? 12 : 28}px, 0)` },
       { opacity: 1, transform: "none" },
     ], {
-      duration: 760 * settings.duration,
-      delay: targets.indexOf(target) * 120,
+      duration: (compact ? 480 : 760) * settings.duration,
+      // Phone content enters separately as it scrolls into view, so avoid long waits.
+      delay: compact ? Math.min(targetIndex * 30, 90) : targetIndex * 120,
       easing: "cubic-bezier(.2,.8,.2,1)",
       fill: "backwards",
     });

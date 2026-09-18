@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { defaultSheryBackgroundConfig, type SheryConfig } from "@/domain/shery-config";
 import { sheryBackgroundDocument } from "./shery-background-document";
+import type { BackgroundFit } from "./background-fit";
 import type { StoreImage } from "@/domain/catalog/products";
 import styles from "./shery-background.module.css";
 
@@ -12,6 +13,7 @@ type Props = {
   selected: number;
   active: boolean;
   duration: number;
+  fit?: BackgroundFit;
   className?: string;
 };
 
@@ -21,13 +23,14 @@ export function SheryBackground({
   selected,
   active,
   duration,
+  fit = "cover",
   className,
 }: Props) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  const documentHtml = useMemo(() => sheryBackgroundDocument(images, config), [images, config]);
+  const documentHtml = useMemo(() => sheryBackgroundDocument(images, config, fit), [images, config, fit]);
 
   const sendState = useCallback(() => {
     frame.current?.contentWindow?.postMessage(

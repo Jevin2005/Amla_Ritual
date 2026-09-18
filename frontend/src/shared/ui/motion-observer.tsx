@@ -6,6 +6,9 @@ import { useStore } from "@/features/store/store-provider";
 const revealSelector =
   "main > section:not(:first-child), main > article, main .grid > article:not([data-reveal-ignore]), main [data-motion-reveal]";
 
+// Shared across effect re-runs, without adding attributes to React-owned HTML.
+const revealedElements = new WeakSet<HTMLElement>();
+
 function collectRevealElements(root: ParentNode) {
   const elements = new Set<HTMLElement>();
   if (root instanceof HTMLElement && root.matches(revealSelector)) elements.add(root);
@@ -17,10 +20,10 @@ function collectRevealElements(root: ParentNode) {
 export function MotionObserver() {
   const { content: { motionSettings } } = useStore();
   useEffect(() => {
-    const body = document.body;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const compactScreen = window.matchMedia("(max-width: 680px)");
     const pending = new Set<HTMLElement>();
+    const visibilityAnimations = new Map<HTMLElement, Animation>();
     const animations = new Map<HTMLElement, Animation>();
     const queuedRoots = new Set<ParentNode>();
     let observer: IntersectionObserver | null = null;
@@ -30,7 +33,9 @@ export function MotionObserver() {
     const reveal = (element: HTMLElement, animate = false) => {
       pending.delete(element);
       observer?.unobserve(element);
-      element.dataset.reveal = "revealed";
+      visibilityAnimations.get(element)?.cancel();
+      visibilityAnimations.delete(element);
+      revealedElements.add(element);
       if (!animate || !motionSettings.enabled || reducedMotion.matches || document.hidden || !element.animate) return;
 
       const siblings = element.parentElement ? Array.from(element.parentElement.children) : [];
@@ -51,6 +56,24 @@ export function MotionObserver() {
       };
       animation.onfinish = clear;
       animation.oncancel = clear;
+
+      for (const [index, line] of element.querySelectorAll<HTMLElement>(".line-reveal-text").entries()) {
+        const lineAnimation = line.animate([
+          { opacity: 0, transform: "translate3d(0, 100%, 0)" },
+          { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ], {
+          duration: 680 * motionSettings.duration,
+          delay: index * 120 * motionSettings.duration,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          fill: "backwards",
+        });
+        animations.set(line, lineAnimation);
+        const clearLine = () => {
+          if (animations.get(line) === lineAnimation) animations.delete(line);
+        };
+        lineAnimation.onfinish = clearLine;
+        lineAnimation.oncancel = clearLine;
+      }
     };
 
     const revealAll = () => {
@@ -61,7 +84,7 @@ export function MotionObserver() {
 
     const register = (root: ParentNode) => {
       for (const element of collectRevealElements(root)) {
-        if (!element.isConnected || element.dataset.reveal) continue;
+        if (!element.isConnected || revealedElements.has(element) || pending.has(element)) continue;
         for (const ancestor of [...pending]) {
           if (ancestor.contains(element)) reveal(ancestor);
         }
@@ -70,11 +93,15 @@ export function MotionObserver() {
         }
         const bounds = element.getBoundingClientRect();
         // Content in or above the viewport stays visible, including during hydration.
-        if (!motionSettings.enabled || reducedMotion.matches || document.hidden || !observer || bounds.top < window.innerHeight || element.contains(document.activeElement)) {
+        if (!motionSettings.enabled || reducedMotion.matches || document.hidden || !observer || !element.animate || bounds.top < window.innerHeight || element.contains(document.activeElement)) {
           reveal(element);
           continue;
         }
-        element.dataset.reveal = "pending";
+        // Web Animations affect presentation without mutating attributes/styles
+        // that a later React Suspense boundary still needs to hydrate.
+        const hidden = element.animate([{ opacity: 0 }, { opacity: 0 }], { duration: 1, fill: "both" });
+        hidden.pause();
+        visibilityAnimations.set(element, hidden);
         pending.add(element);
         observer.observe(element);
       }
@@ -90,6 +117,8 @@ export function MotionObserver() {
         for (const element of pending) {
           if (!element.isConnected) {
             observer?.unobserve(element);
+            visibilityAnimations.get(element)?.cancel();
+            visibilityAnimations.delete(element);
             pending.delete(element);
           }
         }
@@ -112,10 +141,8 @@ export function MotionObserver() {
       }, { threshold: 0, rootMargin: "0px 0px -24px 0px" });
     }
 
-    body.dataset.motionReady = "true";
-    // Defer past React's synchronous hydration pass — rAF fires before hydration
-    // commits and writing data-reveal="pending" causes a hydration mismatch.
-    const initTimer = setTimeout(() => scheduleRegister(document), 0);
+    // Streamed boundaries can hydrate after any timer; keep their HTML untouched.
+    scheduleRegister(document);
     const mutations = new MutationObserver((records) => {
       for (const record of records) {
         for (const node of record.addedNodes) {
@@ -124,7 +151,7 @@ export function MotionObserver() {
         if (record.removedNodes.length) scheduleRegister(record.target as ParentNode);
       }
     });
-    mutations.observe(body, { childList: true, subtree: true });
+    mutations.observe(document.body, { childList: true, subtree: true });
 
     const onFocus = (event: FocusEvent) => {
       if (!(event.target instanceof HTMLElement)) return;
@@ -148,7 +175,6 @@ export function MotionObserver() {
 
     return () => {
       disposed = true;
-      clearTimeout(initTimer);
       cancelAnimationFrame(frame);
       mutations.disconnect();
       revealAll();
@@ -157,7 +183,6 @@ export function MotionObserver() {
       document.removeEventListener("focusin", onFocus);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       reducedMotion.removeEventListener("change", onPreferenceChange);
-      delete body.dataset.motionReady;
     };
   }, [motionSettings.enabled, motionSettings.duration]);
 

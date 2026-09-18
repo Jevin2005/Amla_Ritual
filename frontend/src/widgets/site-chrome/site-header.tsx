@@ -52,7 +52,7 @@ export function SiteHeader() {
       >
         Skip to content
       </a>
-      <div className="bg-[linear-gradient(90deg,var(--forest-dark),var(--forest))] text-white/88 max-[680px]:pt-[env(safe-area-inset-top)]">
+      <div className="bg-[linear-gradient(90deg,var(--forest-dark),var(--forest))] text-white/88 max-[900px]:hidden">
         <div className="mx-auto flex min-h-9 w-full max-w-[1440px] items-center justify-between gap-6 px-[clamp(20px,3.35vw,48px)] py-1.5 text-[0.7rem] font-[650] tracking-[0.12em] uppercase max-[900px]:justify-center max-[680px]:min-h-[32px] max-[680px]:pr-[max(12px,env(safe-area-inset-right))] max-[680px]:pl-[max(12px,env(safe-area-inset-left))] max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.08em]">
           <p className="m-0 text-center leading-normal">
             {content.announcementText}
@@ -75,8 +75,8 @@ export function SiteHeader() {
         </div>
       </div>
       <header
-        className={`sticky top-0 z-[100] border-b border-[var(--line)] bg-[rgba(245,241,232,0.9)] backdrop-blur-[18px] transition-[height,box-shadow,background-color] duration-[420ms] ease-[var(--ease)] max-[1024px]:h-[72px] max-[680px]:h-[60px] ${compact
-            ? "h-[68px] bg-[rgba(255,252,245,0.94)] shadow-[0_12px_35px_rgba(21,59,45,0.09)] max-[1024px]:h-[66px] max-[680px]:h-[60px]"
+        className={`sticky top-0 z-[100] border-b border-[var(--line)] bg-[rgba(245,241,232,0.9)] backdrop-blur-[18px] transition-[height,box-shadow,background-color] duration-[420ms] ease-[var(--ease)] max-[1024px]:h-[72px] max-[900px]:h-[calc(68px+env(safe-area-inset-top))] max-[900px]:pt-[env(safe-area-inset-top)] ${compact
+            ? "h-[68px] bg-[rgba(255,252,245,0.94)] shadow-[0_12px_35px_rgba(21,59,45,0.09)] max-[1024px]:h-[66px] max-[900px]:h-[calc(68px+env(safe-area-inset-top))]"
             : "h-[var(--header-height)]"
           }`}
       >

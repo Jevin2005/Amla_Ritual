@@ -8,10 +8,11 @@ import { nextHeroIndex, type HeroSettings } from "@/domain/catalog/hero";
 import { getHeroPresentation } from "./hero-presentation";
 import { ProductModel } from "@/features/catalog/product-model";
 import { SheryBackground } from "@/features/background/shery-background";
+import { backgroundTextureSize, paintBackground } from "@/features/background/background-fit";
 import { SheryPoster } from "@/features/poster/shery-poster";
 import { defaultSheryBackgroundConfig, heroPosterGooeyConfig } from "@/domain/shery-config";
 import { useStore } from "@/features/store/store-provider";
-import { useFinePointer, usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
+import { useCompactViewport, useFinePointer, usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { useWebGL } from "@/shared/hooks/use-webgl";
 import { HeroPurchase } from "./hero-purchase";
 import styles from "./product-hero.module.css";
@@ -27,7 +28,10 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   const [visited, setVisited] = useState(false);
   const [revision, setRevision] = useState(0);
   const root = useRef<HTMLElement>(null);
+  const backgroundImage = useRef<HTMLImageElement>(null);
+  const mobileBackground = useRef<HTMLCanvasElement>(null);
   const finePointer = useFinePointer();
+  const compactViewport = useCompactViewport();
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisible();
   const webgl = useWebGL();
@@ -41,6 +45,42 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   const heroBackgrounds = useMemo(() => slides.map((slide) => slide.heroBackground), [slides]);
   const heroPosters = useMemo(() => slides.map((slide) => slide.heroPoster), [slides]);
   const posterCursor = finePointer && settings.cursorMotion && motionSettings.cursor && motionSettings.intensity > 0;
+
+  useEffect(() => {
+    if (!compactViewport) return;
+    const image = backgroundImage.current;
+    const canvas = mobileBackground.current;
+    if (!image || !canvas) return;
+    let frame = 0;
+    const draw = () => {
+      if (!image.complete || !image.naturalWidth || !image.naturalHeight) return;
+      const bounds = canvas.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const size = backgroundTextureSize(bounds.width * pixelRatio, bounds.height * pixelRatio);
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      canvas.width = size.width;
+      canvas.height = size.height;
+      paintBackground(context, image, size.width, size.height, "edges");
+      canvas.dataset.ready = "true";
+    };
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(draw);
+    };
+    const observer = typeof ResizeObserver === "function" ? new ResizeObserver(schedule) : null;
+    observer?.observe(canvas);
+    image.addEventListener("load", schedule);
+    window.addEventListener("resize", schedule, { passive: true });
+    schedule();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      image.removeEventListener("load", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [compactViewport, product?.heroBackground.url]);
 
   useEffect(() => {
     const section = root.current;
@@ -92,7 +132,9 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     <section ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
       onPointerEnter={(event) => { if (event.pointerType === "mouse") setHovered(true); }}
       onPointerLeave={() => setHovered(false)}
-      onFocusCapture={() => setFocused(true)}
+      onFocusCapture={(event) => {
+        setFocused(!compactViewport || event.target.matches(":focus-visible") || Boolean(event.target.closest("details")));
+      }}
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
       data-theme={theme.key}
       data-transition={animation}
@@ -106,7 +148,8 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         "--hero-soft": product.accentSoft,
       } as CSSProperties}>
       <div className={styles.background} data-transition={animation} aria-hidden="true">
-        <Image key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
+        <Image ref={backgroundImage} key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
+        <canvas ref={mobileBackground} key={`background-${product.heroBackground.url}`} className={styles.mobileBackground} />
         {visited && slides.length > 1 && transitioning && webgl && (
           <SheryBackground
             images={heroBackgrounds}
@@ -114,6 +157,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
             selected={index}
             active={inView && pageVisible}
             duration={1100 * motionSettings.duration}
+            fit={compactViewport ? "edges" : "cover"}
             className={styles.heroSheryBackground}
           />
         )}
@@ -147,8 +191,8 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           >
             <div className={styles.posterMotion}>
               <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
-                sizes="(max-width: 680px) calc(100vw - 40px), (max-width: 1100px) 600px, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
-              {visited && slides.length > 1 && transitioning && posterCursor && webgl && (
+                sizes="(max-width: 900px) 46vw, (max-width: 1100px) 600px, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+              {visited && slides.length > 1 && transitioning && (compactViewport || posterCursor) && webgl && (
                 <SheryPoster
                   key={heroPosters.map((image) => image.url).join("|")}
                   images={heroPosters}
@@ -190,9 +234,10 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
             <p id="featured-ritual-heading">Featured botanical ritual</p>
             <button type="button" className={styles.arrow} disabled={slides.length < 2} onClick={() => goTo(nextHeroIndex(index, slides.length))} aria-label="Next featured product">→</button>
           </div>
-          <div className={styles.model} data-transition={animation}>
+          <div className={styles.model} key={compactViewport ? product.heroEntryId : undefined} data-transition={animation}>
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={settings} paused={paused || !inView} cameraDistancePercent={95} eager />
+              settings={settings} paused={paused || !inView} cameraDistancePercent={95} eager
+              poster={compactViewport ? product.featuredImage : undefined} />
           </div>
           <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>
             <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical hair care"}</p>

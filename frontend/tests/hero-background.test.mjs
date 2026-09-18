@@ -16,7 +16,7 @@ const bundle = buildSync({
   format: "esm",
   write: false,
 });
-const { defaultSheryBackgroundConfig, sheryBackgroundDocument, backgroundCrop, backgroundTextureSize, uncroppedBackgroundShader } = await import(
+const { defaultSheryBackgroundConfig, sheryBackgroundDocument, backgroundCrop, backgroundSlices, backgroundTextureSize, uncroppedBackgroundShader } = await import(
   `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`
 );
 
@@ -48,6 +48,33 @@ test("background index loop calculation works forward and backward", () => {
   assert.equal(loopForward(1), 0);
   assert.equal(loopBackward(0), 1);
   assert.equal(loopBackward(1), 0);
+});
+
+test("phone background preserves proportional top and bottom artwork with a continuous middle", () => {
+  for (const [width, height] of [[320, 800], [390, 844], [430, 900], [878, 1000]]) {
+    const slices = backgroundSlices(1600, 1000, width, height, "edges");
+    assert.equal(slices.length, 2);
+    assert.equal(slices[0].y, 0);
+    assert.equal(slices[1].y + slices[1].height, 1000);
+    assert.equal(slices[0].dy, 0);
+    assert.equal(slices[1].dy + slices[1].dh, height);
+    for (const edge of slices) {
+      assert.ok(Math.abs(edge.dw / edge.width - edge.dh / edge.height) < 1e-8, "edge artwork must not stretch");
+    }
+    for (let index = 1; index < slices.length; index++) {
+      assert.ok(slices[index - 1].dy + slices[index - 1].dh <= slices[index].dy, "natural edges must not overlap");
+      assert.equal(slices[index - 1].y + slices[index - 1].height, slices[index].y, "no duplicated source artwork");
+    }
+  }
+  assert.deepEqual(backgroundSlices(1600, 1000, 1440, 810, "edges"), backgroundSlices(1600, 1000, 1440, 810, "cover"));
+  assert.ok(sheryBackgroundDocument([], defaultSheryBackgroundConfig, "edges").includes('"fit":"edges"'));
+});
+
+test("background frame defaults to desktop cover and passes an explicit phone fill to its runtime", () => {
+  const images = [{ url: "https://example.test/background.png" }];
+  const frameData = (html) => JSON.parse(html.match(/<script id="shery-data" type="application\/json">(.*?)<\/script>/s)[1]);
+  assert.equal(frameData(sheryBackgroundDocument(images, defaultSheryBackgroundConfig)).fit, "cover");
+  assert.equal(frameData(sheryBackgroundDocument(images, defaultSheryBackgroundConfig, "fill")).fit, "fill");
 });
 
 test("background texture follows phone, tablet and desktop proportions within its memory limit", () => {
@@ -82,4 +109,18 @@ test("cover keeps the centre and proportions when cropping either axis", () => {
     assert.ok(Math.abs(crop.y + crop.height / 2 - 1200) < 1e-8);
     assert.ok(crop.width <= 1800 && crop.height <= 2400);
   }
+});
+
+test("phone fill preserves all Shopify artwork edges through portrait and landscape resizing", () => {
+  for (const [imageWidth, imageHeight] of [[2400, 1200], [1800, 2400]]) {
+    for (const [width, height] of [[320, 900], [390, 800], [430, 1000], [844, 390], [768, 1500]]) {
+      const target = backgroundTextureSize(width, height);
+      assert.deepEqual(backgroundCrop(imageWidth, imageHeight, target.width, target.height, "fill"), {
+        x: 0, y: 0, width: imageWidth, height: imageHeight,
+      });
+    }
+  }
+  const desktop = backgroundCrop(2400, 1200, 1440, 810);
+  assert.deepEqual(backgroundCrop(2400, 1200, 1440, 810, "cover"), desktop);
+  assert.ok(desktop.x > 0, "desktop retains its original centered crop");
 });

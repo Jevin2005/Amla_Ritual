@@ -110,7 +110,7 @@ export function ProductCard({
           {product.name}
         </Link>
 
-        <p className="mb-0 text-[0.82rem] leading-[1.5] text-[var(--muted)] max-[680px]:line-clamp-2 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35] max-[420px]:text-[0.68rem]">
+        <p className="mb-0 text-[0.82rem] leading-[1.5] text-[var(--muted)] max-[900px]:hidden">
           {[product.subtitle, product.size].filter(Boolean).join(" · ")}
         </p>
 

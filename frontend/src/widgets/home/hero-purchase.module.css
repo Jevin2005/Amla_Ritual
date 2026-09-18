@@ -153,6 +153,21 @@
   .explore { font-size: 14px; }
 }
 
+@media (max-width: 900px) {
+  .purchase { max-width: none; }
+  .priceRow { justify-content: space-between; gap: 4px 8px; margin-bottom: 12px; padding-top: 10px; border-top: 1px solid var(--hero-line); }
+  .price { font-family: var(--hero-font-serif); font-size: clamp(20px, 2.7vw, 26px); line-height: 1.2; }
+  .tax, .weight { font-size: clamp(10px, 1.4vw, 13px); }
+  .actions { gap: 8px; }
+  .add { flex: 1 1 auto; min-height: 44px; height: 46px; padding-inline: 10px; gap: 6px; font-size: clamp(10px, 1.5vw, 13px); font-weight: 700; letter-spacing: .025em; text-transform: uppercase; }
+  .wishlist { flex-basis: 44px; width: 44px; height: 44px; border-color: color-mix(in srgb, var(--hero-heading) 40%, transparent); }
+  .wishlist svg { width: 17px; height: 17px; }
+  .explore { min-height: 44px; margin-top: 2px; gap: 5px; font-size: clamp(10px, 1.45vw, 12px); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+}
+@media (max-width: 900px) and (hover: none) {
+  .add:hover:enabled, .wishlist:hover { transform: none; }
+  .add:active:enabled, .wishlist:active { transform: scale(.97); }
+}
 @media (prefers-reduced-motion: reduce) {
   .add, .wishlist, .explore::after { transition: none; }
   .add:hover:enabled, .wishlist:hover { transform: none; }

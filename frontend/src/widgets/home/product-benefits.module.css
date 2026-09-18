@@ -216,7 +216,6 @@
 .tickerGroup i { color: var(--benefits-accent); font-size: 19px; font-style: normal; }
 .section[data-motion-running="true"] .seal,
 .section[data-motion-running="true"] .tickerTrack { animation-play-state: running; }
-.section .ticker:hover .tickerTrack { animation-play-state: paused; }
 
 .section [data-benefit-reveal="pending"] { opacity: 0; }
 .section [data-benefit-reveal="pending"]:focus-within { opacity: 1; }
@@ -225,6 +224,7 @@
 @keyframes tickerScroll { to { transform: translateX(-50%); } }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .section .ticker:hover .tickerTrack { animation-play-state: paused; }
   .row:hover::before { opacity: 1; }
   .row:hover .rowArrow,
   .row:focus-within .rowArrow { transform: rotate(-45deg); border-color: var(--forest); background: var(--forest); color: var(--paper); }

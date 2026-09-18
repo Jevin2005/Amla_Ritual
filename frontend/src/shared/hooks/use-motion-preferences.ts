@@ -4,6 +4,12 @@ import { useSyncExternalStore } from "react";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 const finePointerQuery = "(hover: hover) and (pointer: fine)";
+const compactViewportQuery = "(max-width: 900px)";
+function subscribeCompactViewport(callback: () => void) {
+  const media = window.matchMedia(compactViewportQuery);
+  media.addEventListener("change", callback);
+  return () => media.removeEventListener("change", callback);
+}
 function subscribeFinePointer(callback: () => void) {
   const media = window.matchMedia(finePointerQuery);
   media.addEventListener("change", callback);
@@ -29,4 +35,8 @@ export function useFinePointer() {
 
 export function usePageVisible() {
   return useSyncExternalStore(subscribeVisibility, () => !document.hidden, () => true);
+}
+
+export function useCompactViewport() {
+  return useSyncExternalStore(subscribeCompactViewport, () => window.matchMedia(compactViewportQuery).matches, () => false);
 }

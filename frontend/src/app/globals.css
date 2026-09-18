@@ -304,15 +304,6 @@
   }
 }
 
-body[data-motion-ready="true"] [data-reveal="pending"] {
-  opacity: 0;
-}
-
-/* Keyboard navigation never lands on an invisible reveal target. */
-body[data-motion-ready="true"] [data-reveal="pending"]:focus-within {
-  opacity: 1;
-}
-
 .atelier-hero-copy {
   animation: atelier-hero-copy calc(720ms * var(--motion-duration, 1)) var(--ease) 80ms backwards;
 }
@@ -340,18 +331,6 @@ body[data-motion-ready="true"] [data-reveal="pending"]:focus-within {
   will-change: transform, opacity;
 }
 
-[data-reveal="revealed"] .line-reveal-wrap:nth-child(1) .line-reveal-text,
-.line-reveal-wrap:nth-child(1)[data-reveal="revealed"] .line-reveal-text,
-[data-reveal="revealed"].line-reveal-wrap:nth-child(1) .line-reveal-text {
-  animation: lineReveal calc(680ms * var(--motion-duration, 1)) cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-
-[data-reveal="revealed"] .line-reveal-wrap:nth-child(2) .line-reveal-text,
-.line-reveal-wrap:nth-child(2)[data-reveal="revealed"] .line-reveal-text,
-[data-reveal="revealed"].line-reveal-wrap:nth-child(2) .line-reveal-text {
-  animation: lineReveal calc(680ms * var(--motion-duration, 1)) cubic-bezier(0.22, 1, 0.36, 1) calc(120ms * var(--motion-duration, 1)) backwards;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .line-reveal-text {
     animation: none !important;
@@ -370,8 +349,6 @@ html[data-site-motion="off"] *::after {
   animation: none !important;
   transition-duration: 0ms !important;
 }
-
-html[data-site-motion="off"] [data-reveal="pending"] { opacity: 1; }
 
 /* Mobile hero animated shapes */
 @keyframes mobile-float-a {
@@ -419,8 +396,12 @@ html[data-site-motion="off"] [data-reveal="pending"] { opacity: 1; }
     --page-pad: 16px;
     --radius-md: 14px;
     --radius-lg: 20px;
-    --header-height: 60px;
+    --header-height: calc(68px + env(safe-area-inset-top));
   }
+}
+
+@media (min-width: 681px) and (max-width: 900px) {
+  :root { --header-height: calc(68px + env(safe-area-inset-top)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -438,9 +419,4 @@ html[data-site-motion="off"] [data-reveal="pending"] { opacity: 1; }
     transition-duration: 0.01ms !important;
   }
 
-  body[data-motion-ready="true"] [data-reveal="pending"],
-  [data-reveal="revealed"] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
 }

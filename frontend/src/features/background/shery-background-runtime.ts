@@ -1,5 +1,5 @@
 import { createFrameClock } from "../poster/shery-frame-clock";
-import { backgroundCrop, backgroundTextureSize, uncroppedBackgroundShader } from "./background-fit";
+import { paintBackground, backgroundTextureSize, uncroppedBackgroundShader, type BackgroundFit } from "./background-fit";
 import type { Mesh, Scene, Camera, Texture, WebGLRenderer } from "three";
 import type { SheryConfig } from "@/domain/shery-config";
 
@@ -26,6 +26,7 @@ declare global {
 const data = JSON.parse(document.getElementById("shery-data")!.textContent!) as {
   images: { url: string; altText?: string }[];
   config: SheryConfig;
+  fit?: BackgroundFit;
   debug: boolean;
 };
 const background = document.getElementById("background")!;
@@ -72,9 +73,8 @@ function rebuildTextures() {
     canvas.height = size.height;
     const ctx = canvas.getContext("2d");
     if (!ctx || !img.naturalWidth || !img.naturalHeight) throw new Error("Background image unavailable");
-    // Fill the section proportionally, cropping equally around the centre.
-    const crop = backgroundCrop(img.naturalWidth, img.naturalHeight, size.width, size.height);
-    ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, size.width, size.height);
+    // Use the same fitting as the static fallback to avoid a jump when WebGL loads.
+    paintBackground(ctx, img, size.width, size.height, data.fit);
     const texture = new THREE.Texture(canvas);
     texture.needsUpdate = true;
     texture.minFilter = THREE.LinearFilter;

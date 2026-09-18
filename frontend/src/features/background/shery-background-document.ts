@@ -1,8 +1,9 @@
 import type { StoreImage } from "@/domain/catalog/products";
 import type { SheryConfig } from "@/domain/shery-config";
+import type { BackgroundFit } from "./background-fit";
 
-export function sheryBackgroundDocument(images: StoreImage[], config: SheryConfig) {
-  const data = JSON.stringify({ images, config, debug: false }).replace(/</g, "\\u003c");
+export function sheryBackgroundDocument(images: StoreImage[], config: SheryConfig, fit: BackgroundFit = "cover") {
+  const data = JSON.stringify({ images, config, fit, debug: false }).replace(/</g, "\\u003c");
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="/vendor/shery/Shery.css">
     <style>
