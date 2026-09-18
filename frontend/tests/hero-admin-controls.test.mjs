@@ -144,7 +144,7 @@ test("actual model honors global enabled, cursor, intensity and reduced-motion c
   const subtle = renderModel({ intensity: .5 });
   assert.equal(subtle.styles.get("--model-x"), "6px");
   assert.equal(subtle.styles.get("--model-y"), "4px");
-  assert.equal(subtle.attributes.get("camera-orbit"), "12.5deg 81deg 105%");
+  assert.equal(subtle.attributes.get("camera-orbit"), "12.5deg 96deg 105%");
 });
 
 test("purchase displays supplied size without a tax assertion and never marks a failed add as Added", async () => {

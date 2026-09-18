@@ -20,7 +20,9 @@ Products without a featured image use their own gallery image, then a neutral pl
 
 Amla, Reetha and Indigo are published to **My Store Headless**. Their listing and product-detail data agree for name, subtitle, size, botanical, ingredient, formulation, plant part, benefits, preparation, ritual step and price. All three have product images. Prices currently returned by Shopify: Amla ₹234, Reetha ₹325 and Indigo ₹350.
 
-Bhringraj, Hibiscus and Shikakai are published only to Online Store. They must also be published to My Store Headless to appear in this app. Bhringraj and Hibiscus have ₹0 prices; publication remains pending the merchant's decision. No publication or price changes were made during this audit.
+Following the request to show all six products, Bhringraj, Hibiscus and Shikakai were published to **My Store Headless**. The website's live Shopify loader now returns all six products, all six product-detail lookups succeed, and six complete hero slides qualify. Current prices for the newly connected products are Bhringraj ₹400, Hibiscus ₹450 and Shikakai ₹400. Prices and product content were not changed by this publication fix.
+
+After Vercel refreshed its stale cache, both `https://naturemist.shop/shop` and the public homepage returned HTTP 200 and rendered links to all six current product handles. This product-count fix is live and required no application deployment. The separately known `www.naturemist.shop` certificate mismatch still exists.
 
 Some saved Shopify content also needs merchant review:
 

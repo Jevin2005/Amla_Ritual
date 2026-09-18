@@ -77,7 +77,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         {/* Master Image View */}
         <div className="relative size-full flex items-center justify-center">
           {activeImage.kind === "model" ? (
-            <ProductModel key={activeImage.url} model={activeImage} eager />
+            <ProductModel key={activeImage.url} model={activeImage} cameraDistancePercent={80} eager />
           ) : (
           <Image
             key={activeImage.url}

@@ -113,8 +113,9 @@ export function MotionObserver() {
     }
 
     body.dataset.motionReady = "true";
-    // One post-hydration frame; slow image and model downloads do not delay setup.
-    scheduleRegister(document);
+    // Defer past React's synchronous hydration pass — rAF fires before hydration
+    // commits and writing data-reveal="pending" causes a hydration mismatch.
+    const initTimer = setTimeout(() => scheduleRegister(document), 0);
     const mutations = new MutationObserver((records) => {
       for (const record of records) {
         for (const node of record.addedNodes) {
@@ -147,6 +148,7 @@ export function MotionObserver() {
 
     return () => {
       disposed = true;
+      clearTimeout(initTimer);
       cancelAnimationFrame(frame);
       mutations.disconnect();
       revealAll();

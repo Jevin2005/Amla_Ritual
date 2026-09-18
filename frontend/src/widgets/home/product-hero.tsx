@@ -192,7 +192,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           </div>
           <div className={styles.model} data-transition={animation}>
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={settings} paused={paused || !inView} cameraDistancePercent={85} eager />
+              settings={settings} paused={paused || !inView} cameraDistancePercent={95} eager />
           </div>
           <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>
             <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical hair care"}</p>

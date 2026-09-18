@@ -98,7 +98,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     cancelAnimationFrame(frame.current);
     stage.current?.style.setProperty("--model-x", "0px");
     stage.current?.style.setProperty("--model-y", "0px");
-    viewer.current?.setAttribute("camera-orbit", `0deg 75deg ${cameraDistancePercent}%`);
+    viewer.current?.setAttribute("camera-orbit", `0deg 90deg ${cameraDistancePercent}%`);
   }, [cameraDistancePercent]);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     frame.current = requestAnimationFrame(() => {
       stage.current?.style.setProperty("--model-x", `${x * 12 * motion.intensity}px`);
       stage.current?.style.setProperty("--model-y", `${y * 8 * motion.intensity}px`);
-      viewer.current?.setAttribute("camera-orbit", `${x * 25 * motion.intensity}deg ${75 + y * 12 * motion.intensity}deg ${cameraDistancePercent}%`);
+      viewer.current?.setAttribute("camera-orbit", `${x * 25 * motion.intensity}deg ${90 + y * 12 * motion.intensity}deg ${cameraDistancePercent}%`);
     });
   };
 
@@ -141,10 +141,13 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
         "disable-zoom": "",
         "disable-pan": "",
         "touch-action": "pan-y",
-        "camera-orbit": `0deg 75deg ${cameraDistancePercent}%`,
+        "camera-orbit": `0deg 90deg ${cameraDistancePercent}%`,
+        "camera-target": "auto auto auto",
+        "min-field-of-view": "25deg",
+        "max-field-of-view": "45deg",
         "rotation-per-second": `${settings.rotationSpeed}deg`,
         "auto-rotate-delay": "0",
-        "shadow-intensity": "0.7",
+        "shadow-intensity": "0.8",
         "shadow-softness": "1",
         "interaction-prompt": "none",
         loading: eager ? "eager" : "lazy",
