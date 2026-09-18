@@ -38,6 +38,10 @@ Title, price, availability, variant, benefits, ingredients, formulation, subtitl
 
 The existing desktop/mobile layout, poster position, animations and unfiltered backgrounds remain. Text colours identify the current product title before considering its handle, so a renamed product does not inherit another botanical's theme from an old URL.
 
+Hero background images cover the entire section while preserving their natural proportions. The image stays centred: excess width is cropped equally from the left and right, and excess height equally from the top and bottom. There is no stretching, coloured padding or added filter. Static and animated backgrounds use the same crop; the animation's extra built-in zoom is removed and its textures are resized with the section. Background transitions fade without moving the image off-centre. This update requires deployment.
+
+The animated background observes section-size changes as well as viewport resizing, including phone rotation and content-driven height changes. Repeated resize events are combined into one update before drawing, and unchanged texture dimensions do not trigger another allocation. Fit checks cover 320px phones through 3840px desktop screens.
+
 ## Global slideshow settings
 
 Open **Content → Metaobjects → Storefront content → Homepage settings** (handle `main`).

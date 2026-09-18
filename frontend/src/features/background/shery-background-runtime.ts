@@ -1,4 +1,5 @@
 import { createFrameClock } from "../poster/shery-frame-clock";
+import { backgroundCrop, backgroundTextureSize, uncroppedBackgroundShader } from "./background-fit";
 import type { Mesh, Scene, Camera, Texture, WebGLRenderer } from "three";
 import type { SheryConfig } from "@/domain/shery-config";
 
@@ -49,6 +50,42 @@ let loadTimeout: ReturnType<typeof setTimeout> | undefined;
 let resizePending = false;
 let setScrollCallback: ((val: number) => void) | undefined;
 let setLerpCallback: ((val: number) => void) | undefined;
+let imageElements: HTMLImageElement[] = [];
+let textureResizePending = false;
+let textureWidth = 0;
+let textureHeight = 0;
+const resizeObserver = typeof ResizeObserver === "function"
+  ? new ResizeObserver(() => { textureResizePending = true; })
+  : undefined;
+resizeObserver?.observe(background);
+
+function rebuildTextures() {
+  const THREE = (window as unknown as { THREE: typeof import("three") }).THREE;
+  if (!THREE?.Texture || !imageElements.length) return;
+  const bounds = background.getBoundingClientRect();
+  const size = backgroundTextureSize(Math.max(1, bounds.width), Math.max(1, bounds.height));
+  if (textures.length && size.width === textureWidth && size.height === textureHeight) return;
+  const previous = textures;
+  textures = imageElements.map((img) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = size.width;
+    canvas.height = size.height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx || !img.naturalWidth || !img.naturalHeight) throw new Error("Background image unavailable");
+    // Fill the section proportionally, cropping equally around the centre.
+    const crop = backgroundCrop(img.naturalWidth, img.naturalHeight, size.width, size.height);
+    ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, size.width, size.height);
+    const texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    return texture;
+  });
+  if (attributes) setPair(current, transition?.target ?? (current + 1) % textures.length);
+  previous.forEach((texture) => texture.dispose());
+  textureWidth = size.width;
+  textureHeight = size.height;
+}
 
 const send = (type: string, extra: Record<string, unknown> = {}) =>
   parent.postMessage({ channel: "naturemist-shery-bg", type, ...extra }, parentOrigin);
@@ -146,6 +183,7 @@ window.addEventListener("unhandledrejection", fail);
 
 window.addEventListener("pagehide", () => {
   disposed = true;
+  resizeObserver?.disconnect();
   clock.dispose();
   clearTimeout(loadTimeout);
   const seen = new Set<Texture>(textures);
@@ -166,6 +204,8 @@ window.addEventListener(
     if (!ready) {
       resizePending = true;
       event.stopImmediatePropagation();
+    } else if (!disposed && !failed) {
+      textureResizePending = true;
     }
   },
   true
@@ -209,38 +249,8 @@ async function start() {
   );
   if (disposed) return;
 
-  // Build uniform 1920x1080 textures with aspect-ratio cover to eliminate
-  // WebGL glTexSubImage2D dimension mismatch errors.
-  const imgElements = Array.from(background.querySelectorAll("img"));
-  if (typeof (window as unknown as { THREE?: { Texture?: unknown } }).THREE?.Texture === "function" && imgElements.length > 0) {
-    const THREE = (window as unknown as { THREE: typeof import("three") }).THREE;
-    textures = imgElements.map((img) => {
-      const canvas = document.createElement("canvas");
-      canvas.width = 1920;
-      canvas.height = 1080;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        const natW = img.naturalWidth || img.width || 1920;
-        const natH = img.naturalHeight || img.height || 1080;
-        const imgAspect = natW / natH;
-        const targetAspect = 1920 / 1080;
-        let sx = 0, sy = 0, sw = natW, sh = natH;
-        if (imgAspect > targetAspect) {
-          sw = natH * targetAspect;
-          sx = (natW - sw) / 2;
-        } else {
-          sh = natW / targetAspect;
-          sy = (natH - sh) / 2;
-        }
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 1920, 1080);
-      }
-      const tex = new THREE.Texture(canvas);
-      tex.needsUpdate = true;
-      tex.minFilter = THREE.LinearFilter;
-      tex.magFilter = THREE.LinearFilter;
-      return tex;
-    });
-  }
+  imageElements = Array.from(background.querySelectorAll("img"));
+  rebuildTextures();
 
   const canWebGL = (() => {
     try {
@@ -295,6 +305,13 @@ async function start() {
       const mesh = value.meshes[0];
       if (mesh && mesh.material) {
         mesh.visible = true;
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        materials.forEach((material) => {
+          if ("fragmentShader" in material && typeof material.fragmentShader === "string") {
+            material.fragmentShader = uncroppedBackgroundShader(material.fragmentShader);
+            material.needsUpdate = true;
+          }
+        });
       }
 
       // Intercept currentScroll to prevent Shery from fighting custom slideStyle
@@ -313,6 +330,12 @@ async function start() {
       const render = value.renderer.render.bind(value.renderer);
       value.renderer.render = (scene, camera) => {
         if (failed || disposed) return;
+        // Coalesce rotation, window and content-size changes into one update
+        // before drawing. Offscreen changes wait until rendering resumes.
+        if (textureResizePending) {
+          textureResizePending = false;
+          rebuildTextures();
+        }
         const uniforms = value.uniforms[0];
         if (value.meshes[0]) {
           value.meshes[0].visible = true;
@@ -339,6 +362,7 @@ async function start() {
           // Disable static liquid wobble when not transitioning
           if (uniforms.onMouse) uniforms.onMouse.value = 1;
           if (uniforms.uIntercept) uniforms.uIntercept.value = 0;
+          if (uniforms.maskVal) uniforms.maskVal.value = 1;
 
           // Handle smooth scroll trigger transition
           if (transition) {

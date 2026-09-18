@@ -15,7 +15,7 @@
   font-synthesis: none;
 }
 .background { position: absolute; z-index: -2; inset: 0; overflow: hidden; }
-.backgroundImage { object-fit: cover; object-position: center top; }
+.backgroundImage { object-fit: cover; object-position: center; }
 .heroSheryBackground { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; pointer-events: none; }
 .layout {
   display: grid;
@@ -147,11 +147,10 @@
 .count { color: var(--hero-body); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .hero a:focus-visible, .hero button:focus-visible, .disclosures summary:focus-visible { outline: 2px solid var(--hero-heading); outline-offset: 4px; }
 .progress { position: absolute; inset: auto 0 0; height: 2px; background: var(--hero-accent); transform-origin: left; animation: progress linear both; }
-.background[data-transition="fade"] .backgroundImage,
+.background:is([data-transition="fade"], [data-transition="slide"]) .backgroundImage { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
 .scene[data-transition="fade"],
 .productDetails[data-transition="fade"],
 .model[data-transition="fade"] { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
-.background[data-transition="slide"] .backgroundImage,
 .scene[data-transition="slide"],
 .productDetails[data-transition="slide"] { animation: slide calc(.45s * var(--motion-duration, 1)) var(--ease) backwards; }
 .model[data-transition="slide"] { animation: modelEntrance calc(500ms * var(--motion-duration, 1)) var(--ease) backwards; }

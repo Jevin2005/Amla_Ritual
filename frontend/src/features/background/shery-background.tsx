@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { StoreImage } from "@/domain/catalog/products";
 import { defaultSheryBackgroundConfig, type SheryConfig } from "@/domain/shery-config";
 import { sheryBackgroundDocument } from "./shery-background-document";
+import type { StoreImage } from "@/domain/catalog/products";
 import styles from "./shery-background.module.css";
 
 type Props = {
