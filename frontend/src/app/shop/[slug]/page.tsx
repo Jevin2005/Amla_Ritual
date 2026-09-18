@@ -13,6 +13,8 @@ import {
 import { StarRating } from "@/features/reviews/star-rating";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
 import { getPublicSiteUrl } from "@/lib/site-url";
+import { sanitizeProductDescription } from "@/lib/shopify/product-description";
+import descriptionStyles from "@/features/catalog/product-description.module.css";
 
 export const dynamicParams = true;
 
@@ -106,6 +108,9 @@ export default async function ProductPage(props: ProductPageProps) {
   const fullDescription =
     product.description?.trim() || product.shortDescription.trim();
   const descriptionBlocks = productDescriptionBlocks(fullDescription);
+  const descriptionHtml = product.descriptionHtml?.trim()
+    ? sanitizeProductDescription(product.descriptionHtml)
+    : "";
   const specifications = [
     { label: "Botanical Name", value: product.botanical, italic: true },
     { label: "Plant Part", value: product.plantPart },
@@ -311,9 +316,11 @@ export default async function ProductPage(props: ProductPageProps) {
             </h2>
           </div>
           <div className="max-w-[78ch] space-y-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-[clamp(20px,3vw,34px)] text-[0.86rem] leading-[1.85] text-[var(--muted)] shadow-[0_10px_32px_rgba(21,59,45,0.04)] max-[680px]:rounded-2xl max-[680px]:text-[0.76rem] max-[680px]:leading-[1.72]">
-            {descriptionBlocks.map((block, index) =>
+            {descriptionHtml ? (
+              <div className={descriptionStyles.content} dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
+            ) : descriptionBlocks.map((block, index) =>
               block.kind === "unordered-list" ? (
-                <ul key={`list-${index}`} className="m-0 space-y-1.5 pl-5">
+                <ul key={`list-${index}`} className="m-0 list-disc space-y-1.5 pl-5">
                   {block.items.map((item, itemIndex) => (
                     <li
                       key={`${item}-${itemIndex}`}
@@ -326,7 +333,7 @@ export default async function ProductPage(props: ProductPageProps) {
               ) : block.kind === "ordered-list" ? (
                 <ol
                   key={`ordered-list-${index}`}
-                  className="m-0 space-y-1.5 pl-5"
+                  className="m-0 list-decimal space-y-1.5 pl-5"
                 >
                   {block.items.map((item, itemIndex) => (
                     <li

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Product } from "@/domain/catalog/products";
 import { ProductModel } from "./product-model";
 import styles from "./product-gallery.module.css";
@@ -11,6 +11,7 @@ interface ProductGalleryProps {
 }
 
 export function ProductGallery({ product }: ProductGalleryProps) {
+  const enlargedPhoto = useRef<HTMLDialogElement>(null);
   const baseImage = product.featuredImage?.url
     ? product.featuredImage
     : {
@@ -43,7 +44,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
   return (
     <div className="flex flex-col gap-3.5">
       {/* ── Main Showcase Stage ── */}
-      <div className="group/stage relative aspect-[0.98] w-full overflow-hidden rounded-3xl border border-[var(--line)] bg-[radial-gradient(circle_at_50%_60%,rgba(255,255,255,0.98),transparent_55%),color-mix(in_srgb,var(--pdp-soft,var(--beige))_65%,var(--ivory))] p-6 shadow-[0_12px_36px_rgba(21,59,45,0.06)] max-[680px]:aspect-[1] max-[680px]:rounded-2xl max-[680px]:p-3">
+      <div className="group/stage relative aspect-[0.94] w-full overflow-hidden rounded-3xl border border-[var(--line)] bg-[radial-gradient(circle_at_50%_60%,rgba(255,255,255,0.98),transparent_55%),color-mix(in_srgb,var(--pdp-soft,var(--beige))_65%,var(--ivory))] shadow-[0_12px_36px_rgba(21,59,45,0.06)] max-[680px]:aspect-[0.94] max-[680px]:rounded-2xl">
         {/* Top-Left: Botanical Ritual Step Pill */}
         <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 rounded-full border border-black/5 bg-[rgba(255,255,255,0.85)] px-3 py-1 shadow-xs backdrop-blur-md max-[680px]:top-2.5 max-[680px]:left-2.5 max-[680px]:px-2.5 max-[680px]:py-0.5">
           <span className="size-1.5 rounded-full bg-[var(--botanical)]" />
@@ -75,10 +76,11 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         )}
 
         {/* Master Image View */}
-        <div className="relative size-full flex items-center justify-center">
+        <div className="absolute inset-3 flex items-center justify-center max-[680px]:inset-2">
           {activeImage.kind === "model" ? (
-            <ProductModel key={activeImage.url} model={activeImage} cameraDistancePercent={80} eager />
+            <ProductModel key={activeImage.url} model={activeImage} presentation="gallery" poster={activeImage.previewImage || baseImage} cameraDistancePercent={110} eager />
           ) : (
+          <button type="button" className={styles.enlargePhoto} aria-label={`Enlarge photo of ${product.name}`} onClick={() => enlargedPhoto.current?.showModal()}>
           <Image
             key={activeImage.url}
             src={activeImage.url}
@@ -86,10 +88,12 @@ export function ProductGallery({ product }: ProductGalleryProps) {
             fill
             loading="eager"
             fetchPriority={selectedIndex === 0 ? "high" : "auto"}
-            quality={82}
+            quality={90}
             sizes="(max-width: 960px) 95vw, 48vw"
             className={`size-full object-contain object-center ${styles.photo}`}
           />
+          <span className={styles.enlargeHint}>View larger ↗</span>
+          </button>
           )}
         </div>
 
@@ -139,7 +143,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
       {/* ── Multi-Photo Thumbnails Track ── */}
       {slides.length > 1 && (
         <div
-          className="grid grid-cols-4 gap-2.5 max-[680px]:gap-1.5"
+          className="grid grid-cols-3 gap-3 max-[680px]:gap-2"
           aria-label={`${product.name} photos and 3D models`}
         >
           {slides.map((img, idx) => {
@@ -151,7 +155,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
                 key={img.url + idx}
                 type="button"
                 onClick={() => setActiveIndex(idx)}
-                className={`group relative flex flex-col items-center gap-1 rounded-2xl border p-1.5 transition-all duration-200 cursor-pointer max-[680px]:rounded-xl max-[680px]:p-1 ${
+                className={`group relative flex min-w-0 flex-col items-center gap-1 rounded-2xl border p-1 transition-all duration-200 cursor-pointer max-[680px]:rounded-xl ${
                   isSelected
                     ? "border-[var(--botanical)] bg-[var(--paper)] ring-2 ring-[var(--botanical)]/40 shadow-sm"
                     : "border-[var(--line)] bg-[rgba(255,255,255,0.7)] opacity-75 hover:opacity-100 hover:border-black/20"
@@ -164,15 +168,15 @@ export function ProductGallery({ product }: ProductGalleryProps) {
                     src={thumbnail.url}
                     alt={thumbnail.altText || `${product.name} thumbnail ${idx + 1}`}
                     fill
-                    sizes="120px"
-                    className="object-contain p-1 transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 960px) 31vw, 16vw"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                   {/* Number Notation Pill (01, 02, 03, 04) */}
                   <span className="absolute top-1 left-1 rounded bg-black/60 px-1 py-0.2 font-mono text-[0.52rem] font-bold text-white max-[680px]:text-[0.44rem]">
                     {img.kind === "model" ? "3D" : String(idx + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <span className="truncate text-center text-[0.62rem] font-semibold text-[var(--forest)] max-[680px]:text-[0.5rem] max-[420px]:hidden">
+                <span className="w-full truncate text-center text-[0.75rem] font-semibold text-[var(--forest)] max-[680px]:text-[0.68rem]">
                   {label}
                 </span>
               </button>
@@ -180,6 +184,12 @@ export function ProductGallery({ product }: ProductGalleryProps) {
           })}
         </div>
       )}
+      <dialog ref={enlargedPhoto} className={styles.lightbox} aria-label={`Enlarged photo of ${product.name}`} onClick={(event) => { if (event.target === event.currentTarget) enlargedPhoto.current?.close(); }}>
+        <button type="button" className={styles.closePhoto} onClick={() => enlargedPhoto.current?.close()} aria-label="Close enlarged photo">×</button>
+        <div className={styles.lightboxImage}>
+          <Image src={activeImage.kind === "image" ? activeImage.url : baseImage.url} alt={activeImage.kind === "image" ? activeImage.altText || product.name : product.name} fill sizes="96vw" quality={95} className="object-contain" />
+        </div>
+      </dialog>
     </div>
   );
 }

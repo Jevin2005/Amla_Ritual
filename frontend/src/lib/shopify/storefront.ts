@@ -96,6 +96,7 @@ const PRODUCT_BASE_FRAGMENT = `
   handle
   title
   description
+  descriptionHtml
   productType
   vendor
   tags
@@ -371,6 +372,7 @@ type GraphProduct = {
   handle: string;
   title: string;
   description: string;
+  descriptionHtml?: string;
   productType: string;
   vendor: string;
   tags: string[];
@@ -845,6 +847,7 @@ function mapProduct(product: GraphProduct, index: number): Product {
       product.description.trim() ||
       meta(product, "shortDescription") ||
       fallbackDescription,
+    descriptionHtml: product.descriptionHtml?.trim() || undefined,
     seoTitle: product.seo.title || product.title,
     metaDescription:
       meta(product, "metaDescription") ||

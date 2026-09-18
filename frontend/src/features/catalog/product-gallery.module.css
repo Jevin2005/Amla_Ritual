@@ -1,4 +1,12 @@
 .photo { animation: photoEnter calc(480ms * var(--motion-duration, 1)) var(--ease); }
+.enlargePhoto { position: relative; width: 100%; height: 100%; border: 0; padding: 0; background: transparent; cursor: zoom-in; }
+.enlargePhoto:focus-visible { outline: 2px solid var(--forest); outline-offset: -3px; }
+.enlargeHint { position: absolute; right: 10px; bottom: 30px; padding: 8px 12px; border-radius: 100px; background: rgba(255,255,255,.94); color: var(--forest); font-size: .75rem; }
+.lightbox { width: min(96vw, 1440px); max-width: 96vw; height: 92dvh; max-height: 92dvh; margin: auto; padding: 54px 12px 12px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+.lightbox::backdrop { background: rgba(8,22,15,.8); }
+.lightboxImage { position: relative; width: 100%; height: 100%; }
+.closePhoto { position: absolute; top: 6px; right: 8px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--forest); font-size: 1.8rem; cursor: pointer; }
+.closePhoto:focus-visible { outline: 2px solid var(--forest); outline-offset: 2px; }
 @keyframes photoEnter {
   from { opacity: .3; transform: scale(.98); }
   to { opacity: 1; transform: scale(1); }

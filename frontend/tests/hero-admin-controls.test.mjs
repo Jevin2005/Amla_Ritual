@@ -116,13 +116,13 @@ test("transition none removes both Shery effects while keeping static images and
   }
 });
 
-function renderModel(motion = {}, reduced = false) {
+function renderModel(motion = {}, reduced = false, props = {}) {
   const env = environment("model", motion, reduced);
   const attributes = new Map(), styles = new Map();
   const viewer = { loaded: true, toggleAttribute: (key, value) => attributes.set(key, value), setAttribute: (key, value) => attributes.set(key, value), addEventListener() {}, removeEventListener() {} };
   const stage = { style: { setProperty: (key, value) => styles.set(key, value) } };
   env.harness.refs = [viewer, stage];
-  const tree = env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, settings: defaults });
+  const tree = env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, settings: defaults, ...props });
   env.harness.effects.forEach((effect) => effect());
   tree.props.onPointerMove({ pointerType: "mouse", buttons: 0, clientX: 100, clientY: 100, currentTarget: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }) } });
   env.flush();
@@ -145,6 +145,23 @@ test("actual model honors global enabled, cursor, intensity and reduced-motion c
   assert.equal(subtle.styles.get("--model-x"), "6px");
   assert.equal(subtle.styles.get("--model-y"), "4px");
   assert.equal(subtle.attributes.get("camera-orbit"), "12.5deg 96deg 105%");
+});
+
+test("gallery model keeps its fitted camera when the pointer moves", () => {
+  const result = renderModel({}, false, { presentation: "gallery", cameraDistancePercent: 110 });
+  const viewer = all(result.tree).find((node) => node.type === "model-viewer");
+  assert.equal(viewer.props["camera-orbit"], "0deg 90deg 110%");
+  assert.equal(viewer.props["auto-rotate-delay"], "3000");
+  assert.equal(result.styles.size, 0);
+  assert.equal(result.attributes.has("camera-orbit"), false, "manual orbit is not overwritten by decorative cursor motion");
+});
+
+test("gallery keeps a product photograph visible when WebGL is unavailable", () => {
+  const env = environment("model");
+  env.harness.values.set(3, false);
+  const tree = env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, presentation: "gallery", poster: image });
+  assert.ok(all(tree).some((node) => node.type === "img" && node.props.src === image.url));
+  assert.ok(text(tree).includes("3D view unavailable"));
 });
 
 test("purchase displays supplied size without a tax assertion and never marks a failed add as Added", async () => {

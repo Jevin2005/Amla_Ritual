@@ -1,0 +1,19 @@
+.content { min-width: 0; overflow-wrap: anywhere; }
+/* Restore rich-text formatting removed by the site's CSS reset. Inline styles
+   authored in Shopify take precedence over these semantic defaults. */
+.content :where(p, blockquote, pre, ul, ol, table) { margin-block: 1em; }
+.content :where(h1, h2, h3, h4, h5, h6) { font-size: revert; font-weight: revert; line-height: 1.3; margin-block: 1em .5em; }
+.content :where(strong, b) { font-weight: bolder; }
+.content :where(em, i) { font-style: italic; }
+.content :where(ul) { list-style-type: disc; padding-inline-start: 1.5em; }
+.content :where(ol) { list-style-type: decimal; padding-inline-start: 1.5em; }
+.content :where(ul ul) { list-style-type: circle; }
+.content :where(li) { margin-block: .35em; }
+.content :where(a) { text-decoration: underline; text-underline-offset: .15em; }
+.content :where(blockquote) { border-inline-start: 2px solid var(--line); padding-inline-start: 1em; }
+.content :where(img) { max-width: 100%; height: auto; }
+.content :where(table) { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.content :where(th, td) { border: 1px solid var(--line); padding: .5em; }
+.content :where(pre) { white-space: pre-wrap; }
+.content > :first-child { margin-top: 0; }
+.content > :last-child { margin-bottom: 0; }

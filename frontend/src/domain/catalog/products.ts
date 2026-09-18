@@ -64,6 +64,7 @@ export type Product = {
   availability: string;
   shortDescription: string;
   description?: string;
+  descriptionHtml?: string;
   metaDescription: string;
   seoTitle?: string;
   ingredient: string;

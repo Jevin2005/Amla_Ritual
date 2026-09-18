@@ -138,6 +138,20 @@ test("published product facts, formulation and SEO come from Shopify", async () 
   });
 });
 
+test("catalog and detail queries preserve Shopify description HTML without flattening it", async () => {
+  const descriptionHtml = '<h2>Saved heading</h2><p>Original <strong>formatted</strong> copy.</p><ul><li>Saved benefit</li></ul>';
+  const product = rawProduct({ description: "Saved heading Original formatted copy. Saved benefit", descriptionHtml });
+  await withShopify({ products: [product], product }, async (requests) => {
+    assert.equal((await getStorefront()).products[0].descriptionHtml, descriptionHtml);
+    const detail = await getStorefrontProduct("amla-powder");
+    assert.equal(detail.descriptionHtml, descriptionHtml);
+    assert.equal(detail.description, product.description);
+    for (const operation of ["NatureMistCatalog", "NatureMistProductDetail"]) {
+      assert.match(requests.find(({ query }) => query.includes(operation)).query, /\bdescriptionHtml\b/);
+    }
+  });
+});
+
 test("missing live facts never inherit preview profiles or generated claims", async () => {
   await withShopify({ products: [rawProduct(), rawProduct({ handle: "new-product", title: "New Product" })] }, async () => {
     const { products } = await getStorefront();

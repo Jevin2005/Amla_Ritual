@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { createElement, useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import { defaultHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
@@ -7,6 +8,7 @@ import { isWebGLAvailable, markWebGLUnavailable } from "@/shared/hooks/use-webgl
 import { useStore } from "@/features/store/store-provider";
 import { resolveModelMotion } from "./model-motion";
 import styles from "./product-model.module.css";
+import type { StoreImage } from "@/domain/catalog/products";
 
 type Props = {
   model: { url: string; altText: string };
@@ -14,13 +16,15 @@ type Props = {
   paused?: boolean;
   eager?: boolean;
   cameraDistancePercent?: number;
+  presentation?: "hero" | "gallery";
+  poster?: StoreImage | null;
 };
 
 export function ProductModel(props: Props) {
   return <ModelStage {...props} />;
 }
 
-function ModelStage({ model, settings = defaultHeroSettings, paused = false, eager = false, cameraDistancePercent = 105 }: Props) {
+function ModelStage({ model, settings = defaultHeroSettings, paused = false, eager = false, cameraDistancePercent = 105, presentation = "hero", poster }: Props) {
   const viewer = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const frame = useRef(0);
@@ -35,7 +39,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   const motion = resolveModelMotion(settings, motionSettings, reducedMotion);
   const status = loadStatus.url === model.url ? loadStatus.status : "loading";
   const moving = motion.enabled && !paused && pageVisible && visible;
-  const cursorEnabled = moving && motion.cursor;
+  const cursorEnabled = presentation !== "gallery" && moving && motion.cursor;
 
   useEffect(() => {
     const supported = isWebGLAvailable();
@@ -119,9 +123,12 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     });
   };
 
+  const fallback = poster?.url ? <Image src={poster.url} alt={poster.altText || model.altText} fill sizes="(max-width: 960px) 95vw, 48vw" className={styles.poster} /> : null;
+
   if (webglSupported === false) {
     return (
       <div ref={stage} className={styles.stage} data-status="error">
+        {fallback}
         <span className={styles.hint} role="status">3D view unavailable</span>
       </div>
     );
@@ -129,6 +136,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
 
   return (
     <div ref={stage} className={styles.stage} data-status={status} onPointerMove={followCursor} onPointerLeave={resetPosition}>
+      {status !== "ready" && fallback}
       {createElement("model-viewer", {
         ref: viewer,
         src: model.url,
@@ -146,7 +154,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
         "min-field-of-view": "25deg",
         "max-field-of-view": "45deg",
         "rotation-per-second": `${settings.rotationSpeed}deg`,
-        "auto-rotate-delay": "0",
+        "auto-rotate-delay": presentation === "gallery" ? "3000" : "0",
         "shadow-intensity": "0.8",
         "shadow-softness": "1",
         "interaction-prompt": "none",
