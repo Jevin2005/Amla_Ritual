@@ -77,6 +77,7 @@
 }
 
 .heading > span { display: block; }
+.heading > .mobileHeading, .mobileSummary { display: none; }
 .heading em { color: var(--ritual-accent); font-weight: 400; }
 .body {
   max-width: 415px;
@@ -156,11 +157,14 @@
 }
 
 @media (max-width: 680px) {
-  .section { padding: 28px 12px; }
-  .panel { padding: 28px 16px 16px; border-radius: 22px; }
-  .grid { gap: 24px; }
-  .eyebrow { margin-bottom: 14px; font-size: 10px; letter-spacing: .14em; }
-  .heading { font-size: clamp(32px, 8.5vw, 46px); line-height: 1.1; letter-spacing: -.025em; }
+  .heading > .desktopHeading, .body, .stats { display: none; }
+  .heading > .mobileHeading { display: block; }
+  .mobileSummary { display: block; margin: 8px 0 0; font-size: 12px; line-height: 1.5; color: rgb(242 238 228 / 78%); }
+  .section { padding: 16px 12px; }
+  .panel { padding: 22px 12px 12px; border-radius: 22px; }
+  .grid { gap: 18px; }
+  .eyebrow { display: none; }
+  .heading { font-size: clamp(29px, 7.7vw, 38px); line-height: 1.1; letter-spacing: -.025em; }
   .body { margin-top: 16px; font-size: 14px; line-height: 1.7; color: rgb(242 238 228 / 78%); }
   .stats { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgb(197 214 120 / 18%); gap: 20px; }
   .stats > div { gap: 8px; }

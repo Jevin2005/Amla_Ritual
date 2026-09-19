@@ -7,8 +7,22 @@ const bundle = await build({
   entryPoints: [fileURLToPath(new URL("../src/features/rituals/recommendation.ts", import.meta.url))],
   bundle: true, platform: "node", format: "esm", write: false,
 });
-const { recommendRitual, goalOptions, hairFeels } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { recommendRitual, goalOptions, hairFeels, catalogueGoalOptions } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 const product = (overrides = {}) => ({ slug: "custom-powder", ritualStep: "", concerns: [], availableForSale: true, ...overrides });
+
+test("quiz choices follow catalogue additions and removals without inventing goals", () => {
+  assert.deepEqual(catalogueGoalOptions([product()]), []);
+  const added = product({ concerns: [" Curl care ", "curl care"], ritualStep: "Condition" });
+  assert.deepEqual(catalogueGoalOptions([added]).map((option) => option.goal), ["Softness + Shine", "Curl care"]);
+  assert.equal(recommendRitual([added], "Curl care", "Balanced").product, added);
+  assert.equal(recommendRitual([added], "Unknown", "Balanced"), null);
+  assert.deepEqual(catalogueGoalOptions([]), []);
+});
+
+test("new colour concerns retain strand-test guidance", () => {
+  const added = product({ concerns: ["Rich colour"], ritualStep: "Colour" });
+  assert.equal(recommendRitual([added], "Rich colour", "Very light / coloured").requiresColourReview, true);
+});
 
 test("a catalogue without a matching ritual never recommends an unrelated first product", () => {
   for (const { goal } of goalOptions) {

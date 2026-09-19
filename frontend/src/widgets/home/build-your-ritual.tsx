@@ -29,15 +29,17 @@ export function BuildYourRitual() {
               <span aria-hidden="true" /> Build your ritual
             </p>
             <h2 className={styles.heading} id="builder-title">
-              <span data-ritual-reveal>A botanical starting</span>
-              <span data-ritual-reveal>point, <em>chosen with care.</em></span>
+              <span className={styles.desktopHeading} data-ritual-reveal>A botanical starting</span>
+              <span className={styles.desktopHeading} data-ritual-reveal>point, <em>chosen with care.</em></span>
+              <span className={styles.mobileHeading} data-ritual-reveal>Your ritual, <em>made simple.</em></span>
             </h2>
+            <p className={styles.mobileSummary}>Five quick questions. One thoughtful match.</p>
             <p className={styles.body} data-ritual-reveal>
               Tell us your ritual goal and how your hair feels today. We&apos;ll suggest a simple place to begin—never a diagnosis or a promise.
             </p>
             <dl className={styles.stats} data-ritual-reveal>
-              <div><dt>Questions</dt><dd>2</dd></div>
-              <div><dt>To finish</dt><dd>30s</dd></div>
+              <div><dt>Questions</dt><dd>5</dd></div>
+              <div><dt>To finish</dt><dd>1m</dd></div>
             </dl>
           </div>
           <div className={styles.quiz} data-ritual-reveal>

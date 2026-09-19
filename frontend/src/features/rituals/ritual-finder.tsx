@@ -3,22 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import type { RitualGoal } from "@/domain/catalog/products";
 import { useStore } from "@/features/store/store-provider";
-import { goalOptions, hairFeels, recommendRitual, type HairFeel } from "@/features/rituals/recommendation";
+import { rankRitualProducts, ritualQuestions, type QuizAnswers } from "./guided-quiz";
 import styles from "./ritual-finder.module.css";
 
-type QuizState = { step: 1 | 2 | 3; focus: RitualGoal | null; feel: HairFeel | null };
-
-const feelDescriptions: Record<HairFeel, string> = {
-  Oily: "Roots feel ready for a gentle reset",
-  Balanced: "Comfortable roots and easygoing lengths",
-  "Dry / textured": "Lengths could use softness and slip",
-  "Very light / coloured": "Extra care for your existing colour",
-};
+type QuizState = { step: number; answers: QuizAnswers };
 
 export function RitualFinder() {
-  const [state, setState] = useState<QuizState>({ step: 1, focus: null, feel: null });
+  const [state, setState] = useState<QuizState>({ step: 1, answers: {} });
   const [hasNavigated, setHasNavigated] = useState(false);
   const { products, track, content } = useStore();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -26,15 +18,16 @@ export function RitualFinder() {
   const quizId = useId();
   const { enabled: motionEnabled, cursor: cursorEnabled, intensity } = content.motionSettings;
   const motionActive = motionEnabled && intensity > 0;
-  const { step, focus, feel } = state;
+  const { step, answers } = state;
+  const question = ritualQuestions[step - 1];
+  const complete = step > ritualQuestions.length;
 
-  const result = useMemo(
-    () => (focus && feel ? recommendRitual(products, focus, feel) : null),
-    [focus, feel, products],
-  );
+  const ranked = useMemo(() => rankRitualProducts(products, answers), [products, answers]);
+  const result = ranked[0];
   const resultImage = result
     ? result.product.featuredImage?.url || result.product.images?.[0]?.url
     : undefined;
+  const alternatives = ranked.slice(1).map(({ product }) => product);
 
   // Keep intentional step changes in reach without stealing focus on hydration.
   useEffect(() => {
@@ -136,24 +129,24 @@ export function RitualFinder() {
     return () => cleanups.forEach((cleanup) => cleanup());
   }, [step, motionActive, cursorEnabled, intensity]);
 
-  const goToStep = (nextStep: 1 | 2) => {
+  const goToStep = (nextStep: number) => {
     setHasNavigated(true);
     setState((current) => ({ ...current, step: nextStep }));
   };
 
   const handleFinish = () => {
-    if (!focus || !feel) return;
+    if (!ritualQuestions.every((item) => answers[item.id])) return;
     setHasNavigated(true);
-    setState((current) => ({ ...current, step: 3 }));
+    setState((current) => ({ ...current, step: ritualQuestions.length + 1 }));
     track("quiz_completed", {
       recommendation: result?.product.slug,
-      requires_colour_review: result?.requiresColourReview ?? (focus === "Botanical Colour" && feel === "Very light / coloured"),
+      requires_colour_review: result?.requiresColourReview ?? false,
     });
   };
 
   const reset = () => {
     setHasNavigated(true);
-    setState({ step: 1, focus: null, feel: null });
+    setState({ step: 1, answers: {} });
   };
 
   const optionCards: ReactNode[] = [];
@@ -163,7 +156,7 @@ export function RitualFinder() {
         <input
           className={styles.radioInput}
           type="radio"
-          name={`${quizId}-${step === 1 ? "focus" : "feel"}`}
+          name={`${quizId}-${question?.id}`}
           value={value}
           checked={selected}
           onChange={select}
@@ -180,56 +173,42 @@ export function RitualFinder() {
       </label>,
     );
   };
-  if (step === 1) {
-    goalOptions.forEach((option, index) => addOption(
-      option.goal,
-      option.copy,
-      focus === option.goal,
-      () => setState((current) => ({ ...current, focus: option.goal })),
-      index,
-    ));
-  } else if (step === 2) {
-    hairFeels.forEach((option, index) => addOption(
-      option,
-      feelDescriptions[option],
-      feel === option,
-      () => setState((current) => ({ ...current, feel: option })),
-      index,
-    ));
-  }
+  question?.options.forEach((option, index) => addOption(
+    option.value, option.copy, answers[question.id] === option.value,
+    () => setState((current) => ({ ...current, answers: { ...current.answers, [question.id]: option.value } })), index,
+  ));
 
   return (
     <div className={styles.card} ref={cardRef} data-motion={motionActive ? "on" : "off"}>
       <div className={styles.header}>
         <div className={styles.stepLabel}>
-          <span>{step === 3 ? "Your ritual" : `Step 0${step} / 02`}</span>
+          <span>{complete ? "Your ritual" : `Step ${step} / ${ritualQuestions.length}`}</span>
           <span className={styles.headerDot} aria-hidden="true">·</span>
-          <span className={styles.stepName}>{step === 1 ? "Ritual Goal" : step === 2 ? "Hair Feel" : "Chosen with care"}</span>
+          <span className={styles.stepName}>{question?.label || "Chosen with care"}</span>
         </div>
-        <div className={styles.progress} role="img" aria-label={step === 3 ? "Both questions complete" : `Step ${step} of 2`}>
-          <span className={styles.progressPill}><span data-filled="true" /></span>
-          <span className={styles.progressPill}><span data-filled={step >= 2} /></span>
+        <div className={styles.progress} role="img" aria-label={complete ? "All questions complete" : `Step ${step} of ${ritualQuestions.length}`}>
+          {ritualQuestions.map((item, index) => <span key={item.id} className={styles.progressPill}><span data-filled={step > index} /></span>)}
         </div>
       </div>
 
       <div className={styles.step} key={step} data-enter={hasNavigated}>
-        {step < 3 ? (
+        {!complete ? (
           <>
             <fieldset className={styles.fieldset}>
               <legend className={styles.question} tabIndex={-1} data-ritual-question>
-                {step === 1 ? "What is your primary ritual focus today?" : "How does your hair feel today?"}
+                {question.question}
               </legend>
               <div className={styles.options}>{optionCards}</div>
             </fieldset>
             <div className={styles.footer}>
-              {step === 2 && <button type="button" className={styles.textButton} onClick={() => goToStep(1)}><span aria-hidden="true">←</span> Back</button>}
+              {step > 1 && <button type="button" className={styles.textButton} onClick={() => goToStep(step - 1)}><span aria-hidden="true">←</span> Back</button>}
               <button
                 type="button"
                 className={styles.primaryButton}
-                disabled={step === 1 ? !focus : !feel}
-                onClick={step === 1 ? () => goToStep(2) : handleFinish}
+                disabled={!answers[question.id]}
+                onClick={step < ritualQuestions.length ? () => goToStep(step + 1) : handleFinish}
               >
-                {step === 1 ? "Continue" : "Reveal"} <span aria-hidden="true">→</span>
+                {step < ritualQuestions.length ? "Continue" : "Find my ritual"} <span aria-hidden="true">→</span>
               </button>
             </div>
           </>
@@ -244,6 +223,7 @@ export function RitualFinder() {
                 <div className={styles.resultCopy}>
                   <h3 className={styles.resultTitle} tabIndex={-1} data-ritual-question>{result.product.name}</h3>
                   <p className={styles.resultDescription}>{result.guidance || result.product.shortDescription}</p>
+                  <ul className={styles.matchReasons}>{result.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul>
                 </div>
               </div>
             ) : (
@@ -253,8 +233,12 @@ export function RitualFinder() {
               </div>
             )}
             <ul className={styles.tags} aria-label="Your ritual choices">
-              <li>{focus}</li><li>{feel}</li>
+              {ritualQuestions.map((item) => <li key={item.id}>{answers[item.id]}</li>)}
             </ul>
+            {alternatives.length > 0 && <details className={styles.alternatives}>
+              <summary>Other matching botanicals ({alternatives.length})</summary>
+              <ul>{alternatives.map((product) => <li key={product.id}><Link href={`/shop/${product.slug}`}>{product.name}</Link></li>)}</ul>
+            </details>}
             <div className={styles.resultFooter}>
               <button type="button" className={styles.textButton} onClick={reset}><span aria-hidden="true">↺</span> Start over</button>
               <Link className={styles.primaryButton} href={result ? `/shop/${result.product.slug}` : "/rituals"}>View ritual <span aria-hidden="true">→</span></Link>

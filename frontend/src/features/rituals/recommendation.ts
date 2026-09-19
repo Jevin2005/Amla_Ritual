@@ -20,6 +20,28 @@ export const hairFeels = [
 
 export type HairFeel = (typeof hairFeels)[number];
 
+export function matchesQuizGoal(product: Product, goal: string) {
+  const known = goalOptions.find((option) => option.goal === goal);
+  return known ? matchesRitualGoal(product, known.goal)
+    : product.concerns.some((concern) => concern.trim().toLowerCase() === goal.trim().toLowerCase());
+}
+
+export function catalogueGoalOptions(products: readonly Product[]) {
+  const options: Array<{ goal: string; copy: string }> = goalOptions
+    .filter(({ goal }) => products.some((product) => matchesRitualGoal(product, goal)))
+    .map(({ goal, copy }) => ({ goal, copy }));
+  const seen = new Set([...options.map(({ goal }) => goal.toLowerCase()), "condition", "colour"]);
+  for (const product of products) {
+    for (const concern of product.concerns) {
+      const goal = concern.trim();
+      if (!goal || seen.has(goal.toLowerCase())) continue;
+      seen.add(goal.toLowerCase());
+      options.push({ goal, copy: "Explore botanicals for this ritual" });
+    }
+  }
+  return options;
+}
+
 export type RitualRecommendation = {
   product: Product;
   requiresColourReview: boolean;
@@ -56,15 +78,22 @@ function selectProduct(
 
 export function recommendRitual(
   products: readonly Product[],
-  goal: RitualGoal,
+  goal: string,
   hairFeel: HairFeel,
 ): RitualRecommendation | null {
+  if (!goalOptions.some((option) => option.goal === goal)) {
+    const product = selectProduct(products, "", (item) => matchesQuizGoal(item, goal));
+    if (!product) return null;
+    // Keep colour guidance even when a merchant adds a new concern label.
+    if (product.ritualStep === "Colour") return recommendRitual([product], "Botanical Colour", hairFeel);
+    return recommendation(product);
+  }
   if (goal === "Botanical Colour") {
     const requiresColourReview = hairFeel === "Very light / coloured";
     const product = selectProduct(
       products,
       "indigo-powder",
-      (item) => matchesRitualGoal(item, goal),
+      (item) => matchesQuizGoal(item, goal),
     );
     if (!product) return null;
 
@@ -79,7 +108,7 @@ export function recommendRitual(
     const product = selectProduct(
       products,
       "bhringraj-powder",
-      (item) => matchesRitualGoal(item, goal),
+      (item) => matchesQuizGoal(item, goal),
     );
     return product ? recommendation(product) : null;
   }
@@ -87,14 +116,14 @@ export function recommendRitual(
     const product = selectProduct(
       products,
       hairFeel === "Oily" ? "reetha-powder" : "shikakai-powder",
-      (item) => matchesRitualGoal(item, goal),
+      (item) => matchesQuizGoal(item, goal),
     );
     return product ? recommendation(product) : null;
   }
   const product = selectProduct(
     products,
     hairFeel === "Dry / textured" ? "hibiscus-powder" : "amla-powder",
-    (item) => matchesRitualGoal(item, goal),
+    (item) => matchesQuizGoal(item, goal),
   );
   return product ? recommendation(product) : null;
 }
