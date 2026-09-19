@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { adminDomain, getAdminToken } from "@/lib/shopify/admin-auth";
 
 export const runtime = "nodejs";
 
@@ -21,14 +22,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const domain =
-      process.env.SHOPIFY_STORE_DOMAIN || "amla-ritual.myshopify.com";
-
-    const adminToken =
-      process.env.SHOPIFY_ADMIN_API_TOKEN ||
-      (process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN?.startsWith("shpat_")
-        ? process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN
-        : null);
+    const domain = adminDomain();
+    const adminToken = await getAdminToken();
 
     if (!domain || !adminToken) {
       return NextResponse.json(

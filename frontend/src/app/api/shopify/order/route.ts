@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { adminDomain, requireOrderAccess } from "@/lib/shopify/admin-auth";
 
 export const runtime = "nodejs";
 
@@ -114,49 +115,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const domain =
-      process.env.SHOPIFY_STORE_DOMAIN || "amla-ritual.myshopify.com";
+    const domain = adminDomain();
 
     // ── 2. Admin Token Resolution ──
-    // Priority 1: Explicit SHOPIFY_ADMIN_API_TOKEN
-    // Priority 2: SHOPIFY_STOREFRONT_PRIVATE_TOKEN if it is an Admin/Custom app token (starts with shpat_)
-    let adminToken =
-      process.env.SHOPIFY_ADMIN_API_TOKEN ||
-      (process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN?.startsWith("shpat_")
-        ? process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN
-        : null);
-
-    // Priority 3: Auto-Auth via Client ID & Secret
-    if (
-      !adminToken &&
-      process.env.SHOPIFY_CLIENT_ID &&
-      (process.env.SHOPIFY_CLIENT_SECRET || process.env.SHOPIFY_APP_SECRET)
-    ) {
-      try {
-        const clientSecret =
-          process.env.SHOPIFY_CLIENT_SECRET || process.env.SHOPIFY_APP_SECRET;
-        const tokenRes = await fetch(
-          `https://${domain}/admin/oauth/access_token`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              client_id: process.env.SHOPIFY_CLIENT_ID.trim(),
-              client_secret: clientSecret?.trim(),
-              grant_type: "client_credentials",
-            }),
-          },
-        );
-        if (tokenRes.ok) {
-          const tokenData = await tokenRes.json();
-          if (tokenData?.access_token) {
-            adminToken = tokenData.access_token;
-          }
-        }
-      } catch (authErr) {
-        console.warn("[Shopify Auto-Auth Warning]:", authErr);
-      }
-    }
+    const adminToken = await requireOrderAccess();
 
     const randomSuffix = Math.floor(10000 + Math.random() * 90000);
     let orderId = `NMR-2026-${randomSuffix}`;
@@ -185,14 +147,16 @@ export async function POST(req: NextRequest) {
         const formattedPhone =
           rawPhone.length >= 10 ? `+91${rawPhone.slice(-10)}` : rawPhone;
 
+        const testPayment = isRazorpayPayment && (process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "").startsWith("rzp_test_");
         const shopifyPayload = {
           order: {
+            test: testPayment,
             email: payload.customer.email.trim(),
             phone: formattedPhone,
             financial_status: financialStatus,
             fulfillment_status: null,
-            send_receipt: true,
-            send_fulfillment_receipt: true,
+            send_receipt: !testPayment,
+            send_fulfillment_receipt: !testPayment,
             note: `NatureMist Ritual Order · Payment: ${paymentGatewayName}${
               payload.upiId
                 ? ` · UPI Ref/UTR: ${payload.upiId.trim()}`
@@ -301,7 +265,7 @@ export async function POST(req: NextRequest) {
         } else {
           const errText = await res.text();
           // If customer phone or email already exists for another record, retry by associating at order level
-          if (errText.includes("already been taken") || errText.includes("customer")) {
+          if (res.status === 422 && (errText.includes("already been taken") || errText.includes("customer"))) {
             const fallbackPayload = {
               order: {
                 ...shopifyPayload.order,
@@ -350,6 +314,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    if (!shopifyOrderCreated) {
+      return NextResponse.json({ success: false, shopifyOrderCreated: false, error: "Order could not be saved to Shopify. If payment completed, contact support with your payment reference; do not pay again." }, { status: 502 });
+    }
     return NextResponse.json({
       success: true,
       orderId,

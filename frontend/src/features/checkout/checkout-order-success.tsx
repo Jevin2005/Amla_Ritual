@@ -26,6 +26,15 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
     }
   };
 
+  if (order.shopifySyncPending) {
+    return <section className="mx-auto max-w-xl px-5 py-12 text-center" role="status">
+      <h1 className="font-serif text-3xl text-[var(--forest)]">Payment received. Order needs confirmation.</h1>
+      <p className="mt-4">Your payment was verified, but we couldn’t save the order to our store. Please do not pay again.</p>
+      <p className="mt-4">Payment reference: <strong className="break-all">{order.paymentReference}</strong></p>
+      <p className="mt-2">Contact us with this reference so we can confirm your order.</p>
+      <Link href="/contact" className="mt-5 inline-flex min-h-11 items-center underline">Contact support</Link>
+    </section>;
+  }
   return (
     <>
       {/* ── Print Specific Stylesheet (Guaranteed 1-Page A4) ── */}

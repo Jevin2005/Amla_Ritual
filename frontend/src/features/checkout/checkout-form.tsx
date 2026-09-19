@@ -23,6 +23,8 @@ export type CheckoutFormData = {
 };
 
 export type OrderConfirmationData = {
+  shopifySyncPending?: boolean;
+  paymentReference?: string;
   orderId: string;
   placedAt: string;
   customerName: string;
@@ -360,6 +362,7 @@ export function CheckoutForm({
                 }
 
                 // 3. Submit verified paid order directly to Shopify Admin API
+                let shopifySynced = false;
                 let finalOrderId = `NMR-RZP-${response.razorpay_payment_id?.slice(-6) || Math.floor(10000 + Math.random() * 90000)}`;
                 let finalPlacedAt = new Date().toLocaleDateString("en-IN", {
                   day: "numeric",
@@ -411,6 +414,7 @@ export function CheckoutForm({
 
                   if (orderRes.ok) {
                     const resData = await orderRes.json();
+                    shopifySynced = resData.success === true && resData.shopifyOrderCreated === true;
                     if (resData?.orderId) {
                       finalOrderId = resData.orderId;
                     }
@@ -432,6 +436,8 @@ export function CheckoutForm({
                 });
 
                 const confirmation: OrderConfirmationData = {
+                  shopifySyncPending: !shopifySynced,
+                  paymentReference: response.razorpay_payment_id,
                   orderId: finalOrderId,
                   placedAt: finalPlacedAt,
                   customerName: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
@@ -456,7 +462,7 @@ export function CheckoutForm({
                   })),
                 };
 
-                await clearCart();
+                if (shopifySynced) await clearCart();
                 onOrderSuccess(confirmation);
                 setIsSubmitting(false);
               } catch (handlerErr) {
@@ -539,8 +545,11 @@ export function CheckoutForm({
           }),
         });
 
+        const resData = await orderRes.json();
+        if (!orderRes.ok || !resData.success || !resData.shopifyOrderCreated) {
+          throw new Error(resData.error || "Order could not be saved. Please contact support.");
+        }
         if (orderRes.ok) {
-          const resData = await orderRes.json();
           if (resData?.orderId) {
             finalOrderId = resData.orderId;
           }
@@ -550,6 +559,9 @@ export function CheckoutForm({
         }
       } catch (orderApiErr) {
         console.warn("Order endpoint note:", orderApiErr);
+        setErrorMessage(orderApiErr instanceof Error ? orderApiErr.message : "Unable to save your order.");
+        setIsSubmitting(false);
+        return;
       }
 
       // Track purchase event
