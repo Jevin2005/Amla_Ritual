@@ -11,21 +11,33 @@ import styles from "./product-benefits.module.css";
 const benefits = [
   {
     title: "Follicle Vitality",
+    mobileTitle: "Root care",
+    mobileDescription: "A grounding botanical ritual for roots and scalp.",
+    botanical: "Amla",
     description: "Delivers plant polyphenols and antioxidants to strengthen hair roots.",
     productSlug: "amla-powder",
   },
   {
     title: "Natural Slip & Cuticle Seal",
+    mobileTitle: "Softness & shine",
+    mobileDescription: "Gentle detangling for silky, luminous lengths.",
+    botanical: "Shikakai",
     description: "Gently detangles while imparting a reflective, silky sheen.",
     productSlug: "shikakai-powder",
   },
   {
     title: "Sebum Balance",
+    mobileTitle: "A gentle reset",
+    mobileDescription: "Cleanse your scalp while caring for its natural moisture.",
+    botanical: "Reetha",
     description: "Purifies the scalp without stripping its essential natural moisture barrier.",
     productSlug: "reetha-powder",
   },
   {
     title: "Pure Pigment Depth",
+    mobileTitle: "Botanical colour",
+    mobileDescription: "Plant-based pigment for a considered colour ritual.",
+    botanical: "Indigo",
     description: "Enhances rich natural hair tones with zero synthetic dyes or ammonia.",
     productSlug: "indigo-powder",
   },
@@ -83,9 +95,11 @@ export function ProductBenefits({ products, motionSettings }: {
           <div>
             <p className={styles.eyebrow} data-benefit-reveal>Botanical efficacy</p>
             <h2 className={styles.heading} id="benefits-title">
-              <span data-benefit-reveal>The benefit of</span>
-              <em data-benefit-reveal>this product.</em>
+              <span className={styles.desktopCopy} data-benefit-reveal>The benefit of</span>
+              <em className={styles.desktopCopy} data-benefit-reveal>this product.</em>
+              <span className={styles.mobileCopy} data-benefit-reveal>Find your<br /><em>botanical benefit.</em></span>
             </h2>
+            <p className={styles.mobileIntro}>Four botanicals. A little care for every ritual.</p>
           </div>
           <div className={styles.intro} data-benefit-reveal>
             <p>Proven botanical hair benefits formulated with pure, single-origin shade-dried herbs.</p>
@@ -108,7 +122,7 @@ export function ProductBenefits({ products, motionSettings }: {
 
         <div className={styles.divider} data-benefit-reveal data-benefits-divider />
         <ol className={styles.rows}>
-          {benefits.map(({ title, description, productSlug }, index) => {
+          {benefits.map(({ title, description, productSlug, mobileTitle, mobileDescription, botanical: botanicalName }, index) => {
             // Handles can survive a rename; resolve the displayed botanical
             // from the current product name before linking its live handle.
             const botanical = productSlug.replace(/-powder$/, "");
@@ -123,10 +137,10 @@ export function ProductBenefits({ products, motionSettings }: {
                       <Image src={imageSrc} alt="" fill sizes="64px" className={styles.productImage} />
                     </span>
                   </div>
-                  <h3 className={styles.title}>{title}</h3>
+                  <h3 className={styles.title}><span className={styles.desktopCopy}>{title}</span><span className={styles.mobileCopy}>{mobileTitle}</span></h3>
                   <div className={styles.details} data-benefit-details>
-                    <p className={styles.description}>{description}</p>
-                    <span className={styles.productLink}>{product ? `Explore ${product.name}` : "Explore botanicals"}</span>
+                    <p className={styles.description}><span className={styles.desktopCopy}>{description}</span><span className={styles.mobileCopy}>{mobileDescription}</span></p>
+                    <span className={styles.productLink}><span className={styles.desktopCopy}>{product ? `Explore ${product.name}` : "Explore botanicals"}</span><span className={styles.mobileCopy}>{product ? `Discover ${botanicalName}` : "Explore botanicals"}</span></span>
                   </div>
                   <span className={styles.rowArrow}><Arrow /></span>
                 </Link>
@@ -137,6 +151,7 @@ export function ProductBenefits({ products, motionSettings }: {
             );
           })}
         </ol>
+        <Link href="/shop" className={styles.mobileBrowse}>Explore all botanicals <Arrow /></Link>
       </div>
 
       <div className={styles.ticker} data-benefit-reveal aria-hidden="true">

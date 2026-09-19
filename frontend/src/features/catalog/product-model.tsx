@@ -74,7 +74,8 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     observer?.observe(container);
     const visibilityFrame = observer ? 0 : requestAnimationFrame(() => setVisible(true));
 
-    import("@google/model-viewer").catch(() => {
+    // Use the vendor's production bundle in dev too, avoiding Lit's debug runtime.
+    import("@google/model-viewer/dist/model-viewer.js").catch(() => {
       if (!disposed) failed();
     });
 

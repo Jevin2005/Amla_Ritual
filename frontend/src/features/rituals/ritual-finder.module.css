@@ -95,6 +95,19 @@
   .textButton { gap: 7px; font-size: 10px; }
 }
 
+@media (max-width: 680px) {
+  :global(section[aria-labelledby="builder-title"]) .card { padding: 20px 14px; border-radius: 16px; }
+  :global(section[aria-labelledby="builder-title"]) .header { padding-bottom: 14px; margin-bottom: 18px; gap: 8px; }
+  :global(section[aria-labelledby="builder-title"]) .question { font-size: 17px; line-height: 1.45; margin-bottom: 16px; }
+  :global(section[aria-labelledby="builder-title"]) .options { grid-template-columns: 1fr; gap: 9px; }
+  :global(section[aria-labelledby="builder-title"]) .optionSurface { min-height: 72px; padding: 13px 12px; gap: 10px; border-radius: 12px; }
+  :global(section[aria-labelledby="builder-title"]) .optionTitle { font-size: 14px; }
+  :global(section[aria-labelledby="builder-title"]) .optionDescription { font-size: 12px; line-height: 1.5; }
+  :global(section[aria-labelledby="builder-title"]) .footer { flex-wrap: wrap; margin-top: 18px; gap: 10px; }
+  :global(section[aria-labelledby="builder-title"]) .primaryButton { flex: 1; min-height: 46px; white-space: normal; text-align: center; }
+  :global(section[aria-labelledby="builder-title"]) .resultFooter { flex-wrap: wrap; }
+}
+
 .card[data-motion="off"] *, .card[data-motion="off"] *::before, .card[data-motion="off"] *::after { animation: none !important; transition: none !important; }
 .card[data-motion="off"] .optionSurface, .card[data-motion="off"] .primaryButton, .card[data-motion="off"] .textButton { transform: none !important; }
 

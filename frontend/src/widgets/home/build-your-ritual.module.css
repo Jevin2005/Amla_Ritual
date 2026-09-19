@@ -155,6 +155,21 @@
   .stats dt { font-size: 8px; }
 }
 
+@media (max-width: 680px) {
+  .section { padding: 28px 12px; }
+  .panel { padding: 28px 16px 16px; border-radius: 22px; }
+  .grid { gap: 24px; }
+  .eyebrow { margin-bottom: 14px; font-size: 10px; letter-spacing: .14em; }
+  .heading { font-size: clamp(32px, 8.5vw, 46px); line-height: 1.1; letter-spacing: -.025em; }
+  .body { margin-top: 16px; font-size: 14px; line-height: 1.7; color: rgb(242 238 228 / 78%); }
+  .stats { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgb(197 214 120 / 18%); gap: 20px; }
+  .stats > div { gap: 8px; }
+  .stats > div + div { padding-left: 20px; }
+  .stats dd { font-size: 30px; }
+  .stats dt { font-size: 9px; letter-spacing: .1em; }
+  .quiz { max-width: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .panel [data-ritual-reveal] { opacity: 1 !important; transform: none !important; }
   .panel .ambient > span,

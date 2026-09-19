@@ -191,7 +191,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           >
             <div className={styles.posterMotion}>
               <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
-                sizes="(max-width: 900px) 46vw, (max-width: 1100px) 600px, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+                sizes="(max-width: 900px) 46vw, (max-width: 1100px) 34vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
               {visited && slides.length > 1 && transitioning && (compactViewport || posterCursor) && webgl && (
                 <SheryPoster
                   key={heroPosters.map((image) => image.url).join("|")}
@@ -257,7 +257,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
                   <ol>{product.howTo.map((step) => <li key={step}>{step}</li>)}</ol>
                 </div>
               </details>}
-              {(product.ingredient || product.formulation) && <details name="hero-product-details" open>
+              {(product.ingredient || product.formulation) && <details name="hero-product-details" open={!compactViewport}>
                 <summary>Ingredient clarity <span className={styles.accordionIcon} aria-hidden="true" /></summary>
                 <div className={styles.disclosureBody}>
                   {product.ingredient && <p>{product.ingredient}</p>}

@@ -171,7 +171,33 @@
   .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(230px, .8fr); padding-inline: 28px; column-gap: 32px; }
   .caption { left: -16px; }
 }
-@media (max-width: 1100px) {
+@media (min-width: 901px) and (max-width: 1100px) {
+  .hero { --hero-title-size: clamp(40px, 4.5vw, 49px); }
+  .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(220px, .9fr); column-gap: 20px; min-height: 700px; padding: 32px 24px; }
+  .introEyebrow, .eyebrow { font-size: 10px; letter-spacing: .12em; }
+  .introEyebrow { margin-bottom: 16px; }
+  .tagline { margin-top: 12px; font-size: 25px; }
+  .description { margin-top: 16px; font-size: 14px; line-height: 1.65; }
+  .purchase { margin-top: 20px; }
+  .scene { margin-block: 16px; }
+  .poster { height: clamp(500px, 52vw, 572px); }
+  .caption { left: -10px; gap: 8px; max-width: calc(100% + 8px); padding: 10px; }
+  .captionMark { flex-basis: 26px; height: 26px; font-size: 17px; }
+  .captionCopy strong { font-size: 11px; }
+  .captionCopy span { font-size: 10px; }
+  .featured { gap: 14px; }
+  .featuredHeader p { font-size: 9px; letter-spacing: .1em; }
+  .model { height: 210px; }
+  .productName { font-size: 28px; }
+  .subtitle { margin-bottom: 6px; font-size: 12px; line-height: 1.5; }
+  .disclosures summary { min-height: 46px; font-size: 13px; }
+  .disclosureBody { font-size: 12px; }
+  .navigation { gap: 6px; }
+  .dots { max-width: 128px; }
+  .pause { padding-inline: 10px; font-size: 12px; }
+  .count { font-size: 11px; }
+}
+@media (max-width: 900px) {
   .hero { --hero-title-size: 48px; }
   .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "scene" "purchase" "featured"; grid-template-rows: auto; gap: 32px; max-width: 680px; min-height: 0; padding: 40px 20px 48px; }
   .copy { align-self: auto; }
