@@ -38,7 +38,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   const index = nextHeroIndex(selected, slides.length, 0);
   const product = slides[index];
   const hasProduct = Boolean(product);
-  const duration = product?.heroDurationSeconds ?? settings.intervalSeconds;
+  const duration = (product?.heroDurationSeconds ?? settings.intervalSeconds) * 1.2;
   const moving = motionSettings.enabled && !reducedMotion;
   const transitioning = moving && settings.transition !== "none";
   const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && moving && pageVisible && inView;
@@ -156,7 +156,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
             config={defaultSheryBackgroundConfig}
             selected={index}
             active={inView && pageVisible}
-            duration={1100 * motionSettings.duration}
+            duration={1375 * motionSettings.duration}
             fit={compactViewport ? "edges" : "cover"}
             className={styles.heroSheryBackground}
           />
@@ -200,7 +200,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
                   selected={index}
                   active={inView && pageVisible}
                   cursor={posterCursor}
-                  duration={1400 * motionSettings.duration}
+                  duration={2100 * motionSettings.duration}
                   className={styles.heroPosterEffect}
                   onSelect={goTo}
                 />
@@ -236,7 +236,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           </div>
           <div className={styles.model} key={compactViewport ? product.heroEntryId : undefined} data-transition={animation}>
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={settings} paused={paused || !inView} cameraDistancePercent={95} eager
+              settings={{ ...settings, rotationSpeed: settings.rotationSpeed * .8 }} paused={paused || !inView} cameraDistancePercent={95} eager
               poster={compactViewport ? product.featuredImage : undefined} />
           </div>
           <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>

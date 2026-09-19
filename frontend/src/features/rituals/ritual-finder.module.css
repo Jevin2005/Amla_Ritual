@@ -63,6 +63,8 @@
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 23px 0 0; padding: 0; list-style: none; }
 .tags > li { padding: 6px 11px; border: 1px solid rgba(197, 214, 120, 0.3); border-radius: 99px; color: var(--quiz-accent); font-size: 10px; line-height: 1.5; }
 .emptyResult { padding: 8px 0; }
+:global([data-home-motion="calm"]) .step[data-enter="true"] { animation-duration: .75s; }
+:global([data-home-motion="calm"]) .step[data-enter="true"] .option { animation-duration: .6s; }
 .matchReasons { padding-left: 16px; margin: 12px 0 0; color: var(--quiz-accent); font-size: 12px; line-height: 1.6; }
 .progressPill { width: 14px; }
 .moreChoices { display: none; }

@@ -38,6 +38,7 @@ function fixture({ reduced = false, enabled = true, animationSupport = true } = 
     animations = [];
     constructor(top) { this.top = top; if (!animationSupport) this.animate = undefined; }
     matches() { return true; }
+    closest() { return null; }
     hasAttribute() { return false; }
     setAttribute() { throw new Error("Mutated React-owned HTML before hydration"); }
     querySelector() { return null; }

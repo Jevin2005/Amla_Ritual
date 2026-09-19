@@ -114,6 +114,10 @@
 .ambient .disc { width: 90px; height: 90px; left: 39%; top: -38px; background: radial-gradient(circle at 30% 30%, rgb(197 214 120 / 6%), transparent); animation-duration: 9s; }
 .panel[data-ambient="true"] .ambient > span,
 .panel[data-ambient="true"] .eyebrow > span { animation-play-state: running; }
+.panel .ringOne { animation-duration: 15s; }
+.panel .ambient .ringTwo { animation-duration: 18s; }
+.panel .ambient .disc { animation-duration: 12s; }
+.panel .eyebrow > span { animation-duration: 4s; }
 .panel [data-ritual-reveal="pending"] { opacity: 0; }
 .panel [data-ritual-reveal="pending"]:focus-within { opacity: 1; }
 

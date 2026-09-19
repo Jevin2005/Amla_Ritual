@@ -39,13 +39,14 @@ export function MotionObserver() {
       if (!animate || !motionSettings.enabled || reducedMotion.matches || document.hidden || !element.animate) return;
 
       const siblings = element.parentElement ? Array.from(element.parentElement.children) : [];
+      const pace = element.closest('[data-home-motion="calm"]') ? 1.25 : 1;
       const delay = Math.min(Math.max(0, siblings.indexOf(element)), 3) * (compactScreen.matches ? 35 : 65);
       const image = element.dataset.motionReveal === "image";
       const keyframes: Keyframe[] = image && !compactScreen.matches
         ? [{ opacity: 0.4, clipPath: "inset(8% 0 8% 0)" }, { opacity: 1, clipPath: "inset(0% 0 0% 0)" }]
         : [{ opacity: 0, transform: `translate3d(0, ${compactScreen.matches ? 12 : 26}px, 0)` }, { opacity: 1, transform: "none" }];
       const animation = element.animate(keyframes, {
-        duration: (compactScreen.matches ? 480 : image ? 950 : 760) * motionSettings.duration,
+        duration: (compactScreen.matches ? 480 : image ? 950 : 760) * motionSettings.duration * pace,
         delay: delay * motionSettings.duration,
         easing: "cubic-bezier(0.22, 1, 0.36, 1)",
         fill: "backwards",
@@ -62,7 +63,7 @@ export function MotionObserver() {
           { opacity: 0, transform: "translate3d(0, 100%, 0)" },
           { opacity: 1, transform: "translate3d(0, 0, 0)" },
         ], {
-          duration: 680 * motionSettings.duration,
+          duration: 680 * motionSettings.duration * pace,
           delay: index * 120 * motionSettings.duration,
           easing: "cubic-bezier(0.22, 1, 0.36, 1)",
           fill: "backwards",

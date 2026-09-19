@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, type CSSProperties } from "react";
 import { getHomepageHeroProducts } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
@@ -30,6 +31,7 @@ const revealClass =
 
 export function HomePage() {
   const { products, content } = useStore();
+  const homeMotion = useMemo(() => ({ ...content.motionSettings, duration: content.motionSettings.duration * 1.25 }), [content.motionSettings]);
 
   if (!products.length) {
     return (
@@ -50,7 +52,7 @@ export function HomePage() {
   const hasHero = getHomepageHeroProducts(products).length > 0;
   const CollectionHeading = hasHero ? "h2" : "h1";
   return (
-    <main className="overflow-x-clip" id="main-content">
+    <main className="overflow-x-clip" id="main-content" data-home-motion="calm" style={{ "--motion-duration": homeMotion.duration } as CSSProperties}>
       <ProductHero products={products} settings={content.heroSettings} />
       <section
         className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(70px,7vw,110px)] max-[680px]:px-3 max-[680px]:py-8 max-[420px]:px-2.5 max-[420px]:py-6 ${revealClass}`}
@@ -98,7 +100,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <ProductBenefits products={products} motionSettings={content.motionSettings} />
+      <ProductBenefits products={products} motionSettings={homeMotion} />
 
       <BuildYourRitual />
 
@@ -231,7 +233,7 @@ export function HomePage() {
         aria-labelledby="purity-title"
       >
         {/* Left Column: Arched Image with Badge */}
-        <IngredientPoster images={content.ritualPosters} fallback={content.ritualPoster} settings={content.ritualPosterSettings} />
+        <IngredientPoster images={content.ritualPosters} fallback={content.ritualPoster} settings={content.ritualPosterSettings} pace={1.25} />
 
         {/* Right Column: Heading, description, 3 numbered points, CTA */}
         <div>
@@ -343,70 +345,6 @@ export function HomePage() {
         <FeaturedProductSwitcher />
       </section>
 
-      {/* ── The NatureMist Philosophy (Ancient botanicals. Modern care.) ── */}
-      <section
-        className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(40px,6vw,80px)] max-[680px]:px-4 max-[680px]:py-8 ${revealClass}`}
-        aria-labelledby="story-title"
-      >
-        <div className="relative overflow-hidden rounded-[32px] border border-[#1b3d2b] bg-[#0c2419] bg-[radial-gradient(ellipse_at_50%_35%,rgba(167,201,67,0.2),transparent_65%),linear-gradient(160deg,#0e2a1e_0%,#071710_100%)] px-6 py-20 text-center shadow-[0_24px_64px_rgba(0,0,0,0.25)] max-[680px]:px-4 max-[680px]:py-12 max-[680px]:rounded-2xl">
-          {/* Subtle Botanical Leaf Outline Watermark */}
-          <div
-            className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-15"
-            aria-hidden="true"
-          >
-            <svg
-              className="size-[340px] text-[#c8d88e] max-[680px]:size-[220px]"
-              viewBox="0 0 200 200"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M100 20 C100 20 160 60 160 110 C160 145 135 175 100 180 C65 175 40 145 40 110 C40 60 100 20 100 20 Z" />
-              <line x1="100" y1="20" x2="100" y2="180" strokeWidth="1.2" />
-              <path d="M100 60 Q130 75 145 95" />
-              <path d="M100 60 Q70 75 55 95" />
-              <path d="M100 100 Q135 115 150 135" />
-              <path d="M100 100 Q65 115 50 135" />
-              <path d="M100 140 Q125 150 135 160" />
-              <path d="M100 140 Q75 150 65 160" />
-            </svg>
-          </div>
-
-          <div className="relative z-10 mx-auto flex max-w-[840px] flex-col items-center">
-            <p className="mb-3 text-[0.74rem] font-bold uppercase tracking-[0.22em] text-[#c8d88e] max-[680px]:mb-1.5 max-[680px]:text-[0.66rem]">
-              The NatureMist philosophy
-            </p>
-            <h2
-              className="m-0 text-[clamp(2.8rem,5.5vw,5.5rem)] font-normal leading-[0.94] tracking-[-0.045em] text-[#fbfaf6] [font-family:var(--font-display)] max-[680px]:text-[2.2rem]"
-              id="story-title"
-            >
-              Ancient botanicals.<br />Modern care.
-            </h2>
-            <p className="mx-auto my-6 max-w-[620px] text-[1.05rem] leading-[1.7] text-white/80 max-[680px]:hidden">
-              Beauty begins at the root—with ingredients we can name, rituals we can understand and enough time to care for ourselves well.
-            </p>
-            <Link
-              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#fbfaf6] px-8 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[#0c2419] shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-[#c8d88e] hover:shadow-[0_12px_32px_rgba(200,216,142,0.3)] hover:-translate-y-0.5 active:scale-95 max-[680px]:min-h-[40px] max-[680px]:px-6 max-[680px]:py-2.5 max-[680px]:text-[0.68rem]"
-              href="/our-story"
-            >
-              Our story <span aria-hidden="true">↗</span>
-            </Link>
-
-            {/* 3 Pillars Footer Bar */}
-            <div className="mt-14 flex w-full items-center justify-between border-t border-white/12 pt-6 text-[0.76rem] font-medium tracking-[0.16em] uppercase text-white/70 max-[680px]:mt-8 max-[680px]:pt-5 max-[680px]:flex-col max-[680px]:gap-2 max-[680px]:text-[0.68rem]">
-              <span>Tradition, refined</span>
-              <span className="max-[680px]:hidden text-white/30">·</span>
-              <span>Education before expectation</span>
-              <span className="max-[680px]:hidden text-white/30">·</span>
-              <span>Care without clutter</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Community Videos & Customer Reviews Section ── */}
       <VideoReviewsSection />
 
       {/* ── The Ritual Room (FAQ) - Integrated Luxury Dark Footer-Attached Styling ── */}

@@ -11,7 +11,7 @@ export function BuildYourRitual() {
   const { content: { motionSettings } } = useStore();
 
   useEffect(() => {
-    if (panelRef.current) return installRitualSectionMotion(panelRef.current, motionSettings);
+    if (panelRef.current) return installRitualSectionMotion(panelRef.current, { ...motionSettings, duration: motionSettings.duration * 1.25 });
   }, [motionSettings]);
 
   return (
