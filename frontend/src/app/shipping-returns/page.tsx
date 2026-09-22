@@ -3,7 +3,7 @@ import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
 import {
   PolicyContent,
-  ShopifyPolicyBody,
+  StorePolicyBody,
 } from "@/shared/ui/policy-content";
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default async function ShippingReturnsPage() {
           {policies.map((policy) => (
             <section key={policy.handle}>
               <h2>{policy.title}</h2>
-              <ShopifyPolicyBody html={policy.body} />
+              <StorePolicyBody html={policy.body} />
             </section>
           ))}
         </PolicyContent>

@@ -57,7 +57,7 @@ export function TrackingForm() {
     setTrackedOrder(null);
 
     try {
-      const res = await fetch("/api/shopify/track-order", {
+      const res = await fetch("/api/track-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reference: cleanRef }),
@@ -170,7 +170,7 @@ export function TrackingForm() {
           <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--line)] pb-5">
             <div>
               <span className="text-[0.62rem] font-bold uppercase tracking-wider text-[var(--muted)]">
-                Shopify Verified Order
+                Verified Order
               </span>
               <h3 className="m-0 font-serif text-[1.45rem] font-bold text-[var(--forest)]">
                 {trackedOrder.orderName}

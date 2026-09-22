@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
       {
         id: "confirmed",
         title: "Order Confirmed & Logged",
-        description: "Your botanical order is recorded and verified in Shopify.",
+        description: "Your botanical order is recorded and verified.",
         status: "completed",
         date: formattedDate,
       },

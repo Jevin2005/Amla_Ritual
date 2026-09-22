@@ -59,6 +59,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ── 0. Cash on Delivery Policy Enforcement ──
+    const isCodEnabled =
+      process.env.NEXT_PUBLIC_ENABLE_COD === "true" ||
+      process.env.ENABLE_COD === "true";
+
+    if (payload.paymentMethod === "cod" && !isCodEnabled) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Cash on Delivery is currently disabled. Please pay online via Razorpay (UPI, Cards, Net Banking).",
+        },
+        { status: 400 },
+      );
+    }
+
     // ── 1. Strict Payment Security: Verify Razorpay for Cards/NetBanking & UPI ──
     const isRazorpayPayment =
       payload.paymentMethod === "shopify" ||
@@ -333,7 +349,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!shopifyOrderCreated) {
-      return NextResponse.json({ success: false, shopifyOrderCreated: false, error: "Order could not be saved to Shopify. If payment completed, contact support with your payment reference; do not pay again." }, { status: 502 });
+      return NextResponse.json({ success: false, shopifyOrderCreated: false, error: "Order could not be saved to our store. If payment completed, contact support with your payment reference; do not pay again." }, { status: 502 });
     }
     return NextResponse.json({
       success: true,

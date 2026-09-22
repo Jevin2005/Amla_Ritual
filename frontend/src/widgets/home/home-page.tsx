@@ -42,7 +42,7 @@ export function HomePage() {
             The next ritual is being prepared.
           </h1>
           <p className="mx-auto mt-7 max-w-[540px] text-[var(--muted)]">
-            Products will appear here as soon as they are active and published to the Headless sales channel in Shopify.
+            Products will appear here as soon as our fresh botanical harvest is released.
           </p>
         </div>
       </main>

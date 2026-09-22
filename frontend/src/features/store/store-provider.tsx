@@ -335,7 +335,7 @@ async function readApiPayload(response: Response): Promise<CartApiPayload> {
 }
 
 async function fetchCart(signal?: AbortSignal) {
-  const response = await fetch("/api/shopify/cart", {
+  const response = await fetch("/api/cart", {
     method: "GET",
     credentials: "same-origin",
     cache: "no-store",
@@ -345,7 +345,7 @@ async function fetchCart(signal?: AbortSignal) {
 }
 
 async function mutateCart(body: Record<string, unknown>) {
-  const response = await fetch("/api/shopify/cart", {
+  const response = await fetch("/api/cart", {
     method: "POST",
     credentials: "same-origin",
     cache: "no-store",
@@ -429,7 +429,7 @@ export function StoreProvider({
             setCartError(
               error instanceof Error
                 ? error.message
-                : "Your Shopify bag could not be restored.",
+                : "Your bag could not be restored.",
             );
           }
         }
@@ -522,7 +522,7 @@ export function StoreProvider({
         setAnnouncement(userErrors[0].message);
       } else {
         if (!payload.cart) {
-          throw new Error("Shopify did not return an updated bag. Please try again.");
+          throw new Error("We could not update your bag. Please try again.");
         }
         setAnnouncement(warnings[0]?.message || successMessage);
       }
@@ -690,7 +690,7 @@ export function StoreProvider({
         return null;
       }
       if (source === "shopify" && selections.some(({ variant }) => !/^gid:\/\/shopify\/ProductVariant\/\d+$/.test(variant?.id || ""))) {
-        const message = "The selected products do not have purchasable Shopify variants. Please refresh and try again.";
+        const message = "The selected products do not have purchasable variants. Please refresh and try again.";
         setCartError(message);
         setAnnouncement(message);
         return null;
@@ -729,7 +729,7 @@ export function StoreProvider({
             quantity,
           }));
           if (!lines.length) {
-            throw new Error("The selected products do not have purchasable Shopify variants.");
+            throw new Error("The selected products do not have purchasable variants.");
           }
           const payload = await mutateCart({ action: "add", lines });
           nextCart = handleApiPayload(
@@ -776,7 +776,7 @@ export function StoreProvider({
       try {
         if (source === "shopify") {
           if (!item.lineId.startsWith("gid://shopify/")) {
-            throw new Error("This bag item could not be matched to Shopify. Please refresh and try again.");
+            throw new Error("This bag item could not be verified. Please refresh and try again.");
           }
           const payload = await mutateCart({
             action: "remove",
@@ -834,7 +834,7 @@ export function StoreProvider({
       try {
         if (source === "shopify") {
           if (!item.lineId.startsWith("gid://shopify/")) {
-            throw new Error("This bag item could not be matched to Shopify. Please refresh and try again.");
+            throw new Error("This bag item could not be verified. Please refresh and try again.");
           }
           const payload = await mutateCart({
             action: "update",
@@ -877,7 +877,7 @@ export function StoreProvider({
     try {
       if (source === "shopify") {
         if (current.items.some((item) => !item.lineId.startsWith("gid://shopify/"))) {
-          throw new Error("Your bag could not be matched to Shopify. Please refresh and try again.");
+          throw new Error("Your bag could not be verified. Please refresh and try again.");
         }
         const payload = await mutateCart({
           action: "remove",

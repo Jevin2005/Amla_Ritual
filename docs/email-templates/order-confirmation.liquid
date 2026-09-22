@@ -295,7 +295,7 @@
                           </div>
                         {% else %}
                           <div style="margin-bottom: 4px;">
-                            <strong style="color: #142f24;">{{ order.gateway | default: "Prepaid / Cash on Delivery" | capitalize }}</strong>
+                            <strong style="color: #142f24;">{{ order.gateway | default: "Prepaid (Razorpay / UPI)" | capitalize }}</strong>
                           </div>
                         {% endfor %}
                         

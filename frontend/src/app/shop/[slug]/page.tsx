@@ -297,7 +297,7 @@ export default async function ProductPage(props: ProductPageProps) {
         </div>
       </section>
 
-      {/* Full Shopify product description, preserved without truncation. */}
+      {/* Full product description, preserved without truncation. */}
       <section
         id="product-description"
         className="mx-auto mt-14 w-full max-w-[1440px] scroll-mt-24 px-[clamp(20px,4.5vw,72px)] max-[680px]:mt-10 max-[680px]:px-3"
@@ -471,7 +471,7 @@ export default async function ProductPage(props: ProductPageProps) {
             <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🛡️</span>
             <div>
               <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Secure Encrypted Checkout</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Payment is completed on Shopify&rsquo;s hosted checkout</span>
+              <span className="text-[0.68rem] text-[var(--muted)]">Payment is processed via secure 256-bit encryption</span>
             </div>
           </div>
         </div>

@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
     storefront.source === "shopify"
       ? storefront.content.homeHeroPoster
       : {
-          url: "/og-shopify.jpg",
+          url: "/og-image.jpg",
           width: 1200,
           height: 630,
           altText: "NatureMist — Pure botanicals. Powerful rituals.",
@@ -109,7 +109,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         "@id": `${siteUrl}/#organization`,
         name: brandName,
         url: siteUrl,
-        logo: `${siteUrl}/og-shopify.jpg`,
+        logo: `${siteUrl}/og-image.jpg`,
         description:
           "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.",
         email: "care@naturemist.com",

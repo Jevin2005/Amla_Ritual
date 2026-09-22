@@ -3,7 +3,7 @@ import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
 import {
   PolicyContent,
-  ShopifyPolicyContent,
+  StorePolicyContent,
 } from "@/shared/ui/policy-content";
 
 export const metadata: Metadata = { title: "Terms", alternates: { canonical: "/terms" } };
@@ -20,7 +20,7 @@ export default async function TermsPage() {
         description="Understanding our store terms, botanical guidelines, and customer purchase commitments."
       />
       {policy ? (
-        <ShopifyPolicyContent html={policy.body} />
+        <StorePolicyContent html={policy.body} />
       ) : (
         <PolicyContent>
           <h2>1. Botanical Products & Authenticity</h2>

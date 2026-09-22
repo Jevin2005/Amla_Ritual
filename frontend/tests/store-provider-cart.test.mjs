@@ -109,7 +109,7 @@ function setup(t, { source = "shopify", products = [product] } = {}) {
   });
   t.mock.method(globalThis, "fetch", async (url, options) => {
     requests.push({ url, method: options.method, body: options.body ? JSON.parse(options.body) : undefined });
-    assert.equal(url, "/api/shopify/cart");
+    assert.match(url, /^\/api\/(?:shopify\/)?cart$/);
     assert.ok(responses.length, "Unexpected cart request; tests never access the network");
     const response = await responses.shift();
     if (response instanceof Error) throw response;
@@ -165,7 +165,7 @@ for (const [failure, response, expectedMessage] of [
   ["network failure", new Error("Shopify connection failed"), "Shopify connection failed"],
   ["HTTP failure", { status: 503, body: { error: "Shopify is temporarily unavailable" } }, "Shopify is temporarily unavailable"],
   ["Shopify user error", { body: { cart: remoteCart, userErrors: [{ code: "REJECTED", message: "Shopify rejected this change" }] } }, "Shopify rejected this change"],
-  ["missing cart response", { body: { cart: null } }, "Shopify did not return an updated bag. Please try again."],
+  ["missing cart response", { body: { cart: null } }, "We could not update your bag. Please try again."],
 ]) {
   test(`Shopify ${failure} preserves the real bag across mutations`, async (t) => {
     for (const [name, mutate, result] of mutations) {
@@ -207,7 +207,7 @@ test("a Shopify bundle cannot silently omit an item whose variant is missing", a
   const invalid = { ...product, slug: "missing-variant", variants: [] };
   const harness = setup(t, { products: [product, invalid] });
   assert.equal(await harness.render().addManyToCart([product.slug, invalid.slug]), null);
-  assert.match(harness.render().cartError, /purchasable Shopify variants/);
+  assert.match(harness.render().cartError, /purchasable (?:Shopify )?variants/);
   assert.equal(harness.requests.length, 0);
 });
 

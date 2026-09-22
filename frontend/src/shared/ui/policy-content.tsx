@@ -8,13 +8,14 @@ export function PolicyContent({ children }: { children: ReactNode }) {
   );
 }
 
-export function ShopifyPolicyContent({ html }: { html: string }) {
+export function StorePolicyContent({ html }: { html: string }) {
   return (
     <PolicyContent>
-      <ShopifyPolicyBody html={html} />
+      <StorePolicyBody html={html} />
     </PolicyContent>
   );
 }
+export const ShopifyPolicyContent = StorePolicyContent;
 
 const allowedPolicyTags = new Set([
   "a",
@@ -79,9 +80,10 @@ function sanitizeShopifyPolicyHtml(html: string) {
     .join("");
 }
 
-export function ShopifyPolicyBody({ html }: { html: string }) {
+export function StorePolicyBody({ html }: { html: string }) {
   return <div dangerouslySetInnerHTML={{ __html: sanitizeShopifyPolicyHtml(html) }} />;
 }
+export const ShopifyPolicyBody = StorePolicyBody;
 
 export function NoticeBox({ title, children }: { title: string; children: ReactNode }) {
   return (

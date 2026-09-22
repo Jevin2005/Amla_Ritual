@@ -39,7 +39,7 @@ export function CheckoutPreview() {
         </p>
         <p className="max-w-[360px] text-[var(--muted)] mt-2">
           {source === "shopify"
-            ? "Connecting with Shopify for current prices and inventory…"
+            ? "Connecting to secure checkout for current prices and inventory…"
             : "Checking the botanicals saved on this device…"}
         </p>
       </section>

@@ -31,7 +31,7 @@ export default function TrackOrderPage() {
           </p>
           <ol className="mt-8 grid list-none gap-3 p-0" aria-label="Future order journey">
             {[
-              ["01", "Order confirmed", "Your reference and receipt are issued and logged in Shopify."],
+              ["01", "Order confirmed", "Your reference and receipt are issued and logged securely."],
               ["02", "Packed with care", "Herbal powders are freshly filled and seal-inspected."],
               ["03", "On its way", "Live courier waybill milestones update automatically."],
             ].map(([number, title, copy]) => (

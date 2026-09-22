@@ -228,7 +228,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
                 Preparing Checkout…
               </span>
             ) : source === "shopify" ? (
-              <span>Buy Now (Shopify) ↗</span>
+              <span>Buy Now ↗</span>
             ) : (
               <span>Buy Now ➔</span>
             )}

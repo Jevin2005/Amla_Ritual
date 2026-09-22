@@ -3,7 +3,7 @@ import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
 import {
   PolicyContent,
-  ShopifyPolicyContent,
+  StorePolicyContent,
 } from "@/shared/ui/policy-content";
 
 export const metadata: Metadata = { title: "Privacy", alternates: { canonical: "/privacy" } };
@@ -20,7 +20,7 @@ export default async function PrivacyPage() {
         description="We believe in radical transparency—both in our botanical hair formulations and in how we safeguard your personal information."
       />
       {policy ? (
-        <ShopifyPolicyContent html={policy.body} />
+        <StorePolicyContent html={policy.body} />
       ) : (
         <PolicyContent>
           <h2>1. Information We Collect</h2>
@@ -33,7 +33,7 @@ export default async function PrivacyPage() {
           </p>
           <h2>3. Payment Security & Encryption</h2>
           <p>
-            All online transactions are securely encrypted and processed directly via Shopify’s PCI-DSS compliant checkout gateway. We never store or view your credit/debit card numbers or banking passwords.
+            All online transactions are securely encrypted and processed directly via PCI-DSS Level 1 compliant checkout gateways. We never store or view your credit/debit card numbers or banking passwords.
           </p>
           <h2>4. Cookies & Preferences</h2>
           <p>

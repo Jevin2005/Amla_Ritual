@@ -45,7 +45,7 @@ export function CartDrawer() {
     setDiscountMessage("");
     const applied = await applyDiscountCode(discount);
     if (applied) {
-      setDiscountMessage(`${discount.trim()} was applied by Shopify.`);
+      setDiscountMessage(`${discount.trim()} was applied successfully.`);
       setDiscount("");
     }
   };
@@ -79,7 +79,7 @@ export function CartDrawer() {
         <div className="sticky top-0 z-10 flex min-h-[105px] items-center justify-between border-b border-[var(--line)] bg-[rgba(255,252,245,0.92)] px-[30px] py-[22px] backdrop-blur-xl max-[680px]:min-h-[88px] max-[680px]:px-5 max-[680px]:py-[17px]">
           <div>
             <p className="m-0 mb-1 text-[0.68rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase">
-              {source === "shopify" ? "Synced with Shopify" : "Your selection"}
+              {source === "shopify" ? "Verified Bag" : "Your selection"}
             </p>
             <h2
               className="m-0 font-serif text-[2.2rem] leading-none font-normal text-[var(--forest)]"
@@ -267,7 +267,7 @@ export function CartDrawer() {
                 </div>
                 {source === "preview" && (
                   <p className="mt-[7px] text-[0.65rem] text-[var(--muted)]">
-                    Shopify will validate discount codes when the live store is connected.
+                    Discount codes will be validated at checkout.
                   </p>
                 )}
                 {discountMessage && (
@@ -352,7 +352,7 @@ export function CartDrawer() {
               </dl>
               <p className="mt-3 text-[0.7rem] leading-[1.6] text-[var(--muted)]">
                 {source === "shopify"
-                  ? "Shopify keeps prices and availability current. Shipping and taxes are finalized in secure checkout."
+                  ? "Prices and availability are kept up to date. Shipping and taxes are finalized in secure checkout."
                   : "Preview pricing only. No order or payment is created in preview mode."}
               </p>
 

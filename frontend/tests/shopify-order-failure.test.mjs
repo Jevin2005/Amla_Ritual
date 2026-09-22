@@ -18,7 +18,7 @@ async function route(path, auth, fetch, env = {}) {
 const payload = { customer: { email: "test@example.com", phone: "9999999999", firstName: "Test", lastName: "Buyer" }, deliveryAddress: { firstName: "Test", lastName: "Buyer", address1: "Test", city: "Test", province: "Test", zip: "123456", country: "India" }, items: [{ name: "Test", quantity: 1, pricePaise: 100 }], paymentMethod: "cod", shippingMethod: "standard", shippingFeePaise: 0 };
 test("Shopify 401 cannot return a fabricated successful order", async () => {
   let requests = 0;
-  const post = await route("../src/app/api/shopify/order/route.ts", async () => "token", async () => { requests++; return { ok: false, status: 401, text: async () => "Invalid token" }; });
+  const post = await route("../src/app/api/shopify/order/route.ts", async () => "token", async () => { requests++; return { ok: false, status: 401, text: async () => "Invalid token" }; }, { ENABLE_COD: "true" });
   const result = await post({ json: async () => payload });
   assert.equal(result.status, 502);
   assert.equal(result.body.success, false);
