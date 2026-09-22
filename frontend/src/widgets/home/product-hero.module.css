@@ -41,7 +41,7 @@
   letter-spacing: .18em;
   text-transform: uppercase;
 }
-.introEyebrow { margin-bottom: 20px; }
+.introEyebrow { --line-delay: 0ms; margin-bottom: 20px; }
 .copy h1 {
   margin: 0;
   color: var(--hero-heading);
@@ -53,11 +53,12 @@
 }
 .headlineLine, .headlineText { display: block; }
 .headlineLine { padding-block: .08em; margin-block: -.08em; }
-.headlineLine:nth-child(2) { --line-delay: 85ms; }
+.headlineLine:nth-child(1) { --line-delay: 60ms; }
+.headlineLine:nth-child(2) { --line-delay: 120ms; }
 .productHeadline { white-space: normal; overflow-wrap: anywhere; word-break: normal; }
 .productHeadline[data-long-name="true"] { font-size: clamp(calc(var(--hero-title-size) * .85), 18cqi, var(--hero-title-size)); }
 .tagline {
-  --line-delay: 170ms;
+  --line-delay: 180ms;
   margin: 16px 0 0;
   color: var(--hero-accent);
   font-family: var(--hero-font-serif);
@@ -67,7 +68,7 @@
   letter-spacing: normal;
 }
 .tagline em { font-weight: 400; font-style: italic; }
-.description { max-width: 34ch; margin: 20px 0 0; color: var(--hero-body); font-size: clamp(16px, calc(4px + .833333vw), 20px); font-weight: 400; line-height: 1.6; letter-spacing: normal; }
+.description { --line-delay: 240ms; max-width: 34ch; margin: 20px 0 0; color: var(--hero-body); font-size: clamp(16px, calc(4px + .833333vw), 20px); font-weight: 400; line-height: 1.6; letter-spacing: normal; }
 .purchase { grid-area: purchase; align-self: start; min-width: 0; margin-top: 24px; }
 .scene { grid-area: scene; position: relative; align-self: center; justify-self: center; width: 100%; max-width: 640px; min-width: 0; margin-block: 24px; }
 .poster {
@@ -120,6 +121,10 @@
 .arrow:disabled { opacity: .4; cursor: not-allowed; }
 .model { width: 100%; height: clamp(220px, 20vw, 290px); }
 .productDetails { display: grid; gap: 8px; min-width: 0; }
+.productDetails .eyebrow { --line-delay: 60ms; }
+.productDetails .productName { --line-delay: 120ms; }
+.productDetails .subtitle { --line-delay: 180ms; }
+.productDetails .disclosures { --line-delay: 240ms; }
 .productName { margin: 0; color: var(--hero-heading); font-family: var(--hero-font-serif); font-size: clamp(34px, calc(4px + 2.083333vw), 44px); font-weight: 500; line-height: 1.1; letter-spacing: -.025em; }
 .productName a { color: inherit; text-decoration: none; }
 .productName a:hover { text-decoration: underline; text-underline-offset: 4px; }
@@ -150,22 +155,25 @@
 .progress { position: absolute; inset: auto 0 0; height: 2px; background: var(--hero-accent); transform-origin: left; animation: progress linear both; }
 .background:is([data-transition="fade"], [data-transition="slide"]) .backgroundImage { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
 .scene[data-transition="fade"],
-.productDetails[data-transition="fade"],
 .model[data-transition="fade"] { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
-.scene[data-transition="slide"],
-.productDetails[data-transition="slide"] { animation: slide calc(.45s * var(--motion-duration, 1)) var(--ease) backwards; }
+.scene[data-transition="slide"] { animation: slide calc(.45s * var(--motion-duration, 1)) var(--ease) backwards; }
 .model[data-transition="slide"] { animation: modelEntrance calc(500ms * var(--motion-duration, 1)) var(--ease) backwards; }
-.copy[data-transition="fade"] .headlineText { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
-.copy[data-transition="slide"] .headlineText { animation: lineReveal calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.caption[data-transition="fade"] { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(140ms * var(--motion-duration, 1)) backwards; }
+.caption[data-transition="slide"] { animation: slide calc(500ms * var(--motion-duration, 1)) var(--ease) calc(140ms * var(--motion-duration, 1)) backwards; }
+.copy[data-transition="fade"] :is(.introEyebrow, .headlineText, .description) { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.copy[data-transition="slide"] :is(.introEyebrow, .headlineText, .description) { animation: lineReveal calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
 .purchase[data-transition="fade"] { animation: fade calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
 .purchase[data-transition="slide"] { animation: slide calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
-.productDetails:is([data-transition="fade"], [data-transition="slide"]) { animation-delay: calc(100ms * var(--motion-duration, 1)); }
+.productDetails[data-transition="fade"] { animation: fade calc(450ms * var(--motion-duration, 1)) ease backwards; }
+.productDetails[data-transition="slide"] { animation: fade calc(450ms * var(--motion-duration, 1)) ease backwards; }
+.productDetails[data-transition="fade"] :is(.eyebrow, .productName, .subtitle, .disclosures) { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.productDetails[data-transition="slide"] :is(.eyebrow, .productName, .subtitle, .disclosures) { animation: slide calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
 .disclosures details[open] .disclosureBody { animation: slide 350ms var(--ease) backwards; }
 .hero[data-transition="none"] .disclosureBody { animation: none; }
 @keyframes modelEntrance { from { opacity: 0; transform: scale(.96) translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes lineReveal { from { opacity: 0; transform: translate3d(0, 28px, 0); } to { opacity: 1; transform: none; } }
+@keyframes lineReveal { from { opacity: 0; transform: translate3d(0, 24px, 0); } to { opacity: 1; transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes slide { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
 @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @media (max-width: 1200px) and (min-width: 1101px) {
   .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(230px, .8fr); padding-inline: 28px; column-gap: 32px; }

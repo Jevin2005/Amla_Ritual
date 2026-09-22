@@ -27,9 +27,12 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   const [inView, setInView] = useState(false);
   const [visited, setVisited] = useState(false);
   const [revision, setRevision] = useState(0);
+  const [modelInteracting, setModelInteracting] = useState(false);
   const root = useRef<HTMLElement>(null);
   const backgroundImage = useRef<HTMLImageElement>(null);
   const mobileBackground = useRef<HTMLCanvasElement>(null);
+  const modelContainerRef = useRef<HTMLDivElement>(null);
+  const interactingRef = useRef(false);
   const finePointer = useFinePointer();
   const compactViewport = useCompactViewport();
   const reducedMotion = useReducedMotion();
@@ -41,10 +44,72 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   const duration = (product?.heroDurationSeconds ?? settings.intervalSeconds) * 1.2;
   const moving = motionSettings.enabled && !reducedMotion;
   const transitioning = moving && settings.transition !== "none";
-  const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && moving && pageVisible && inView;
+  const playing = slides.length > 1 && settings.autoplay && !paused && !focused && !modelInteracting && moving && pageVisible && inView;
+  const showProgress = slides.length > 1 && settings.autoplay && moving && pageVisible && inView;
   const heroBackgrounds = useMemo(() => slides.map((slide) => slide.heroBackground), [slides]);
   const heroPosters = useMemo(() => slides.map((slide) => slide.heroPoster), [slides]);
   const posterCursor = finePointer && settings.cursorMotion && motionSettings.cursor && motionSettings.intensity > 0;
+  const remainingTimeRef = useRef<number>(duration * 1000);
+  const startTimeRef = useRef<number>(0);
+  const timerRef = useRef<number | null>(null);
+  useEffect(() => {
+    remainingTimeRef.current = duration * 1000;
+    startTimeRef.current = 0;
+  }, [index, revision, duration]);
+
+  const start3DInteraction = useCallback(() => {
+    if (interactingRef.current) return;
+    interactingRef.current = true;
+    setModelInteracting(true);
+
+    const onRelease = () => {
+      if (!interactingRef.current) return;
+      interactingRef.current = false;
+      setModelInteracting(false);
+      if (typeof window !== "undefined" && typeof window.removeEventListener === "function") {
+        window.removeEventListener("pointerup", onRelease, true);
+        window.removeEventListener("pointercancel", onRelease, true);
+        window.removeEventListener("mouseup", onRelease, true);
+        window.removeEventListener("touchend", onRelease, true);
+        window.removeEventListener("touchcancel", onRelease, true);
+        window.removeEventListener("blur", onRelease);
+      }
+    };
+
+    if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+      window.addEventListener("pointerup", onRelease, { capture: true, passive: true });
+      window.addEventListener("pointercancel", onRelease, { capture: true, passive: true });
+      window.addEventListener("mouseup", onRelease, { capture: true, passive: true });
+      window.addEventListener("touchend", onRelease, { capture: true, passive: true });
+      window.addEventListener("touchcancel", onRelease, { capture: true, passive: true });
+      window.addEventListener("blur", onRelease);
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = modelContainerRef.current;
+    if (!el) return;
+
+    const handleStart = () => start3DInteraction();
+    const onCameraChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ source?: string }>;
+      if (customEvent.detail?.source === "user-interaction") {
+        start3DInteraction();
+      }
+    };
+
+    el.addEventListener("pointerdown", handleStart, { capture: true, passive: true });
+    el.addEventListener("mousedown", handleStart, { capture: true });
+    el.addEventListener("touchstart", handleStart, { capture: true, passive: true });
+    el.addEventListener("camera-change", onCameraChange as EventListener, { capture: true });
+
+    return () => {
+      el.removeEventListener("pointerdown", handleStart, { capture: true });
+      el.removeEventListener("mousedown", handleStart, { capture: true });
+      el.removeEventListener("touchstart", handleStart, { capture: true });
+      el.removeEventListener("camera-change", onCameraChange as EventListener, { capture: true });
+    };
+  }, [start3DInteraction, compactViewport, product?.heroEntryId]);
 
   useEffect(() => {
     if (!compactViewport) return;
@@ -115,18 +180,49 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   };
 
   useEffect(() => {
-    if (!playing) return;
-    const timer = window.setTimeout(() => {
+    if (!playing) {
+      if (startTimeRef.current > 0) {
+        const elapsed = Date.now() - startTimeRef.current;
+        remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+        startTimeRef.current = 0;
+      }
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
+    const remaining = remainingTimeRef.current > 0 ? remainingTimeRef.current : duration * 1000;
+    remainingTimeRef.current = remaining;
+    startTimeRef.current = Date.now();
+
+    timerRef.current = window.setTimeout(() => {
+      timerRef.current = null;
+      startTimeRef.current = 0;
+      remainingTimeRef.current = 0;
       setSelected((current) => nextHeroIndex(current, slides.length));
       setRevision((current) => current + 1);
-    }, duration * 1000);
-    return () => window.clearTimeout(timer);
+    }, remaining) as unknown as number;
+
+    return () => {
+      if (startTimeRef.current > 0) {
+        const elapsed = Date.now() - startTimeRef.current;
+        remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+        startTimeRef.current = 0;
+      }
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
   }, [playing, duration, slides.length, index, revision]);
 
   if (!product) return null;
 
   const { theme, firstLine, productLine, tagline, description } = getHeroPresentation(product);
   const animation = reducedMotion || !motionSettings.enabled ? "none" : settings.transition;
+  const heroTransitionDuration = 1400 * motionSettings.duration;
 
   return (
     <section ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
@@ -138,6 +234,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
       data-theme={theme.key}
       data-transition={animation}
+      data-hovered={hovered ? "true" : undefined}
       style={{
         "--hero-heading": theme.heading,
         "--hero-body": theme.body,
@@ -156,7 +253,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
             config={defaultSheryBackgroundConfig}
             selected={index}
             active={inView && pageVisible}
-            duration={1375 * motionSettings.duration}
+            duration={heroTransitionDuration}
             fit={compactViewport ? "edges" : "cover"}
             className={styles.heroSheryBackground}
           />
@@ -200,7 +297,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
                   selected={index}
                   active={inView && pageVisible}
                   cursor={posterCursor}
-                  duration={2100 * motionSettings.duration}
+                  duration={heroTransitionDuration}
                   className={styles.heroPosterEffect}
                   onSelect={goTo}
                 />
@@ -214,7 +311,12 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
               </span>
             )}
           </div>
-          <Link href={`/shop/${product.slug}`} className={styles.caption}>
+          <Link
+            key={`caption-${product.heroEntryId}`}
+            href={`/shop/${product.slug}`}
+            className={styles.caption}
+            data-transition={animation}
+          >
             <span className={styles.captionMark} aria-hidden="true">N</span>
             <span className={styles.captionCopy}>
               <strong>{product.hero?.badgeText || product.name}</strong>
@@ -234,7 +336,15 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
             <p id="featured-ritual-heading">Featured botanical ritual</p>
             <button type="button" className={styles.arrow} disabled={slides.length < 2} onClick={() => goTo(nextHeroIndex(index, slides.length))} aria-label="Next featured product">→</button>
           </div>
-          <div className={styles.model} key={compactViewport ? product.heroEntryId : undefined} data-transition={animation}>
+          <div
+            ref={modelContainerRef}
+            className={styles.model}
+            key={compactViewport ? product.heroEntryId : undefined}
+            data-transition={animation}
+            onPointerDown={start3DInteraction}
+            onMouseDown={start3DInteraction}
+            onTouchStart={start3DInteraction}
+          >
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
               settings={{ ...settings, rotationSpeed: settings.rotationSpeed * .8 }} paused={paused || !inView} cameraDistancePercent={95} eager
               poster={compactViewport ? product.featuredImage : undefined} />
@@ -281,7 +391,17 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           )}
         </aside>
       </div>
-      {playing && <div key={`${product.slug}-${revision}-${playing}`} className={styles.progress} style={{ animationDuration: `${duration}s` }} aria-hidden="true" />}
+      {showProgress && (
+        <div
+          key={`progress-${product.slug}-${revision}`}
+          className={styles.progress}
+          style={{
+            animationDuration: `${duration}s`,
+            animationPlayState: playing ? "running" : "paused",
+          }}
+          aria-hidden="true"
+        />
+      )}
       <span className="sr-only" aria-live={playing ? "off" : "polite"} aria-atomic="true">{product.name}, featured product {index + 1} of {slides.length}</span>
     </section>
   );

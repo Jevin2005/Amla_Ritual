@@ -134,6 +134,54 @@ test("touch focus pauses for reading disclosures and releases when another hero 
   assert.equal(desktop.harness.values.get(3), true, "desktop focus behavior is unchanged");
 });
 
+test("hover on hero does not pause autoplay, but 3D element interaction pauses and resumes", () => {
+  const { tree, harness } = renderHero();
+  const modelNode = all(tree).find((node) => node.props?.className === "model");
+  assert.ok(modelNode, "model container rendered");
+  assert.equal(typeof modelNode.props.onPointerDown, "function");
+  assert.equal(typeof modelNode.props.onMouseDown, "function");
+  assert.equal(typeof modelNode.props.onTouchStart, "function");
+
+  // Hovering does not pause autoplay (index 2 is hovered, index 7 is modelInteracting)
+  tree.props.onPointerEnter({ pointerType: "mouse" });
+  assert.equal(harness.values.get(7), undefined, "hovering does not set modelInteracting");
+
+  // Interaction with 3D model sets modelInteracting state
+  modelNode.props.onPointerDown();
+  assert.equal(harness.values.get(7), true, "3D element interaction marks modelInteracting true");
+
+  // Progress bar element is rendered with running/paused animation support
+  const progressBar = all(tree).find((node) => node.props?.className === "progress");
+  assert.ok(progressBar, "progress bar element rendered");
+});
+
+test("poster and background animations share synchronized duration and poster onSelect updates ritual synchronously", () => {
+  const { tree, harness } = renderHero();
+  const background = all(tree).find((node) => node.type === "SheryBackground");
+  const poster = all(tree).find((node) => node.type === "SheryPoster");
+  assert.ok(background, "SheryBackground rendered");
+  assert.ok(poster, "SheryPoster rendered");
+  assert.equal(background.props.duration, poster.props.duration, "poster and background transition durations are synchronized");
+  assert.equal(typeof poster.props.onSelect, "function", "SheryPoster has onSelect callback");
+
+  // Poster interaction advances index immediately
+  poster.props.onSelect(1);
+  assert.equal(harness.values.get(0), 1, "selected index advances synchronously on poster interaction");
+});
+
+test("all text blocks (copy, caption, product details) mount with transition data on ritual change", () => {
+  const { tree } = renderHero();
+  const copy = all(tree).find((node) => node.props?.className === "copy");
+  const caption = all(tree).find((node) => node.props?.className === "caption");
+  const details = all(tree).find((node) => node.props?.className === "productDetails");
+  assert.ok(copy, "copy rendered");
+  assert.ok(caption, "caption rendered");
+  assert.ok(details, "productDetails rendered");
+  assert.equal(copy.props["data-transition"], "fade");
+  assert.equal(caption.props["data-transition"], "fade");
+  assert.equal(details.props["data-transition"], "fade");
+});
+
 test("transition none removes both Shery effects while keeping static images and navigation", () => {
   const animated = renderHero().tree;
   assert.ok(all(animated).some((node) => node.type === "SheryPoster"));

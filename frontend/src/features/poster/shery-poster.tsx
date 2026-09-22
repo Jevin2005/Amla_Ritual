@@ -28,7 +28,7 @@ export function SheryPoster({ images, config, selected, active, cursor, duration
       if (event.data.type === "ready") { setReady(true); sendState(); sendPointer(pointerInside.current); }
       if (event.data.type === "error") setFailed(true);
       if (event.data.type === "close") onClose?.();
-      if (event.data.type === "index" && Number.isInteger(event.data.selected) && event.data.selected >= 0 && event.data.selected < images.length) onSelect?.(event.data.selected);
+      if ((event.data.type === "index" || event.data.type === "click") && Number.isInteger(event.data.selected) && event.data.selected >= 0 && event.data.selected < images.length) onSelect?.(event.data.selected);
     };
     window.addEventListener("message", receive);
     return () => window.removeEventListener("message", receive);

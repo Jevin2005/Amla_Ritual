@@ -180,7 +180,7 @@ window.addEventListener("click", (event) => {
   if (event?.target instanceof Element && event.target.closest("#controlKit")) return;
   const next = (selected + 1) % data.images.length;
   select(next);
-  // Notify the parent at the expansion peak, when the new image fills the frame.
+  parent.postMessage({ channel: "naturemist-shery", type: "click", selected: next }, parentOrigin);
 });
 window.addEventListener("pointerenter", () => { pointerInside = true; }, true);
 // An iframe can become interactive under an already stationary pointer, so its
