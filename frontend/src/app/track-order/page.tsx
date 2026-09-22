@@ -16,7 +16,7 @@ export default function TrackOrderPage() {
       <PageHero
         eyebrow="After the ritual leaves us"
         title="Track an order."
-        description="Enter your order reference (e.g. #1004) or mobile number to view live preparation and delivery milestones."
+        description="Enter your unique 13-digit Tracking ID from your confirmation email (e.g. 8607588876474) to view live preparation and delivery milestones."
       />
       <section className="mx-auto grid w-full max-w-[1200px] grid-cols-[1fr_0.8fr] items-start gap-[clamp(52px,8vw,96px)] px-[clamp(24px,5vw,64px)] pb-[150px] pt-[100px] max-[900px]:grid-cols-1 max-[680px]:px-5 max-[680px]:pb-[100px] max-[680px]:pt-[72px]">
         <div>

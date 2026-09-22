@@ -28,6 +28,8 @@ type OrderRequestPayload = {
     pricePaise: number;
     slug?: string;
     sku?: string;
+    variantId?: string | null;
+    imageUrl?: string | null;
   }>;
   paymentMethod: "cod" | "upi" | "shopify";
   shippingMethod: "standard" | "express";
@@ -214,16 +216,32 @@ export async function POST(req: NextRequest) {
               zip: payload.deliveryAddress.zip.trim(),
               phone: formattedPhone,
             },
-            line_items: payload.items.map((item) => ({
-              title: item.name,
-              price: (item.pricePaise / item.quantity / 100).toFixed(2),
-              quantity: item.quantity,
-              variant_title: item.variant || "Default",
-              sku: item.sku || undefined,
-              properties: item.slug
-                ? [{ name: "Botanical Handle", value: item.slug }]
-                : [],
-            })),
+            line_items: payload.items.map((item) => {
+              const numericVariantId = item.variantId
+                ? Number(String(item.variantId).replace(/\D/g, ""))
+                : undefined;
+              const hasValidVariant =
+                numericVariantId &&
+                !isNaN(numericVariantId) &&
+                numericVariantId > 0;
+
+              return {
+                ...(hasValidVariant ? { variant_id: numericVariantId } : {}),
+                title: item.name,
+                price: (item.pricePaise / item.quantity / 100).toFixed(2),
+                quantity: item.quantity,
+                variant_title: item.variant || "Default",
+                sku: item.sku || undefined,
+                properties: [
+                  ...(item.slug
+                    ? [{ name: "Botanical Handle", value: item.slug }]
+                    : []),
+                  ...(item.imageUrl
+                    ? [{ name: "_image_url", value: item.imageUrl }]
+                    : []),
+                ],
+              };
+            }),
             shipping_lines: [
               {
                 title:
@@ -257,9 +275,9 @@ export async function POST(req: NextRequest) {
             shopifyOrderCreated = true;
             shopifyOrderId = resData.order.id;
             shopifyOrderName = resData.order.name; // e.g. "#1001"
-            orderId = resData.order.name || `NMR-${resData.order.order_number}`;
+            orderId = String(resData.order.id);
             console.log(
-              `[Shopify Order Created Successfully]: Order ${shopifyOrderName} (ID: ${shopifyOrderId})`,
+              `[Shopify Order Created Successfully]: Order ${shopifyOrderName} (Unique Tracking ID: ${shopifyOrderId})`,
             );
           }
         } else {
@@ -290,9 +308,9 @@ export async function POST(req: NextRequest) {
                 shopifyOrderCreated = true;
                 shopifyOrderId = retryData.order.id;
                 shopifyOrderName = retryData.order.name;
-                orderId = retryData.order.name || `NMR-${retryData.order.order_number}`;
+                orderId = String(retryData.order.id);
                 console.log(
-                  `[Shopify Order Created with Existing Customer]: Order ${shopifyOrderName} (ID: ${shopifyOrderId})`,
+                  `[Shopify Order Created with Existing Customer]: Order ${shopifyOrderName} (Unique Tracking ID: ${shopifyOrderId})`,
                 );
               }
             } else {

@@ -102,7 +102,7 @@ export function TrackingForm() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!reference.trim()) {
-      setErrorMessage("Please enter an order number (e.g. #1004) or phone number.");
+      setErrorMessage("Please enter the unique Tracking ID from your confirmation email (e.g. 8607588876474).");
       return;
     }
     fetchTracking(reference);
@@ -121,20 +121,20 @@ export function TrackingForm() {
             className="block text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)]"
             htmlFor="order-reference"
           >
-            Order reference or mobile number
+            Private Tracking ID
           </label>
           <span className="text-[0.64rem] font-medium text-[var(--muted)]">
-            e.g. #1004 or 9876543210
+            e.g. 8607588876474
           </span>
         </div>
 
         <div className="flex gap-2 max-[500px]:flex-col">
           <input
-            className="h-[52px] flex-1 rounded-2xl border border-[var(--line)] bg-[var(--ivory)] px-4 text-[0.84rem] text-[var(--forest)] outline-none transition-colors focus:border-[var(--botanical)] focus:ring-2 focus:ring-[var(--botanical)]/15"
+            className="h-[52px] flex-1 rounded-2xl border border-[var(--line)] bg-[var(--ivory)] px-4 text-[0.84rem] text-[var(--forest)] outline-none transition-colors focus:border-[var(--botanical)] focus:ring-2 focus:ring-[var(--botanical)]/15 font-mono"
             id="order-reference"
             value={reference}
             onChange={(e) => setReference(e.target.value)}
-            placeholder="e.g. #1004, NMR-1004, or 10-digit Phone"
+            placeholder="Enter 13-digit Tracking ID (e.g. 8607588876474)"
             required
           />
           <button
