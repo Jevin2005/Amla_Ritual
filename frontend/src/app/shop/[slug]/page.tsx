@@ -3,7 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { globalSafety } from "@/domain/catalog/products";
-import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
+import {
+  filterReviewsByProduct,
+  getProductReviewSummary,
+} from "@/domain/reviews/custom-reviews";
 import {
   ProductCard,
   ProductDetailActions,
@@ -11,6 +14,13 @@ import {
   ProductReviewsSection,
 } from "@/features/catalog";
 import { StarRating } from "@/features/reviews/star-rating";
+import { JudgemePreviewBadge } from "@/features/reviews/judgeme-preview-badge";
+import { isJudgemeConfigured } from "@/lib/judgeme/config";
+import {
+  getJudgemeProductReviews,
+  getJudgemeProductReviewWidget,
+  getJudgemePreviewBadge,
+} from "@/lib/judgeme/api";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { sanitizeProductDescription } from "@/lib/shopify/product-description";
@@ -92,6 +102,12 @@ export default async function ProductPage(props: ProductPageProps) {
   ]);
   if (!product) notFound();
 
+  const targetHandle = product.shopifyHandle || product.slug;
+  const [reviewWidgetHtml, previewBadgeHtml] = await Promise.all([
+    getJudgemeProductReviewWidget(targetHandle),
+    getJudgemePreviewBadge(targetHandle),
+  ]);
+
   const concernMatches = storefront.products.filter(
     (item) =>
       item.slug !== product.slug &&
@@ -117,10 +133,44 @@ export default async function ProductPage(props: ProductPageProps) {
     { label: "Net Quantity", value: product.size },
     { label: "Formulation", value: product.formulation },
   ].filter((item) => item.value?.trim());
-  const reviewSummary = getProductReviewSummary(
+  const [judgemeReviewData] = await Promise.all([
+    getJudgemeProductReviews(product.id),
+  ]);
+
+  const customReviewSummary = getProductReviewSummary(
     storefront.content.customerReviews,
     product.slug,
   );
+
+  const effectiveReviewSummary =
+    judgemeReviewData && judgemeReviewData.reviewCount > 0
+      ? {
+          averageRating: judgemeReviewData.averageRating,
+          reviewCount: judgemeReviewData.reviewCount,
+          reviews: judgemeReviewData.reviews.map((r) => ({
+            rating: r.rating,
+            author: r.reviewerName,
+            date: r.createdAt ? r.createdAt.split("T")[0] : undefined,
+            body: r.body || r.title,
+          })),
+        }
+      : customReviewSummary && customReviewSummary.reviewCount > 0
+      ? {
+          averageRating: customReviewSummary.averageRating,
+          reviewCount: customReviewSummary.reviewCount,
+          reviews: filterReviewsByProduct(
+            storefront.content.customerReviews,
+            product.slug,
+          ).map((r) => ({
+            rating: r.rating,
+            author: r.author,
+            date: r.date,
+            body: r.quote,
+          })),
+        }
+      : null;
+
+  const reviewSummary = customReviewSummary;
 
   const siteUrl = getPublicSiteUrl();
   const productUrl = `${siteUrl}/shop/${product.slug}`;
@@ -153,8 +203,35 @@ export default async function ProductPage(props: ProductPageProps) {
         url: siteUrl,
       },
     },
+    ...(effectiveReviewSummary && effectiveReviewSummary.reviewCount > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: effectiveReviewSummary.averageRating.toFixed(1),
+            reviewCount: effectiveReviewSummary.reviewCount,
+            bestRating: "5",
+            worstRating: "1",
+          },
+          review: effectiveReviewSummary.reviews.slice(0, 5).map((r) => ({
+            "@type": "Review",
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: r.rating,
+              bestRating: "5",
+            },
+            author: {
+              "@type": "Person",
+              name: r.author,
+            },
+            ...(r.date ? { datePublished: r.date } : {}),
+            reviewBody: r.body,
+          })),
+        }
+      : {}),
     additionalProperty: specifications.map(({ label, value }) => ({
-      "@type": "PropertyValue", name: label, value,
+      "@type": "PropertyValue",
+      name: label,
+      value,
     })),
   };
 
@@ -204,7 +281,15 @@ export default async function ProductPage(props: ProductPageProps) {
             {product.subtitle && <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
               {product.subtitle}
             </p>}
-            {reviewSummary && (
+            {isJudgemeConfigured() ? (
+              <Link
+                href="#customer-reviews"
+                className="mt-2 inline-flex min-h-8 items-center rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
+                aria-label={`Jump to reviews for ${product.name}`}
+              >
+                <JudgemePreviewBadge productId={product.id} initialHtml={previewBadgeHtml} />
+              </Link>
+            ) : reviewSummary ? (
               <Link
                 href="#customer-reviews"
                 className="mt-2 inline-flex min-h-8 items-center rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
@@ -216,7 +301,7 @@ export default async function ProductPage(props: ProductPageProps) {
                   size="default"
                 />
               </Link>
-            )}
+            ) : null}
           </div>
 
           {/* Short Description */}
@@ -361,6 +446,7 @@ export default async function ProductPage(props: ProductPageProps) {
         product={product}
         reviews={storefront.content.customerReviews}
         videoReviews={storefront.content.videoReviews}
+        reviewWidgetHtml={reviewWidgetHtml}
       />
 
       {/* ── Product-Specific FAQ Section ── */}

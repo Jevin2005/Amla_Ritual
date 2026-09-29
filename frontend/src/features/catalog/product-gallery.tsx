@@ -86,8 +86,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
             src={activeImage.url}
             alt={activeImage.altText || product.name}
             fill
-            loading="eager"
-            fetchPriority={selectedIndex === 0 ? "high" : "auto"}
+            priority={selectedIndex === 0}
             quality={90}
             sizes="(max-width: 960px) 95vw, 48vw"
             className={`size-full object-contain object-center ${styles.photo}`}
@@ -187,7 +186,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
       <dialog ref={enlargedPhoto} className={styles.lightbox} aria-label={`Enlarged photo of ${product.name}`} onClick={(event) => { if (event.target === event.currentTarget) enlargedPhoto.current?.close(); }}>
         <button type="button" className={styles.closePhoto} onClick={() => enlargedPhoto.current?.close()} aria-label="Close enlarged photo">×</button>
         <div className={styles.lightboxImage}>
-          <Image src={activeImage.kind === "image" ? activeImage.url : baseImage.url} alt={activeImage.kind === "image" ? activeImage.altText || product.name : product.name} fill sizes="96vw" quality={95} className="object-contain" />
+          <Image src={activeImage.kind === "image" ? activeImage.url : baseImage.url} alt={activeImage.kind === "image" ? activeImage.altText || product.name : product.name} fill sizes="96vw" quality={95} loading="lazy" className="object-contain" />
         </div>
       </dialog>
     </div>

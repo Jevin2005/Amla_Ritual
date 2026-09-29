@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   getPlayableVideoMedia,
   type CustomerReview,
@@ -284,8 +284,51 @@ export function VideoReviewsSection() {
   const [activeVideo, setActiveVideo] = useState<VideoReview | null>(null);
   const { content } = useStore();
 
-  const videos = selectBestHomeVideos(content.videoReviews, 6);
-  const reviews = selectBestHomeReviews(content.customerReviews, 8);
+  const [localAllReviews, setLocalAllReviews] = useState<CustomerReview[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = JSON.parse(localStorage.getItem("naturemist_all_reviews") || "[]");
+      if (Array.isArray(saved) && saved.length > 0) {
+        queueMicrotask(() => {
+          setLocalAllReviews(saved);
+        });
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const mergedReviews = useMemo(() => {
+    const existingIds = new Set(content.customerReviews.map((r) => r.id));
+    const uniqueLocal = localAllReviews.filter((r) => !existingIds.has(r.id));
+    return [...uniqueLocal, ...content.customerReviews];
+  }, [content.customerReviews, localAllReviews]);
+
+  const customerVideos = useMemo(() => {
+    const list: VideoReview[] = [...content.videoReviews];
+    mergedReviews.forEach((review: CustomerReview) => {
+      if (review.video) {
+        list.push({
+          id: `rev-video-${review.id}`,
+          creator: review.author,
+          title: review.video.title || `${review.productName || "Botanical"} Video Story`,
+          duration: review.video.duration || "0:45",
+          image: review.video.poster || review.photos?.[0] || "/images/product-placeholder.svg",
+          videoUrl: review.video.url,
+          productTag: (review.productName || "BOTANICAL").toUpperCase(),
+          productSlug: review.productSlug,
+          testimonial: review.quote,
+          featuredOnHome: true,
+        });
+      }
+    });
+    return list;
+  }, [content.videoReviews, mergedReviews]);
+
+  const videos = selectBestHomeVideos(customerVideos, 6);
+  const reviews = selectBestHomeReviews(mergedReviews, 8);
   const closeVideo = useCallback(() => setActiveVideo(null), []);
 
   if (videos.length === 0 && reviews.length === 0) return null;

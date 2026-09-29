@@ -5,7 +5,9 @@ import { StoreProvider } from "@/features/store/store-provider";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { SiteChrome } from "@/widgets/site-chrome/site-chrome";
+import { JudgemeScript } from "@/features/reviews/judgeme-script";
 import "./globals.css";
+import "@/features/reviews/judgeme.css";
 
 function productForGlobalStore(product: Product): Product {
   const defaultVariant = getDefaultVariant(product);
@@ -152,6 +154,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           <SiteChrome>{children}</SiteChrome>
         </StoreProvider>
+        <JudgemeScript />
       </body>
     </html>
   );

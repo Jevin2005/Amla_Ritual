@@ -245,7 +245,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         "--hero-soft": product.accentSoft,
       } as CSSProperties}>
       <div className={styles.background} data-transition={animation} aria-hidden="true">
-        <Image ref={backgroundImage} key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
+        <Image ref={backgroundImage} key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" priority loading="eager" className={styles.backgroundImage} />
         <canvas ref={mobileBackground} key={`background-${product.heroBackground.url}`} className={styles.mobileBackground} />
         {visited && slides.length > 1 && transitioning && webgl && (
           <SheryBackground
@@ -288,7 +288,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           >
             <div className={styles.posterMotion}>
               <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
-                sizes="(max-width: 900px) 46vw, (max-width: 1100px) 34vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+                sizes="(max-width: 900px) 46vw, (max-width: 1100px) 34vw, 38vw" priority loading="eager" fetchPriority="high" className={styles.posterImage} />
               {visited && slides.length > 1 && transitioning && (compactViewport || posterCursor) && webgl && (
                 <SheryPoster
                   key={heroPosters.map((image) => image.url).join("|")}

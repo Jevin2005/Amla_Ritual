@@ -43,10 +43,14 @@ export function ReviewCard({
   review,
   showProductLink = false,
   className = "",
+  onPhotoClick,
+  onVideoClick,
 }: {
   review: CustomerReview;
   showProductLink?: boolean;
   className?: string;
+  onPhotoClick?: (photoUrl: string) => void;
+  onVideoClick?: (video: { url: string; poster?: string; title?: string }) => void;
 }) {
   const date = reviewDate(review);
   const supportingDetails = [review.location, review.role].filter(Boolean);
@@ -119,6 +123,44 @@ export function ReviewCard({
       <p className="mb-0 mt-2 flex-1 text-[0.84rem] leading-[1.65] text-[var(--muted)]">
         &ldquo;{review.quote}&rdquo;
       </p>
+
+      {/* Customer Attached Photos */}
+      {review.photos && review.photos.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {review.photos.map((photo, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => onPhotoClick?.(photo)}
+              className="group relative size-14 overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--sand)] shadow-2xs transition-all hover:scale-105 hover:border-[var(--botanical)] cursor-pointer"
+              aria-label={`Enlarge customer photo ${i + 1}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photo}
+                alt=""
+                className="size-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Customer Attached Video */}
+      {review.video && (
+        <div className="mt-2.5">
+          <button
+            type="button"
+            onClick={() => onVideoClick?.(review.video!)}
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--sand)] px-3 py-1.5 text-[0.72rem] font-bold text-[var(--forest)] transition-all hover:border-[var(--botanical)] hover:bg-white cursor-pointer"
+          >
+            <span className="grid size-5 place-items-center rounded-full bg-[var(--forest)] text-[0.55rem] text-white">
+              ▶
+            </span>
+            <span className="truncate">{review.video.title || "Watch Customer Video"}</span>
+          </button>
+        </div>
+      )}
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] pt-3">
         <div className="flex flex-wrap items-center gap-2">

@@ -14,6 +14,11 @@ import {
   type StoreImage,
 } from "@/domain/catalog/products";
 import {
+  findProductBySlug,
+  getCanonicalProductSlug,
+  matchesProductSlug,
+} from "@/domain/catalog/canonical-slug";
+import {
   customReviews,
   customVideoReviews,
   isReviewTag,
@@ -811,9 +816,12 @@ function mapProduct(product: GraphProduct, index: number): Product {
   const model = heroReference("heroModel");
   const modelUrl = model?.sources?.find((source) => isGlbUrl(source.url))?.url || model?.url;
 
+  const canonicalSlug = getCanonicalProductSlug(product.title, product.handle);
+
   return {
     id: product.id,
-    slug: product.handle,
+    slug: canonicalSlug,
+    shopifyHandle: product.handle,
     name: product.title,
     botanical:
       meta(product, "botanicalName") ||
@@ -900,7 +908,6 @@ function mapProduct(product: GraphProduct, index: number): Product {
 }
 
 function mapBundles(collections: GraphCollection[], catalog: Product[]) {
-  const handles = new Set(catalog.map((product) => product.slug));
   const managed = collections
     .filter(
       (collection) =>
@@ -911,7 +918,10 @@ function mapBundles(collections: GraphCollection[], catalog: Product[]) {
       handle: collection.handle,
       name: collection.title,
       description: collection.description,
-      slugs: collection.products.nodes.map((product) => product.handle).filter((handle) => handles.has(handle)),
+      slugs: collection.products.nodes.flatMap((node) => {
+        const found = findProductBySlug(node.handle, catalog);
+        return found ? [found.slug] : [];
+      }),
     }))
     .filter((bundle) => bundle.slugs.length > 0);
 
@@ -1550,9 +1560,17 @@ async function loadStorefront(): Promise<StorefrontData> {
 
 export const getStorefront = cache(loadStorefront);
 
-async function loadStorefrontProduct(handle: string) {
+async function loadStorefrontProduct(handleOrSlug: string) {
+  const storefront = await getStorefront();
+  const matched = findProductBySlug(handleOrSlug, storefront.products);
+
   if (!isShopifyConfigured()) {
-    return previewStorefront.products.find((product) => product.slug === handle);
+    return (
+      matched ||
+      previewStorefront.products.find((product) =>
+        matchesProductSlug(handleOrSlug, product),
+      )
+    );
   }
 
   const strict =
@@ -1561,11 +1579,13 @@ async function loadStorefrontProduct(handle: string) {
 
   const marketContext = getMarketContext();
   let firstPage: ProductDetailResponse | null = null;
+  const shopifyHandleToQuery = matched?.shopifyHandle || handleOrSlug;
+
   try {
     firstPage = await shopifyStorefrontRequest<ProductDetailResponse>(
       PRODUCT_DETAIL_QUERY,
       {
-        handle,
+        handle: shopifyHandleToQuery,
         variantFirst: 250,
         variantAfter: null,
         ...marketContext,
@@ -1575,10 +1595,11 @@ async function loadStorefrontProduct(handle: string) {
   } catch (error) {
     if (strict) throw error;
     warnStorefrontPart("product detail", error);
-    return undefined;
+    return matched;
   }
 
   if (!firstPage?.product) {
+    if (matched) return matched;
     return undefined;
   }
 
@@ -1591,14 +1612,14 @@ async function loadStorefrontProduct(handle: string) {
     const page = await shopifyStorefrontRequest<ProductVariantsResponse>(
       PRODUCT_VARIANTS_QUERY,
       {
-        handle,
+        handle: shopifyHandleToQuery,
         variantFirst: 250,
         variantAfter: pageInfo.endCursor,
         ...marketContext,
       },
       { revalidate: 300, tags: ["shopify-storefront"] },
     );
-    if (!page.product) return undefined;
+    if (!page.product) return matched || undefined;
     variants.push(...page.product.variants.nodes);
     const nextPageInfo = page.product.variants.pageInfo;
     if (
@@ -1619,21 +1640,30 @@ async function loadStorefrontProduct(handle: string) {
       seenCursors.add(after);
       const page = await shopifyStorefrontRequest<{ product: { media: GraphProductMediaConnection } | null }>(
         PRODUCT_MEDIA_QUERY,
-        { handle, after, ...marketContext },
+        { handle: shopifyHandleToQuery, after, ...marketContext },
         { revalidate: 300, tags: ["shopify-storefront"] },
       );
-      if (!page.product) return undefined;
+      if (!page.product) return matched || undefined;
       media.nodes.push(...page.product.media.nodes);
       media.pageInfo = page.product.media.pageInfo;
     }
   }
 
-  const storefront = await getStorefront();
-  const catalogIndex = storefront.products.findIndex((product) => product.slug === handle);
-  return mapProduct(
+  const catalogIndex = matched
+    ? storefront.products.findIndex((p) => p.slug === matched.slug)
+    : storefront.products.findIndex((p) => p.slug === handleOrSlug);
+
+  const mapped = mapProduct(
     { ...firstPage.product, variants: { nodes: variants } },
     Math.max(0, catalogIndex),
   );
+
+  if (matched) {
+    mapped.slug = matched.slug;
+    mapped.shopifyHandle = matched.shopifyHandle || firstPage.product.handle;
+  }
+
+  return mapped;
 }
 
 export const getStorefrontProduct = cache(loadStorefrontProduct);

@@ -6,6 +6,8 @@ import { useState, type CSSProperties } from "react";
 import { formatCurrency, type Product } from "@/domain/catalog/products";
 import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
 import { StarRating } from "@/features/reviews/star-rating";
+import { JudgemePreviewBadge } from "@/features/reviews/judgeme-preview-badge";
+import { isJudgemeConfigured } from "@/lib/judgeme/config";
 import { useStore } from "@/features/store/store-provider";
 import styles from "./product-card.module.css";
 
@@ -114,7 +116,21 @@ export function ProductCard({
           {[product.subtitle, product.size].filter(Boolean).join(" · ")}
         </p>
 
-        {reviewSummary && (
+        {isJudgemeConfigured() ? (
+          <Link
+            href={`/shop/${product.slug}#customer-reviews`}
+            className="mt-2 inline-flex min-h-7 items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:mt-1.5 max-[680px]:min-h-8"
+            onClick={() =>
+              track("select_item_reviews", {
+                item_id: product.slug,
+                placement: "product_card",
+              })
+            }
+            aria-label={`Read reviews for ${product.name}`}
+          >
+            <JudgemePreviewBadge productId={product.id} />
+          </Link>
+        ) : reviewSummary ? (
           <Link
             href={`/shop/${product.slug}#customer-reviews`}
             className="mt-2 inline-flex min-h-7 items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:mt-1.5 max-[680px]:min-h-8"
@@ -132,7 +148,7 @@ export function ProductCard({
               size="compact"
             />
           </Link>
-        )}
+        ) : null}
 
         <div className="mt-auto pt-4 max-[680px]:pt-3">
           <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2.5">

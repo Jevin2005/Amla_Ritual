@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   getPlayableVideoMedia,
   normalizeProductSlug,
   reviewTags,
+  type CustomerReview,
   type ReviewTag,
   type VideoReview,
 } from "@/domain/reviews/custom-reviews";
@@ -14,6 +15,8 @@ import { ReviewCard } from "@/features/reviews/review-card";
 import { StarRating } from "@/features/reviews/star-rating";
 import { VideoAutoplayPreview } from "@/features/reviews/video-autoplay-preview";
 import { VideoReviewModal } from "@/features/reviews/video-review-modal";
+import { JudgemeAllReviewsWidget } from "@/features/reviews/judgeme-all-reviews-widget";
+import { isJudgemeConfigured } from "@/lib/judgeme/config";
 import { useStore } from "@/features/store/store-provider";
 
 const eyebrowClass =
@@ -25,15 +28,59 @@ type ReviewFilter = "All" | ReviewTag;
 const REVIEW_PAGE_SIZE = 8;
 const VIDEO_PAGE_SIZE = 8;
 
-export function ReviewsPage() {
+type ReviewsPageProps = {
+  initialReviews?: CustomerReview[];
+};
+
+export function ReviewsPage({ initialReviews = [] }: ReviewsPageProps) {
   const { content } = useStore();
   const [activeFilter, setActiveFilter] = useState<ReviewFilter>("All");
   const [activeVideo, setActiveVideo] = useState<VideoReview | null>(null);
   const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_PAGE_SIZE);
   const [visibleVideoCount, setVisibleVideoCount] = useState(VIDEO_PAGE_SIZE);
 
-  const reviews = content.customerReviews;
-  const videos = content.videoReviews;
+  const [localAllReviews, setLocalAllReviews] = useState<CustomerReview[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = JSON.parse(localStorage.getItem("naturemist_all_reviews") || "[]");
+      if (Array.isArray(saved) && saved.length > 0) {
+        queueMicrotask(() => {
+          setLocalAllReviews(saved);
+        });
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const reviews = useMemo(() => {
+    const baseReviews = initialReviews.length > 0 ? initialReviews : content.customerReviews;
+    const existingIds = new Set(baseReviews.map((r) => r.id));
+    const uniqueLocal = localAllReviews.filter((r) => !existingIds.has(r.id));
+    return [...uniqueLocal, ...baseReviews];
+  }, [content.customerReviews, localAllReviews, initialReviews]);
+
+  const videos = useMemo(() => {
+    const list: VideoReview[] = [...content.videoReviews];
+    reviews.forEach((review) => {
+      if (review.video) {
+        list.push({
+          id: `rev-video-${review.id}`,
+          creator: review.author,
+          title: review.video.title || `${review.productName || "Botanical"} Video Story`,
+          duration: review.video.duration || "0:45",
+          image: review.video.poster || review.photos?.[0] || "/images/product-placeholder.svg",
+          videoUrl: review.video.url,
+          productTag: (review.productName || "BOTANICAL").toUpperCase(),
+          productSlug: review.productSlug,
+          testimonial: review.quote,
+        });
+      }
+    });
+    return list;
+  }, [content.videoReviews, reviews]);
   const availableTags = useMemo(
     () => reviewTags.filter((tag) => reviews.some((review) => review.tag === tag)),
     [reviews],
@@ -116,7 +163,19 @@ export function ReviewsPage() {
         </div>
       </section>
 
-      {!hasStories ? (
+      {isJudgemeConfigured() && (
+        <section className="mx-auto w-full max-w-[1280px] px-[clamp(24px,5vw,64px)] pt-10 pb-6" aria-labelledby="all-reviews-heading">
+          <div className="mb-6 text-center">
+            <p className={`${eyebrowClass} mb-2`}>Verified Customer Voices</p>
+            <h2 id="all-reviews-heading" className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,4vw,3.2rem)] font-normal text-[var(--forest)]">
+              All Verified Reviews
+            </h2>
+          </div>
+          <JudgemeAllReviewsWidget />
+        </section>
+      )}
+
+      {!hasStories && !isJudgemeConfigured() ? (
         <section className="mx-auto w-full max-w-[920px] px-[clamp(24px,5vw,64px)] py-[clamp(70px,9vw,120px)] text-center" aria-labelledby="empty-reviews-title">
           <span className="mx-auto grid size-14 place-items-center rounded-full bg-[var(--sand)] text-2xl text-[var(--botanical)]" aria-hidden="true">
             &#9734;

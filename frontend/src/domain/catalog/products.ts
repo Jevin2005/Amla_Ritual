@@ -52,6 +52,7 @@ export type ProductHeroContent = {
 export type Product = {
   id?: string;
   slug: string;
+  shopifyHandle?: string;
   name: string;
   botanical: string;
   plantPart: string;

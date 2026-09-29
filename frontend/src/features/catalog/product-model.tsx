@@ -124,7 +124,17 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     });
   };
 
-  const fallback = poster?.url ? <Image src={poster.url} alt={poster.altText || model.altText} fill sizes="(max-width: 960px) 95vw, 48vw" className={styles.poster} /> : null;
+  const fallback = poster?.url ? (
+    <Image
+      src={poster.url}
+      alt={poster.altText || model.altText}
+      fill
+      priority={eager}
+      loading={eager ? "eager" : "lazy"}
+      sizes="(max-width: 960px) 95vw, 48vw"
+      className={styles.poster}
+    />
+  ) : null;
 
   if (webglSupported === false) {
     return (
