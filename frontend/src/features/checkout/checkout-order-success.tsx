@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { formatCurrency } from "@/domain/catalog/products";
 import type { OrderConfirmationData } from "./checkout-form";
+import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 
 type CheckoutOrderSuccessProps = {
   order: OrderConfirmationData;
@@ -31,7 +32,7 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
       <h1 className="font-serif text-3xl text-[var(--forest)]">Payment received. Order needs confirmation.</h1>
       <p className="mt-4">Your payment was verified, but we couldn’t save the order to our store. Please do not pay again.</p>
       <p className="mt-4">Payment reference: <strong className="break-all">{order.paymentReference}</strong></p>
-      <p className="mt-2">Contact us with this reference so we can confirm your order.</p>
+      <p className="mt-2">Contact <SupportContactLinks /> with this reference so we can confirm your order.</p>
       <Link href="/contact" className="mt-5 inline-flex min-h-11 items-center underline">Contact support</Link>
     </section>;
   }
@@ -300,7 +301,7 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
                 Single-Origin Ayurvedic Hair & Scalp Rituals
               </p>
               <p className="text-[8pt] text-neutral-500">
-                www.naturemist.shop · support@naturemist.shop · +91 98765 43210
+                www.naturemist.shop · <SupportContactLinks />
               </p>
             </div>
 
@@ -406,7 +407,7 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
             🌿 100% Certified Organic & Single-Origin Wildcrafted Botanicals · Food-Grade UV Glass Sealed
           </p>
           <p className="mt-0.5">
-            This is a computer-generated tax receipt and does not require a physical signature. For support, email support@naturemist.shop.
+            This is a computer-generated tax receipt and does not require a physical signature. For support, contact <SupportContactLinks />.
           </p>
           <p className="mt-0.5 font-mono text-[7pt] text-neutral-400">
             NatureMist Ayurvedic Preparations · Order Ref: {order.orderId}

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { requireOrderAccess } from "@/lib/shopify/admin-auth";
+import { SUPPORT_MESSAGE } from "@/shared/config/support";
 
 export const runtime = "nodejs";
 
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
     try { await requireOrderAccess(); }
     catch (error) {
       console.error("[Checkout Shopify preflight]", error instanceof Error ? error.message : "Authentication unavailable");
-      return NextResponse.json({ success: false, error: "Checkout is temporarily unavailable. No payment has been started. Please contact support." }, { status: 503 });
+      return NextResponse.json({ success: false, error: `Checkout is temporarily unavailable. No payment has been started. ${SUPPORT_MESSAGE}` }, { status: 503 });
     }
     const authHeader = `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString("base64")}`;
 

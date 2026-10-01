@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { adminDomain, requireOrderAccess } from "@/lib/shopify/admin-auth";
+import { SUPPORT_MESSAGE } from "@/shared/config/support";
 
 export const runtime = "nodejs";
 
@@ -349,7 +350,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!shopifyOrderCreated) {
-      return NextResponse.json({ success: false, shopifyOrderCreated: false, error: "Order could not be saved to our store. If payment completed, contact support with your payment reference; do not pay again." }, { status: 502 });
+      return NextResponse.json({ success: false, shopifyOrderCreated: false, error: `Order could not be saved to our store. If payment completed, do not pay again. ${SUPPORT_MESSAGE} Include your payment reference.` }, { status: 502 });
     }
     return NextResponse.json({
       success: true,

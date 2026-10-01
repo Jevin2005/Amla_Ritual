@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
+import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 
 type Milestone = {
   id: string;
@@ -350,8 +351,7 @@ export function TrackingForm() {
           {/* WhatsApp Support Notice */}
           <div className="rounded-2xl border border-[var(--line)] bg-[var(--ivory)] p-4 text-center">
             <p className="m-0 text-[0.72rem] text-[var(--muted)]">
-              Questions about preparation or transit? WhatsApp our herbal dispatch team at{" "}
-              <strong className="text-[var(--forest)]">+91 98765 43210</strong> with reference{" "}
+              Questions about preparation or transit? Contact <SupportContactLinks /> with reference{" "}
               <strong className="font-mono text-[var(--forest)]">{trackedOrder.orderName}</strong>.
             </p>
           </div>

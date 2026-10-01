@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { getDefaultVariant, type Product } from "@/domain/catalog/products";
 import { StoreProvider } from "@/features/store/store-provider";
 import { getPublicSiteUrl } from "@/lib/site-url";
+import { SUPPORT } from "@/shared/config/support";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { SiteChrome } from "@/widgets/site-chrome/site-chrome";
 import { JudgemeScript } from "@/features/reviews/judgeme-script";
@@ -114,7 +115,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         logo: `${siteUrl}/og-image.jpg`,
         description:
           "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.",
-        email: "care@naturemist.com",
+        email: SUPPORT.email,
+        telephone: SUPPORT.phone,
+        contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: SUPPORT.email, telephone: SUPPORT.phone },
         sameAs: [siteUrl],
       },
       {

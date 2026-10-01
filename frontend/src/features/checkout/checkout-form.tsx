@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Script from "next/script";
 import { useStore } from "@/features/store/store-provider";
+import { SUPPORT_MESSAGE } from "@/shared/config/support";
 
 export type CheckoutFormData = {
   email: string;
@@ -474,7 +475,7 @@ export function CheckoutForm({
                 setErrorMessage(
                   handlerErr instanceof Error
                     ? handlerErr.message
-                    : "Payment verified but failed to record order. Please contact support.",
+                    : `Payment verified but failed to record order. ${SUPPORT_MESSAGE}`,
                 );
                 setIsSubmitting(false);
               }
@@ -559,7 +560,7 @@ export function CheckoutForm({
 
         const resData = await orderRes.json();
         if (!orderRes.ok || !resData.success || !resData.shopifyOrderCreated) {
-          throw new Error(resData.error || "Order could not be saved. Please contact support.");
+          throw new Error(resData.error || `Order could not be saved. ${SUPPORT_MESSAGE}`);
         }
         if (orderRes.ok) {
           if (resData?.orderId) {
@@ -713,7 +714,7 @@ export function CheckoutForm({
                   maxLength={10}
                   value={formData.phone}
                   onChange={(e) => handleInputChange("phone", e.target.value)}
-                  placeholder="98765 43210"
+                  placeholder="Your 10-digit mobile number"
                   className="h-11 flex-1 bg-transparent px-3.5 text-[0.8rem] text-[var(--forest)] placeholder:text-[var(--muted)]/60 outline-none"
                 />
               </div>

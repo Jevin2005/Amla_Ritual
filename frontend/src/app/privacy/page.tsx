@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
+import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 import {
   PolicyContent,
   StorePolicyContent,
@@ -41,7 +42,7 @@ export default async function PrivacyPage() {
           </p>
           <h2>5. Contact Our Privacy Team</h2>
           <p>
-            If you have questions regarding your personal data or wish to request data updates, please contact our support team at <a href="mailto:care@naturemist.com">care@naturemist.com</a>.
+            If you have questions regarding your personal data or wish to request data updates, contact <SupportContactLinks />.
           </p>
         </PolicyContent>
       )}

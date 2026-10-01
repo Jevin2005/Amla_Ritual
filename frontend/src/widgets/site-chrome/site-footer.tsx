@@ -4,6 +4,7 @@ import Link from "next/link";
 import { NewsletterForm } from "@/features/newsletter/newsletter-form";
 import { useStore } from "@/features/store/store-provider";
 import { BrandMark } from "./brand-mark";
+import { SUPPORT } from "@/shared/config/support";
 
 const footerHeadingClass =
   "m-0 mb-[18px] text-[0.7rem] font-bold tracking-[0.14em] text-[var(--amla)] uppercase";
@@ -85,6 +86,11 @@ export function SiteFooter() {
           <p className="mt-[22px] max-w-[350px] text-[0.92rem] leading-[1.7] text-white/68">
             Traditional Indian botanicals, translated into clear and considered care.
           </p>
+          <div className="mt-5 flex flex-col items-start gap-1" aria-label="Customer support">
+            <h3 className={footerHeadingClass}>Need help?</h3>
+            <a className={footerLinkClass} href={SUPPORT.emailHref}>{SUPPORT.email}</a>
+            <a className={footerLinkClass} href={SUPPORT.phoneHref}>{SUPPORT.phoneDisplay}</a>
+          </div>
         </div>
         {navigation.slice(0, 3).map((group) => (
           <nav className="flex flex-col" aria-label={`${group.title} links`} key={group.id}>

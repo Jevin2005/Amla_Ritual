@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useStore } from "@/features/store/store-provider";
+import { SUPPORT } from "@/shared/config/support";
+import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 
 const eyebrowClass =
   "mb-4 text-[0.72rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
@@ -21,17 +23,19 @@ export function ContactPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    // Simulate support ticket submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      track("contact_form_submitted", { topic: formData.topic });
-    }, 600);
+    const subject = `NatureMist support: ${formData.topic}${formData.orderNumber ? ` (${formData.orderNumber})` : ""}`;
+    const body = [
+      `Name: ${formData.name}`,
+      `Reply email: ${formData.email}`,
+      `Order reference: ${formData.orderNumber || "Not provided"}`,
+      "", formData.message,
+    ].join("\n");
+    window.location.href = `mailto:${SUPPORT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setSubmitted(true);
+    track("contact_email_draft_opened", { topic: formData.topic });
   };
 
   return (
@@ -44,7 +48,7 @@ export function ContactPage() {
             We are here to guide your ritual.
           </h1>
           <p className="mx-auto mt-6 max-w-[560px] text-[1.05rem] leading-[1.75] text-[var(--muted)]">
-            Whether you need bespoke mixer recommendations, batch sourcing inquiries, or order care, our botanical specialists respond within 24 hours.
+            For product questions, order care, or any problem with your experience, email or call our support team.
           </p>
         </div>
       </section>
@@ -60,30 +64,29 @@ export function ContactPage() {
                   ✓
                 </span>
                 <h2 className="m-0 font-serif text-[2.2rem] font-normal text-[var(--forest)]">
-                  Message received.
+                  Finish in your email app.
                 </h2>
                 <p className="mt-3 max-w-[400px] text-[0.95rem] leading-[1.65] text-[var(--muted)]">
-                  Thank you, <strong>{formData.name}</strong>. A dedicated botanical specialist will review your inquiry and email you at <strong>{formData.email}</strong> shortly.
+                  Send your draft to <strong>{SUPPORT.email}</strong> from your email app. Your message has not been sent by this website. If your email app did not open, contact <SupportContactLinks />.
                 </p>
                 <button
                   type="button"
                   onClick={() => {
                     setSubmitted(false);
-                    setFormData({ name: "", email: "", topic: "ritual-guidance", orderNumber: "", message: "" });
                   }}
                   className={`${buttonClass} mt-8`}
                 >
-                  Send another note
+                  Edit your note
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <div>
                   <h2 className="m-0 font-serif text-[clamp(1.8rem,3vw,2.4rem)] font-normal text-[var(--forest)]">
                     Send a note
                   </h2>
                   <p className="mt-2 text-[0.88rem] text-[var(--muted)]">
-                    Fill out the details below and we will get back to you promptly.
+                    Fill in the details to prepare an email to {SUPPORT.email}. You will send it from your email app.
                   </p>
                 </div>
 
@@ -168,10 +171,10 @@ export function ContactPage() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || !formData.name || !formData.email || !formData.message}
+                  disabled={!formData.name.trim() || !formData.email.trim() || !formData.message.trim()}
                   className={`${buttonClass} w-full justify-center disabled:cursor-not-allowed disabled:opacity-50`}
                 >
-                  {isSubmitting ? "Sending note..." : "Send note to specialists"}
+                  Open email draft
                 </button>
 
                 <p className="m-0 text-center text-[0.78rem] text-[var(--muted)]">
@@ -195,15 +198,15 @@ export function ContactPage() {
                       Care & Inquiries
                     </h3>
                     <a
-                      href="mailto:care@naturemist.com"
-                      className="text-[0.88rem] font-medium text-[var(--botanical)] underline underline-offset-4 hover:text-[var(--forest)]"
+                      href={SUPPORT.emailHref}
+                      className="break-all text-[0.88rem] font-medium text-[var(--botanical)] underline underline-offset-4 hover:text-[var(--forest)]"
                     >
-                      care@naturemist.com
+                      {SUPPORT.email}
                     </a>
                   </div>
                 </div>
                 <p className="mt-3 text-[0.84rem] leading-relaxed text-[var(--muted)]">
-                  Guaranteed response within 24 hours on all ritual consultations and customer care notes.
+                  Email us for order help, product questions, or any issue with the app.
                 </p>
               </div>
 
@@ -215,11 +218,9 @@ export function ContactPage() {
                   </div>
                   <div>
                     <h3 className="m-0 font-serif text-[1.2rem] font-normal text-[var(--forest)]">
-                      Botanical Concierge
+                      Call support
                     </h3>
-                    <p className="m-0 text-[0.88rem] font-medium text-[var(--forest)]">
-                      Mon – Sat · 9:00 AM – 7:00 PM IST
-                    </p>
+                    <a href={SUPPORT.phoneHref} className="text-[0.88rem] font-medium text-[var(--forest)] underline underline-offset-4">{SUPPORT.phoneDisplay}</a>
                   </div>
                 </div>
                 <p className="mt-3 text-[0.84rem] leading-relaxed text-[var(--muted)]">
