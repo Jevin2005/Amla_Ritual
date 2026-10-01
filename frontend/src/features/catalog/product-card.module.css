@@ -1,6 +1,8 @@
 .photoLink { display: block; position: relative; width: 100%; height: 100%; overflow: hidden; }
 .primary, .alternate { object-fit: cover; object-position: center; }
 .alternate { opacity: 0; }
+/* Empty or still-loading ratings must not reserve a blank row. */
+.vendorReviews:not(:has(:global(.jdgm-prev-badge[data-number-of-reviews]:not([data-number-of-reviews="0"])))) { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .primary, .alternate { transition: opacity calc(550ms * var(--motion-duration, 1)) ease, transform calc(850ms * var(--motion-duration, 1)) var(--ease); }
   .photoLink:hover .primary, .photoLink:hover .alternate { transform: scale(1.045); }

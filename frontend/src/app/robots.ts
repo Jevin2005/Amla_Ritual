@@ -28,7 +28,6 @@ export default function robots(): MetadataRoute.Robots {
           "/",
           "/shop",
           "/shop/*",
-          "/rituals",
           "/our-story",
           "/faqs",
           "/reviews",
@@ -42,5 +41,4 @@ export default function robots(): MetadataRoute.Robots {
     host: siteUrl,
   };
 }
-
 

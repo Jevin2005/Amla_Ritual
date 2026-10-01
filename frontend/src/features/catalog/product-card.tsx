@@ -46,7 +46,7 @@ export function ProductCard({
 
   return (
     <article
-      className="group/card @container relative flex h-full flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow,ring-color] duration-[420ms] ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] hover:ring-[color-mix(in_srgb,var(--product-accent)_34%,transparent)] max-[680px]:rounded-lg"
+      className="group/card @container relative flex flex-col self-start overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow,ring-color] duration-[420ms] ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] hover:ring-[color-mix(in_srgb,var(--product-accent)_34%,transparent)] max-[680px]:rounded-lg"
       style={style}
     >
       {/* Product listing photo area - Full Cover */}
@@ -99,7 +99,7 @@ export function ProductCard({
       </div>
 
       {/* Info area */}
-      <div className="flex flex-1 flex-col border-t border-[var(--line)] px-5 pt-4 pb-5 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5 max-[420px]:px-2.5 max-[420px]:py-2.5">
+      <div className="flex flex-col border-t border-[var(--line)] px-5 pt-4 pb-4 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5 max-[420px]:px-2.5 max-[420px]:py-2.5">
         <p className="mb-1 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.1em]">
           {product.ritualStep ? `${product.ritualStep} Ritual` : "Botanical hair care"}
         </p>
@@ -119,7 +119,7 @@ export function ProductCard({
         {isJudgemeConfigured() ? (
           <Link
             href={`/shop/${product.slug}#customer-reviews`}
-            className="mt-2 inline-flex min-h-7 items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:mt-1.5 max-[680px]:min-h-8"
+            className={`${styles.vendorReviews} mt-1 inline-flex items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]`}
             onClick={() =>
               track("select_item_reviews", {
                 item_id: product.slug,
@@ -133,7 +133,7 @@ export function ProductCard({
         ) : reviewSummary ? (
           <Link
             href={`/shop/${product.slug}#customer-reviews`}
-            className="mt-2 inline-flex min-h-7 items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:mt-1.5 max-[680px]:min-h-8"
+            className="mt-1 inline-flex items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
             onClick={() =>
               track("select_item_reviews", {
                 item_id: product.slug,
@@ -150,7 +150,7 @@ export function ProductCard({
           </Link>
         ) : null}
 
-        <div className="mt-auto pt-4 max-[680px]:pt-3">
+        <div className="mt-3 max-[680px]:mt-2.5">
           <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2.5">
             <div>
               <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">

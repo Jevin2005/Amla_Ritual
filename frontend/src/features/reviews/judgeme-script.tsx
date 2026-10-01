@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect } from "react";
+import { useState } from "react";
 import {
   getJudgemePublicToken,
   getJudgemeShopDomain,
@@ -26,9 +26,9 @@ export function JudgemeScript() {
   const enabled = isJudgemeConfigured();
   const shopDomain = getJudgemeShopDomain();
   const publicToken = getJudgemePublicToken();
+  const [configured, setConfigured] = useState(false);
 
-  useEffect(() => {
-    if (!enabled) return;
+  function initializeWidgets() {
     try {
       if (
         typeof window !== "undefined" &&
@@ -40,7 +40,8 @@ export function JudgemeScript() {
     } catch (err) {
       console.warn("[Judge.me] Deferred initialization:", err);
     }
-  }, [enabled]);
+    window.dispatchEvent(new Event("judgeme:ready"));
+  }
 
   if (!enabled) return null;
 
@@ -53,7 +54,8 @@ export function JudgemeScript() {
       />
       <Script
         id="judgeme-init"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
+        onReady={() => setConfigured(true)}
         dangerouslySetInnerHTML={{
           __html: `
             window.jdgm = window.jdgm || {};
@@ -62,27 +64,15 @@ export function JudgemeScript() {
             ${publicToken ? `window.jdgm.PUBLIC_TOKEN = ${JSON.stringify(publicToken)};` : ""}
             window.jdgmSettings = window.jdgmSettings || ${JSON.stringify(defaultJudgemeSettings)};
             var jdgmSettings = window.jdgmSettings;
-          `,
+          `.replace(/</g, "\\u003c"),
         }}
       />
-      <Script
+      {configured && <Script
         id="judgeme-widget-js"
         src="https://cdn.judge.me/judgeme_widget_v2.js"
         strategy="afterInteractive"
-        onLoad={() => {
-          try {
-            if (
-              typeof window !== "undefined" &&
-              typeof window.jdgm?.initializeWidgets === "function" &&
-              typeof (window.jdgm as Record<string, unknown>)._addEmptyWidgetHeader === "function"
-            ) {
-              window.jdgm.initializeWidgets();
-            }
-          } catch (err) {
-            console.warn("[Judge.me] onLoad initialization:", err);
-          }
-        }}
-      />
+        onReady={initializeWidgets}
+      />}
     </>
   );
 }

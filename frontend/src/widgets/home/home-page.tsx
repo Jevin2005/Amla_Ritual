@@ -371,9 +371,9 @@ export function HomePage() {
             </p>
             <Link
               className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3 text-[0.76rem] font-bold tracking-[0.12em] uppercase text-[#fbfaf6] backdrop-blur-sm transition-all duration-200 hover:border-[#c8d88e] hover:bg-[#c8d88e] hover:text-[#0c2419] max-[680px]:min-h-[42px] max-[680px]:px-5 max-[680px]:text-[0.72rem]"
-              href="/rituals"
+              href="/faqs"
             >
-              Explore all ritual guidance <span aria-hidden="true">↗</span>
+              Read all FAQs <span aria-hidden="true">↗</span>
             </Link>
           </div>
 

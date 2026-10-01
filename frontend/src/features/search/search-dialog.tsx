@@ -36,6 +36,7 @@ export function SearchDialog() {
         isSearchOpen ? "visible pointer-events-auto" : "invisible pointer-events-none"
       }`}
       aria-hidden={!isSearchOpen}
+      inert={!isSearchOpen}
     >
       <button
         className={`absolute inset-0 bg-[rgba(11,29,18,0.56)] backdrop-blur-[4px] transition-opacity duration-[380ms] ease-[ease] ${
@@ -117,7 +118,7 @@ export function SearchDialog() {
                 closeDialog();
               }}
             >
-              <span
+              <div
                 className="flex h-[92px] w-[82px] items-end justify-center overflow-hidden rounded-[var(--radius-sm)] ring-1 ring-[var(--line)] max-[680px]:w-[68px]"
                 style={{ backgroundColor: product.accentSoft }}
                 aria-hidden="true"
@@ -128,15 +129,15 @@ export function SearchDialog() {
                   size="small"
                   decorative
                 />
-              </span>
-              <span>
+              </div>
+              <div className="min-w-0">
                 <strong className="block font-serif text-[1.45rem] font-normal text-[var(--forest)]">
                   {product.name}
                 </strong>
                 <small className="text-[0.68rem] text-[var(--muted)]">
                   {product.subtitle}
                 </small>
-              </span>
+              </div>
               <span aria-hidden="true">↗</span>
             </Link>
           ))}

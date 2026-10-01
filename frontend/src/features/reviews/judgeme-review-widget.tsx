@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { extractNumericProductId, isJudgemeConfigured } from "@/lib/judgeme/config";
+import { useHydrated } from "@/shared/hooks/use-hydrated";
 
 type JudgemeReviewWidgetProps = {
   productId?: string | null;
@@ -20,9 +21,10 @@ export function JudgemeReviewWidget({
 }: JudgemeReviewWidgetProps) {
   const numericId = extractNumericProductId(productId);
   const enabled = isJudgemeConfigured();
+  const hydrated = useHydrated();
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !hydrated) return;
 
     function init() {
       try {
@@ -39,16 +41,19 @@ export function JudgemeReviewWidget({
     }
 
     init();
+    window.addEventListener("judgeme:ready", init);
     const timer1 = setTimeout(init, 250);
     const timer2 = setTimeout(init, 750);
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
+      window.removeEventListener("judgeme:ready", init);
     };
-  }, [numericId, productHandle, enabled]);
+  }, [numericId, productHandle, enabled, hydrated]);
 
   if (!enabled) return null;
+  if (!hydrated) return <div className={`judgeme-review-widget-container ${className}`} aria-busy="true"><p className="text-sm text-[var(--muted)]">Loading customer reviews…</p></div>;
 
   const processedHtml = initialHtml
     ? initialHtml.replace(/<style class=['"]jdgm-temp-hiding-style['"]>[\s\S]*?<\/style>/gi, "")
@@ -58,6 +63,7 @@ export function JudgemeReviewWidget({
     <div className={`judgeme-review-widget-container ${className}`}>
       {processedHtml ? (
         <div
+          key={numericId || productHandle}
           className="jdgm-widget jdgm-review-widget"
           data-id={numericId || undefined}
           data-product-title={productTitle}
@@ -67,6 +73,7 @@ export function JudgemeReviewWidget({
         />
       ) : (
         <div
+          key={numericId || productHandle}
           className="jdgm-widget jdgm-review-widget"
           data-id={numericId || undefined}
           data-product-title={productTitle}

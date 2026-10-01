@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
 import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { defaultMotionSettings, parseMotionSettings, type MotionSettings } from "@/domain/motion";
 import { defaultIngredientPosterSettings, parseIngredientPosterSettings, posterImages, type IngredientPosterSettings } from "@/domain/ingredient-poster";
@@ -556,8 +557,8 @@ export const previewContent: StorefrontContent = {
   ritualPosters: defaultRitualPosters,
   ritualPosterSettings: defaultIngredientPosterSettings,
   announcementText: "Rooted in Ayurveda · Made for modern rituals",
-  announcementLinkLabel: "Find your ritual",
-  announcementLinkUrl: "/rituals",
+  announcementLinkLabel: "",
+  announcementLinkUrl: "",
   homeHeroPoster: {
     url: "/images/naturemist-hero.png",
     altText: "NatureMist botanical hair ritual",
@@ -578,7 +579,6 @@ export const previewContent: StorefrontContent = {
   },
   primaryNavigation: [
     { id: "shop", title: "Shop", url: "/shop", items: [] },
-    { id: "rituals", title: "Rituals", url: "/rituals", items: [] },
     { id: "reviews", title: "Reviews", url: "/reviews", items: [] },
     { id: "story", title: "Our Story", url: "/our-story", items: [] },
     { id: "contact", title: "Contact", url: "/contact", items: [] },
@@ -971,8 +971,8 @@ function storefrontPath(value: string) {
       "our-story": "/our-story",
       about: "/our-story",
       story: "/our-story",
-      rituals: "/rituals",
-      ritual: "/rituals",
+      rituals: "/shop",
+      ritual: "/shop",
       contact: "/contact",
       "contact-us": "/contact",
       faqs: "/faqs",
@@ -1008,7 +1008,7 @@ function storefrontPath(value: string) {
 }
 
 function mapMenu(items: GraphMenuItem[] | undefined): NavigationItem[] {
-  return (items || []).map((item) => ({
+  return (items || []).filter((item) => !item.url || !isRetiredRitualUrl(item.url)).map((item) => ({
     id: item.id,
     title: item.title,
     url: item.url

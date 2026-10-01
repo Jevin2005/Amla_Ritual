@@ -586,10 +586,10 @@ export default async function OurStoryPage() {
             </div>
 
             <Link
-              href="/rituals"
+              href="/shop"
               className="mt-10 inline-flex min-h-[50px] items-center justify-center gap-3 rounded-full border border-white/25 px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-white transition-[transform,background-color,color,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--amla)] hover:bg-[var(--amla)] hover:text-[var(--forest)] max-[680px]:mt-7 max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
             >
-              Find your ritual <span aria-hidden="true">↗</span>
+              Shop botanicals <span aria-hidden="true">↗</span>
             </Link>
           </div>
         </div>
@@ -624,12 +624,6 @@ export default async function OurStoryPage() {
                   className="inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-full bg-white px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)] shadow-[0_10px_28px_rgba(0,0,0,0.22)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--amla)] max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
                 >
                   Explore botanicals <span aria-hidden="true">↗</span>
-                </Link>
-                <Link
-                  href="/rituals"
-                  className="inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-full border border-white/25 px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-white/55 max-[680px]:min-h-[44px] max-[680px]:px-5 max-[680px]:text-[0.7rem]"
-                >
-                  Build a ritual
                 </Link>
               </div>
             </div>

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { extractNumericProductId, isJudgemeConfigured } from "@/lib/judgeme/config";
+import { useHydrated } from "@/shared/hooks/use-hydrated";
 
 type JudgemePreviewBadgeProps = {
   productId?: string | null;
@@ -16,9 +17,10 @@ export function JudgemePreviewBadge({
 }: JudgemePreviewBadgeProps) {
   const numericId = extractNumericProductId(productId);
   const enabled = isJudgemeConfigured();
+  const hydrated = useHydrated();
 
   useEffect(() => {
-    if (!enabled || !numericId) return;
+    if (!enabled || !numericId || !hydrated) return;
 
     function init() {
       try {
@@ -39,11 +41,15 @@ export function JudgemePreviewBadge({
     }
 
     init();
+    window.addEventListener("judgeme:ready", init);
     const timer = setTimeout(init, 300);
-    return () => clearTimeout(timer);
-  }, [numericId, enabled]);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("judgeme:ready", init);
+    };
+  }, [numericId, enabled, hydrated]);
 
-  if (!enabled || !numericId) return null;
+  if (!enabled || !numericId || !hydrated) return null;
 
   return (
     <div className={`judgeme-preview-badge-container inline-block ${className}`}>

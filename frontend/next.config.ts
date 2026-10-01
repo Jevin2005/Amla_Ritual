@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
   experimental: {
     cpus: 4,
   },
+  async redirects() {
+    return [{ source: "/rituals", destination: "/shop", permanent: true }];
+  },
   async headers() {
     return [
       {

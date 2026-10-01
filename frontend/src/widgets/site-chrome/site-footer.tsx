@@ -26,9 +26,8 @@ const fallbackNavigation = [
   {
     id: "footer-discover",
     title: "Discover",
-    url: "/rituals",
+    url: "/our-story",
     items: [
-      { id: "finder", title: "Build your ritual", url: "/rituals", items: [] },
       { id: "reviews", title: "Customer reviews", url: "/reviews", items: [] },
       { id: "story", title: "Our story", url: "/our-story", items: [] },
       { id: "faq", title: "Frequently asked (FAQ)", url: "/faqs", items: [] },

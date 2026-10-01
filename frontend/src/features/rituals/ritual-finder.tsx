@@ -241,7 +241,7 @@ export function RitualFinder() {
             </details>}
             <div className={styles.resultFooter}>
               <button type="button" className={styles.textButton} onClick={reset}><span aria-hidden="true">↺</span> Start over</button>
-              <Link className={styles.primaryButton} href={result ? `/shop/${result.product.slug}` : "/rituals"}>View ritual <span aria-hidden="true">→</span></Link>
+              <Link className={styles.primaryButton} href={result ? `/shop/${result.product.slug}` : "/shop"}>View ritual <span aria-hidden="true">→</span></Link>
             </div>
           </div>
         )}

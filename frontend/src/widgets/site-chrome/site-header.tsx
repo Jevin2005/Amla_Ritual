@@ -7,6 +7,7 @@ import { useStore } from "@/features/store/store-provider";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
 import { BrandMark } from "./brand-mark";
 import { MobileMenu } from "./mobile-menu";
+import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
 
 const interactiveNavClass =
   "relative inline-flex min-h-11 items-center justify-center whitespace-nowrap bg-transparent px-0.5 py-0 text-[0.7rem] font-bold tracking-[0.115em] text-[var(--forest)] uppercase after:absolute after:inset-x-0.5 after:bottom-1.5 after:h-px after:bg-[var(--forest)] after:transition-[transform] after:duration-[350ms] after:ease-[var(--ease)] after:content-[''] after:[transform:scaleX(0)] after:[transform-origin:right] hover:after:[transform:scaleX(1)] hover:after:[transform-origin:left] focus-visible:after:[transform:scaleX(1)] focus-visible:after:[transform-origin:left] aria-[current=page]:after:[transform:scaleX(1)] aria-[current=page]:after:[transform-origin:left]";
@@ -19,6 +20,7 @@ export function SiteHeader() {
   const { content, cartCount, wishlist, openCart, openSearch } = useStore();
   const pathname = usePathname();
   const wishlistCount = wishlist.length;
+  const showAnnouncementLink = content.announcementLinkLabel && content.announcementLinkUrl && !isRetiredRitualUrl(content.announcementLinkUrl);
   const [compact, setCompact] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileRef = useRef<HTMLElement>(null);
@@ -58,13 +60,13 @@ export function SiteHeader() {
             {content.announcementText}
           </p>
           <div className="flex items-center gap-3.5 text-[0.68rem] max-[900px]:hidden">
-            <Link
+            {showAnnouncementLink && <><Link
               className="shrink-0 border-b border-white/40 transition-colors hover:border-white hover:text-white"
               href={content.announcementLinkUrl}
             >
               {content.announcementLinkLabel} <span aria-hidden="true">↗</span>
             </Link>
-            <span className="opacity-40 select-none" aria-hidden="true">|</span>
+            <span className="opacity-40 select-none" aria-hidden="true">|</span></>}
             <Link
               className="shrink-0 border-b border-transparent transition-colors hover:border-white hover:text-white"
               href="/track-order"
