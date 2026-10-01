@@ -311,20 +311,21 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
               </span>
             )}
           </div>
-          <Link
-            key={`caption-${product.heroEntryId}`}
-            href={`/shop/${product.slug}`}
-            className={styles.caption}
-            data-transition={animation}
-          >
-            <span className={styles.captionMark} aria-hidden="true">N</span>
-            <span className={styles.captionCopy}>
-              <strong>{product.hero?.badgeText || product.name}</strong>
-              <span>{product.hero?.badgeSubtitle || product.subtitle}</span>
-            </span>
-            <span className={styles.captionDot} aria-hidden="true" />
-          </Link>
-          <a className={styles.scrollLink} href="#featured-ritual" aria-label={`Explore ${product.name}`}><span aria-hidden="true">↓</span></a>
+          <div className={styles.sceneFooter}>
+            <Link
+              key={`caption-${product.heroEntryId}`}
+              href={`/shop/${product.slug}`}
+              className={styles.caption}
+              data-transition={animation}
+            >
+              <span className={styles.captionCopy}>
+                <strong>{product.hero?.badgeText || product.name}</strong>
+                <span>{product.hero?.badgeSubtitle || product.subtitle}</span>
+              </span>
+              <span className={styles.captionArrow} aria-hidden="true">↗</span>
+            </Link>
+            <a className={styles.scrollLink} href="#featured-ritual" aria-label={`Explore ${product.name}`}><span aria-hidden="true">↓</span></a>
+          </div>
         </div>
         <div className={styles.purchase} key={`purchase-${product.heroEntryId}`} data-transition={animation}>
           <HeroPurchase slug={product.slug} name={product.name} pricePaise={product.pricePaise}
