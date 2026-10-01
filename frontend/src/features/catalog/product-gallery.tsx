@@ -1,192 +1,135 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { Product } from "@/domain/catalog/products";
 import { ProductModel } from "./product-model";
 import styles from "./product-gallery.module.css";
 
-interface ProductGalleryProps {
-  product: Product;
+export function ProductGallery({ product }: { product: Product }) {
+  return <Gallery key={product.id || product.slug} product={product} />;
 }
 
-export function ProductGallery({ product }: ProductGalleryProps) {
-  const enlargedPhoto = useRef<HTMLDialogElement>(null);
-  const baseImage = product.featuredImage?.url
-    ? product.featuredImage
-    : {
-        url: "/images/product-placeholder.svg",
-        altText: `${product.name} Primary View`,
-        width: 800,
-        height: 800,
-      };
-
-  // Photos and 3D models use the product's Media list, independently of its hero entry.
+function Gallery({ product }: { product: Product }) {
+  const viewport = useRef<HTMLDivElement>(null);
+  const enlargedMedia = useRef<HTMLDialogElement>(null);
+  const selectedRef = useRef(0);
+  const instructionsId = useId();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [enlargedIndex, setEnlargedIndex] = useState<number | null>(null);
+  const baseImage = product.featuredImage?.url ? product.featuredImage : {
+    url: "/images/product-placeholder.svg",
+    altText: product.name,
+    width: 800,
+    height: 800,
+  };
   const images = product.images?.length ? product.images : [baseImage];
-
   const slides = [
     ...images.map((image) => ({ ...image, kind: "image" as const })),
     ...(product.models || []).map((model) => ({ ...model, kind: "model" as const })),
   ];
-
-  const [activeIndex, setActiveIndex] = useState(0);
   const selectedIndex = Math.min(activeIndex, slides.length - 1);
-  const activeImage = slides[selectedIndex];
+  const enlarged = enlargedIndex === null ? null : slides[enlargedIndex];
 
-  const handlePrev = () => {
-    setActiveIndex(selectedIndex > 0 ? selectedIndex - 1 : slides.length - 1);
-  };
+  function selectSlide(index: number) {
+    const element = viewport.current;
+    if (!element) return;
+    const next = Math.max(0, Math.min(slides.length - 1, index));
+    element.scrollTo({
+      left: next * element.clientWidth,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    });
+  }
 
-  const handleNext = () => {
-    setActiveIndex(selectedIndex < slides.length - 1 ? selectedIndex + 1 : 0);
-  };
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const observer = new ResizeObserver(() => {
+      element.scrollTo({ left: selectedRef.current * element.clientWidth, behavior: "instant" });
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (enlargedIndex === null) return;
+    const dialog = enlargedMedia.current;
+    if (!dialog) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    if (!dialog.open) dialog.showModal();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (dialog.open) dialog.close();
+    };
+  }, [enlargedIndex]);
 
   return (
-    <div className="flex flex-col gap-3.5">
-      {/* ── Main Showcase Stage ── */}
-      <div className="group/stage relative aspect-[0.94] w-full overflow-hidden rounded-3xl border border-[var(--line)] bg-[radial-gradient(circle_at_50%_60%,rgba(255,255,255,0.98),transparent_55%),color-mix(in_srgb,var(--pdp-soft,var(--beige))_65%,var(--ivory))] shadow-[0_12px_36px_rgba(21,59,45,0.06)] max-[680px]:aspect-[0.94] max-[680px]:rounded-2xl">
-        {/* Top-Left: Botanical Ritual Step Pill */}
-        <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 rounded-full border border-black/5 bg-[rgba(255,255,255,0.85)] px-3 py-1 shadow-xs backdrop-blur-md max-[680px]:top-2.5 max-[680px]:left-2.5 max-[680px]:px-2.5 max-[680px]:py-0.5">
-          <span className="size-1.5 rounded-full bg-[var(--botanical)]" />
-          <span className="text-[0.6rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)] max-[680px]:text-[0.5rem]">
-            {product.ritualStep} Ritual
-          </span>
-        </div>
-
-        {/* Top-Right: Premium Photo Showcase Counter Notation */}
-        {slides.length > 1 && (
-          <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-white shadow-md backdrop-blur-md max-[680px]:top-2.5 max-[680px]:right-2.5 max-[680px]:px-2.5 max-[680px]:py-0.5">
-            <svg
-              className="size-3.5 text-white/90 max-[680px]:size-3"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="4" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" />
-            </svg>
-            <span className="font-mono text-[0.68rem] font-bold tracking-wider max-[680px]:text-[0.58rem]">
-              {selectedIndex + 1} / {slides.length}
-            </span>
-          </div>
-        )}
-
-        {/* Master Image View */}
-        <div className="absolute inset-3 flex items-center justify-center max-[680px]:inset-2">
-          {activeImage.kind === "model" ? (
-            <ProductModel key={activeImage.url} model={activeImage} presentation="gallery" poster={activeImage.previewImage || baseImage} cameraDistancePercent={110} eager />
-          ) : (
-          <button type="button" className={styles.enlargePhoto} aria-label={`Enlarge photo of ${product.name}`} onClick={() => enlargedPhoto.current?.showModal()}>
-          <Image
-            key={activeImage.url}
-            src={activeImage.url}
-            alt={activeImage.altText || product.name}
-            fill
-            priority={selectedIndex === 0}
-            quality={90}
-            sizes="(max-width: 960px) 95vw, 48vw"
-            className={`size-full object-contain object-center ${styles.photo}`}
-          />
-          <span className={styles.enlargeHint}>View larger ↗</span>
-          </button>
-          )}
-        </div>
-
-        {/* Left & Right Chevrons */}
-        {slides.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={handlePrev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 grid size-9 place-items-center rounded-full border border-black/5 bg-white/85 text-[1.1rem] text-[var(--forest)] shadow-md backdrop-blur-md transition-all hover:bg-white hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-7.5 max-[680px]:text-[0.95rem]"
-              aria-label="Previous product media"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 grid size-9 place-items-center rounded-full border border-black/5 bg-white/85 text-[1.1rem] text-[var(--forest)] shadow-md backdrop-blur-md transition-all hover:bg-white hover:scale-105 active:scale-95 cursor-pointer max-[680px]:size-7.5 max-[680px]:text-[0.95rem]"
-              aria-label="Next product media"
-            >
-              ›
-            </button>
-          </>
-        )}
-
-        {/* Bottom Pagination Dots / Progress Indicator */}
-        {slides.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1 backdrop-blur-md max-[680px]:bottom-2 max-[680px]:px-2 max-[680px]:py-0.5">
-            {slides.map((slide, i) => (
+    <div className={styles.gallery}>
+      <p id={instructionsId} className="sr-only">Swipe left or right to browse product media. Use the arrow keys when the gallery is focused. Select a poster to open the full view.</p>
+      <div
+        ref={viewport}
+        className={styles.viewport}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={`${product.name} product gallery`}
+        aria-describedby={instructionsId}
+        tabIndex={0}
+        onScroll={(event) => {
+          const element = event.currentTarget;
+          const index = Math.max(0, Math.min(slides.length - 1, Math.round(element.scrollLeft / element.clientWidth)));
+          selectedRef.current = index;
+          setActiveIndex((previous) => previous === index ? previous : index);
+        }}
+        onKeyDown={(event) => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+          event.preventDefault();
+          selectSlide(event.key === "Home" ? 0 : event.key === "End" ? slides.length - 1 : selectedIndex + (event.key === "ArrowRight" ? 1 : -1));
+        }}
+      >
+        {slides.map((slide, index) => {
+          const poster = slide.kind === "model" ? slide.previewImage || baseImage : slide;
+          return (
+            <div key={`${slide.kind}-${slide.url}-${index}`} className={styles.slide} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}`} inert={index !== selectedIndex}>
               <button
-                key={i}
                 type="button"
-                onClick={() => setActiveIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  i === selectedIndex
-                    ? "w-5 bg-white shadow-xs"
-                    : "w-1.5 bg-white/45 hover:bg-white/80"
-                }`}
-                aria-label={slide.kind === "model" ? `Jump to 3D model ${i - images.length + 1}` : `Jump to photo ${i + 1}`}
-                aria-pressed={i === selectedIndex}
-              />
-            ))}
-          </div>
-        )}
+                className={styles.enlargePhoto}
+                aria-label={slide.kind === "model" ? `Explore 3D model of ${product.name}` : `Enlarge photo ${index + 1} of ${product.name}`}
+                onClick={() => setEnlargedIndex(index)}
+              >
+                <Image src={poster.url} alt={poster.altText || product.name} fill preload={index === 0} quality={90} sizes="(max-width: 680px) 100vw, (max-width: 960px) 90vw, 52vw" className={styles.photo} draggable={false} />
+                {slide.kind === "model" && <span className={styles.modelLabel}>Explore in 3D <span aria-hidden="true">↗</span></span>}
+              </button>
+            </div>
+          );
+        })}
       </div>
 
-      {/* ── Multi-Photo Thumbnails Track ── */}
       {slides.length > 1 && (
-        <div
-          className="grid grid-cols-3 gap-3 max-[680px]:gap-2"
-          aria-label={`${product.name} photos and 3D models`}
-        >
-          {slides.map((img, idx) => {
-            const isSelected = idx === selectedIndex;
-            const label = img.kind === "model" ? "Explore in 3D" : img.altText || `Photo ${idx + 1}`;
-            const thumbnail = img.kind === "model" ? img.previewImage || baseImage : img;
-            return (
-              <button
-                key={img.url + idx}
-                type="button"
-                onClick={() => setActiveIndex(idx)}
-                className={`group relative flex min-w-0 flex-col items-center gap-1 rounded-2xl border p-1 transition-all duration-200 cursor-pointer max-[680px]:rounded-xl ${
-                  isSelected
-                    ? "border-[var(--botanical)] bg-[var(--paper)] ring-2 ring-[var(--botanical)]/40 shadow-sm"
-                    : "border-[var(--line)] bg-[rgba(255,255,255,0.7)] opacity-75 hover:opacity-100 hover:border-black/20"
-                }`}
-                aria-label={img.kind === "model" ? `View 3D model: ${img.altText}` : `View photo ${idx + 1}: ${label}`}
-                aria-pressed={isSelected}
-              >
-                <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-white max-[680px]:rounded-lg">
-                  <Image
-                    src={thumbnail.url}
-                    alt={thumbnail.altText || `${product.name} thumbnail ${idx + 1}`}
-                    fill
-                    sizes="(max-width: 960px) 31vw, 16vw"
-                    className="object-contain transition-transform duration-300 group-hover:scale-105"
-                  />
-                  {/* Number Notation Pill (01, 02, 03, 04) */}
-                  <span className="absolute top-1 left-1 rounded bg-black/60 px-1 py-0.2 font-mono text-[0.52rem] font-bold text-white max-[680px]:text-[0.44rem]">
-                    {img.kind === "model" ? "3D" : String(idx + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <span className="w-full truncate text-center text-[0.75rem] font-semibold text-[var(--forest)] max-[680px]:text-[0.68rem]">
-                  {label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <>
+          <div className={styles.thumbnails} aria-label="Product thumbnails">
+            {slides.map((slide, index) => {
+              const poster = slide.kind === "model" ? slide.previewImage || baseImage : slide;
+              return (
+                <button key={`${slide.url}-${index}`} type="button" className={styles.thumbnail} onClick={() => selectSlide(index)} aria-pressed={selectedIndex === index} aria-label={slide.kind === "model" ? `View 3D model ${index - images.length + 1}` : `View photo ${index + 1}`}>
+                  <Image src={poster.url} alt="" fill sizes="160px" className={styles.thumbnailPhoto} />
+                  {slide.kind === "model" && <span className={styles.modelBadge}>3D</span>}
+                </button>
+              );
+            })}
+          </div>
+          <div className={styles.mobileProgress}>
+            <button type="button" onClick={() => selectSlide(selectedIndex - 1)} disabled={selectedIndex === 0} aria-label="Previous product poster">‹</button>
+            <span aria-live="polite" aria-atomic="true">{selectedIndex + 1} / {slides.length}</span>
+            <button type="button" onClick={() => selectSlide(selectedIndex + 1)} disabled={selectedIndex === slides.length - 1} aria-label="Next product poster">›</button>
+          </div>
+        </>
       )}
-      <dialog ref={enlargedPhoto} className={styles.lightbox} aria-label={`Enlarged photo of ${product.name}`} onClick={(event) => { if (event.target === event.currentTarget) enlargedPhoto.current?.close(); }}>
-        <button type="button" className={styles.closePhoto} onClick={() => enlargedPhoto.current?.close()} aria-label="Close enlarged photo">×</button>
+
+      <dialog ref={enlargedMedia} className={styles.lightbox} aria-label={`Full view of ${product.name}`} onClose={() => setEnlargedIndex(null)} onClick={(event) => { if (event.target === event.currentTarget) enlargedMedia.current?.close(); }}>
+        <button type="button" className={styles.closePhoto} onClick={() => enlargedMedia.current?.close()} aria-label="Close full product view">×</button>
         <div className={styles.lightboxImage}>
-          <Image src={activeImage.kind === "image" ? activeImage.url : baseImage.url} alt={activeImage.kind === "image" ? activeImage.altText || product.name : product.name} fill sizes="96vw" quality={95} loading="lazy" className="object-contain" />
+          {enlarged?.kind === "model" ? <ProductModel model={enlarged} presentation="gallery" poster={enlarged.previewImage || baseImage} cameraDistancePercent={110} eager /> : enlarged && <Image src={enlarged.url} alt={enlarged.altText || product.name} fill sizes="96vw" quality={95} className="object-contain" />}
         </div>
       </dialog>
     </div>

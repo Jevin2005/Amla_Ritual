@@ -260,7 +260,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
       {/* ── Main Amazon-Style 2-Column Showcase ── */}
       <section
-        className="mx-auto grid w-full max-w-[1440px] grid-cols-[1fr_1.08fr] items-start gap-[clamp(32px,5vw,72px)] px-[clamp(20px,4.5vw,72px)] py-2 max-[960px]:grid-cols-1 max-[960px]:gap-6 max-[680px]:px-3"
+        className="mx-auto grid w-full max-w-[1440px] grid-cols-[1.12fr_1fr] items-start gap-[clamp(28px,3.5vw,48px)] px-[clamp(20px,4.5vw,72px)] py-2 max-[960px]:grid-cols-1 max-[960px]:gap-6 max-[680px]:px-3"
         style={{
           "--pdp-accent": product.accent,
           "--pdp-soft": product.accentSoft,
