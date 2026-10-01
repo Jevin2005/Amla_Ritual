@@ -284,14 +284,14 @@ async function completeCartLines(cart: GraphCart, ip: string | null) {
 
   while (pageInfo.hasNextPage) {
     if (!pageInfo.endCursor) {
-      throw new Error("Shopify returned a non-advancing cart cursor.");
+      throw new Error("Received a non-advancing cart cursor.");
     }
     const data = await shopifyStorefrontRequest<CartLinesPageResponse>(
       CART_LINES_PAGE_QUERY,
       { cartId: cart.id, after: pageInfo.endCursor },
       { buyerIp: ip },
     );
-    if (!data.cart) throw new Error("The Shopify cart expired while it was loading.");
+    if (!data.cart) throw new Error("The bag session expired while it was loading.");
 
     lines.push(...data.cart.lines.nodes);
     const nextPageInfo = data.cart.lines.pageInfo;
@@ -299,7 +299,7 @@ async function completeCartLines(cart: GraphCart, ip: string | null) {
       nextPageInfo.hasNextPage &&
       (!nextPageInfo.endCursor || nextPageInfo.endCursor === pageInfo.endCursor)
     ) {
-      throw new Error("Shopify returned a non-advancing cart cursor.");
+      throw new Error("Received a non-advancing cart cursor.");
     }
     pageInfo = nextPageInfo;
   }
@@ -555,7 +555,7 @@ async function payloadResponse(payload: GraphCartPayload, ip: string | null) {
   if (!payload.cart) {
     return json(
       {
-        error: userErrors[0]?.message || "Shopify could not update this bag.",
+        error: userErrors[0]?.message || "Unable to update this bag.",
         userErrors,
         warnings,
       },
@@ -615,7 +615,7 @@ export async function GET(request: NextRequest) {
     );
   } catch {
     return json(
-      { error: "Your Shopify bag could not be restored. Please try again." },
+      { error: "Your bag could not be restored. Please try again." },
       502,
     );
   }
@@ -663,8 +663,25 @@ export async function POST(request: NextRequest) {
         { buyerIp: ip },
       );
       if (!data.cartLinesAdd.cart) {
-        // Carts can expire between page hydration and an add. Starting a fresh cart
-        // is safe here because no existing checkout state can still be recovered.
+        // A null mutation cart can also mean validation failed. Only replace the
+        // customer's bag after a separate read confirms it no longer exists.
+        const existing = await shopifyStorefrontRequest<CartQueryResponse>(
+          CART_QUERY,
+          { cartId },
+          { buyerIp: ip },
+        );
+        if (existing.cart) {
+          return payloadResponse({
+            ...data.cartLinesAdd,
+            cart: existing.cart,
+            userErrors: data.cartLinesAdd.userErrors.length
+              ? data.cartLinesAdd.userErrors
+              : [{ field: null, message: "Shopify did not confirm this bag update. Please try again." }],
+          }, ip);
+        }
+        if (existing.cart !== null) {
+          throw new Error("Shopify did not confirm whether the existing bag expired.");
+        }
         return payloadResponse(await createCart(lines, [], ip), ip);
       }
       return payloadResponse(data.cartLinesAdd, ip);
@@ -729,7 +746,7 @@ export async function POST(request: NextRequest) {
     return json({ error: "This cart action is not supported." }, 400);
   } catch {
     return json(
-      { error: "Shopify could not update your bag. Please try again." },
+      { error: "Unable to update your bag. Please try again." },
       502,
     );
   }

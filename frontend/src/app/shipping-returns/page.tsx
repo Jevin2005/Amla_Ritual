@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
+import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 import {
   PolicyContent,
-  ShopifyPolicyBody,
+  StorePolicyBody,
 } from "@/shared/ui/policy-content";
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default async function ShippingReturnsPage() {
           {policies.map((policy) => (
             <section key={policy.handle}>
               <h2>{policy.title}</h2>
-              <ShopifyPolicyBody html={policy.body} />
+              <StorePolicyBody html={policy.body} />
             </section>
           ))}
         </PolicyContent>
@@ -50,7 +51,7 @@ export default async function ShippingReturnsPage() {
           </p>
           <h2>4. Returns & Replacements</h2>
           <p>
-            Due to hygiene and purity standards for organic botanicals, we accept returns on unopened, sealed products within 14 days of delivery. If an item arrives damaged or incorrect, contact our Care Team at <a href="mailto:care@naturemist.com">care@naturemist.com</a> for an immediate replacement.
+            Due to hygiene and purity standards for organic botanicals, we accept returns on unopened, sealed products within 14 days of delivery. If an item arrives damaged or incorrect, contact <SupportContactLinks /> for an immediate replacement.
           </p>
         </PolicyContent>
       )}

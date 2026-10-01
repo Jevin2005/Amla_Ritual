@@ -67,6 +67,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
       quantity,
       openDrawer,
       selectedVariant?.id,
+      product,
     );
     if (!nextCart) return null;
     setAdded(true);
@@ -78,7 +79,8 @@ export function ProductDetailActions({ product }: { product: Product }) {
   const buyNow = async () => {
     setIsBuyingNow(true);
     try {
-      await add(false);
+      const nextCart = await add(false);
+      if (!nextCart) return;
       track("begin_checkout", {
         item_id: selectedVariant?.id || product.slug,
         quantity,
@@ -226,7 +228,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
                 Preparing Checkout…
               </span>
             ) : source === "shopify" ? (
-              <span>Buy Now (Shopify) ↗</span>
+              <span>Buy Now ↗</span>
             ) : (
               <span>Buy Now ➔</span>
             )}
@@ -272,7 +274,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
         typeof document !== "undefined" &&
         createPortal(
           <div
-            className="fixed inset-x-0 bottom-0 z-[9999] hidden max-[680px]:flex items-center justify-between gap-2 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3.5 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(10px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
+            className="fixed inset-x-0 bottom-0 z-[90] hidden max-[680px]:flex items-center justify-between gap-2 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3.5 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(10px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
             role="region"
             aria-label="Sticky Purchase Footer"
           >

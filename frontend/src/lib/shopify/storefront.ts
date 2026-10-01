@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
+import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { defaultMotionSettings, parseMotionSettings, type MotionSettings } from "@/domain/motion";
 import { defaultIngredientPosterSettings, parseIngredientPosterSettings, posterImages, type IngredientPosterSettings } from "@/domain/ingredient-poster";
 import {
@@ -13,6 +13,11 @@ import {
   type ProductVariant,
   type StoreImage,
 } from "@/domain/catalog/products";
+import {
+  findProductBySlug,
+  getCanonicalProductSlug,
+  matchesProductSlug,
+} from "@/domain/catalog/canonical-slug";
 import {
   customReviews,
   customVideoReviews,
@@ -26,6 +31,28 @@ const DEFAULT_API_VERSION = "2026-07";
 const DEFAULT_PRODUCT_LIMIT = 50;
 
 const productMetafields = `
+  heroEnabled: metafield(namespace: "custom", key: "hero_enabled") { value }
+  heroOrder: metafield(namespace: "custom", key: "hero_order") { value }
+  heroDuration: metafield(namespace: "custom", key: "hero_duration") { value }
+  heroEyebrow: metafield(namespace: "custom", key: "hero_eyebrow") { value }
+  heroHeadlineFirst: metafield(namespace: "custom", key: "hero_headline_first") { value }
+  heroHeadlineMiddle: metafield(namespace: "custom", key: "hero_headline_middle") { value }
+  heroHeadlineItalic: metafield(namespace: "custom", key: "hero_headline_italic") { value }
+  heroDescription: metafield(namespace: "custom", key: "hero_description") { value }
+  heroBadgeText: metafield(namespace: "custom", key: "hero_badge_text") { value }
+  heroBadgeSubtitle: metafield(namespace: "custom", key: "hero_badge_subtitle") { value }
+  heroPoster: metafield(namespace: "custom", key: "hero_poster") {
+    reference { ... on MediaImage { image { url altText width height } } }
+  }
+  heroBackground: metafield(namespace: "custom", key: "hero_background") {
+    reference { ... on MediaImage { image { url altText width height } } }
+  }
+  heroModel: metafield(namespace: "custom", key: "hero_model") {
+    reference {
+      ... on Model3d { alt sources { url mimeType format } }
+      ... on GenericFile { url }
+    }
+  }
   botanical: metafield(namespace: "custom", key: "botanical") { value }
   botanicalName: metafield(namespace: "custom", key: "botanical_name") { value }
   plantPart: metafield(namespace: "custom", key: "plant_part") { value }
@@ -74,6 +101,7 @@ const PRODUCT_BASE_FRAGMENT = `
   handle
   title
   description
+  descriptionHtml
   productType
   vendor
   tags
@@ -265,27 +293,6 @@ const SITE_CONTENT_QUERY = `#graphql
   }
 `;
 
-const HOMEPAGE_HERO_QUERY = `#graphql
-  query NatureMistHomepageHeroes($first: Int!, $after: String, $country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    metaobjects(type: "homepage_hero", first: $first, after: $after) {
-      nodes {
-        id handle
-        fields {
-          key value
-          reference {
-            ... on Product { id }
-            ... on MediaImage { image { url altText width height } }
-            ... on Model3d { alt sources { url mimeType format } }
-            ... on GenericFile { url }
-          }
-        }
-      }
-      pageInfo { hasNextPage endCursor }
-    }
-  }
-`;
-
 const REVIEWS_QUERY = `#graphql
   query NatureMistReviews(
     $videoFirst: Int!
@@ -370,6 +377,7 @@ type GraphProduct = {
   handle: string;
   title: string;
   description: string;
+  descriptionHtml?: string;
   productType: string;
   vendor: string;
   tags: string[];
@@ -458,7 +466,6 @@ type GraphMetaobjectConnection = {
 };
 
 type ContentResponse = {
-  heroEntries?: GraphMetaobjectNode[];
   metaobject: GraphSiteContent | null;
   mainMenu: { items: GraphMenuItem[] } | null;
   footerMenu: { items: GraphMenuItem[] } | null;
@@ -480,7 +487,6 @@ export type StorefrontVideoReview = VideoReview;
 export type StorefrontCustomerReview = CustomerReview;
 
 export type StorefrontContent = {
-  heroEntries: HomepageHeroEntry[];
   heroSettings: HeroSettings;
   motionSettings: MotionSettings;
   announcementText: string;
@@ -545,7 +551,6 @@ export const defaultRitualPosters: StoreImage[] = [
 ];
 
 export const previewContent: StorefrontContent = {
-  heroEntries: [],
   heroSettings: defaultHeroSettings,
   motionSettings: defaultMotionSettings,
   ritualPosters: defaultRitualPosters,
@@ -702,13 +707,16 @@ function listMeta(product: GraphProduct, key: string, fallback: string[]) {
   try {
     const parsed = JSON.parse(value) as unknown;
     if (Array.isArray(parsed)) {
-      return parsed.filter((item): item is string => typeof item === "string" && Boolean(item.trim()));
+      return parsed.filter((item): item is string => typeof item === "string" && Boolean(item.trim())).map((item) => item.trim());
     }
   } catch {
-    // Plain text metafields are supported as a newline- or comma-separated fallback.
+    // Merchant-authored paragraphs may contain commas; only explicit bullets
+    // and line breaks separate benefit or preparation items.
   }
+  const separator = ["benefits", "howTo", "howToUse", "safety"].includes(key)
+    ? /\r?\n|[•●]/ : /\r?\n|[•●,]/;
   return value
-    .split(/\r?\n|,/)
+    .split(separator)
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -791,60 +799,51 @@ function mapProduct(product: GraphProduct, index: number): Product {
   const defaultVariant =
     selectedVariant || variants.find((variant) => variant.availableForSale) || variants[0] || null;
 
-  // Match known botanical profile if specific metafields haven't been entered in Shopify Admin yet
-  const matchingPreview = previewProducts.find(
-    (p) =>
-      p.slug === product.handle ||
-      product.handle.toLowerCase().includes(p.slug) ||
-      p.slug.includes(product.handle.toLowerCase()) ||
-      product.title.toLowerCase().includes(p.name.toLowerCase().replace(/ powder$/i, "")) ||
-      product.title.toLowerCase().includes(p.slug.toLowerCase()),
-  );
+  // Live product facts come only from Shopify. Preview profiles must never
+  // supply ingredients, claims, directions or quantities for a published item.
+  const fallbackDescription = `Explore ${product.title}.`;
+  const ritualStepValue = meta(product, "ritualStep")?.toLowerCase();
+  const canonicalStep = ritualStepValue === "color" ? "colour" : ritualStepValue;
+  const ritualStep = (["Cleanse", "Condition", "Colour"] as const)
+    .find((step) => step.toLowerCase() === canonicalStep) || "";
+  const experienceValue = meta(product, "experience")?.toLowerCase();
+  const experience = (["Beginner", "Familiar", "Advanced"] as const)
+    .find((level) => level.toLowerCase() === experienceValue) || "";
+  const howToUse = listMeta(product, "howToUse", []);
+  const featuredImage = toImage(product.featuredImage) || product.images.nodes.map(toImage).find(Boolean) || null;
+  const heroReference = (key: string) =>
+    (product as unknown as Record<string, GraphMetaobjectField | undefined>)[key]?.reference;
+  const model = heroReference("heroModel");
+  const modelUrl = model?.sources?.find((source) => isGlbUrl(source.url))?.url || model?.url;
 
-  const fallbackDescription =
-    matchingPreview?.shortDescription || `Discover the pure ${product.title} botanical ritual.`;
-  const ritualStepValue = meta(product, "ritualStep") || matchingPreview?.ritualStep || "Condition";
-  const ritualStep = ["Cleanse", "Condition", "Colour"].includes(ritualStepValue)
-    ? (ritualStepValue as Product["ritualStep"])
-    : "Condition";
-  const experienceValue = meta(product, "experience") || matchingPreview?.experience || "Beginner";
-  const experience = ["Beginner", "Familiar", "Advanced"].includes(experienceValue)
-    ? (experienceValue as Product["experience"])
-    : "Beginner";
-  const featuredImage = toImage(product.featuredImage);
+  const canonicalSlug = getCanonicalProductSlug(product.title, product.handle);
 
   return {
     id: product.id,
-    slug: product.handle,
+    slug: canonicalSlug,
+    shopifyHandle: product.handle,
     name: product.title,
     botanical:
       meta(product, "botanicalName") ||
       meta(product, "botanical") ||
-      matchingPreview?.botanical ||
-      (product.productType && product.productType !== "Default" ? product.productType : "Phyllanthus emblica"),
+      "",
     plantPart:
-      meta(product, "plantPart") ||
-      matchingPreview?.plantPart ||
-      "Organic Fruit Pulp",
+      meta(product, "plantPart") || "",
     collectionNumber:
       meta(product, "collectionNumber") ||
-      matchingPreview?.collectionNumber ||
       String(index + 1).padStart(2, "0"),
     subtitle:
       meta(product, "subtitle") ||
-      matchingPreview?.subtitle ||
-      (product.productType && product.productType !== "Default" ? product.productType : "100% Pure Botanical Ritual"),
-    accent: validHex(meta(product, "accent"), matchingPreview?.accent || palette[0]),
-    accentSoft: validHex(meta(product, "accentSoft"), matchingPreview?.accentSoft || palette[1]),
-    pricePaise: defaultVariant?.pricePaise || toPaise(product.priceRange.minVariantPrice.amount),
-    compareAtPricePaise: defaultVariant?.compareAtPricePaise || null,
+      (product.productType && product.productType !== "Default" ? product.productType : ""),
+    accent: validHex(meta(product, "accent"), palette[0]),
+    accentSoft: validHex(meta(product, "accentSoft"), palette[1]),
+    pricePaise: defaultVariant?.pricePaise ?? toPaise(product.priceRange.minVariantPrice.amount),
+    compareAtPricePaise: defaultVariant?.compareAtPricePaise ?? null,
     currencyCode: defaultVariant?.currencyCode || product.priceRange.minVariantPrice.currencyCode,
     size:
       meta(product, "netQuantity") ||
       meta(product, "size") ||
-      (defaultVariant?.title && defaultVariant.title !== "Default Title" ? defaultVariant.title : null) ||
-      matchingPreview?.size ||
-      "250g Jar",
+      "",
     availability:
       meta(product, "availability") ||
       (product.availableForSale ? "In stock" : "Sold out"),
@@ -856,43 +855,46 @@ function mapProduct(product: GraphProduct, index: number): Product {
       product.description.trim() ||
       meta(product, "shortDescription") ||
       fallbackDescription,
+    descriptionHtml: product.descriptionHtml?.trim() || undefined,
     seoTitle: product.seo.title || product.title,
     metaDescription:
       meta(product, "metaDescription") ||
+      product.seo.description?.trim() ||
       cleanShortSummary(product.description, fallbackDescription),
-    ingredient:
-      meta(product, "ingredient") ||
-      matchingPreview?.ingredient ||
-      `100% Pure Organic ${product.title.replace(/ Powder$/i, "")} Powder (Zero fillers, zero synthetic additives).`,
-    benefits: listMeta(product, "benefits", matchingPreview?.benefits || [
-      "Deeply conditions scalp and lengths",
-      "Strengthens hair roots and minimizes breakage",
-      "Restores natural mirror shine without chemical build-up"
-    ]),
-    howTo: (
-      // Prefer the "How To Use" metafield key (how_to_use) which is what
-      // Shopify Admin creates when the field is named "How To Use".
-      // Fall back to the legacy "how_to" key, then to the local preview data.
-      listMeta(product, "howToUse", []).length > 0
-        ? listMeta(product, "howToUse", [])
-        : listMeta(product, "howTo", matchingPreview?.howTo || [
-            "Mix 1-2 scoops with warm water into a smooth paste.",
-            "Apply evenly from roots to ends on damp hair.",
-            "Leave on for 15-20 minutes, then rinse thoroughly with cool water.",
-          ])
-    ),
-    mixers: listMeta(product, "mixers", matchingPreview?.mixers || ["Warm water", "Castor oil", "Yogurt"]),
-    suitableFor: listMeta(product, "suitableFor", matchingPreview?.suitableFor || ["All hair types", "Color-treated hair", "Sensitive scalps"]),
-    safety: listMeta(product, "safety", matchingPreview?.safety || ["Patch test before first use", "For external cosmetic use only", "Avoid contact with eyes"]),
-    storage: meta(product, "storage") || matchingPreview?.storage || "Store in a cool, dry place away from moisture and direct sunlight.",
-    texture: meta(product, "texture") || matchingPreview?.texture || "Micro-milled, ultra-sifted botanical powder.",
-    concerns: listMeta(product, "concerns", matchingPreview?.concerns || product.tags),
+    ingredient: meta(product, "ingredient") || "",
+    formulation: meta(product, "formulation") || undefined,
+    benefits: listMeta(product, "benefits", []),
+    // Prefer the current Shopify field, while retaining explicitly authored
+    // directions from the legacy key when the current field is absent.
+    howTo: howToUse.length ? howToUse : listMeta(product, "howTo", []),
+    mixers: listMeta(product, "mixers", []),
+    suitableFor: listMeta(product, "suitableFor", []),
+    safety: listMeta(product, "safety", []),
+    storage: meta(product, "storage") || "",
+    texture: meta(product, "texture") || "",
+    concerns: listMeta(product, "concerns", product.tags),
     ritualStep,
     experience,
-    colorConsiderations: listMeta(product, "colorConsiderations", matchingPreview?.colorConsiderations || []),
-    searchTerms: listMeta(product, "searchTerms", matchingPreview?.searchTerms || product.tags),
-    faqs: faqMeta(product, matchingPreview?.faqs || []),
+    colorConsiderations: listMeta(product, "colorConsiderations", []),
+    searchTerms: listMeta(product, "searchTerms", product.tags),
+    faqs: faqMeta(product, []),
     featuredImage,
+    heroEnabled: meta(product, "heroEnabled") === "true",
+    heroOrder: meta(product, "heroOrder") ? boundedNumber(meta(product, "heroOrder"), Number.MAX_SAFE_INTEGER, 0, 9999) : undefined,
+    heroDurationSeconds: meta(product, "heroDuration") ? boundedNumber(meta(product, "heroDuration"), 8, 3, 60) : undefined,
+    heroPoster: toImage(heroReference("heroPoster")?.image),
+    heroBackground: toImage(heroReference("heroBackground")?.image),
+    heroModel: isGlbUrl(modelUrl) ? { url: modelUrl, altText: model?.alt || `${product.title} in 3D` } : null,
+    hero: {
+      eyebrow: meta(product, "heroEyebrow") || "",
+      headlineFirst: meta(product, "heroHeadlineFirst") || "",
+      headlineMiddle: meta(product, "heroHeadlineMiddle") || "",
+      headlineItalic: meta(product, "heroHeadlineItalic") || "",
+      description: meta(product, "heroDescription") || "",
+      badgeText: meta(product, "heroBadgeText") || "",
+      badgeSubtitle: meta(product, "heroBadgeSubtitle") || "",
+      howToText: "",
+    },
     images: product.images.nodes.map(toImage).filter((image): image is StoreImage => Boolean(image)),
     models: (product.media?.nodes || []).flatMap((media) => {
       const url = media.sources?.find((source) => isGlbUrl(source.url))?.url;
@@ -906,7 +908,6 @@ function mapProduct(product: GraphProduct, index: number): Product {
 }
 
 function mapBundles(collections: GraphCollection[], catalog: Product[]) {
-  const handles = new Set(catalog.map((product) => product.slug));
   const managed = collections
     .filter(
       (collection) =>
@@ -917,7 +918,10 @@ function mapBundles(collections: GraphCollection[], catalog: Product[]) {
       handle: collection.handle,
       name: collection.title,
       description: collection.description,
-      slugs: collection.products.nodes.map((product) => product.handle).filter((handle) => handles.has(handle)),
+      slugs: collection.products.nodes.flatMap((node) => {
+        const found = findProductBySlug(node.handle, catalog);
+        return found ? [found.slug] : [];
+      }),
     }))
     .filter((bundle) => bundle.slugs.length > 0);
 
@@ -1213,32 +1217,6 @@ function mapCustomerReviews(nodes: GraphMetaobjectNode[] | undefined | null): St
   return [...mapped, ...staticOnly];
 }
 
-function mapHeroEntry(entry: GraphMetaobjectNode): HomepageHeroEntry {
-  const fields = new Map(entry.fields.map((field) => [field.key, field]));
-  const text = (key: string) => fields.get(key)?.value?.trim() || "";
-  const model = fields.get("model")?.reference;
-  const modelUrl = model?.sources?.find((source) => isGlbUrl(source.url))?.url || model?.url;
-  return {
-    id: entry.id,
-    // Only a resolved, market-visible product can be featured.
-    productId: fields.get("product")?.reference?.id || null,
-    model: isGlbUrl(modelUrl) ? { url: modelUrl, altText: model?.alt || text("name") || "Product in 3D" } : null,
-    poster: toImage(fields.get("poster")?.reference?.image),
-    background: toImage(fields.get("background")?.reference?.image),
-    order: text("order") ? boundedNumber(text("order"), Number.MAX_SAFE_INTEGER, 0, 9999) : undefined,
-    durationSeconds: text("duration") ? boundedNumber(text("duration"), 8, 3, 60) : undefined,
-    copy: {
-      eyebrow: text("eyebrow"),
-      headlineFirst: text("headline_first"),
-      headlineMiddle: text("headline_middle"),
-      headlineItalic: text("headline_italic"),
-      description: text("description"),
-      badgeText: text("badge_text"),
-      badgeSubtitle: text("badge_subtitle"),
-    },
-  };
-}
-
 function mapContent(response: ContentResponse): StorefrontContent {
   const content = response.metaobject;
   const ritualPoster = contentImage(content, "ritualPoster", previewContent.ritualPoster);
@@ -1247,7 +1225,6 @@ function mapContent(response: ContentResponse): StorefrontContent {
     return image ? [image] : [];
   });
   return {
-    heroEntries: (response.heroEntries || []).map(mapHeroEntry),
     heroSettings: parseHeroSettings(content),
     motionSettings: parseMotionSettings(content),
     announcementText: contentText(content, "announcementText", previewContent.announcementText),
@@ -1451,27 +1428,6 @@ async function loadAllReviewMetaobjects(marketContext: MarketContext) {
   } satisfies Pick<ContentResponse, "videoReviews" | "customerReviews">;
 }
 
-async function loadHomepageHeroEntries(marketContext: MarketContext) {
-  const entries: GraphMetaobjectNode[] = [];
-  let after: string | null = null;
-  const seen = new Set<string>();
-  // Shopify's publishable capability excludes drafts from Storefront API results.
-  while (true) {
-    const response: { metaobjects: GraphMetaobjectConnection } = await shopifyStorefrontRequest(
-      HOMEPAGE_HERO_QUERY,
-      { ...marketContext, first: 100, after },
-      { revalidate: 120, tags: ["shopify-storefront"] },
-    );
-    const page = response.metaobjects;
-    entries.push(...page.nodes);
-    if (!page.pageInfo.hasNextPage) return entries;
-    const cursor = page.pageInfo.endCursor;
-    if (!cursor || seen.has(cursor)) throw new Error("Shopify returned a non-advancing homepage hero cursor.");
-    seen.add(cursor);
-    after = cursor;
-  }
-}
-
 async function loadSiteContent(marketContext: MarketContext) {
   const content = await shopifyStorefrontRequest<ContentResponse>(
     SITE_CONTENT_QUERY,
@@ -1483,16 +1439,13 @@ async function loadSiteContent(marketContext: MarketContext) {
     },
   );
 
-  const [reviews, heroes] = await Promise.allSettled([
+  const [reviews] = await Promise.allSettled([
     loadAllReviewMetaobjects(marketContext),
-    loadHomepageHeroEntries(marketContext),
   ]);
   if (reviews.status === "rejected") warnStorefrontPart("review metaobject", reviews.reason);
-  if (heroes.status === "rejected") warnStorefrontPart("homepage hero", heroes.reason);
   return {
     ...content,
     ...(reviews.status === "fulfilled" ? reviews.value : {}),
-    heroEntries: heroes.status === "fulfilled" ? heroes.value : [],
   };
 }
 
@@ -1550,8 +1503,8 @@ async function loadStorefront(): Promise<StorefrontData> {
   if (catalogResult.status === "rejected") {
     warnStorefrontPart("catalog", catalogResult.reason);
     return {
-      products: strict ? [] : previewProducts,
-      bundles: strict ? [] : previewBundles,
+      products: [],
+      bundles: [],
       content,
       shopName: shop?.name || "NatureMist",
       shopUrl: shop?.primaryDomain.url || null,
@@ -1571,7 +1524,9 @@ async function loadStorefront(): Promise<StorefrontData> {
       "Shopify is connected but returned no published products for this market.",
     );
   }
-  const products = rawProducts.length ? rawProducts : (strict ? [] : previewProducts);
+  const products = rawProducts.sort((a, b) =>
+    a.collectionNumber.localeCompare(b.collectionNumber, undefined, { numeric: true }),
+  );
 
   if (collectionsResult.status === "rejected") {
     warnStorefrontPart("collection", collectionsResult.reason);
@@ -1585,9 +1540,7 @@ async function loadStorefront(): Promise<StorefrontData> {
 
   const collections =
     collectionsResult.status === "fulfilled" ? collectionsResult.value : [];
-  const bundles = rawProducts.length
-    ? mapBundles(collections, products)
-    : (strict ? [] : previewBundles);
+  const bundles = mapBundles(collections, products);
 
   return {
     products,
@@ -1607,9 +1560,17 @@ async function loadStorefront(): Promise<StorefrontData> {
 
 export const getStorefront = cache(loadStorefront);
 
-async function loadStorefrontProduct(handle: string) {
+async function loadStorefrontProduct(handleOrSlug: string) {
+  const storefront = await getStorefront();
+  const matched = findProductBySlug(handleOrSlug, storefront.products);
+
   if (!isShopifyConfigured()) {
-    return previewStorefront.products.find((product) => product.slug === handle);
+    return (
+      matched ||
+      previewStorefront.products.find((product) =>
+        matchesProductSlug(handleOrSlug, product),
+      )
+    );
   }
 
   const strict =
@@ -1618,11 +1579,13 @@ async function loadStorefrontProduct(handle: string) {
 
   const marketContext = getMarketContext();
   let firstPage: ProductDetailResponse | null = null;
+  const shopifyHandleToQuery = matched?.shopifyHandle || handleOrSlug;
+
   try {
     firstPage = await shopifyStorefrontRequest<ProductDetailResponse>(
       PRODUCT_DETAIL_QUERY,
       {
-        handle,
+        handle: shopifyHandleToQuery,
         variantFirst: 250,
         variantAfter: null,
         ...marketContext,
@@ -1631,13 +1594,12 @@ async function loadStorefrontProduct(handle: string) {
     );
   } catch (error) {
     if (strict) throw error;
-    return previewStorefront.products.find((product) => product.slug === handle);
+    warnStorefrontPart("product detail", error);
+    return matched;
   }
 
   if (!firstPage?.product) {
-    if (!strict) {
-      return previewStorefront.products.find((product) => product.slug === handle);
-    }
+    if (matched) return matched;
     return undefined;
   }
 
@@ -1650,14 +1612,14 @@ async function loadStorefrontProduct(handle: string) {
     const page = await shopifyStorefrontRequest<ProductVariantsResponse>(
       PRODUCT_VARIANTS_QUERY,
       {
-        handle,
+        handle: shopifyHandleToQuery,
         variantFirst: 250,
         variantAfter: pageInfo.endCursor,
         ...marketContext,
       },
       { revalidate: 300, tags: ["shopify-storefront"] },
     );
-    if (!page.product) return undefined;
+    if (!page.product) return matched || undefined;
     variants.push(...page.product.variants.nodes);
     const nextPageInfo = page.product.variants.pageInfo;
     if (
@@ -1678,21 +1640,30 @@ async function loadStorefrontProduct(handle: string) {
       seenCursors.add(after);
       const page = await shopifyStorefrontRequest<{ product: { media: GraphProductMediaConnection } | null }>(
         PRODUCT_MEDIA_QUERY,
-        { handle, after, ...marketContext },
+        { handle: shopifyHandleToQuery, after, ...marketContext },
         { revalidate: 300, tags: ["shopify-storefront"] },
       );
-      if (!page.product) return undefined;
+      if (!page.product) return matched || undefined;
       media.nodes.push(...page.product.media.nodes);
       media.pageInfo = page.product.media.pageInfo;
     }
   }
 
-  const storefront = await getStorefront();
-  const catalogIndex = storefront.products.findIndex((product) => product.slug === handle);
-  return mapProduct(
+  const catalogIndex = matched
+    ? storefront.products.findIndex((p) => p.slug === matched.slug)
+    : storefront.products.findIndex((p) => p.slug === handleOrSlug);
+
+  const mapped = mapProduct(
     { ...firstPage.product, variants: { nodes: variants } },
     Math.max(0, catalogIndex),
   );
+
+  if (matched) {
+    mapped.slug = matched.slug;
+    mapped.shopifyHandle = matched.shopifyHandle || firstPage.product.handle;
+  }
+
+  return mapped;
 }
 
 export const getStorefrontProduct = cache(loadStorefrontProduct);

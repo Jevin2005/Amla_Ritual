@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { PageHero } from "@/shared/ui/page-hero";
+import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 import {
   PolicyContent,
-  ShopifyPolicyContent,
+  StorePolicyContent,
 } from "@/shared/ui/policy-content";
 
 export const metadata: Metadata = { title: "Terms", alternates: { canonical: "/terms" } };
@@ -20,7 +21,7 @@ export default async function TermsPage() {
         description="Understanding our store terms, botanical guidelines, and customer purchase commitments."
       />
       {policy ? (
-        <ShopifyPolicyContent html={policy.body} />
+        <StorePolicyContent html={policy.body} />
       ) : (
         <PolicyContent>
           <h2>1. Botanical Products & Authenticity</h2>
@@ -41,7 +42,7 @@ export default async function TermsPage() {
           </p>
           <h2>5. Inquiries & Support</h2>
           <p>
-            For questions regarding these terms, please contact our support team at <a href="mailto:care@naturemist.com">care@naturemist.com</a>.
+            For questions regarding these terms, contact <SupportContactLinks />.
           </p>
         </PolicyContent>
       )}

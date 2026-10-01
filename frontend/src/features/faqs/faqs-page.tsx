@@ -67,7 +67,7 @@ const FAQ_DATA: FaqItem[] = [
     category: "orders",
     question: "How are payments processed on the website?",
     answer:
-      "Our storefront connects directly to Shopify's secure, PCI-DSS Level 1 compliant hosted checkout. All payment transactions, UPI, Net Banking, Credit/Debit cards, and Cash on Delivery (where eligible) are encrypted and processed by Shopify.",
+      "All payment transactions, UPI (Google Pay, PhonePe, Paytm), Net Banking, and Credit/Debit cards are 100% encrypted and processed securely via Razorpay.",
   },
   {
     category: "orders",
@@ -88,7 +88,7 @@ const CATEGORIES = [
   { id: "botanicals", label: "Botanicals & Purity" },
   { id: "preparation", label: "Preparation & Usage" },
   { id: "hair-types", label: "Hair & Scalp Types" },
-  { id: "orders", label: "Orders & Shopify Checkout" },
+  { id: "orders", label: "Orders & Checkout" },
 ] as const;
 
 export function FaqsPage() {

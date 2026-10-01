@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Script from "next/script";
 import { useStore } from "@/features/store/store-provider";
+import { SUPPORT_MESSAGE } from "@/shared/config/support";
 
 export type CheckoutFormData = {
   email: string;
@@ -23,6 +24,8 @@ export type CheckoutFormData = {
 };
 
 export type OrderConfirmationData = {
+  shopifySyncPending?: boolean;
+  paymentReference?: string;
   orderId: string;
   placedAt: string;
   customerName: string;
@@ -121,6 +124,7 @@ export function CheckoutForm({
     upiId: "",
   });
 
+  const isCodEnabled = process.env.NEXT_PUBLIC_ENABLE_COD === "true";
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -245,12 +249,13 @@ export function CheckoutForm({
             },
           });
         } catch (syncErr) {
-          console.warn("Shopify buyer identity non-blocking sync:", syncErr);
+          console.warn("Buyer identity non-blocking sync:", syncErr);
         }
       }
 
       // ── IN-APP DIRECT PAYMENT (RAZORPAY MODAL: UPI, QR, CARDS, NET BANKING & WALLETS) ──
-      if (formData.paymentMethod === "shopify" || formData.paymentMethod === "upi") {
+      const isCodPayment = isCodEnabled && formData.paymentMethod === "cod";
+      if (!isCodPayment) {
         // Function to load Razorpay Checkout.js dynamically if not already available
         const loadScript = (): Promise<boolean> => {
           return new Promise((resolve) => {
@@ -360,6 +365,7 @@ export function CheckoutForm({
                 }
 
                 // 3. Submit verified paid order directly to Shopify Admin API
+                let shopifySynced = false;
                 let finalOrderId = `NMR-RZP-${response.razorpay_payment_id?.slice(-6) || Math.floor(10000 + Math.random() * 90000)}`;
                 let finalPlacedAt = new Date().toLocaleDateString("en-IN", {
                   day: "numeric",
@@ -370,7 +376,7 @@ export function CheckoutForm({
                 });
 
                 try {
-                  const orderRes = await fetch("/api/shopify/order", {
+                  const orderRes = await fetch("/api/order", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -396,6 +402,8 @@ export function CheckoutForm({
                         quantity: item.quantity,
                         pricePaise: item.lineTotalPaise,
                         slug: item.slug,
+                        variantId: item.variantId || null,
+                        imageUrl: item.image?.url || null,
                       })),
                       paymentMethod: "shopify",
                       shippingMethod: formData.shippingMethod,
@@ -411,6 +419,7 @@ export function CheckoutForm({
 
                   if (orderRes.ok) {
                     const resData = await orderRes.json();
+                    shopifySynced = resData.success === true && resData.shopifyOrderCreated === true;
                     if (resData?.orderId) {
                       finalOrderId = resData.orderId;
                     }
@@ -419,7 +428,7 @@ export function CheckoutForm({
                     }
                   }
                 } catch (syncErr) {
-                  console.warn("Shopify order sync note:", syncErr);
+                  console.warn("Order sync note:", syncErr);
                 }
 
                 // 4. Track purchase event
@@ -432,6 +441,8 @@ export function CheckoutForm({
                 });
 
                 const confirmation: OrderConfirmationData = {
+                  shopifySyncPending: !shopifySynced,
+                  paymentReference: response.razorpay_payment_id,
                   orderId: finalOrderId,
                   placedAt: finalPlacedAt,
                   customerName: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
@@ -456,7 +467,7 @@ export function CheckoutForm({
                   })),
                 };
 
-                await clearCart();
+                if (shopifySynced) await clearCart();
                 onOrderSuccess(confirmation);
                 setIsSubmitting(false);
               } catch (handlerErr) {
@@ -464,7 +475,7 @@ export function CheckoutForm({
                 setErrorMessage(
                   handlerErr instanceof Error
                     ? handlerErr.message
-                    : "Payment verified but failed to record order. Please contact support.",
+                    : `Payment verified but failed to record order. ${SUPPORT_MESSAGE}`,
                 );
                 setIsSubmitting(false);
               }
@@ -491,7 +502,13 @@ export function CheckoutForm({
         }
       }
 
-      // 2. Submit order to /api/shopify/order (for COD or fallback)
+      // 2. Submit order to /api/shopify/order (for COD when explicitly enabled)
+      if (!isCodEnabled) {
+        setErrorMessage("Cash on Delivery is currently disabled. Please pay online via UPI, Cards, or Net Banking.");
+        setIsSubmitting(false);
+        return;
+      }
+
       let finalOrderId = `NMR-2026-${Math.floor(10000 + Math.random() * 90000)}`;
       let finalPlacedAt = new Date().toLocaleDateString("en-IN", {
         day: "numeric",
@@ -502,7 +519,7 @@ export function CheckoutForm({
       });
 
       try {
-        const orderRes = await fetch("/api/shopify/order", {
+        const orderRes = await fetch("/api/order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -528,6 +545,8 @@ export function CheckoutForm({
               quantity: item.quantity,
               pricePaise: item.lineTotalPaise,
               slug: item.slug,
+              variantId: item.variantId || null,
+              imageUrl: item.image?.url || null,
             })),
             paymentMethod: formData.paymentMethod,
             upiId: formData.upiId?.trim() || undefined,
@@ -539,8 +558,11 @@ export function CheckoutForm({
           }),
         });
 
+        const resData = await orderRes.json();
+        if (!orderRes.ok || !resData.success || !resData.shopifyOrderCreated) {
+          throw new Error(resData.error || `Order could not be saved. ${SUPPORT_MESSAGE}`);
+        }
         if (orderRes.ok) {
-          const resData = await orderRes.json();
           if (resData?.orderId) {
             finalOrderId = resData.orderId;
           }
@@ -550,6 +572,9 @@ export function CheckoutForm({
         }
       } catch (orderApiErr) {
         console.warn("Order endpoint note:", orderApiErr);
+        setErrorMessage(orderApiErr instanceof Error ? orderApiErr.message : "Unable to save your order.");
+        setIsSubmitting(false);
+        return;
       }
 
       // Track purchase event
@@ -689,7 +714,7 @@ export function CheckoutForm({
                   maxLength={10}
                   value={formData.phone}
                   onChange={(e) => handleInputChange("phone", e.target.value)}
-                  placeholder="98765 43210"
+                  placeholder="Your 10-digit mobile number"
                   className="h-11 flex-1 bg-transparent px-3.5 text-[0.8rem] text-[var(--forest)] placeholder:text-[var(--muted)]/60 outline-none"
                 />
               </div>
@@ -1020,7 +1045,7 @@ export function CheckoutForm({
             {/* 1. All-in-One Online Payment via Razorpay */}
             <label
               className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${
-                formData.paymentMethod === "shopify"
+                formData.paymentMethod === "shopify" || !isCodEnabled
                   ? "border-[var(--forest)] bg-[#edf3dd]/50 ring-2 ring-[var(--forest)]/15 shadow-sm"
                   : "border-[var(--line)] bg-[var(--paper)] hover:bg-[var(--ivory)]"
               }`}
@@ -1029,7 +1054,7 @@ export function CheckoutForm({
                 type="radio"
                 name="paymentMethod"
                 value="shopify"
-                checked={formData.paymentMethod === "shopify"}
+                checked={formData.paymentMethod === "shopify" || !isCodEnabled}
                 onChange={() => handleInputChange("paymentMethod", "shopify")}
                 className="mt-0.5 size-4 accent-[var(--forest)] shrink-0"
               />
@@ -1043,36 +1068,38 @@ export function CheckoutForm({
                   </span>
                 </div>
                 <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
-                  Pay securely via Razorpay with UPI, QR Code, Debit / Credit Cards, Net Banking, or Wallets.
+                  Pay securely via Razorpay with UPI (Google Pay, PhonePe, Paytm), Debit / Credit Cards, Net Banking, or Wallets.
                 </p>
               </div>
             </label>
 
-            {/* 2. Cash on Delivery (COD) */}
-            <label
-              className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${
-                formData.paymentMethod === "cod"
-                  ? "border-[var(--forest)] bg-[#edf3dd]/50 ring-2 ring-[var(--forest)]/15"
-                  : "border-[var(--line)] bg-[var(--paper)] hover:bg-[var(--ivory)]"
-              }`}
-            >
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="cod"
-                checked={formData.paymentMethod === "cod"}
-                onChange={() => handleInputChange("paymentMethod", "cod")}
-                className="mt-0.5 size-4 accent-[var(--forest)]"
-              />
-              <div className="flex-1">
-                <span className="text-[0.82rem] font-bold text-[var(--forest)]">
-                  Cash on Delivery (Pay at Doorstep)
-                </span>
-                <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
-                  Pay securely with Cash, UPI, or Card directly to the courier partner when your ritual arrives.
-                </p>
-              </div>
-            </label>
+            {/* 2. Cash on Delivery (COD) - Conditionally shown only when enabled */}
+            {isCodEnabled && (
+              <label
+                className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${
+                  formData.paymentMethod === "cod"
+                    ? "border-[var(--forest)] bg-[#edf3dd]/50 ring-2 ring-[var(--forest)]/15"
+                    : "border-[var(--line)] bg-[var(--paper)] hover:bg-[var(--ivory)]"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cod"
+                  checked={formData.paymentMethod === "cod"}
+                  onChange={() => handleInputChange("paymentMethod", "cod")}
+                  className="mt-0.5 size-4 accent-[var(--forest)]"
+                />
+                <div className="flex-1">
+                  <span className="text-[0.82rem] font-bold text-[var(--forest)]">
+                    Cash on Delivery (Pay at Doorstep)
+                  </span>
+                  <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
+                    Pay securely with Cash, UPI, or Card directly to the courier partner when your ritual arrives.
+                  </p>
+                </div>
+              </label>
+            )}
           </div>
         </section>
 
@@ -1097,12 +1124,12 @@ export function CheckoutForm({
               <span className="flex items-center gap-2">
                 <span className="size-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
                 <span>
-                  {formData.paymentMethod === "cod"
+                  {formData.paymentMethod === "cod" && isCodEnabled
                     ? "Placing Cash on Delivery Order…"
                     : "Opening Razorpay Gateway…"}
                 </span>
               </span>
-            ) : formData.paymentMethod === "cod" ? (
+            ) : formData.paymentMethod === "cod" && isCodEnabled ? (
               <span className="whitespace-nowrap">Place Order (Cash on Delivery) ➔</span>
             ) : (
               <span className="whitespace-nowrap">Pay Online via Razorpay (₹{finalPayableRupees}) ➔</span>

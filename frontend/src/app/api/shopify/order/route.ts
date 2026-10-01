@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { adminDomain, requireOrderAccess } from "@/lib/shopify/admin-auth";
+import { SUPPORT_MESSAGE } from "@/shared/config/support";
 
 export const runtime = "nodejs";
 
@@ -27,6 +29,8 @@ type OrderRequestPayload = {
     pricePaise: number;
     slug?: string;
     sku?: string;
+    variantId?: string | null;
+    imageUrl?: string | null;
   }>;
   paymentMethod: "cod" | "upi" | "shopify";
   shippingMethod: "standard" | "express";
@@ -52,6 +56,22 @@ export async function POST(req: NextRequest) {
     ) {
       return NextResponse.json(
         { success: false, error: "Missing required order details." },
+        { status: 400 },
+      );
+    }
+
+    // ── 0. Cash on Delivery Policy Enforcement ──
+    const isCodEnabled =
+      process.env.NEXT_PUBLIC_ENABLE_COD === "true" ||
+      process.env.ENABLE_COD === "true";
+
+    if (payload.paymentMethod === "cod" && !isCodEnabled) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Cash on Delivery is currently disabled. Please pay online via Razorpay (UPI, Cards, Net Banking).",
+        },
         { status: 400 },
       );
     }
@@ -114,49 +134,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const domain =
-      process.env.SHOPIFY_STORE_DOMAIN || "amla-ritual.myshopify.com";
+    const domain = adminDomain();
 
     // ── 2. Admin Token Resolution ──
-    // Priority 1: Explicit SHOPIFY_ADMIN_API_TOKEN
-    // Priority 2: SHOPIFY_STOREFRONT_PRIVATE_TOKEN if it is an Admin/Custom app token (starts with shpat_)
-    let adminToken =
-      process.env.SHOPIFY_ADMIN_API_TOKEN ||
-      (process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN?.startsWith("shpat_")
-        ? process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN
-        : null);
-
-    // Priority 3: Auto-Auth via Client ID & Secret
-    if (
-      !adminToken &&
-      process.env.SHOPIFY_CLIENT_ID &&
-      (process.env.SHOPIFY_CLIENT_SECRET || process.env.SHOPIFY_APP_SECRET)
-    ) {
-      try {
-        const clientSecret =
-          process.env.SHOPIFY_CLIENT_SECRET || process.env.SHOPIFY_APP_SECRET;
-        const tokenRes = await fetch(
-          `https://${domain}/admin/oauth/access_token`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              client_id: process.env.SHOPIFY_CLIENT_ID.trim(),
-              client_secret: clientSecret?.trim(),
-              grant_type: "client_credentials",
-            }),
-          },
-        );
-        if (tokenRes.ok) {
-          const tokenData = await tokenRes.json();
-          if (tokenData?.access_token) {
-            adminToken = tokenData.access_token;
-          }
-        }
-      } catch (authErr) {
-        console.warn("[Shopify Auto-Auth Warning]:", authErr);
-      }
-    }
+    const adminToken = await requireOrderAccess();
 
     const randomSuffix = Math.floor(10000 + Math.random() * 90000);
     let orderId = `NMR-2026-${randomSuffix}`;
@@ -185,14 +166,16 @@ export async function POST(req: NextRequest) {
         const formattedPhone =
           rawPhone.length >= 10 ? `+91${rawPhone.slice(-10)}` : rawPhone;
 
+        const testPayment = isRazorpayPayment && (process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "").startsWith("rzp_test_");
         const shopifyPayload = {
           order: {
+            test: testPayment,
             email: payload.customer.email.trim(),
             phone: formattedPhone,
             financial_status: financialStatus,
             fulfillment_status: null,
-            send_receipt: true,
-            send_fulfillment_receipt: true,
+            send_receipt: !testPayment,
+            send_fulfillment_receipt: !testPayment,
             note: `NatureMist Ritual Order · Payment: ${paymentGatewayName}${
               payload.upiId
                 ? ` · UPI Ref/UTR: ${payload.upiId.trim()}`
@@ -250,16 +233,32 @@ export async function POST(req: NextRequest) {
               zip: payload.deliveryAddress.zip.trim(),
               phone: formattedPhone,
             },
-            line_items: payload.items.map((item) => ({
-              title: item.name,
-              price: (item.pricePaise / item.quantity / 100).toFixed(2),
-              quantity: item.quantity,
-              variant_title: item.variant || "Default",
-              sku: item.sku || undefined,
-              properties: item.slug
-                ? [{ name: "Botanical Handle", value: item.slug }]
-                : [],
-            })),
+            line_items: payload.items.map((item) => {
+              const numericVariantId = item.variantId
+                ? Number(String(item.variantId).replace(/\D/g, ""))
+                : undefined;
+              const hasValidVariant =
+                numericVariantId &&
+                !isNaN(numericVariantId) &&
+                numericVariantId > 0;
+
+              return {
+                ...(hasValidVariant ? { variant_id: numericVariantId } : {}),
+                title: item.name,
+                price: (item.pricePaise / item.quantity / 100).toFixed(2),
+                quantity: item.quantity,
+                variant_title: item.variant || "Default",
+                sku: item.sku || undefined,
+                properties: [
+                  ...(item.slug
+                    ? [{ name: "Botanical Handle", value: item.slug }]
+                    : []),
+                  ...(item.imageUrl
+                    ? [{ name: "_image_url", value: item.imageUrl }]
+                    : []),
+                ],
+              };
+            }),
             shipping_lines: [
               {
                 title:
@@ -293,15 +292,15 @@ export async function POST(req: NextRequest) {
             shopifyOrderCreated = true;
             shopifyOrderId = resData.order.id;
             shopifyOrderName = resData.order.name; // e.g. "#1001"
-            orderId = resData.order.name || `NMR-${resData.order.order_number}`;
+            orderId = String(resData.order.id);
             console.log(
-              `[Shopify Order Created Successfully]: Order ${shopifyOrderName} (ID: ${shopifyOrderId})`,
+              `[Shopify Order Created Successfully]: Order ${shopifyOrderName} (Unique Tracking ID: ${shopifyOrderId})`,
             );
           }
         } else {
           const errText = await res.text();
           // If customer phone or email already exists for another record, retry by associating at order level
-          if (errText.includes("already been taken") || errText.includes("customer")) {
+          if (res.status === 422 && (errText.includes("already been taken") || errText.includes("customer"))) {
             const fallbackPayload = {
               order: {
                 ...shopifyPayload.order,
@@ -326,9 +325,9 @@ export async function POST(req: NextRequest) {
                 shopifyOrderCreated = true;
                 shopifyOrderId = retryData.order.id;
                 shopifyOrderName = retryData.order.name;
-                orderId = retryData.order.name || `NMR-${retryData.order.order_number}`;
+                orderId = String(retryData.order.id);
                 console.log(
-                  `[Shopify Order Created with Existing Customer]: Order ${shopifyOrderName} (ID: ${shopifyOrderId})`,
+                  `[Shopify Order Created with Existing Customer]: Order ${shopifyOrderName} (Unique Tracking ID: ${shopifyOrderId})`,
                 );
               }
             } else {
@@ -350,6 +349,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    if (!shopifyOrderCreated) {
+      return NextResponse.json({ success: false, shopifyOrderCreated: false, error: `Order could not be saved to our store. If payment completed, do not pay again. ${SUPPORT_MESSAGE} Include your payment reference.` }, { status: 502 });
+    }
     return NextResponse.json({
       success: true,
       orderId,

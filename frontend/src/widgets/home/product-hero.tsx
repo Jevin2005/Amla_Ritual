@@ -2,23 +2,24 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
-import { nextHeroIndex, type HeroSettings, type HomepageHeroEntry } from "@/domain/catalog/hero";
+import { nextHeroIndex, type HeroSettings } from "@/domain/catalog/hero";
+import { getHeroPresentation } from "./hero-presentation";
 import { ProductModel } from "@/features/catalog/product-model";
 import { SheryBackground } from "@/features/background/shery-background";
+import { backgroundTextureSize, paintBackground } from "@/features/background/background-fit";
 import { SheryPoster } from "@/features/poster/shery-poster";
-import { defaultSheryBackgroundConfig, sheryPosterConfig } from "@/domain/shery-config";
+import { defaultSheryBackgroundConfig, heroPosterGooeyConfig } from "@/domain/shery-config";
 import { useStore } from "@/features/store/store-provider";
-import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
-import { usePointerMotion } from "@/shared/hooks/use-pointer-motion";
+import { useCompactViewport, useFinePointer, usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { useWebGL } from "@/shared/hooks/use-webgl";
 import { HeroPurchase } from "./hero-purchase";
 import styles from "./product-hero.module.css";
 
-export function ProductHero({ products, entries, settings }: { products: Product[]; entries: HomepageHeroEntry[]; settings: HeroSettings }) {
+export function ProductHero({ products, settings }: { products: Product[]; settings: HeroSettings }) {
   const { content: { motionSettings } } = useStore();
-  const slides = getHomepageHeroProducts(products, entries);
+  const slides = useMemo(() => getHomepageHeroProducts(products), [products]);
   const [selected, setSelected] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -26,20 +27,125 @@ export function ProductHero({ products, entries, settings }: { products: Product
   const [inView, setInView] = useState(false);
   const [visited, setVisited] = useState(false);
   const [revision, setRevision] = useState(0);
+  const [modelInteracting, setModelInteracting] = useState(false);
   const root = useRef<HTMLElement>(null);
-  const posterPointer = usePointerMotion<HTMLDivElement>(settings.cursorMotion);
+  const backgroundImage = useRef<HTMLImageElement>(null);
+  const mobileBackground = useRef<HTMLCanvasElement>(null);
+  const modelContainerRef = useRef<HTMLDivElement>(null);
+  const interactingRef = useRef(false);
+  const finePointer = useFinePointer();
+  const compactViewport = useCompactViewport();
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisible();
   const webgl = useWebGL();
   const index = nextHeroIndex(selected, slides.length, 0);
   const product = slides[index];
   const hasProduct = Boolean(product);
-  const duration = product?.heroDurationSeconds ?? settings.intervalSeconds;
+  const duration = (product?.heroDurationSeconds ?? settings.intervalSeconds) * 1.2;
   const moving = motionSettings.enabled && !reducedMotion;
-  const playing = slides.length > 1 && settings.autoplay && !paused && !hovered && !focused && moving && pageVisible && inView;
-  const heroBackgrounds = slides.map((slide) => slide.heroBackground);
-  const heroPosters = slides.map((slide) => slide.heroPoster);
-  const heroPosterConfig = sheryPosterConfig(1);
+  const transitioning = moving && settings.transition !== "none";
+  const playing = slides.length > 1 && settings.autoplay && !paused && !focused && !modelInteracting && moving && pageVisible && inView;
+  const showProgress = slides.length > 1 && settings.autoplay && moving && pageVisible && inView;
+  const heroBackgrounds = useMemo(() => slides.map((slide) => slide.heroBackground), [slides]);
+  const heroPosters = useMemo(() => slides.map((slide) => slide.heroPoster), [slides]);
+  const posterCursor = finePointer && settings.cursorMotion && motionSettings.cursor && motionSettings.intensity > 0;
+  const remainingTimeRef = useRef<number>(duration * 1000);
+  const startTimeRef = useRef<number>(0);
+  const timerRef = useRef<number | null>(null);
+  useEffect(() => {
+    remainingTimeRef.current = duration * 1000;
+    startTimeRef.current = 0;
+  }, [index, revision, duration]);
+
+  const start3DInteraction = useCallback(() => {
+    if (interactingRef.current) return;
+    interactingRef.current = true;
+    setModelInteracting(true);
+
+    const onRelease = () => {
+      if (!interactingRef.current) return;
+      interactingRef.current = false;
+      setModelInteracting(false);
+      if (typeof window !== "undefined" && typeof window.removeEventListener === "function") {
+        window.removeEventListener("pointerup", onRelease, true);
+        window.removeEventListener("pointercancel", onRelease, true);
+        window.removeEventListener("mouseup", onRelease, true);
+        window.removeEventListener("touchend", onRelease, true);
+        window.removeEventListener("touchcancel", onRelease, true);
+        window.removeEventListener("blur", onRelease);
+      }
+    };
+
+    if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+      window.addEventListener("pointerup", onRelease, { capture: true, passive: true });
+      window.addEventListener("pointercancel", onRelease, { capture: true, passive: true });
+      window.addEventListener("mouseup", onRelease, { capture: true, passive: true });
+      window.addEventListener("touchend", onRelease, { capture: true, passive: true });
+      window.addEventListener("touchcancel", onRelease, { capture: true, passive: true });
+      window.addEventListener("blur", onRelease);
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = modelContainerRef.current;
+    if (!el) return;
+
+    const handleStart = () => start3DInteraction();
+    const onCameraChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ source?: string }>;
+      if (customEvent.detail?.source === "user-interaction") {
+        start3DInteraction();
+      }
+    };
+
+    el.addEventListener("pointerdown", handleStart, { capture: true, passive: true });
+    el.addEventListener("mousedown", handleStart, { capture: true });
+    el.addEventListener("touchstart", handleStart, { capture: true, passive: true });
+    el.addEventListener("camera-change", onCameraChange as EventListener, { capture: true });
+
+    return () => {
+      el.removeEventListener("pointerdown", handleStart, { capture: true });
+      el.removeEventListener("mousedown", handleStart, { capture: true });
+      el.removeEventListener("touchstart", handleStart, { capture: true });
+      el.removeEventListener("camera-change", onCameraChange as EventListener, { capture: true });
+    };
+  }, [start3DInteraction, compactViewport, product?.heroEntryId]);
+
+  useEffect(() => {
+    if (!compactViewport) return;
+    const image = backgroundImage.current;
+    const canvas = mobileBackground.current;
+    if (!image || !canvas) return;
+    let frame = 0;
+    const draw = () => {
+      if (!image.complete || !image.naturalWidth || !image.naturalHeight) return;
+      const bounds = canvas.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const size = backgroundTextureSize(bounds.width * pixelRatio, bounds.height * pixelRatio);
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      canvas.width = size.width;
+      canvas.height = size.height;
+      paintBackground(context, image, size.width, size.height, "edges");
+      canvas.dataset.ready = "true";
+    };
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(draw);
+    };
+    const observer = typeof ResizeObserver === "function" ? new ResizeObserver(schedule) : null;
+    observer?.observe(canvas);
+    image.addEventListener("load", schedule);
+    window.addEventListener("resize", schedule, { passive: true });
+    schedule();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      image.removeEventListener("load", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [compactViewport, product?.heroBackground.url]);
 
   useEffect(() => {
     const section = root.current;
@@ -59,14 +165,13 @@ export function ProductHero({ products, entries, settings }: { products: Product
     return () => observer.disconnect();
   }, [hasProduct]);
 
-  const goTo = (next: number) => {
+  const goTo = useCallback((next: number) => {
+    if (!Number.isInteger(next)) return;
     const target = nextHeroIndex(next, slides.length, 0);
-    setSelected((current) => {
-      if (current === target) return current;
-      setRevision((rev) => rev + 1);
-      return target;
-    });
-  };
+    if (target === index) return;
+    setSelected(target);
+    setRevision((rev) => rev + 1);
+  }, [index, slides.length]);
 
   const handlePosterClick = () => {
     if (slides.length > 1) {
@@ -75,51 +180,98 @@ export function ProductHero({ products, entries, settings }: { products: Product
   };
 
   useEffect(() => {
-    if (!playing) return;
-    const timer = window.setTimeout(() => {
+    if (!playing) {
+      if (startTimeRef.current > 0) {
+        const elapsed = Date.now() - startTimeRef.current;
+        remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+        startTimeRef.current = 0;
+      }
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
+    const remaining = remainingTimeRef.current > 0 ? remainingTimeRef.current : duration * 1000;
+    remainingTimeRef.current = remaining;
+    startTimeRef.current = Date.now();
+
+    timerRef.current = window.setTimeout(() => {
+      timerRef.current = null;
+      startTimeRef.current = 0;
+      remainingTimeRef.current = 0;
       setSelected((current) => nextHeroIndex(current, slides.length));
       setRevision((current) => current + 1);
-    }, duration * 1000);
-    return () => window.clearTimeout(timer);
+    }, remaining) as unknown as number;
+
+    return () => {
+      if (startTimeRef.current > 0) {
+        const elapsed = Date.now() - startTimeRef.current;
+        remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+        startTimeRef.current = 0;
+      }
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
   }, [playing, duration, slides.length, index, revision]);
 
   if (!product) return null;
 
-  const name = product.name.replace(/ Powder$/i, "");
+  const { theme, firstLine, productLine, tagline, description } = getHeroPresentation(product);
   const animation = reducedMotion || !motionSettings.enabled ? "none" : settings.transition;
+  const heroTransitionDuration = 1400 * motionSettings.duration;
 
   return (
     <section ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
       onPointerEnter={(event) => { if (event.pointerType === "mouse") setHovered(true); }}
       onPointerLeave={() => setHovered(false)}
-      onFocusCapture={() => setFocused(true)}
+      onFocusCapture={(event) => {
+        setFocused(!compactViewport || event.target.matches(":focus-visible") || Boolean(event.target.closest("details")));
+      }}
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
-      style={{ "--hero-accent": product.accent, "--hero-soft": product.accentSoft } as CSSProperties}>
+      data-theme={theme.key}
+      data-transition={animation}
+      data-hovered={hovered ? "true" : undefined}
+      style={{
+        "--hero-heading": theme.heading,
+        "--hero-body": theme.body,
+        "--hero-accent": theme.accent,
+        "--hero-button-bg": theme.buttonBackground,
+        "--hero-button-text": theme.buttonText,
+        "--hero-surface": theme.surface,
+        "--hero-soft": product.accentSoft,
+      } as CSSProperties}>
       <div className={styles.background} data-transition={animation} aria-hidden="true">
-        <Image key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} />
-        {visited && slides.length > 1 && moving && webgl && (
+        <Image ref={backgroundImage} key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" priority loading="eager" className={styles.backgroundImage} />
+        <canvas ref={mobileBackground} key={`background-${product.heroBackground.url}`} className={styles.mobileBackground} />
+        {visited && slides.length > 1 && transitioning && webgl && (
           <SheryBackground
             images={heroBackgrounds}
             config={defaultSheryBackgroundConfig}
             selected={index}
             active={inView && pageVisible}
-            duration={1100 * motionSettings.duration}
+            duration={heroTransitionDuration}
+            fit={compactViewport ? "edges" : "cover"}
             className={styles.heroSheryBackground}
           />
         )}
       </div>
       <div className={styles.layout} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}: ${product.name}`}>
         <div className={styles.copy} key={`copy-${product.heroEntryId}`} data-transition={animation}>
+          <p className={styles.introEyebrow}>{product.hero?.eyebrow || "NATUREMIST · BOTANICAL HAIR CARE"}</p>
           <h1 id="hero-title">
-            <span className={styles.headlineLine}><span className={styles.headlineText}>{product.hero?.headlineFirst || "Discover"}</span></span>
-            <span className={styles.headlineLine}><span className={styles.headlineText}>{product.hero?.headlineMiddle || name}</span></span>
-            <span className={styles.headlineLine}><em className={styles.headlineText}>{product.hero?.headlineItalic || "Botanical ritual."}</em></span>
+            <span className={styles.headlineLine}><span className={styles.headlineText}>{firstLine}</span></span>
+            <span className={`${styles.headlineLine} ${styles.productHeadline}`} data-long-name={productLine.length > 8}>
+              <span className={styles.headlineText}>{productLine}</span>
+            </span>
           </h1>
-          <div className={styles.purchase}>
-            <HeroPurchase key={product.slug} slug={product.slug} name={product.name} pricePaise={product.pricePaise} cursorMotion={settings.cursorMotion} />
-          </div>
+          <p className={styles.tagline}><em className={styles.headlineText}>{tagline}</em></p>
+          {description && <p className={styles.description}>{description}</p>}
         </div>
-        <div {...posterPointer} className={styles.scene}>
+        <div className={styles.scene} data-transition={animation}>
           <div className={styles.orbit} aria-hidden="true" />
           <div
             className={styles.poster}
@@ -135,22 +287,22 @@ export function ProductHero({ products, entries, settings }: { products: Product
             }}
           >
             <div className={styles.posterMotion}>
-              <Image src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
-                sizes="(max-width: 1000px) 48vw, 38vw" loading="eager" fetchPriority="high" className={styles.posterImage} />
+              <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
+                sizes="(max-width: 900px) 46vw, (max-width: 1100px) 34vw, 38vw" priority loading="eager" fetchPriority="high" className={styles.posterImage} />
+              {visited && slides.length > 1 && transitioning && (compactViewport || posterCursor) && webgl && (
+                <SheryPoster
+                  key={heroPosters.map((image) => image.url).join("|")}
+                  images={heroPosters}
+                  config={heroPosterGooeyConfig}
+                  selected={index}
+                  active={inView && pageVisible}
+                  cursor={posterCursor}
+                  duration={heroTransitionDuration}
+                  className={styles.heroPosterEffect}
+                  onSelect={goTo}
+                />
+              )}
             </div>
-
-            {visited && slides.length > 1 && moving && webgl && (
-              <SheryPoster
-                images={heroPosters}
-                config={heroPosterConfig}
-                selected={index}
-                active={inView && pageVisible}
-                cursor={false}
-                duration={1100 * motionSettings.duration}
-                onSelect={(newIndex) => goTo(newIndex)}
-                className={styles.heroShery}
-              />
-            )}
 
             {slides.length > 1 && (
               <span className={styles.posterBadge} aria-hidden="true">
@@ -159,15 +311,25 @@ export function ProductHero({ products, entries, settings }: { products: Product
               </span>
             )}
           </div>
-          <Link href={`/shop/${product.slug}`} className={styles.caption}>
-            <span className={styles.captionMark} aria-hidden="true">N</span>
-            <span className={styles.captionCopy}>
-              <strong>{product.hero?.badgeText || product.name}</strong>
-              <span>{product.hero?.badgeSubtitle || product.subtitle}</span>
-            </span>
-            <span className={styles.captionDot} aria-hidden="true" />
-          </Link>
-          <a className={styles.scrollLink} href="#featured-ritual" aria-label={`Explore ${product.name}`}><span aria-hidden="true">↓</span></a>
+          <div className={styles.sceneFooter}>
+            <Link
+              key={`caption-${product.heroEntryId}`}
+              href={`/shop/${product.slug}`}
+              className={styles.caption}
+              data-transition={animation}
+            >
+              <span className={styles.captionCopy}>
+                <strong>{product.hero?.badgeText || product.name}</strong>
+                <span>{product.hero?.badgeSubtitle || product.subtitle}</span>
+              </span>
+              <span className={styles.captionArrow} aria-hidden="true">↗</span>
+            </Link>
+            <a className={styles.scrollLink} href="#featured-ritual" aria-label={`Explore ${product.name}`}><span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <div className={styles.purchase} key={`purchase-${product.heroEntryId}`} data-transition={animation}>
+          <HeroPurchase slug={product.slug} name={product.name} pricePaise={product.pricePaise}
+            size={product.size} currencyCode={product.currencyCode} cursorMotion={posterCursor && moving} />
         </div>
         <aside className={styles.featured} id="featured-ritual" aria-labelledby="featured-ritual-heading">
           <div className={styles.featuredHeader} aria-label="Hero slideshow controls">
@@ -175,32 +337,44 @@ export function ProductHero({ products, entries, settings }: { products: Product
             <p id="featured-ritual-heading">Featured botanical ritual</p>
             <button type="button" className={styles.arrow} disabled={slides.length < 2} onClick={() => goTo(nextHeroIndex(index, slides.length))} aria-label="Next featured product">→</button>
           </div>
-          <div className={styles.model} data-transition={animation}>
+          <div
+            ref={modelContainerRef}
+            className={styles.model}
+            key={compactViewport ? product.heroEntryId : undefined}
+            data-transition={animation}
+            onPointerDown={start3DInteraction}
+            onMouseDown={start3DInteraction}
+            onTouchStart={start3DInteraction}
+          >
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={settings} paused={paused || !inView} eager />
+              settings={{ ...settings, rotationSpeed: settings.rotationSpeed * .8 }} paused={paused || !inView} cameraDistancePercent={95} eager
+              poster={compactViewport ? product.featuredImage : undefined} />
           </div>
           <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>
-            <p className={styles.eyebrow}>{product.hero?.eyebrow || "Single-origin botanical"}</p>
+            <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical hair care"}</p>
             <h2 className={styles.productName}><Link href={`/shop/${product.slug}`}>{product.name}</Link></h2>
-            <p className={styles.subtitle}>{[product.subtitle, product.size].filter(Boolean).join(" · ")}</p>
+            {(product.subtitle || product.size) && <p className={styles.subtitle}>{[product.subtitle, product.size].filter(Boolean).join(" · ")}</p>}
             <div className={styles.disclosures}>
-              <details name="hero-product-details">
-                <summary>Why you’ll love it <span aria-hidden="true">+</span></summary>
+              {(description || product.benefits.length > 0) && <details name="hero-product-details">
+                <summary>Why you’ll love it <span className={styles.accordionIcon} aria-hidden="true" /></summary>
                 <div className={styles.disclosureBody}>
-                  {(product.hero?.description || product.shortDescription) && <p>{product.hero?.description || product.shortDescription}</p>}
+                  {description && <p>{description}</p>}
                   {product.benefits.length > 0 && <ul>{product.benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>}
                 </div>
-              </details>
-              <details name="hero-product-details">
-                <summary>How to prepare <span aria-hidden="true">+</span></summary>
+              </details>}
+              {product.howTo.length > 0 && <details name="hero-product-details">
+                <summary>How to prepare <span className={styles.accordionIcon} aria-hidden="true" /></summary>
                 <div className={styles.disclosureBody}>
-                  {product.howTo.length > 0 ? <ol>{product.howTo.map((step) => <li key={step}>{step}</li>)}</ol> : <Link href={`/shop/${product.slug}`}>View preparation details</Link>}
+                  <ol>{product.howTo.map((step) => <li key={step}>{step}</li>)}</ol>
                 </div>
-              </details>
-              <details name="hero-product-details" open>
-                <summary>Ingredient clarity <span aria-hidden="true">+</span></summary>
-                <div className={styles.disclosureBody}><p>{product.ingredient}</p></div>
-              </details>
+              </details>}
+              {(product.ingredient || product.formulation) && <details name="hero-product-details" open={!compactViewport}>
+                <summary>Ingredient clarity <span className={styles.accordionIcon} aria-hidden="true" /></summary>
+                <div className={styles.disclosureBody}>
+                  {product.ingredient && <p>{product.ingredient}</p>}
+                  {product.formulation && <p className={styles.formulation}><span>Formulation: </span>{product.formulation}</p>}
+                </div>
+              </details>}
             </div>
           </div>
           {slides.length > 1 && (
@@ -212,13 +386,23 @@ export function ProductHero({ products, entries, settings }: { products: Product
                   </button>
                 ))}
               </div>
-              {settings.autoplay && !reducedMotion && <button className={styles.pause} type="button" onClick={() => setPaused((value) => !value)} aria-pressed={paused} aria-label={paused ? "Resume slideshow" : "Pause slideshow"}>{paused ? "Play" : "Pause"}</button>}
+              {settings.autoplay && moving && <button className={styles.pause} type="button" onClick={() => setPaused((value) => !value)} aria-pressed={paused} aria-label={paused ? "Resume slideshow" : "Pause slideshow"}>{paused ? "Play" : "Pause"}</button>}
               <span className={styles.count}>{String(index + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}</span>
             </div>
           )}
         </aside>
       </div>
-      {playing && <div key={`${product.slug}-${revision}-${playing}`} className={styles.progress} style={{ animationDuration: `${duration}s` }} aria-hidden="true" />}
+      {showProgress && (
+        <div
+          key={`progress-${product.slug}-${revision}`}
+          className={styles.progress}
+          style={{
+            animationDuration: `${duration}s`,
+            animationPlayState: playing ? "running" : "paused",
+          }}
+          aria-hidden="true"
+        />
+      )}
       <span className="sr-only" aria-live={playing ? "off" : "polite"} aria-atomic="true">{product.name}, featured product {index + 1} of {slides.length}</span>
     </section>
   );

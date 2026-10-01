@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ReviewsPage } from "@/features/reviews/reviews-page";
+import { getJudgemeAllReviewsPage } from "@/lib/judgeme/all-reviews";
 
 export const metadata: Metadata = {
   title: "Customer Reviews & Video Stories | NatureMist",
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/reviews" },
 };
 
-export default function ReviewsRoute() {
-  return <ReviewsPage />;
+export default async function ReviewsRoute() {
+  const judgemeReviews = await getJudgemeAllReviewsPage();
+  return <ReviewsPage initialJudgemeReviews={judgemeReviews} />;
 }

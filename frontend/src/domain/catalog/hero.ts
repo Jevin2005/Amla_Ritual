@@ -1,16 +1,3 @@
-import type { ProductHeroContent, StoreImage } from "./products";
-
-export type HomepageHeroEntry = {
-  id: string;
-  productId: string | null;
-  model: { url: string; altText: string } | null;
-  poster: StoreImage | null;
-  background: StoreImage | null;
-  order?: number;
-  durationSeconds?: number;
-  copy: Partial<ProductHeroContent>;
-};
-
 export type HeroSettings = {
   autoplay: boolean;
   intervalSeconds: number;

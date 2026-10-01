@@ -1,0 +1,25 @@
+{
+  "interface": {
+    "displayName": "Judge.me Setup Helper",
+    "shortDescription": "Manage Judge.me setup, emails, and reviews",
+    "longDescription": "Customize Judge.me Product Reviews request-email templates, collection schedules, storefront widgets, and review management workflows. Carry out requested changes through available authenticated browser access or documented tools, then verify the saved result. Supports Shopify themes and headless storefronts. This unofficial plugin supplies workflows, not credentials or a bundled Judge.me connection; available actions depend on tools, permissions, and plan. It does not target the separate Judge.me Email marketing app.",
+    "developerName": "Plugin owner",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Help me install Judge.me and display reviews on my store.",
+      "Customize my Judge.me widgets to match my store's branding.",
+      "Check my headless storefront's Judge.me setup and review request links."
+    ]
+  },
+  "name": "judge-me-setup-helper",
+  "version": "0.2.0",
+  "description": "Configure Judge.me Product Reviews widgets, customize review-request emails and schedules, and manage reviews through authenticated access.",
+  "author": {
+    "name": "Plugin owner"
+  },
+  "keywords": [],
+  "skills": "./skills"
+}

@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { adminDomain, getAdminToken } from "@/lib/shopify/admin-auth";
 
 export const runtime = "nodejs";
 
@@ -21,14 +22,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const domain =
-      process.env.SHOPIFY_STORE_DOMAIN || "amla-ritual.myshopify.com";
-
-    const adminToken =
-      process.env.SHOPIFY_ADMIN_API_TOKEN ||
-      (process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN?.startsWith("shpat_")
-        ? process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN
-        : null);
+    const domain = adminDomain();
+    const adminToken = await getAdminToken();
 
     if (!domain || !adminToken) {
       return NextResponse.json(
@@ -40,27 +35,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── 1. Normalize Query ──
-    const digitsOnly = rawRef.replace(/\D/g, "");
-    let candidateName = rawRef;
+    // ── 1. Strict Privacy & Security Check ──
+    // Strip prefixes like "ID:", "id:", "#", spaces
+    const cleanId = rawRef.replace(/^(id|ref)[:\s#]*/i, "").replace(/[#\s]/g, "").trim();
 
-    // If user enters pure numbers like "1004" or "NMR-1004", normalize to "#1004"
-    if (/^\d{3,6}$/.test(rawRef)) {
-      candidateName = `#${rawRef}`;
-    } else if (rawRef.toLowerCase().startsWith("nmr-")) {
-      const suffix = rawRef.slice(4);
-      if (/^\d+$/.test(suffix)) {
-        candidateName = `#${suffix}`;
-      }
+    // Block predictable order names (e.g. #1001, #9999, 1004) and phone numbers / emails
+    // Shopify order IDs are 12 to 16 digits (e.g. 8607588876474)
+    if (!/^\d{10,16}$/.test(cleanId)) {
+      return NextResponse.json({
+        success: true,
+        found: false,
+        message:
+          "For customer privacy and security, orders can only be tracked using the unique 13-digit Tracking ID sent in your confirmation email (e.g. 8607588876474). Predictable numbers like #1001, phone numbers, or emails cannot be used.",
+      });
     }
 
-    // ── 2. Search Shopify Admin for Matching Order ──
+    // ── 2. Direct Primary Key Lookup in Shopify Admin by Unique Order ID ──
     let matchedOrder: Record<string, unknown> | null = null;
 
-    // Search attempt A: By exact order name (e.g. "#1004")
     try {
-      const nameRes = await fetch(
-        `https://${domain}/admin/api/2024-01/orders.json?name=${encodeURIComponent(candidateName)}&status=any`,
+      const orderRes = await fetch(
+        `https://${domain}/admin/api/2024-01/orders/${cleanId}.json`,
         {
           headers: {
             "X-Shopify-Access-Token": adminToken,
@@ -69,59 +64,23 @@ export async function POST(req: NextRequest) {
         },
       );
 
-      if (nameRes.ok) {
-        const nameData = await nameRes.json();
-        if (nameData?.orders?.length > 0) {
-          matchedOrder = nameData.orders[0];
+      if (orderRes.ok) {
+        const orderData = await orderRes.json();
+        if (orderData?.order) {
+          matchedOrder = orderData.order;
         }
+      } else if (orderRes.status === 404) {
+        return NextResponse.json({
+          success: true,
+          found: false,
+          message: `No active order found matching Tracking ID "${cleanId}". Please check the ID in your confirmation email.`,
+        });
+      } else {
+        const errText = await orderRes.text();
+        console.warn("[Track Order ID Lookup Warning]:", orderRes.status, errText);
       }
-    } catch (nameErr) {
-      console.warn("[Track Order Name Lookup Warning]:", nameErr);
-    }
-
-    // Search attempt B: By recent orders matching phone or email or order note
-    if (!matchedOrder) {
-      try {
-        const recentRes = await fetch(
-          `https://${domain}/admin/api/2024-01/orders.json?status=any&limit=25`,
-          {
-            headers: {
-              "X-Shopify-Access-Token": adminToken,
-              "Content-Type": "application/json",
-            },
-          },
-        );
-
-        if (recentRes.ok) {
-          const recentData = await recentRes.json();
-          const orders = (recentData?.orders || []) as Array<Record<string, unknown>>;
-
-          matchedOrder =
-            orders.find((o) => {
-              const name = String(o.name || "").toLowerCase();
-              const note = String(o.note || "").toLowerCase();
-              const email = String(o.email || "").toLowerCase();
-              const phone = String(o.phone || "").replace(/\D/g, "");
-              const shippingPhone = String(
-                (o.shipping_address as { phone?: string })?.phone || "",
-              ).replace(/\D/g, "");
-
-              const queryLower = rawRef.toLowerCase();
-
-              return (
-                name === queryLower ||
-                name === `#${queryLower}` ||
-                (digitsOnly.length >= 10 &&
-                  (phone.includes(digitsOnly) ||
-                    shippingPhone.includes(digitsOnly))) ||
-                (queryLower.includes("@") && email === queryLower) ||
-                (queryLower.length > 5 && note.includes(queryLower))
-              );
-            }) || null;
-        }
-      } catch (listErr) {
-        console.warn("[Track Order List Lookup Warning]:", listErr);
-      }
+    } catch (fetchErr) {
+      console.error("[Track Order Fetch Error]:", fetchErr);
     }
 
     // ── 3. Return Not Found if No Match ──
@@ -129,7 +88,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         found: false,
-        message: `No active order found for reference "${rawRef}". Please verify the order number (e.g. #1004) from your order confirmation or receipt.`,
+        message: `No active order found for Tracking ID "${cleanId}". Please verify the ID sent to your confirmation email.`,
       });
     }
 
@@ -180,7 +139,7 @@ export async function POST(req: NextRequest) {
       {
         id: "confirmed",
         title: "Order Confirmed & Logged",
-        description: "Your botanical order is recorded and verified in Shopify.",
+        description: "Your botanical order is recorded and verified.",
         status: "completed",
         date: formattedDate,
       },
@@ -263,7 +222,7 @@ export async function POST(req: NextRequest) {
       success: true,
       found: true,
       order: {
-        orderName: matchedOrder.name,
+        orderName: String(matchedOrder.id),
         placedAt: formattedDate,
         financialStatus: matchedOrder.financial_status,
         fulfillmentStatus: matchedOrder.fulfillment_status || "Processing",

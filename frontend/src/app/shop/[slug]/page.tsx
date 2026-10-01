@@ -3,7 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { globalSafety } from "@/domain/catalog/products";
-import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
+import {
+  filterReviewsByProduct,
+  getProductReviewSummary,
+} from "@/domain/reviews/custom-reviews";
 import {
   ProductCard,
   ProductDetailActions,
@@ -11,8 +14,17 @@ import {
   ProductReviewsSection,
 } from "@/features/catalog";
 import { StarRating } from "@/features/reviews/star-rating";
+import { JudgemePreviewBadge } from "@/features/reviews/judgeme-preview-badge";
+import { isJudgemeConfigured } from "@/lib/judgeme/config";
+import {
+  getJudgemeProductReviews,
+  getJudgemeProductReviewWidget,
+  getJudgemePreviewBadge,
+} from "@/lib/judgeme/api";
 import { getStorefront, getStorefrontProduct } from "@/lib/shopify/storefront";
 import { getPublicSiteUrl } from "@/lib/site-url";
+import { sanitizeProductDescription } from "@/lib/shopify/product-description";
+import descriptionStyles from "@/features/catalog/product-description.module.css";
 
 export const dynamicParams = true;
 
@@ -59,13 +71,13 @@ export async function generateMetadata(
   const image = product.featuredImage;
 
   return {
-    title: `${product.name} | 100% Pure Botanical | NatureMist`,
+    title: product.seoTitle || product.name,
     description: product.metaDescription,
     alternates: { canonical: `/shop/${slug}` },
     openGraph: {
       type: "website",
       siteName: "NatureMist",
-      title: `${product.name} | Pure Botanical Powder`,
+      title: product.seoTitle || product.name,
       description: product.metaDescription,
       url: `/shop/${slug}`,
       images: image
@@ -90,6 +102,12 @@ export default async function ProductPage(props: ProductPageProps) {
   ]);
   if (!product) notFound();
 
+  const targetHandle = product.shopifyHandle || product.slug;
+  const [reviewWidgetHtml, previewBadgeHtml] = await Promise.all([
+    getJudgemeProductReviewWidget(targetHandle),
+    getJudgemePreviewBadge(targetHandle),
+  ]);
+
   const concernMatches = storefront.products.filter(
     (item) =>
       item.slug !== product.slug &&
@@ -106,10 +124,53 @@ export default async function ProductPage(props: ProductPageProps) {
   const fullDescription =
     product.description?.trim() || product.shortDescription.trim();
   const descriptionBlocks = productDescriptionBlocks(fullDescription);
-  const reviewSummary = getProductReviewSummary(
+  const descriptionHtml = product.descriptionHtml?.trim()
+    ? sanitizeProductDescription(product.descriptionHtml)
+    : "";
+  const specifications = [
+    { label: "Botanical Name", value: product.botanical, italic: true },
+    { label: "Plant Part", value: product.plantPart },
+    { label: "Net Quantity", value: product.size },
+    { label: "Formulation", value: product.formulation },
+  ].filter((item) => item.value?.trim());
+  const [judgemeReviewData] = await Promise.all([
+    getJudgemeProductReviews(product.id),
+  ]);
+
+  const customReviewSummary = getProductReviewSummary(
     storefront.content.customerReviews,
     product.slug,
   );
+
+  const effectiveReviewSummary =
+    judgemeReviewData && judgemeReviewData.reviewCount > 0
+      ? {
+          averageRating: judgemeReviewData.averageRating,
+          reviewCount: judgemeReviewData.reviewCount,
+          reviews: judgemeReviewData.reviews.map((r) => ({
+            rating: r.rating,
+            author: r.reviewerName,
+            date: r.createdAt ? r.createdAt.split("T")[0] : undefined,
+            body: r.body || r.title,
+          })),
+        }
+      : customReviewSummary && customReviewSummary.reviewCount > 0
+      ? {
+          averageRating: customReviewSummary.averageRating,
+          reviewCount: customReviewSummary.reviewCount,
+          reviews: filterReviewsByProduct(
+            storefront.content.customerReviews,
+            product.slug,
+          ).map((r) => ({
+            rating: r.rating,
+            author: r.author,
+            date: r.date,
+            body: r.quote,
+          })),
+        }
+      : null;
+
+  const reviewSummary = customReviewSummary;
 
   const siteUrl = getPublicSiteUrl();
   const productUrl = `${siteUrl}/shop/${product.slug}`;
@@ -122,7 +183,7 @@ export default async function ProductPage(props: ProductPageProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: `NatureMist ${product.name}`,
+    name: product.name,
     description: product.metaDescription || product.shortDescription,
     brand: { "@type": "Brand", name: "NatureMist" },
     category: "Botanical hair care powder",
@@ -142,10 +203,36 @@ export default async function ProductPage(props: ProductPageProps) {
         url: siteUrl,
       },
     },
-    additionalProperty: [
-      { "@type": "PropertyValue", name: "Botanical", value: product.botanical },
-      { "@type": "PropertyValue", name: "Plant part", value: product.plantPart },
-    ],
+    ...(effectiveReviewSummary && effectiveReviewSummary.reviewCount > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: effectiveReviewSummary.averageRating.toFixed(1),
+            reviewCount: effectiveReviewSummary.reviewCount,
+            bestRating: "5",
+            worstRating: "1",
+          },
+          review: effectiveReviewSummary.reviews.slice(0, 5).map((r) => ({
+            "@type": "Review",
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: r.rating,
+              bestRating: "5",
+            },
+            author: {
+              "@type": "Person",
+              name: r.author,
+            },
+            ...(r.date ? { datePublished: r.date } : {}),
+            reviewBody: r.body,
+          })),
+        }
+      : {}),
+    additionalProperty: specifications.map(({ label, value }) => ({
+      "@type": "PropertyValue",
+      name: label,
+      value,
+    })),
   };
 
   return (
@@ -173,7 +260,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
       {/* ── Main Amazon-Style 2-Column Showcase ── */}
       <section
-        className="mx-auto grid w-full max-w-[1440px] grid-cols-[1fr_1.08fr] items-start gap-[clamp(32px,5vw,72px)] px-[clamp(20px,4.5vw,72px)] py-2 max-[960px]:grid-cols-1 max-[960px]:gap-6 max-[680px]:px-3"
+        className="mx-auto grid w-full max-w-[1440px] grid-cols-[1.12fr_1fr] items-start gap-[clamp(28px,3.5vw,48px)] px-[clamp(20px,4.5vw,72px)] py-2 max-[960px]:grid-cols-1 max-[960px]:gap-6 max-[680px]:px-3"
         style={{
           "--pdp-accent": product.accent,
           "--pdp-soft": product.accentSoft,
@@ -191,10 +278,18 @@ export default async function ProductPage(props: ProductPageProps) {
             <h1 className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,3.8vw,3.4rem)] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--forest)] max-[680px]:text-[1.85rem]">
               {product.name}
             </h1>
-            <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
+            {product.subtitle && <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
               {product.subtitle}
-            </p>
-            {reviewSummary && (
+            </p>}
+            {isJudgemeConfigured() ? (
+              <Link
+                href="#customer-reviews"
+                className="mt-2 inline-flex min-h-8 items-center rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
+                aria-label={`Jump to reviews for ${product.name}`}
+              >
+                <JudgemePreviewBadge productId={product.id} initialHtml={previewBadgeHtml} />
+              </Link>
+            ) : reviewSummary ? (
               <Link
                 href="#customer-reviews"
                 className="mt-2 inline-flex min-h-8 items-center rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
@@ -206,7 +301,7 @@ export default async function ProductPage(props: ProductPageProps) {
                   size="default"
                 />
               </Link>
-            )}
+            ) : null}
           </div>
 
           {/* Short Description */}
@@ -221,32 +316,22 @@ export default async function ProductPage(props: ProductPageProps) {
           </Link>
 
           {/* Amazon-Style Specifications Table */}
-          <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
+          {specifications.length > 0 && <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
             <span className="mb-2.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--botanical)]">
               Botanical Specifications
             </span>
             <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-[0.8rem] max-[680px]:grid-cols-1 max-[680px]:gap-y-1.5 max-[680px]:text-[0.74rem]">
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Botanical Name:</span>
-                <span className="font-semibold text-[var(--forest)] italic text-right">{product.botanical}</span>
-              </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Plant Part:</span>
-                <span className="font-semibold text-[var(--forest)] text-right">{product.plantPart}</span>
-              </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Net Quantity:</span>
-                <span className="font-semibold text-[var(--forest)] text-right">{product.size}</span>
-              </div>
-              <div className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
-                <span className="text-[var(--muted)] shrink-0">Formulation:</span>
-                <span className="font-semibold text-[var(--forest)] text-right">Shade-Dried Powder</span>
-              </div>
+              {specifications.map(({ label, value, italic }) => (
+                <div key={label} className="flex items-baseline justify-between border-b border-[var(--line)] pb-1.5 gap-2">
+                  <span className="text-[var(--muted)] shrink-0">{label}:</span>
+                  <span className={`font-semibold text-[var(--forest)] text-right${italic ? " italic" : ""}`}>{value}</span>
+                </div>
+              ))}
             </div>
-          </div>
+          </div>}
 
           {/* About This Item (Key Benefits) */}
-          <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
+          {product.benefits.length > 0 && <div className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 shadow-2xs max-[680px]:p-3 max-[680px]:rounded-xl">
             <span className="mb-2.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)]">
               About this item
             </span>
@@ -258,7 +343,7 @@ export default async function ProductPage(props: ProductPageProps) {
                 </li>
               ))}
             </ul>
-          </div>
+          </div>}
 
           {/* Main Purchase Actions (Inline & Seamless) */}
           <div className="pt-1">
@@ -267,7 +352,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
           {/* Preparation & Storage Accordions */}
           <div className="space-y-2">
-            <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl" open>
+            {product.howTo.length > 0 && <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl" open>
               <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.12rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[1rem]">
                 <span>How to prepare & apply</span>
                 <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
@@ -279,7 +364,7 @@ export default async function ProductPage(props: ProductPageProps) {
                   </li>
                 ))}
               </ol>
-            </details>
+            </details>}
 
             <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl">
               <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.12rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[1rem]">
@@ -287,7 +372,7 @@ export default async function ProductPage(props: ProductPageProps) {
                 <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
               </summary>
               <div className="mt-2.5 text-[0.82rem] text-[var(--muted)] leading-relaxed max-[680px]:text-[0.75rem]">
-                <p className="m-0 font-medium text-[var(--forest)]">{product.storage}</p>
+                {product.storage && <p className="m-0 font-medium text-[var(--forest)]">{product.storage}</p>}
                 <p className="mt-1.5 mb-0 text-[0.74rem] text-[var(--muted)]">
                   {globalSafety}
                 </p>
@@ -297,7 +382,7 @@ export default async function ProductPage(props: ProductPageProps) {
         </div>
       </section>
 
-      {/* Full Shopify product description, preserved without truncation. */}
+      {/* Full product description, preserved without truncation. */}
       <section
         id="product-description"
         className="mx-auto mt-14 w-full max-w-[1440px] scroll-mt-24 px-[clamp(20px,4.5vw,72px)] max-[680px]:mt-10 max-[680px]:px-3"
@@ -305,20 +390,22 @@ export default async function ProductPage(props: ProductPageProps) {
       >
         <div className="grid grid-cols-[minmax(180px,0.42fr)_minmax(0,1.58fr)] gap-[clamp(28px,5vw,72px)] border-t border-[var(--line)] pt-10 max-[760px]:grid-cols-1 max-[760px]:gap-4 max-[680px]:pt-7">
           <div>
-            <p className="mb-1 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)]">
+            <p className="mb-2 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)]">
               Complete product details
             </p>
             <h2
               id="product-description-title"
-              className="m-0 [font-family:var(--font-display)] text-[clamp(1.7rem,3vw,2.45rem)] font-normal leading-[1.05] text-[var(--forest)]"
+              className="m-0 [font-family:var(--font-display)] text-[clamp(1.7rem,3vw,2.45rem)] font-normal leading-[1.12] text-[var(--forest)]"
             >
               Product description
             </h2>
           </div>
-          <div className="max-w-[78ch] space-y-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-[clamp(20px,3vw,34px)] text-[0.86rem] leading-[1.85] text-[var(--muted)] shadow-[0_10px_32px_rgba(21,59,45,0.04)] max-[680px]:rounded-2xl max-[680px]:text-[0.76rem] max-[680px]:leading-[1.72]">
-            {descriptionBlocks.map((block, index) =>
+          <div className="w-full min-w-0 space-y-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-[clamp(20px,3vw,34px)] text-[1rem] font-normal leading-[1.8] text-[var(--charcoal)] shadow-[0_10px_32px_rgba(21,59,45,0.04)] max-[680px]:rounded-2xl max-[680px]:text-[0.9375rem] max-[680px]:leading-[1.75]">
+            {descriptionHtml ? (
+              <div className={descriptionStyles.content} dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
+            ) : descriptionBlocks.map((block, index) =>
               block.kind === "unordered-list" ? (
-                <ul key={`list-${index}`} className="m-0 space-y-1.5 pl-5">
+                <ul key={`list-${index}`} className="m-0 list-disc space-y-1.5 pl-5">
                   {block.items.map((item, itemIndex) => (
                     <li
                       key={`${item}-${itemIndex}`}
@@ -331,7 +418,7 @@ export default async function ProductPage(props: ProductPageProps) {
               ) : block.kind === "ordered-list" ? (
                 <ol
                   key={`ordered-list-${index}`}
-                  className="m-0 space-y-1.5 pl-5"
+                  className="m-0 list-decimal space-y-1.5 pl-5"
                 >
                   {block.items.map((item, itemIndex) => (
                     <li
@@ -359,10 +446,11 @@ export default async function ProductPage(props: ProductPageProps) {
         product={product}
         reviews={storefront.content.customerReviews}
         videoReviews={storefront.content.videoReviews}
+        reviewWidgetHtml={reviewWidgetHtml}
       />
 
       {/* ── Product-Specific FAQ Section ── */}
-      <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="product-faq-title">
+      {product.faqs.length > 0 && <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="product-faq-title">
         <div className="mb-4 flex items-end justify-between max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-0.5">
           <div>
             <p className="mb-0.5 text-[0.64rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.52rem]">
@@ -404,7 +492,7 @@ export default async function ProductPage(props: ProductPageProps) {
             </details>
           ))}
         </div>
-      </section>
+      </section>}
 
       {/* ── Related Botanicals Carousel ("Customers also bought") ── */}
       <section className="mx-auto mt-12 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:px-3" aria-labelledby="related-title">
@@ -445,33 +533,6 @@ export default async function ProductPage(props: ProductPageProps) {
               <ProductCard product={item} />
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* ── Reassurance Banner Strip Attached Above Footer ── */}
-      <section className="mx-auto mt-16 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:mt-10 max-[680px]:px-3">
-        <div className="grid grid-cols-3 gap-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-6 text-center shadow-xs max-[680px]:grid-cols-1 max-[680px]:gap-3 max-[680px]:p-4 max-[680px]:rounded-2xl">
-          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">📦</span>
-            <div>
-              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Fast Dispatch</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Dispatch timing is confirmed securely at checkout</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🌿</span>
-            <div>
-              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Clear Product Details</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Ingredients and directions are shown before purchase</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🛡️</span>
-            <div>
-              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Secure Encrypted Checkout</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Payment is completed on Shopify&rsquo;s hosted checkout</span>
-            </div>
-          </div>
         </div>
       </section>
     </main>

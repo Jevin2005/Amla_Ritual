@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, type CSSProperties } from "react";
 import { getHomepageHeroProducts } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
@@ -8,9 +9,9 @@ import { MagneticLink } from "@/shared/ui/magnetic-link";
 import { IngredientPoster } from "@/features/poster/ingredient-poster";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { ProductHero } from "./product-hero";
+import { ProductBenefits } from "./product-benefits";
+import { BuildYourRitual } from "./build-your-ritual";
 import { VideoReviewsSection } from "./video-reviews-section";
-import { ProductBenefitsSection } from "./product-benefits-section";
-import { BuildYourRitualSection } from "./build-your-ritual-section";
 import { homeFaqs } from "./content";
 
 const eyebrowClass =
@@ -30,6 +31,7 @@ const revealClass =
 
 export function HomePage() {
   const { products, content } = useStore();
+  const homeMotion = useMemo(() => ({ ...content.motionSettings, duration: content.motionSettings.duration * 1.25 }), [content.motionSettings]);
 
   if (!products.length) {
     return (
@@ -40,18 +42,18 @@ export function HomePage() {
             The next ritual is being prepared.
           </h1>
           <p className="mx-auto mt-7 max-w-[540px] text-[var(--muted)]">
-            Products will appear here as soon as they are active and published to the Headless sales channel in Shopify.
+            Products will appear here as soon as our fresh botanical harvest is released.
           </p>
         </div>
       </main>
     );
   }
 
-  const hasHero = getHomepageHeroProducts(products, content.heroEntries).length > 0;
+  const hasHero = getHomepageHeroProducts(products).length > 0;
   const CollectionHeading = hasHero ? "h2" : "h1";
   return (
-    <main className="overflow-x-clip" id="main-content">
-      <ProductHero products={products} entries={content.heroEntries} settings={content.heroSettings} />
+    <main className="overflow-x-clip" id="main-content" data-home-motion="calm" style={{ "--motion-duration": homeMotion.duration } as CSSProperties}>
+      <ProductHero products={products} settings={content.heroSettings} />
       <section
         className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(70px,7vw,110px)] max-[680px]:px-3 max-[680px]:py-8 max-[420px]:px-2.5 max-[420px]:py-6 ${revealClass}`}
         aria-labelledby="collection-title"
@@ -98,11 +100,9 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ── The Benefit of This Product Section ── */}
-      <ProductBenefitsSection products={products} />
+      <ProductBenefits products={products} motionSettings={homeMotion} />
 
-      {/* ── Build your ritual / Botanical Starting Point ── */}
-      <BuildYourRitualSection products={products} />
+      <BuildYourRitual />
 
       {/* ── The Art of Preparation (Three steps. One unhurried ritual) ── */}
       <section
@@ -233,7 +233,7 @@ export function HomePage() {
         aria-labelledby="purity-title"
       >
         {/* Left Column: Arched Image with Badge */}
-        <IngredientPoster images={content.ritualPosters} fallback={content.ritualPoster} settings={content.ritualPosterSettings} />
+        <IngredientPoster images={content.ritualPosters} fallback={content.ritualPoster} settings={content.ritualPosterSettings} pace={1.25} />
 
         {/* Right Column: Heading, description, 3 numbered points, CTA */}
         <div>
@@ -346,7 +346,6 @@ export function HomePage() {
         <FeaturedProductSwitcher />
       </section>
 
-      {/* ── Community Videos & Customer Reviews Section ── */}
       <VideoReviewsSection />
 
       {/* ── The Ritual Room (FAQ) - Integrated Luxury Dark Footer-Attached Styling ── */}

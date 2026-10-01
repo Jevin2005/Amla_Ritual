@@ -15,13 +15,13 @@ const SheryEditor = process.env.NODE_ENV === "development"
   ? lazy(() => import("./shery-editor").then((module) => ({ default: module.SheryEditor })))
   : null;
 
-export function IngredientPoster({ images: sourceImages, fallback, settings }: { images: StoreImage[]; fallback: StoreImage; settings: IngredientPosterSettings }) {
+export function IngredientPoster({ images: sourceImages, fallback, settings, pace = 1 }: { images: StoreImage[]; fallback: StoreImage; settings: IngredientPosterSettings; pace?: number }) {
   const images = useMemo(() => posterImages(sourceImages, fallback), [sourceImages, fallback]);
   // Changing/reordering admin images starts a fresh sequence with the first image.
-  return <PosterSequence key={images.map((image) => image.url).join("|")} images={images} settings={settings} />;
+  return <PosterSequence key={images.map((image) => image.url).join("|")} images={images} settings={settings} pace={pace} />;
 }
 
-function PosterSequence({ images, settings }: { images: StoreImage[]; settings: IngredientPosterSettings }) {
+function PosterSequence({ images, settings, pace }: { images: StoreImage[]; settings: IngredientPosterSettings; pace: number }) {
   const { content: { motionSettings } } = useStore();
   const [debugOpen, setDebugOpen] = useState(false);
   const config = useMemo(() => sheryPosterConfig(settings.strength, settings.config), [settings.strength, settings.config]);
@@ -59,9 +59,9 @@ function PosterSequence({ images, settings }: { images: StoreImage[]; settings: 
 
   useEffect(() => {
     if (!playing) return;
-    const timer = setTimeout(() => setSelected((index) => (index + 1) % images.length), settings.interval * 1000);
+    const timer = setTimeout(() => setSelected((index) => (index + 1) % images.length), settings.interval * 1000 * pace);
     return () => clearTimeout(timer);
-  }, [playing, selected, images.length, settings.interval]);
+  }, [playing, selected, images.length, settings.interval, pace]);
 
   return (
     <div
@@ -105,15 +105,9 @@ function PosterSequence({ images, settings }: { images: StoreImage[]; settings: 
           loading={visited ? "eager" : "lazy"}
         />
         {visited && images.length > 1 && moving && settings.gooey && (
-          <SheryPoster
-            images={images}
-            config={config}
-            selected={selected}
-            active={inView && pageVisible && !debugOpen}
-            cursor={motionSettings.cursor && motionSettings.intensity > 0 && !focused && hovered}
-            duration={1100 * motionSettings.duration}
-            onSelect={setSelected}
-          />
+          <SheryPoster images={images} config={config} selected={selected} active={inView && pageVisible && !debugOpen}
+            cursor={motionSettings.cursor && motionSettings.intensity > 0 && !focused && hovered} duration={1320 * motionSettings.duration * pace}
+            onSelect={setSelected} />
         )}
         <span className={styles.brand} aria-hidden="true">N</span>
 

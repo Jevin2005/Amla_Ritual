@@ -1,44 +1,46 @@
-# Homepage hero: separate Shopify editor
+# Homepage hero: Shopify product metafields
 
-Normal product listings are managed under **Products**. Homepage content is managed separately under **Content → Metaobjects → Homepage hero**. No homepage fields are needed when adding a regular product.
+After deploying the product-metafield update, edit **Products → choose a product → Metafields → View all**. These fields are the sole source for each hero slide. The old **Homepage hero** metaobjects are retained but no longer queried. Their Active/Draft status has no effect on the hero.
 
-Product-page galleries show photos and processed GLB models attached under **Products → Media**. Select the **3D** thumbnail to rotate a model. These models stay available when the homepage entry is Draft. Wildcrafted Amla Powder's existing model is also attached to its product Media list.
+## Select and arrange products
 
-## Create or edit a homepage entry
+1. Publish the product to the website's **Headless** sales channel and intended market.
+2. Select a processed **Homepage hero poster**, **Homepage background image**, and **Homepage 3D model** (.glb).
+3. Set **Show in homepage hero** to **True**. False or blank hides only its hero slide; the product stays in normal listings.
+4. Set **Homepage slide order** (lower numbers first) and **Homepage slide duration (seconds)** (3–60 seconds). A blank duration uses the global interval; blank order uses catalog order. Equal orders retain catalog order.
+5. Fill the headline, eyebrow, description and caption fields on that same product. Save and allow approximately five minutes for the cached website to refresh, or use the configured authenticated Shopify webhook.
 
-1. Open **Content → Metaobjects → Homepage hero** and choose **Add entry**, or open an existing entry.
-2. Select a product. Its title, price, inventory and standard photos stay managed in Products.
-3. Upload the three assets below. Incomplete entries can be saved as **Draft**.
-4. Set the entry to **Active** when it is ready to appear on the homepage.
+Each enabled product produces one slide. Missing/deleted image references or a missing/non-GLB model exclude the slide until repaired; the website never borrows another product's media. Publishing the product to Online Store alone does not make it available to the Headless website.
 
-| Field | Requirement | What to enter |
-| --- | --- | --- |
-| Product | Required | Select an active product published to Headless. |
-| 3D model | Required for display | A `.glb` file with embedded textures for the featured product panel. Shopify must finish processing it. |
-| Hero poster | Required for display | Tall lifestyle or ritual image, displayed in the arched center frame. |
-| Background image | Required for display | Wide background, preferably without a jar. |
-| Entry name | Optional | A name for finding the entry in the admin. |
-| Slide order | Optional | Lower numbers first; blank uses product collection order. |
-| Slide duration | Optional | 3–60 seconds; blank uses the global default. |
-| Eyebrow, headline lines, description and captions | Optional | Leave blank to use product-derived copy. |
+## Field mapping
 
-Media fields are labelled **required for display**. They allow empty draft saves, but an Active entry with missing media still cannot appear. A deleted or unpublished product cannot appear. USDZ-only models do not qualify.
+All fields below use the existing merchant-owned **custom** namespace and Storefront **PUBLIC_READ** access. No definition or value recreation is needed. The misleading Legacy prefix has been removed from all 13 definitions in Shopify.
 
-Set an entry to **Draft** to hide it. Removing an entry or clearing its assets affects only the hero. Standard product cards, detail galleries, search, wishlist and cart use normal product data and availability rules.
+| Shopify key | Controls |
+| --- | --- |
+| hero_enabled | Explicit true includes this product, subject to publishing and complete media |
+| hero_order | Slide order |
+| hero_duration | This slide's autoplay interval in seconds |
+| hero_poster | Centre poster image |
+| hero_background | Full background image |
+| hero_model | Product GLB model; accepts processed Model3d or a GLB GenericFile |
+| hero_eyebrow | Introductory and product labels |
+| hero_headline_first | First headline line |
+| hero_headline_middle | Second headline line |
+| hero_headline_italic | Italic phrase |
+| hero_description | Intro description and Why you'll love it copy |
+| hero_badge_text | Poster product caption |
+| hero_badge_subtitle | Poster caption detail |
 
-## Desktop and phone layout
+Title, price, availability, variant, benefits, ingredients, formulation, subtitle, quantity and preparation instructions continue to come from the same Shopify product. Blank optional hero text uses existing product/design fallbacks. Product gallery photos and models remain managed under **Products → Media**.
 
-Desktop shows the headline and purchase controls on the left, the tall poster in the center, and the 3D product with its details on the right. At 1000px and below, the headline and poster stay side by side, with the featured product panel beneath them. The background spans both rows.
+## Layout and display
 
-The taller poster stays visible while the separate model rotates directly over the full hero background. The model has no card background, border or product photo behind it; a short status message appears while loading or if 3D is unavailable. No fourth hero upload is required. Headline fields control the left title, eyebrow controls the label above the product name, and caption fields control the poster badge. The optional homepage description appears inside **Why you'll love it**. Benefits, preparation, ingredient, name, size and price come from the linked product. Both **Explore the ritual** arrows scroll to the featured panel.
+The existing desktop/mobile layout, poster position, animations and unfiltered backgrounds remain. Text colours identify the current product title before considering its handle, so a renamed product does not inherit another botanical's theme from an old URL.
 
-## Migrated Amla entry
+Hero background images cover the entire section while preserving their natural proportions. The image stays centred: excess width is cropped equally from the left and right, and excess height equally from the top and bottom. There is no stretching, coloured padding or added filter. Static and animated backgrounds use the same crop; the animation's extra built-in zoom is removed and its textures are resized with the section. Background transitions fade without moving the image off-centre. This update requires deployment.
 
-**Wildcrafted Amla Powder** is **Active**, linked to the original product. Its model, poster, background and saved homepage copy were copied from the old product fields. Future homepage edits belong in this separate entry.
-
-If a hero does not appear, check this entry rather than the old product fields: it must be Active, include all three processed assets, and link to a product published to Headless. Allow approximately two minutes for cached content to refresh. The website must also be running the update that reads these separate entries.
-
-The 13 old Homepage product fields are unpinned so they no longer clutter the normal product form. Their saved values remain as a backup under View all. The updated website reads the separate Homepage hero entries; the old product fields no longer control the new hero.
+The animated background observes section-size changes as well as viewport resizing, including phone rotation and content-driven height changes. Repeated resize events are combined into one update before drawing, and unchanged texture dimensions do not trigger another allocation. Fit checks cover 320px phones through 3840px desktop screens.
 
 ## Global slideshow settings
 
@@ -53,9 +55,9 @@ Open **Content → Metaobjects → Storefront content → Homepage settings** (h
 | Move 3D products with cursor | True | True / false |
 | Product transition | `fade` | `fade`, `slide`, `none` |
 
-One complete Active entry stays on screen. Two or more change automatically in order. Visitors can navigate and pause slides or rotation. Slides pause on hover, keyboard focus, outside the viewport and in background tabs. Reduced-motion preferences disable automatic slides, rotation, cursor motion and transitions.
+One complete enabled product stays on screen. Two or more change automatically in order. Visitors can navigate and pause slides or rotation. Slides pause on hover, keyboard focus, outside the viewport and in background tabs. Reduced-motion preferences disable automatic slides, rotation, cursor motion and transitions.
 
-Homepage changes refresh within approximately two minutes; product changes can take up to five minutes. Authenticated webhooks can invalidate the shared cache sooner. The collection is shown first when no complete Active hero entries exist.
+Product and hero changes can take approximately five minutes to refresh. Authenticated webhooks can invalidate the shared cache sooner. The collection is shown first when no complete enabled hero products exist.
 
 ## Website animation controls
 
@@ -63,14 +65,14 @@ The same **Storefront content → Homepage settings** entry also controls the ne
 
 | Setting | Recommended value | What it controls |
 | --- | --- | --- |
-| Website animations | True | Headline, photo, gallery and scroll reveals. False makes CSS transitions immediate. |
+| Website animations | True | Headline, photo, gallery and scroll reveals. False also stops automatic hero changes, 3D rotation and decorative cursor motion. |
 | Cursor effects | True | Magnetic link text and gently moving images on devices with a mouse. |
 | Animation timing | 1 | 0.6 is quicker; 1.5 is slower. This does not change the slideshow interval. |
 | Cursor movement strength | 1 | 0 disables decorative cursor motion; 0.5 is subtler; 1.5 is stronger. |
 
-The hero's existing **Product transition** still accepts `none` to disable its entrance sequence. **Move 3D products with cursor** must also be enabled for the hero poster and Explore link to follow the cursor. 3D rotation, model cursor motion and automatic slide changes keep their own controls above.
+The hero's **Product transition** supports a fade, a directional slide, or `none`. Choosing `none` makes hero image and text changes immediate and disables its Shery effects. **Move 3D products with cursor** must also be enabled for the hero poster and Explore link to follow the cursor. Global Website animations, Cursor effects and Cursor movement strength also govern decorative 3D cursor movement. The separate 3D rotation and automatic slideshow controls remain available.
 
-The homepage has staggered headline lines, a gentle poster zoom and tilt, magnetic Explore links, individual catalog reveals, and masked ritual imagery. Catalog photos crossfade to the next available product photo on mouse hover after that photo loads. Product-page photos animate when selected; all photos and the 3D thumbnail remain available.
+The homepage has staggered headline lines, an organic hover reveal inside the arched hero poster, magnetic Explore links, individual catalog reveals, and masked ritual imagery. Clicking the hero poster selects the next entry and keeps its product, purchase controls, background and model synchronized. Catalog photos crossfade to the next available product photo on mouse hover after that photo loads. Product-page photos animate when selected; all photos and the 3D thumbnail remain available.
 
 Phones use shorter scroll reveals and no cursor effects. Operating-system reduced-motion preferences take priority. Content is visible without JavaScript; scroll reveals never hide already-visible content during loading, and keyboard focus immediately reveals its target.
 
@@ -115,7 +117,4 @@ The editor launcher is available only in development. The production poster runs
 
 ## Integration
 
-The merchant-owned `homepage_hero` definition is created before entries are written with `metaobjectUpsert`. It has public Storefront read access and the publishable capability. Storefront API returns Active entries only; the website additionally requires a resolved published product and three media references. Normal product queries do not load legacy `custom.hero_*` fields.
-
-- [Shopify metaobject entries and status](https://help.shopify.com/en/manual/custom-data/metaobjects/creating-entries)
-- [Shopify Model3d](https://shopify.dev/docs/api/storefront/2026-07/objects/Model3d)
+The catalog query resolves custom.hero_* metafields directly from each storefront-visible product, including file references. No homepage_hero metaobject query or fallback remains. Product updates invalidate the shared shopify-storefront cache through the authenticated webhook; the catalog also revalidates after 300 seconds.

@@ -1,0 +1,27 @@
+.content { min-width: 0; overflow-wrap: anywhere; }
+/* Restore rich-text formatting removed by the site's CSS reset. Inline styles
+   authored in Shopify take precedence over these semantic defaults. */
+.content :where(p, blockquote, pre, ul, ol, table) { margin-block: 1.15em; }
+.content :where(h1, h2, h3, h4, h5, h6) { font-weight: 700; line-height: 1.35; margin-block: 1.6em .65em; text-wrap: pretty; }
+.content :where(h1) { font-size: 1.75em; }
+.content :where(h2) { font-size: 1.5em; }
+.content :where(h3) { font-size: 1.25em; }
+.content :where(h4, h5, h6) { font-size: 1.125em; }
+.content :where(strong, b) { font-weight: 700; }
+.content :where(em, i) { font-style: italic; }
+.content :where(ul) { list-style-type: disc; padding-inline-start: 1.5em; }
+.content :where(ol) { list-style-type: decimal; padding-inline-start: 1.5em; }
+.content :where(ul ul) { list-style-type: circle; }
+.content :where(li) { margin-block: .6em; padding-inline-start: .2em; }
+.content :where(li)::marker { color: var(--botanical); }
+.content :where(li p, li ul, li ol) { margin-block: .5em; }
+.content :where(a) { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+.content :where(a:hover) { text-decoration-thickness: 2px; }
+.content :where(a:focus-visible) { outline: 2px solid var(--botanical); outline-offset: 3px; border-radius: 2px; }
+.content :where(blockquote) { border-inline-start: 2px solid var(--line); padding-inline-start: 1em; }
+.content :where(img) { max-width: 100%; height: auto; }
+.content :where(table) { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.content :where(th, td) { border: 1px solid var(--line); padding: .5em; }
+.content :where(pre) { white-space: pre-wrap; }
+.content > :first-child { margin-top: 0; }
+.content > :last-child { margin-bottom: 0; }

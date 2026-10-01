@@ -3,9 +3,12 @@ import type { CSSProperties } from "react";
 import { getDefaultVariant, type Product } from "@/domain/catalog/products";
 import { StoreProvider } from "@/features/store/store-provider";
 import { getPublicSiteUrl } from "@/lib/site-url";
+import { SUPPORT } from "@/shared/config/support";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { SiteChrome } from "@/widgets/site-chrome/site-chrome";
+import { JudgemeScript } from "@/features/reviews/judgeme-script";
 import "./globals.css";
+import "@/features/reviews/judgeme.css";
 
 function productForGlobalStore(product: Product): Product {
   const defaultVariant = getDefaultVariant(product);
@@ -29,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
     storefront.source === "shopify"
       ? storefront.content.homeHeroPoster
       : {
-          url: "/og-shopify.jpg",
+          url: "/og-image.jpg",
           width: 1200,
           height: 630,
           altText: "NatureMist — Pure botanicals. Powerful rituals.",
@@ -109,10 +112,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         "@id": `${siteUrl}/#organization`,
         name: brandName,
         url: siteUrl,
-        logo: `${siteUrl}/og-shopify.jpg`,
+        logo: `${siteUrl}/og-image.jpg`,
         description:
           "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.",
-        email: "care@naturemist.com",
+        email: SUPPORT.email,
+        telephone: SUPPORT.phone,
+        contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: SUPPORT.email, telephone: SUPPORT.phone },
         sameAs: [siteUrl],
       },
       {
@@ -152,6 +157,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           <SiteChrome>{children}</SiteChrome>
         </StoreProvider>
+        <JudgemeScript />
       </body>
     </html>
   );

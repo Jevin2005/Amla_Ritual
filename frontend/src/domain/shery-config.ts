@@ -69,3 +69,16 @@ export function sheryPosterConfig(strength: number, preset: SheryConfig = {}): S
     zindex: { value: 1 },
   };
 }
+
+// Organic reveal on the hero photograph; the underlying image stays undistorted.
+export const heroPosterGooeyConfig = sheryPosterConfig(1, {
+  distortionAmount: { value: 0 },
+  metaball: { value: .24 },
+  noise_height: { value: .44 },
+  noise_speed: { value: .7 },
+  noise_scale: { value: 10 },
+  growSize: { value: 6 },
+  durationOut: { value: .8 },
+  durationIn: { value: .6 },
+  antialias_threshold: { value: .025 },
+});

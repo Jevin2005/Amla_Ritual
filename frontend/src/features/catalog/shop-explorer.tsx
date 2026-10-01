@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ritualGoals, type RitualGoal } from "@/domain/catalog/products";
+import { matchesRitualGoal, ritualGoals, type RitualGoal } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
 
@@ -35,7 +35,7 @@ export function ShopExplorer() {
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     const list = products.filter((product) => {
-      const matchesGoal = goal === "All" || product.concerns.includes(goal);
+      const matchesGoal = goal === "All" || matchesRitualGoal(product, goal);
       const matchesCollection =
         !collection ||
         (product.collections ?? []).some(
@@ -44,7 +44,7 @@ export function ShopExplorer() {
       const matchesStep = step === "All" || product.ritualStep === step;
       const matchesQuery =
         !normalized ||
-        [product.name, product.botanical, product.subtitle, ...product.searchTerms]
+        [product.name, product.botanical, product.subtitle, product.ingredient, product.formulation, product.size, ...product.searchTerms]
           .join(" ")
           .toLowerCase()
           .includes(normalized);
@@ -54,7 +54,7 @@ export function ShopExplorer() {
     return [...list].sort((a, b) => {
       if (sort === "price-low") return a.pricePaise - b.pricePaise;
       if (sort === "price-high") return b.pricePaise - a.pricePaise;
-      return a.collectionNumber.localeCompare(b.collectionNumber);
+      return a.collectionNumber.localeCompare(b.collectionNumber, undefined, { numeric: true });
     });
   }, [collection, goal, products, query, sort, step]);
 

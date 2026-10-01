@@ -1,0 +1,168 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef } from "react";
+import type { Product } from "@/domain/catalog/products";
+import type { MotionSettings } from "@/domain/motion";
+import { installBenefitsPointer, observeBenefitsEntrance } from "./product-benefits-motion";
+import styles from "./product-benefits.module.css";
+
+const benefits = [
+  {
+    title: "Follicle Vitality",
+    mobileTitle: "Root care",
+    mobileDescription: "A grounding botanical ritual for roots and scalp.",
+    botanical: "Amla",
+    description: "Delivers plant polyphenols and antioxidants to strengthen hair roots.",
+    productSlug: "amla-powder",
+  },
+  {
+    title: "Natural Slip & Cuticle Seal",
+    mobileTitle: "Softness & shine",
+    mobileDescription: "Gentle detangling for silky, luminous lengths.",
+    botanical: "Shikakai",
+    description: "Gently detangles while imparting a reflective, silky sheen.",
+    productSlug: "shikakai-powder",
+  },
+  {
+    title: "Sebum Balance",
+    mobileTitle: "A gentle reset",
+    mobileDescription: "Cleanse your scalp while caring for its natural moisture.",
+    botanical: "Reetha",
+    description: "Purifies the scalp without stripping its essential natural moisture barrier.",
+    productSlug: "reetha-powder",
+  },
+  {
+    title: "Pure Pigment Depth",
+    mobileTitle: "Botanical colour",
+    mobileDescription: "Plant-based pigment for a considered colour ritual.",
+    botanical: "Indigo",
+    description: "Enhances rich natural hair tones with zero synthetic dyes or ammonia.",
+    productSlug: "indigo-powder",
+  },
+];
+
+const tickerItems = [...benefits.map(({ title }) => title), "Single-origin shade-dried herbs"];
+
+function Arrow() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ProductBenefits({ products, motionSettings }: {
+  products: readonly Product[];
+  motionSettings: MotionSettings;
+}) {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const stopEntrance = observeBenefitsEntrance(section, motionSettings);
+    const stopPointer = installBenefitsPointer(section, motionSettings);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let inView = false;
+    const updateLoops = () => {
+      section.dataset.motionRunning = String(inView && !document.hidden && motionSettings.enabled && !reduced.matches);
+    };
+    const observer = "IntersectionObserver" in window ? new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      updateLoops();
+    }) : undefined;
+    if (observer) observer.observe(section);
+    else inView = true;
+    updateLoops();
+    document.addEventListener("visibilitychange", updateLoops);
+    reduced.addEventListener("change", updateLoops);
+    return () => {
+      stopEntrance();
+      stopPointer();
+      observer?.disconnect();
+      document.removeEventListener("visibilitychange", updateLoops);
+      reduced.removeEventListener("change", updateLoops);
+      delete section.dataset.motionRunning;
+    };
+  }, [motionSettings]);
+
+  return (
+    <section ref={sectionRef} className={styles.section} aria-labelledby="benefits-title" data-reveal-ignore>
+      <div className={styles.inner}>
+        <div className={styles.header}>
+          <div>
+            <p className={styles.eyebrow} data-benefit-reveal>Botanical efficacy</p>
+            <h2 className={styles.heading} id="benefits-title">
+              <span className={styles.desktopCopy} data-benefit-reveal>The benefit of</span>
+              <em className={styles.desktopCopy} data-benefit-reveal>this product.</em>
+              <span className={styles.mobileCopy} data-benefit-reveal>Find your<br /><em>botanical benefit.</em></span>
+            </h2>
+            <p className={styles.mobileIntro}>Four botanicals. A little care for every ritual.</p>
+          </div>
+          <div className={styles.intro} data-benefit-reveal>
+            <p>Proven botanical hair benefits formulated with pure, single-origin shade-dried herbs.</p>
+            <div className={styles.actions}>
+              <Link href="/shop" className={styles.button} data-benefits-button>
+                <span className={styles.buttonSurface} data-benefits-button-surface>
+                  Explore us <span className={styles.buttonArrow}><Arrow /></span>
+                </span>
+              </Link>
+              <div className={styles.seal} aria-label="100%">
+                <svg viewBox="0 0 56 56" fill="none" aria-hidden="true">
+                  <circle cx="28" cy="28" r="26.5" stroke="currentColor" strokeWidth="0.7" />
+                  <circle cx="28" cy="28" r="21.5" stroke="currentColor" strokeWidth="0.7" strokeDasharray="1 4" />
+                  <text x="28" y="32" textAnchor="middle" fill="currentColor" stroke="none">100%</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.divider} data-benefit-reveal data-benefits-divider />
+        <ol className={styles.rows}>
+          {benefits.map(({ title, description, productSlug, mobileTitle, mobileDescription, botanical: botanicalName }, index) => {
+            // Handles can survive a rename; resolve the displayed botanical
+            // from the current product name before linking its live handle.
+            const botanical = productSlug.replace(/-powder$/, "");
+            const product = products.find(({ name }) => name.toLowerCase().split(/[^a-z]+/).includes(botanical));
+            const imageSrc = product?.featuredImage?.url || `/images/${productSlug}.jpg`;
+            return (
+              <li key={title} className={styles.row} data-benefit-row data-benefit-reveal>
+                <Link className={styles.rowLink} href={product ? `/shop/${product.slug}` : "/shop"}>
+                  <div className={styles.identity}>
+                    <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                    <span className={styles.thumbnail} aria-hidden="true">
+                      <Image src={imageSrc} alt="" fill sizes="64px" className={styles.productImage} />
+                    </span>
+                  </div>
+                  <h3 className={styles.title}><span className={styles.desktopCopy}>{title}</span><span className={styles.mobileCopy}>{mobileTitle}</span></h3>
+                  <div className={styles.details} data-benefit-details>
+                    <p className={styles.description}><span className={styles.desktopCopy}>{description}</span><span className={styles.mobileCopy}>{mobileDescription}</span></p>
+                    <span className={styles.productLink}><span className={styles.desktopCopy}>{product ? `Explore ${product.name}` : "Explore botanicals"}</span><span className={styles.mobileCopy}>{product ? `Discover ${botanicalName}` : "Explore botanicals"}</span></span>
+                  </div>
+                  <span className={styles.rowArrow}><Arrow /></span>
+                </Link>
+                <div className={styles.preview} data-benefit-preview aria-hidden="true">
+                  <Image src={imageSrc} alt="" fill sizes="230px" className={styles.productImage} />
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+        <Link href="/shop" className={styles.mobileBrowse}>Explore all botanicals <Arrow /></Link>
+      </div>
+
+      <div className={styles.ticker} data-benefit-reveal aria-hidden="true">
+        <div className={styles.tickerTrack}>
+          {[0, 1].map((copy) => (
+            <div key={copy} className={styles.tickerGroup}>
+              {tickerItems.map((title) => <span key={title}>{title}<i>✦</i></span>)}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

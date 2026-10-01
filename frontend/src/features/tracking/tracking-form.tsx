@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
+import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 
 type Milestone = {
   id: string;
@@ -57,7 +58,7 @@ export function TrackingForm() {
     setTrackedOrder(null);
 
     try {
-      const res = await fetch("/api/shopify/track-order", {
+      const res = await fetch("/api/track-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reference: cleanRef }),
@@ -102,7 +103,7 @@ export function TrackingForm() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!reference.trim()) {
-      setErrorMessage("Please enter an order number (e.g. #1004) or phone number.");
+      setErrorMessage("Please enter the unique Tracking ID from your confirmation email (e.g. 8607588876474).");
       return;
     }
     fetchTracking(reference);
@@ -121,20 +122,20 @@ export function TrackingForm() {
             className="block text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[var(--forest)]"
             htmlFor="order-reference"
           >
-            Order reference or mobile number
+            Private Tracking ID
           </label>
           <span className="text-[0.64rem] font-medium text-[var(--muted)]">
-            e.g. #1004 or 9876543210
+            e.g. 8607588876474
           </span>
         </div>
 
         <div className="flex gap-2 max-[500px]:flex-col">
           <input
-            className="h-[52px] flex-1 rounded-2xl border border-[var(--line)] bg-[var(--ivory)] px-4 text-[0.84rem] text-[var(--forest)] outline-none transition-colors focus:border-[var(--botanical)] focus:ring-2 focus:ring-[var(--botanical)]/15"
+            className="h-[52px] flex-1 rounded-2xl border border-[var(--line)] bg-[var(--ivory)] px-4 text-[0.84rem] text-[var(--forest)] outline-none transition-colors focus:border-[var(--botanical)] focus:ring-2 focus:ring-[var(--botanical)]/15 font-mono"
             id="order-reference"
             value={reference}
             onChange={(e) => setReference(e.target.value)}
-            placeholder="e.g. #1004, NMR-1004, or 10-digit Phone"
+            placeholder="Enter 13-digit Tracking ID (e.g. 8607588876474)"
             required
           />
           <button
@@ -170,7 +171,7 @@ export function TrackingForm() {
           <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--line)] pb-5">
             <div>
               <span className="text-[0.62rem] font-bold uppercase tracking-wider text-[var(--muted)]">
-                Shopify Verified Order
+                Verified Order
               </span>
               <h3 className="m-0 font-serif text-[1.45rem] font-bold text-[var(--forest)]">
                 {trackedOrder.orderName}
@@ -350,8 +351,7 @@ export function TrackingForm() {
           {/* WhatsApp Support Notice */}
           <div className="rounded-2xl border border-[var(--line)] bg-[var(--ivory)] p-4 text-center">
             <p className="m-0 text-[0.72rem] text-[var(--muted)]">
-              Questions about preparation or transit? WhatsApp our herbal dispatch team at{" "}
-              <strong className="text-[var(--forest)]">+91 98765 43210</strong> with reference{" "}
+              Questions about preparation or transit? Contact <SupportContactLinks /> with reference{" "}
               <strong className="font-mono text-[var(--forest)]">{trackedOrder.orderName}</strong>.
             </p>
           </div>

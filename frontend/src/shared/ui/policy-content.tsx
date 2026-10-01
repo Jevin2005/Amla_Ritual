@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { SUPPORT } from "@/shared/config/support";
+import { SupportContactLinks } from "./support-contact-links";
 
 export function PolicyContent({ children }: { children: ReactNode }) {
   return (
@@ -8,13 +10,16 @@ export function PolicyContent({ children }: { children: ReactNode }) {
   );
 }
 
-export function ShopifyPolicyContent({ html }: { html: string }) {
+export function StorePolicyContent({ html }: { html: string }) {
   return (
     <PolicyContent>
-      <ShopifyPolicyBody html={html} />
+      <StorePolicyBody html={html} />
+      <h2>Need help?</h2>
+      <p>For questions about this policy, contact <SupportContactLinks />.</p>
     </PolicyContent>
   );
 }
+export const ShopifyPolicyContent = StorePolicyContent;
 
 const allowedPolicyTags = new Set([
   "a",
@@ -50,6 +55,9 @@ function safePolicyLink(value: string) {
 
 function sanitizeShopifyPolicyHtml(html: string) {
   const withoutExecutableContent = html
+    .replace(/care@naturemist\.(?:com|shop)/gi, SUPPORT.email)
+    .replace(/tel:(?:\+91\s*)?98765\s*43210/gi, SUPPORT.phoneHref)
+    .replace(/(?:\+91\s*)?98765\s*43210/g, SUPPORT.phoneDisplay)
     .replace(/<!--([\s\S]*?)-->/g, "")
     .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1\s*>/gi, "");
 
@@ -79,9 +87,10 @@ function sanitizeShopifyPolicyHtml(html: string) {
     .join("");
 }
 
-export function ShopifyPolicyBody({ html }: { html: string }) {
+export function StorePolicyBody({ html }: { html: string }) {
   return <div dangerouslySetInnerHTML={{ __html: sanitizeShopifyPolicyHtml(html) }} />;
 }
+export const ShopifyPolicyBody = StorePolicyBody;
 
 export function NoticeBox({ title, children }: { title: string; children: ReactNode }) {
   return (

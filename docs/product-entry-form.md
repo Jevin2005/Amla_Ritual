@@ -11,7 +11,7 @@ For every definition below:
 - pin the definition so the team sees it on every product editor;
 - keep the definitions in the order below, which follows the website layout.
 
-Homepage content is separate: use **Content → Metaobjects → Homepage hero**. No homepage fields are required for a normal product listing. See [Homepage hero editor](homepage-hero-admin.md).
+Homepage content uses the optional **Homepage** fields under **Products → Metafields**. No homepage fields are required for a normal product listing. See [Homepage hero editor](homepage-hero-admin.md).
 
 ## Form fields in website order
 
@@ -146,11 +146,11 @@ The remaining copy must match the approved pack and compliance review. Do not co
 
 1. Create the product as **Draft** and assign its category, vendor, type, tags, and collections.
 2. Add options/variants, SKUs, prices, inventory, shipping weight, and high-quality media with alt text.
-3. Complete the pinned product fields. These describe the standard product listing; homepage content is managed separately under Content → Metaobjects → Homepage hero.
+3. Complete the pinned product fields. These describe the standard product listing; homepage content is managed in the optional Homepage metafields on the same product.
 4. Preview the product and test every variant, sold-out state, quantity change, cart action, and checkout handoff.
 5. Publish it to the **Headless** sales channel and the intended Shopify Markets.
 6. Change the status to **Active**. The storefront refreshes automatically; allow up to five minutes if a webhook is not configured.
 
 To remove a product from the website without deleting its history, unpublish it from the Headless channel or set it to Draft. To reorder a ritual set, reorder products inside its Shopify collection.
 
-To remove only a homepage feature, set its separate **Homepage hero** entry to **Draft**. The product remains in normal listings. See [Homepage hero editor](homepage-hero-admin.md).
+To remove only a homepage feature, set the product’s **Show in homepage hero** metafield to **False**. The product remains in normal listings. See [Homepage hero editor](homepage-hero-admin.md).
