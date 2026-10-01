@@ -1,13 +1,20 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   normalizeProductSlug,
   type CustomerReview,
+  type VideoReview,
 } from "@/domain/reviews/custom-reviews";
+import { ReviewPhotoModal, type ReviewPhoto } from "@/features/reviews/review-photo-modal";
 import { StarRating } from "@/features/reviews/star-rating";
+import { VideoReviewModal } from "@/features/reviews/video-review-modal";
 
 function reviewerInitials(review: CustomerReview) {
-  if (review.avatarText?.trim()) return review.avatarText.trim().slice(0, 2);
+  if (review.avatarText?.trim()) return review.avatarText.trim().slice(0, 2).toLocaleUpperCase();
 
   return review.author
     .split(/\s+/)
@@ -52,138 +59,185 @@ export function ReviewCard({
   onPhotoClick?: (photoUrl: string) => void;
   onVideoClick?: (video: { url: string; poster?: string; title?: string }) => void;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const [hasMoreText, setHasMoreText] = useState(false);
+  const [activePhoto, setActivePhoto] = useState<ReviewPhoto | null>(null);
+  const [activeVideo, setActiveVideo] = useState<VideoReview | null>(null);
+  const quoteRef = useRef<HTMLParagraphElement>(null);
+  const quoteId = useId();
   const date = reviewDate(review);
-  const supportingDetails = [review.location, review.role].filter(Boolean);
   const productSlug = normalizeProductSlug(review.productSlug);
+  const photos = (review.photos || []).map((url, index) => ({
+    url,
+    alt: `Photo ${index + 1} from ${review.author}'s review`,
+  }));
+  const visiblePhotos = photos.slice(0, review.video ? 2 : 3);
+  const hiddenPhotoCount = photos.length - visiblePhotos.length;
+
+  useEffect(() => {
+    const quote = quoteRef.current;
+    if (!quote || expanded) return;
+
+    const measure = () => setHasMoreText(quote.scrollHeight > quote.clientHeight + 1);
+    const frame = requestAnimationFrame(measure);
+    const observer = new ResizeObserver(measure);
+    observer.observe(quote);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [expanded, review.quote]);
+
+  function openVideo() {
+    const video = review.video;
+    if (!video) return;
+    if (onVideoClick) {
+      onVideoClick(video);
+      return;
+    }
+    setActiveVideo({
+      id: `review-video-${review.id}`,
+      creator: review.author,
+      title: video.title || `Video review by ${review.author}`,
+      duration: video.duration || "",
+      image: video.poster || photos[0]?.url || "/images/product-placeholder.svg",
+      videoUrl: video.url,
+      productTag: review.productName || "",
+      productSlug: review.productSlug,
+      testimonial: review.quote,
+    });
+  }
 
   return (
-    <article
-      className={`flex h-full flex-col select-none rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-5 shadow-[0_8px_28px_rgba(21,59,45,0.045)] transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--botanical)_45%,var(--line))] hover:shadow-[0_14px_34px_rgba(21,59,45,0.07)] max-[680px]:p-4 ${className}`}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-3">
-          <div
-            className={`relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-full text-[0.7rem] font-bold uppercase tracking-[0.05em] text-white ${review.avatarBg || "bg-[var(--forest)]"}`}
-            aria-hidden="true"
-          >
-            {review.avatarImage ? (
-              <Image
-                src={review.avatarImage}
-                alt=""
-                fill
-                sizes="40px"
-                className="object-cover"
-              />
-            ) : (
-              reviewerInitials(review)
-            )}
-          </div>
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <h3 className="m-0 truncate text-[0.86rem] font-bold text-[var(--forest)]">
-                {review.author}
-              </h3>
+    <>
+      <article
+        aria-label={`Review by ${review.author}`}
+        className={`flex min-w-0 flex-col rounded-2xl border border-[#e2e5da] bg-[#fffcf5] p-[18px] transition-colors hover:border-[#c2ccba] max-[680px]:p-4 ${className}`}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div
+              className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-full bg-[var(--forest)] [font-family:var(--font-sans)] text-xs font-medium uppercase tracking-[0.02em] text-[#fffcf5]"
+              aria-hidden="true"
+            >
+              {review.avatarImage ? (
+                <Image src={review.avatarImage} alt="" fill sizes="36px" className="object-cover" />
+              ) : (
+                reviewerInitials(review)
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="m-0 break-words text-[0.8125rem] font-semibold leading-snug text-[var(--forest)]">{review.author}</p>
               {review.verified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#eaf3e7] px-2 py-0.5 text-[0.66rem] font-bold uppercase tracking-[0.07em] text-[#397228]">
+                <span className="mt-0.5 inline-flex items-center gap-1 text-[0.625rem] leading-snug text-[#68765a]">
                   <span aria-hidden="true">&#10003;</span> Verified purchase
                 </span>
               )}
             </div>
-            {supportingDetails.length > 0 && (
-              <p className="m-0 mt-0.5 truncate text-[0.72rem] text-[var(--muted)]">
-                {supportingDetails.join(" · ")}
-              </p>
+          </div>
+          {date && (
+            <time dateTime={date.dateTime} className="max-w-[34%] shrink-0 break-words pt-0.5 text-right text-[0.625rem] leading-relaxed text-[#74776b]">
+              {date.label}
+            </time>
+          )}
+        </div>
+
+        <div className="mt-2.5">
+          <StarRating average={review.rating} count={1} size="compact" showCount={false} className="gap-2 [&>strong]:text-xs [&>strong]:font-medium [&>span]:text-[0.875rem] [&>span>span:last-child]:text-[#a67c42]" />
+        </div>
+
+        {review.headline && (
+          <h3 className="mb-0 mt-2.5 break-words [font-family:var(--font-display)] text-[1.125rem] font-normal leading-[1.4] tracking-[-0.01em] text-[var(--forest)]">
+            {review.headline}
+          </h3>
+        )}
+        {review.quote && (
+          <div className={review.headline ? "mt-1.5" : "mt-3"}>
+            <p
+              ref={quoteRef}
+              id={quoteId}
+              className={`m-0 whitespace-pre-line break-words text-[0.875rem] leading-[1.65] text-[#62685c] ${expanded ? "" : "line-clamp-4"}`}
+            >
+              {review.quote}
+            </p>
+            {(hasMoreText || expanded) && (
+              <button
+                type="button"
+                aria-expanded={expanded}
+                aria-controls={quoteId}
+                onClick={() => setExpanded((value) => !value)}
+                className="-mb-2 inline-flex min-h-11 cursor-pointer items-center rounded text-[0.74rem] font-semibold text-[#45603c] underline decoration-[#bcc5ae] underline-offset-4 transition-colors hover:text-[var(--forest)] hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
+              >
+                {expanded ? "Read less" : "Read more"}
+              </button>
             )}
           </div>
-        </div>
-        {date && (
-          <time
-            dateTime={date.dateTime}
-            className="shrink-0 text-[0.72rem] text-[var(--muted)]"
-          >
-            {date.label}
-          </time>
         )}
-      </div>
 
-      <div className="mt-4">
-        <StarRating
-          average={review.rating}
-          count={1}
-          size="compact"
-          showCount={false}
-        />
-      </div>
+        {(review.video || photos.length > 0) && (
+          <div className="mt-3 flex flex-wrap gap-2" aria-label="Customer photos and video">
+            {review.video && (
+              <button
+                type="button"
+                onClick={openVideo}
+                className="group relative grid aspect-square w-[76px] max-w-[calc((100%_-_1rem)/3)] shrink-0 cursor-pointer place-items-center overflow-hidden rounded-xl border border-[#dce1d3] bg-[var(--forest)] text-white shadow-[0_2px_5px_rgba(21,59,45,0.05)] min-[380px]:w-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
+                aria-label={`Play ${review.video.title || `video review by ${review.author}`}`}
+              >
+                {review.video.poster && (
+                  // Customer media can be hosted outside the image optimizer's allowlist.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={review.video.poster} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
+                )}
+                <span className="absolute inset-0 bg-gradient-to-t from-black/45 to-black/10 transition-opacity group-hover:opacity-80" />
+                <span className="relative grid size-8 place-items-center rounded-full border border-white/65 bg-white/15 shadow-sm backdrop-blur-sm">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 2.5 13 8l-8 5.5z" /></svg>
+                </span>
+                <span className="absolute inset-x-0 bottom-1 text-[0.56rem] font-medium tracking-[0.035em]">Video</span>
+              </button>
+            )}
+            {visiblePhotos.map((photo, index) => {
+              const showsMore = index === visiblePhotos.length - 1 && hiddenPhotoCount > 0;
+              return (
+                <button
+                  key={`${photo.url}-${index}`}
+                  type="button"
+                  onClick={() => {
+                    if (onPhotoClick && !showsMore) onPhotoClick(photo.url);
+                    else setActivePhoto(photo);
+                  }}
+                  className="group relative aspect-square w-[76px] max-w-[calc((100%_-_1rem)/3)] shrink-0 cursor-pointer overflow-hidden rounded-xl border border-[#dce1d3] bg-[var(--surface-warm)] shadow-[0_2px_5px_rgba(21,59,45,0.05)] min-[380px]:w-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
+                  aria-label={showsMore ? `View all ${photos.length} photos from ${review.author}'s review` : `Enlarge photo ${index + 1} from ${review.author}'s review`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photo.url} alt="" loading="lazy" className="size-full object-cover transition-opacity duration-300 group-hover:opacity-85" />
+                  {showsMore && <span className="absolute inset-0 grid place-items-center bg-[#173824]/65 text-base font-medium text-white">+{hiddenPhotoCount}</span>}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
-      {review.headline && (
-        <h4 className="mb-0 mt-3 [font-family:var(--font-display)] text-[1.12rem] font-normal leading-[1.3] text-[var(--forest)]">
-          {review.headline}
-        </h4>
-      )}
-      <p className="mb-0 mt-2 flex-1 text-[0.84rem] leading-[1.65] text-[var(--muted)]">
-        &ldquo;{review.quote}&rdquo;
-      </p>
-
-      {/* Customer Attached Photos */}
-      {review.photos && review.photos.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          {review.photos.map((photo, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => onPhotoClick?.(photo)}
-              className="group relative size-14 overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--sand)] shadow-2xs transition-all hover:scale-105 hover:border-[var(--botanical)] cursor-pointer"
-              aria-label={`Enlarge customer photo ${i + 1}`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={photo}
-                alt=""
-                className="size-full object-cover"
-              />
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Customer Attached Video */}
-      {review.video && (
-        <div className="mt-2.5">
-          <button
-            type="button"
-            onClick={() => onVideoClick?.(review.video!)}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--sand)] px-3 py-1.5 text-[0.72rem] font-bold text-[var(--forest)] transition-all hover:border-[var(--botanical)] hover:bg-white cursor-pointer"
-          >
-            <span className="grid size-5 place-items-center rounded-full bg-[var(--forest)] text-[0.55rem] text-white">
-              ▶
-            </span>
-            <span className="truncate">{review.video.title || "Watch Customer Video"}</span>
-          </button>
-        </div>
-      )}
-
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] pt-3">
-        <div className="flex flex-wrap items-center gap-2">
-          {review.tag && (
-            <span className="rounded-full bg-[var(--sand)] px-2.5 py-1 text-[0.66rem] font-bold uppercase tracking-[0.08em] text-[var(--forest)]">
-              {review.tag}
-            </span>
-          )}
-          {review.productName && (
-            <span className="text-[0.72rem] font-semibold text-[var(--muted)]">
-              {review.productName}
-            </span>
-          )}
-        </div>
         {showProductLink && productSlug && (
-          <Link
-            href={`/shop/${productSlug}#customer-reviews`}
-            className="inline-flex min-h-8 items-center px-1 text-[0.72rem] font-bold uppercase tracking-[0.08em] text-[var(--botanical)] underline decoration-transparent underline-offset-4 transition-colors hover:text-[var(--forest)] hover:decoration-current"
-          >
-            View product
-          </Link>
+          <div className="mt-3.5 border-t border-[#e6e8de] pt-1">
+            <Link
+              href={`/shop/${productSlug}`}
+              className="flex min-h-11 w-full flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-md py-2 text-[0.6875rem] font-medium text-[#637653] transition-colors hover:bg-[#f2f4eb] hover:text-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]"
+            >
+              {review.productName?.trim() && <span className="min-w-0 flex-[1_1_120px] leading-relaxed [overflow-wrap:anywhere]">{review.productName}</span>}
+              <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-semibold text-[var(--forest)]">
+                View product <span aria-hidden="true">&#8599;</span>
+              </span>
+            </Link>
+          </div>
         )}
-      </div>
-    </article>
+      </article>
+      <ReviewPhotoModal photo={activePhoto} photos={photos} onClose={() => setActivePhoto(null)} />
+      {activeVideo && createPortal(
+        <div onMouseDown={(event) => event.stopPropagation()}>
+          <VideoReviewModal video={activeVideo} onClose={() => setActiveVideo(null)} />
+        </div>,
+        document.body,
+      )}
+    </>
   );
 }

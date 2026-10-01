@@ -23,12 +23,12 @@ declare global {
 }
 
 export function JudgemeScript() {
-  if (!isJudgemeConfigured()) return null;
-
+  const enabled = isJudgemeConfigured();
   const shopDomain = getJudgemeShopDomain();
   const publicToken = getJudgemePublicToken();
 
   useEffect(() => {
+    if (!enabled) return;
     try {
       if (
         typeof window !== "undefined" &&
@@ -40,10 +40,17 @@ export function JudgemeScript() {
     } catch (err) {
       console.warn("[Judge.me] Deferred initialization:", err);
     }
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
     <>
+      <link
+        rel="stylesheet"
+        href="https://cdn.judge.me/judgeme_widget_v2.css"
+        precedence="judgeme"
+      />
       <Script
         id="judgeme-init"
         strategy="beforeInteractive"
@@ -55,18 +62,12 @@ export function JudgemeScript() {
             ${publicToken ? `window.jdgm.PUBLIC_TOKEN = ${JSON.stringify(publicToken)};` : ""}
             window.jdgmSettings = window.jdgmSettings || ${JSON.stringify(defaultJudgemeSettings)};
             var jdgmSettings = window.jdgmSettings;
-            if (!window.jdgm._addEmptyWidgetHeader) {
-              window.jdgm._addEmptyWidgetHeader = function() {};
-            }
-            if (!window.jdgm._customizeReviewWidget) {
-              window.jdgm._customizeReviewWidget = function() {};
-            }
           `,
         }}
       />
       <Script
         id="judgeme-widget-js"
-        src="https://cdn.judge.me/widget_v2.js"
+        src="https://cdn.judge.me/judgeme_widget_v2.js"
         strategy="afterInteractive"
         onLoad={() => {
           try {

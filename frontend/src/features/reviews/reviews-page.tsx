@@ -1,360 +1,257 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  getPlayableVideoMedia,
-  normalizeProductSlug,
   reviewTags,
   type CustomerReview,
   type ReviewTag,
   type VideoReview,
 } from "@/domain/reviews/custom-reviews";
-import { ReviewCard } from "@/features/reviews/review-card";
-import { StarRating } from "@/features/reviews/star-rating";
-import { VideoAutoplayPreview } from "@/features/reviews/video-autoplay-preview";
-import { VideoReviewModal } from "@/features/reviews/video-review-modal";
 import { JudgemeAllReviewsWidget } from "@/features/reviews/judgeme-all-reviews-widget";
-import { isJudgemeConfigured } from "@/lib/judgeme/config";
+import { ReviewCard } from "@/features/reviews/review-card";
+import { ReviewPagination } from "@/features/reviews/review-pagination";
+import { VideoReviewModal } from "@/features/reviews/video-review-modal";
+import { VideoStoryCard } from "@/features/reviews/video-story-card";
 import { useStore } from "@/features/store/store-provider";
+import { isJudgemeConfigured } from "@/lib/judgeme/config";
+import type { JudgemeAllReviewsPage } from "@/lib/judgeme/all-reviews";
 
+const REVIEW_PAGE_SIZE = 6;
+const VIDEO_PAGE_SIZE = 8;
+const sectionClass =
+  "mx-auto w-full max-w-[1240px] px-[clamp(20px,4vw,56px)]";
 const eyebrowClass =
-  "mb-4 text-[0.72rem] leading-[1.3] font-bold tracking-[0.2em] text-[var(--botanical)] uppercase";
-const buttonClass =
-  "inline-flex min-h-[52px] items-center justify-center gap-[14px] rounded-full border border-transparent bg-[var(--forest)] px-8 py-[14px] text-[0.74rem] leading-none font-bold tracking-[0.14em] text-[var(--paper)] uppercase shadow-[0_10px_26px_rgba(21,59,45,0.18)] transition-[transform,background-color,box-shadow] duration-[350ms] ease-[var(--ease)] hover:-translate-y-0.5 hover:bg-[var(--forest-dark)] hover:shadow-[0_14px_30px_rgba(21,59,45,0.22)]";
+  "mb-3 mt-0 text-[0.65rem] font-semibold uppercase tracking-[0.19em] text-[var(--botanical)]";
+const headingClass =
+  "m-0 [font-family:var(--font-display)] text-[clamp(1.85rem,3.3vw,2.8rem)] font-normal leading-[1.12] tracking-[-0.035em] text-[var(--forest)]";
 
 type ReviewFilter = "All" | ReviewTag;
-const REVIEW_PAGE_SIZE = 8;
-const VIDEO_PAGE_SIZE = 8;
-
 type ReviewsPageProps = {
   initialReviews?: CustomerReview[];
+  initialJudgemeReviews?: JudgemeAllReviewsPage | null;
 };
 
-export function ReviewsPage({ initialReviews = [] }: ReviewsPageProps) {
+function focusReviewSection(section: HTMLElement | null) {
+  if (!section) return;
+  section.focus({ preventScroll: true });
+  section.scrollIntoView({
+    block: "start",
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "instant"
+      : "smooth",
+  });
+}
+
+export function ReviewsPage({ initialReviews = [], initialJudgemeReviews = null }: ReviewsPageProps) {
   const { content } = useStore();
+  const usesJudgeme = isJudgemeConfigured();
   const [activeFilter, setActiveFilter] = useState<ReviewFilter>("All");
   const [activeVideo, setActiveVideo] = useState<VideoReview | null>(null);
-  const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_PAGE_SIZE);
-  const [visibleVideoCount, setVisibleVideoCount] = useState(VIDEO_PAGE_SIZE);
-
+  const [reviewPage, setReviewPage] = useState(1);
+  const [videoPage, setVideoPage] = useState(1);
   const [localAllReviews, setLocalAllReviews] = useState<CustomerReview[]>([]);
+  const reviewSectionRef = useRef<HTMLElement>(null);
+  const videoSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (usesJudgeme) return;
     try {
       const saved = JSON.parse(localStorage.getItem("naturemist_all_reviews") || "[]");
       if (Array.isArray(saved) && saved.length > 0) {
-        queueMicrotask(() => {
-          setLocalAllReviews(saved);
-        });
+        queueMicrotask(() => setLocalAllReviews(saved));
       }
     } catch {
-      // ignore
+      // Reviews from the store remain available when local storage is unavailable.
     }
-  }, []);
+  }, [usesJudgeme]);
 
   const reviews = useMemo(() => {
     const baseReviews = initialReviews.length > 0 ? initialReviews : content.customerReviews;
-    const existingIds = new Set(baseReviews.map((r) => r.id));
-    const uniqueLocal = localAllReviews.filter((r) => !existingIds.has(r.id));
+    const existingIds = new Set(baseReviews.map((review) => review.id));
+    const uniqueLocal = localAllReviews.filter((review) => !existingIds.has(review.id));
     return [...uniqueLocal, ...baseReviews];
   }, [content.customerReviews, localAllReviews, initialReviews]);
 
-  const videos = useMemo(() => {
-    const list: VideoReview[] = [...content.videoReviews];
-    reviews.forEach((review) => {
-      if (review.video) {
-        list.push({
-          id: `rev-video-${review.id}`,
-          creator: review.author,
-          title: review.video.title || `${review.productName || "Botanical"} Video Story`,
-          duration: review.video.duration || "0:45",
-          image: review.video.poster || review.photos?.[0] || "/images/product-placeholder.svg",
-          videoUrl: review.video.url,
-          productTag: (review.productName || "BOTANICAL").toUpperCase(),
-          productSlug: review.productSlug,
-          testimonial: review.quote,
-        });
-      }
-    });
-    return list;
-  }, [content.videoReviews, reviews]);
+  // Attached review videos remain in their review cards or Judge.me.
+  const videos = content.videoReviews;
   const availableTags = useMemo(
     () => reviewTags.filter((tag) => reviews.some((review) => review.tag === tag)),
     [reviews],
   );
   const filteredReviews = useMemo(
-    () =>
-      activeFilter === "All"
-        ? reviews
-        : reviews.filter((review) => review.tag === activeFilter),
+    () => activeFilter === "All"
+      ? reviews
+      : reviews.filter((review) => review.tag === activeFilter),
     [activeFilter, reviews],
   );
-  const visibleReviews = filteredReviews.slice(0, visibleReviewCount);
-  const visibleVideos = videos.slice(0, visibleVideoCount);
-  const average = useMemo(
-    () =>
-      reviews.length
-        ? reviews.reduce((total, review) => total + review.rating, 0) /
-          reviews.length
-        : 0,
-    [reviews],
+  const reviewPageCount = Math.max(1, Math.ceil(filteredReviews.length / REVIEW_PAGE_SIZE));
+  const videoPageCount = Math.max(1, Math.ceil(videos.length / VIDEO_PAGE_SIZE));
+  const currentReviewPage = Math.min(reviewPage, reviewPageCount);
+  const currentVideoPage = Math.min(videoPage, videoPageCount);
+  const visibleReviews = filteredReviews.slice(
+    (currentReviewPage - 1) * REVIEW_PAGE_SIZE,
+    currentReviewPage * REVIEW_PAGE_SIZE,
   );
-  const productCount = useMemo(
-    () =>
-      new Set(
-        [...reviews, ...videos]
-          .map((item) => normalizeProductSlug(item.productSlug))
-          .filter(Boolean),
-      ).size,
-    [reviews, videos],
+  const visibleVideos = videos.slice(
+    (currentVideoPage - 1) * VIDEO_PAGE_SIZE,
+    currentVideoPage * VIDEO_PAGE_SIZE,
   );
+  const writtenReviewCount = usesJudgeme
+    ? initialJudgemeReviews?.productReviewCount
+    : reviews.length;
   const closeVideo = useCallback(() => setActiveVideo(null), []);
   const hasStories = reviews.length > 0 || videos.length > 0;
 
   return (
-    <main className="overflow-x-clip" id="main-content">
-      <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(183,212,90,0.15),transparent_40%),linear-gradient(180deg,#faf7f0,#f4efe4_70%,#f8f5ed)] px-[clamp(24px,5vw,72px)] pb-[clamp(50px,6vw,90px)] pt-[clamp(65px,8vw,110px)] text-center">
-        <div className="mx-auto max-w-[840px]">
-          <p className={eyebrowClass}>Community Reflections & Results</p>
-          <h1 className="m-0 [font-family:var(--font-display)] text-[clamp(2.8rem,5.5vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.045em] text-[var(--forest)] text-balance">
-            Real experiences. Product by product.
+    <main id="main-content" className="overflow-x-clip bg-[#f8f6ef] pb-12 sm:pb-16">
+      <header className={`${sectionClass} pb-[clamp(36px,5vw,60px)] pt-[clamp(44px,7vw,84px)] text-center`}>
+        <div className="mx-auto max-w-[850px]">
+          <p className={eyebrowClass}>Community reflections &amp; results</p>
+          <h1 className="m-0 [font-family:var(--font-display)] text-[clamp(2.65rem,5.6vw,4.8rem)] font-normal leading-[1.02] tracking-[-0.045em] text-[var(--forest)]">
+            Real experiences.<br />Product by product.
           </h1>
-          <p className="mx-auto mt-6 max-w-[600px] text-[1.02rem] leading-[1.75] text-[var(--muted)]">
-            Explore published written reviews and customer video stories. Every item is connected to the exact botanical it describes.
+          <p className="mx-auto mb-0 mt-5 max-w-[540px] text-[0.9rem] leading-[1.8] text-[var(--muted)]">
+            Explore written reviews, customer photos and video stories from everyday botanical routines.
           </p>
-
-          {hasStories && (
-            <div className="mx-auto mt-10 grid max-w-[760px] grid-cols-3 gap-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--paper)] p-6 shadow-[0_12px_32px_rgba(21,59,45,0.06)] max-[600px]:grid-cols-1 max-[600px]:gap-5">
-              <div className="flex flex-col items-center justify-center">
-                {reviews.length > 0 ? (
-                  <StarRating
-                    average={average}
-                    count={reviews.length}
-                    size="large"
-                  />
-                ) : (
-                  <span className="[font-family:var(--font-display)] text-[2rem] text-[var(--forest)]">—</span>
-                )}
-                <p className="mb-0 mt-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)]">
-                  Written rating
-                </p>
+          {(writtenReviewCount !== undefined || videos.length > 0) && (
+            <dl className="mx-auto mb-0 mt-7 flex w-fit min-w-[min(100%,300px)] max-w-full items-center justify-center divide-x divide-[#dcded1] rounded-2xl border border-[#dcded1] bg-[#fffdf7] px-3 py-5 shadow-[0_5px_22px_rgba(21,59,45,0.025)] sm:mt-8 sm:px-5">
+              {writtenReviewCount !== undefined && (
+                <div className="flex flex-1 flex-col-reverse gap-2 px-5 sm:px-8">
+                  <dt className="text-[0.59rem] font-semibold uppercase tracking-[0.12em] text-[#727967]">Written reviews</dt>
+                  <dd className="m-0 [font-family:var(--font-display)] text-[2rem] leading-none text-[var(--forest)]">{writtenReviewCount.toLocaleString("en-IN")}</dd>
+                </div>
+              )}
+              <div className="flex flex-1 flex-col-reverse gap-2 px-5 sm:px-8">
+                <dt className="text-[0.59rem] font-semibold uppercase tracking-[0.12em] text-[#727967]">Video stories</dt>
+                <dd className="m-0 [font-family:var(--font-display)] text-[2rem] leading-none text-[var(--forest)]">{videos.length.toLocaleString("en-IN")}</dd>
               </div>
-              <div className="border-x border-[var(--line)] max-[600px]:border-x-0 max-[600px]:border-y max-[600px]:py-4">
-                <p className="m-0 [font-family:var(--font-display)] text-[2.35rem] font-normal leading-none text-[var(--forest)]">
-                  {videos.length}
-                </p>
-                <p className="mb-0 mt-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)]">
-                  Video {videos.length === 1 ? "story" : "stories"}
-                </p>
-              </div>
-              <div>
-                <p className="m-0 [font-family:var(--font-display)] text-[2.35rem] font-normal leading-none text-[var(--forest)]">
-                  {productCount}
-                </p>
-                <p className="mb-0 mt-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)]">
-                  {productCount === 1 ? "Botanical" : "Botanicals"} reviewed
-                </p>
-              </div>
-            </div>
+            </dl>
           )}
         </div>
-      </section>
+      </header>
 
-      {isJudgemeConfigured() && (
-        <section className="mx-auto w-full max-w-[1280px] px-[clamp(24px,5vw,64px)] pt-10 pb-6" aria-labelledby="all-reviews-heading">
-          <div className="mb-6 text-center">
-            <p className={`${eyebrowClass} mb-2`}>Verified Customer Voices</p>
-            <h2 id="all-reviews-heading" className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,4vw,3.2rem)] font-normal text-[var(--forest)]">
-              All Verified Reviews
-            </h2>
+      {videos.length > 0 && (
+        <section
+          ref={videoSectionRef}
+          id="customer-video-list"
+          tabIndex={-1}
+          className={`${sectionClass} scroll-mt-28 pb-[clamp(44px,6vw,76px)] outline-none`}
+          aria-labelledby="video-stories-title"
+        >
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className={eyebrowClass}>Explore the ritual</p>
+              <h2 id="video-stories-title" className={headingClass}>Customer video stories</h2>
+            </div>
+            <p className="m-0 text-[0.72rem] text-[var(--muted)]">Videos play muted</p>
           </div>
-          <JudgemeAllReviewsWidget />
+          <div id="customer-video-cards" className="grid grid-cols-1 items-start gap-3 min-[380px]:grid-cols-2 sm:gap-5 lg:grid-cols-4">
+            {visibleVideos.map((video) => (
+              <VideoStoryCard key={video.id} video={video} onOpen={setActiveVideo} />
+            ))}
+          </div>
+          <ReviewPagination
+            page={currentVideoPage}
+            totalItems={videos.length}
+            pageSize={VIDEO_PAGE_SIZE}
+            label="Video stories"
+            controlsId="customer-video-cards"
+            onPageChange={(page) => {
+              setVideoPage(Math.min(videoPageCount, Math.max(1, page)));
+              focusReviewSection(videoSectionRef.current);
+            }}
+          />
         </section>
       )}
 
-      {!hasStories && !isJudgemeConfigured() ? (
-        <section className="mx-auto w-full max-w-[920px] px-[clamp(24px,5vw,64px)] py-[clamp(70px,9vw,120px)] text-center" aria-labelledby="empty-reviews-title">
-          <span className="mx-auto grid size-14 place-items-center rounded-full bg-[var(--sand)] text-2xl text-[var(--botanical)]" aria-hidden="true">
-            &#9734;
-          </span>
-          <h2 id="empty-reviews-title" className="mb-0 mt-5 [font-family:var(--font-display)] text-[clamp(1.8rem,4vw,2.7rem)] font-normal text-[var(--forest)]">
-            Customer stories are being prepared
-          </h2>
-          <p className="mx-auto mb-0 mt-3 max-w-[560px] text-[0.9rem] leading-[1.75] text-[var(--muted)]">
-            This page will populate automatically when approved written or video reviews are published.
-          </p>
-          <Link href="/shop" className={`${buttonClass} mt-8`}>
-            Explore the collection
-          </Link>
-        </section>
-      ) : (
-        <>
-          {videos.length > 0 && (
-            <section className="mx-auto w-full max-w-[1280px] px-[clamp(24px,5vw,64px)] pt-[clamp(60px,7vw,96px)]" aria-labelledby="video-stories-title">
-              <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <p className={`${eyebrowClass} mb-2`}>Explore the ritual</p>
-                  <h2 id="video-stories-title" className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,4vw,3.2rem)] font-normal text-[var(--forest)]">
-                    Customer video stories
-                  </h2>
-                </div>
-                <span
-                  className="text-[0.74rem] text-[var(--muted)]"
-                  role="status"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  Showing {visibleVideos.length} of {videos.length} · Select a story to open
-                </span>
-              </div>
-              <div className="grid grid-cols-4 gap-5 max-[1000px]:grid-cols-3 max-[760px]:flex max-[760px]:snap-x max-[760px]:snap-mandatory max-[760px]:overflow-x-auto max-[760px]:pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {visibleVideos.map((video) => {
-                  const media = getPlayableVideoMedia(video);
-                  const isDirectVideo = media?.kind === "video";
-                  return (
-                    <button
-                      key={video.id}
-                      type="button"
-                      onClick={() => setActiveVideo(video)}
-                      className="group overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--paper)] text-left shadow-[0_10px_30px_rgba(21,59,45,0.06)] transition-[transform,border-color] hover:-translate-y-1 hover:border-[var(--botanical)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[760px]:w-[72vw] max-[760px]:max-w-[290px] max-[760px]:shrink-0 max-[760px]:snap-start"
-                      aria-label={`${media ? "Play" : "Open"} ${video.title} by ${video.creator}`}
-                    >
-                      <span className="relative block aspect-[4/5] overflow-hidden bg-[var(--sand)]">
-                        <Image
-                          src={video.image}
-                          alt=""
-                          fill
-                          sizes="(max-width: 760px) 72vw, (max-width: 1000px) 33vw, 25vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                        />
-                        {isDirectVideo && (
-                          <VideoAutoplayPreview
-                            url={media.url}
-                            poster={video.image}
-                            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                          />
-                        )}
-                        <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10 pointer-events-none" />
-                        <span className="absolute inset-0 grid place-items-center pointer-events-none">
-                          <span className="grid size-14 place-items-center rounded-full border border-white/75 bg-black/30 text-white shadow-xl backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:border-transparent group-hover:bg-[var(--botanical)] group-hover:text-[var(--forest-dark)]">
-                            <span className={media ? "ml-1 text-xl" : "text-2xl"} aria-hidden="true">
-                              {media ? "▶" : "“"}
-                            </span>
-                          </span>
-                        </span>
-                        <span className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3 text-white pointer-events-none">
-                          <strong className="text-[0.74rem] uppercase tracking-[0.08em]">{video.creator}</strong>
-                          <span className="text-[0.66rem] text-white/90">{video.duration}</span>
-                        </span>
-                      </span>
-                      <span className="block p-4">
-                        <strong className="block text-[0.88rem] leading-[1.35] text-[var(--forest)]">{video.title}</strong>
-                        <span className="mt-2 block line-clamp-2 text-[0.78rem] leading-[1.55] text-[var(--muted)]">{video.testimonial}</span>
-                        <span className="mt-3 block text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--botanical)]">{video.productTag}</span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              {visibleVideos.length < videos.length && (
-                <div className="mt-7 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVisibleVideoCount((count) => count + VIDEO_PAGE_SIZE)
-                    }
-                    className="inline-flex min-h-12 items-center rounded-full border border-[var(--forest)] px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-white"
-                  >
-                    Load more video stories
-                  </button>
-                </div>
-              )}
-            </section>
-          )}
+      {(usesJudgeme || reviews.length > 0) && (
+        <section
+          ref={reviewSectionRef}
+          id="customer-review-list"
+          tabIndex={-1}
+          className={`${sectionClass} scroll-mt-28 pb-[clamp(44px,6vw,76px)] outline-none`}
+          aria-labelledby="written-reviews-title"
+        >
+          <div className="mb-7 text-center sm:mb-8">
+            <p className={eyebrowClass}>Published experiences</p>
+            <h2 id="written-reviews-title" className={headingClass}>Written customer reviews</h2>
+          </div>
 
-          {reviews.length > 0 && (
-            <section className="mx-auto w-full max-w-[1280px] px-[clamp(24px,5vw,64px)] py-[clamp(60px,7vw,100px)]" aria-labelledby="written-reviews-title">
-              <div className="mb-9 text-center">
-                <p className={`${eyebrowClass} mb-2`}>Published experiences</p>
-                <h2 id="written-reviews-title" className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,4vw,3.2rem)] font-normal text-[var(--forest)]">
-                  Written customer reviews
-                </h2>
-              </div>
-
+          {usesJudgeme ? (
+            <JudgemeAllReviewsWidget initialPage={initialJudgemeReviews} />
+          ) : (
+            <>
               {availableTags.length > 0 && (
-                <div className="mb-10 flex flex-wrap items-center justify-center gap-2.5" aria-label="Filter reviews by concern">
+                <div className="mb-7 flex flex-wrap justify-center gap-2" role="group" aria-label="Filter reviews by concern">
                   {(["All", ...availableTags] as ReviewFilter[]).map((tag) => (
                     <button
                       key={tag}
                       type="button"
                       onClick={() => {
                         setActiveFilter(tag);
-                        setVisibleReviewCount(REVIEW_PAGE_SIZE);
+                        setReviewPage(1);
                       }}
-                      className={`rounded-full px-5 py-2.5 text-[0.74rem] font-bold uppercase tracking-[0.1em] transition-[background-color,color,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] ${
-                        activeFilter === tag
-                          ? "bg-[var(--forest)] text-[var(--paper)] shadow-[0_6px_18px_rgba(21,59,45,0.15)]"
-                          : "border border-[var(--line)] bg-[var(--paper)] text-[var(--muted)] hover:border-[var(--forest)] hover:text-[var(--forest)]"
-                      }`}
+                      className={`min-h-11 rounded-full border px-4 py-2 text-[0.72rem] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] ${activeFilter === tag ? "border-[var(--forest)] bg-[var(--forest)] text-[var(--paper)]" : "border-[#deded1] bg-[#fffdf7] text-[var(--muted)] hover:border-[var(--forest)] hover:text-[var(--forest)]"}`}
                       aria-pressed={activeFilter === tag}
+                      aria-controls="customer-review-cards"
                     >
                       {tag}
                     </button>
                   ))}
                 </div>
               )}
-
-              <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-                Showing {visibleReviews.length} of {filteredReviews.length} matching written reviews
-                {activeFilter === "All" ? "." : ` for ${activeFilter}.`}
-              </p>
-
-              <div className="grid grid-cols-2 gap-6 max-[850px]:grid-cols-1">
+              <div id="customer-review-cards" className="grid grid-cols-1 items-start gap-5 md:grid-cols-2">
                 {visibleReviews.map((review) => (
                   <ReviewCard key={review.id} review={review} showProductLink />
                 ))}
               </div>
-
-              {visibleReviews.length < filteredReviews.length && (
-                <div className="mt-8 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVisibleReviewCount((count) => count + REVIEW_PAGE_SIZE)
-                    }
-                    className="inline-flex min-h-12 items-center rounded-full border border-[var(--forest)] px-7 py-3 text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-white"
-                  >
-                    Load more written reviews
-                  </button>
-                </div>
-              )}
-
-              {filteredReviews.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-[var(--line-strong)] bg-[var(--paper)] p-8 text-center text-[0.86rem] text-[var(--muted)]">
+              {filteredReviews.length > 0 ? (
+                <ReviewPagination
+                  page={currentReviewPage}
+                  totalItems={filteredReviews.length}
+                  pageSize={REVIEW_PAGE_SIZE}
+                  label="Customer reviews"
+                  controlsId="customer-review-cards"
+                  onPageChange={(page) => {
+                    setReviewPage(Math.min(reviewPageCount, Math.max(1, page)));
+                    focusReviewSection(reviewSectionRef.current);
+                  }}
+                />
+              ) : (
+                <p role="status" className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] px-5 py-8 text-center text-sm text-[var(--muted)]">
                   No reviews are published in this category yet.
-                </div>
+                </p>
               )}
-            </section>
+            </>
           )}
-
-          <section className="mx-auto mb-[clamp(60px,8vw,100px)] w-full max-w-[1280px] px-[clamp(24px,5vw,64px)]">
-            <div className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--sand)]/50 p-[clamp(32px,5vw,56px)] text-center">
-              <p className={eyebrowClass}>Find Your Botanical</p>
-              <h2 className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,4vw,3.2rem)] font-normal text-[var(--forest)]">
-                Explore the product behind each story.
-              </h2>
-              <div className="mt-8 flex justify-center">
-                <Link href="/shop" className={buttonClass}>
-                  Explore the collection
-                </Link>
-              </div>
-            </div>
-          </section>
-        </>
+        </section>
       )}
+
+      {!hasStories && !usesJudgeme && (
+        <section className={`${sectionClass} py-10`} aria-labelledby="empty-reviews-title">
+          <div className="border-y border-[var(--line)] py-10 text-center">
+            <h2 id="empty-reviews-title" className={headingClass}>Customer stories are on their way</h2>
+            <p className="mx-auto mb-0 mt-3 max-w-[480px] text-[0.9rem] leading-relaxed text-[var(--muted)]">
+              Published customer reviews, photos and videos will appear here.
+            </p>
+          </div>
+        </section>
+      )}
+
+      <section className={sectionClass} aria-labelledby="reviews-collection-title">
+        <div className="rounded-[24px] border border-[#dddfd1] bg-[#f1efe5] px-5 py-9 text-center sm:px-10 sm:py-11">
+          <p className={eyebrowClass}>Find your botanical</p>
+          <h2 id="reviews-collection-title" className={`${headingClass} mx-auto max-w-[660px]`}>Explore the product behind each story.</h2>
+          <Link
+            href="/shop"
+            className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[var(--forest)] px-7 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[var(--paper)] transition-colors hover:bg-[var(--forest-dark)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--forest)]"
+          >
+            Explore the collection
+            <span aria-hidden="true">&rarr;</span>
+          </Link>
+        </div>
+      </section>
 
       <VideoReviewModal video={activeVideo} onClose={closeVideo} />
     </main>
