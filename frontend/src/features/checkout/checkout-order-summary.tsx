@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { formatCurrency } from "@/domain/catalog/products";
-import { ProductJar } from "@/features/catalog/product-jar";
+import { CartProductImage } from "@/features/cart/cart-product-image";
 import { useStore } from "@/features/store/store-provider";
 
 type CheckoutOrderSummaryProps = {
@@ -64,7 +64,7 @@ export function CheckoutOrderSummary({
       {/* Cart Items List */}
       <div className="flex flex-col divide-y divide-[var(--line)] max-h-[380px] overflow-y-auto pr-1">
         {cart.map((item) => {
-          const product = products.find((p) => p.slug === item.slug);
+          const product = products.find((p) => item.productId && p.id === item.productId) || products.find((p) => p.slug === item.slug);
           const maxQuantity = Math.min(12, item.quantityAvailable ?? 12);
           const variantLabel = item.selectedOptions
             .map((opt) => opt.value)
@@ -83,28 +83,13 @@ export function CheckoutOrderSummary({
                   backgroundColor: product?.accentSoft ? `${product.accentSoft}40` : "var(--ivory)",
                 }}
               >
-                {item.image?.url || product?.featuredImage?.url ? (
-                  <img
-                    src={item.image?.url || product?.featuredImage?.url || "/images/product-placeholder.svg"}
-                    alt={item.productName}
-                    className="size-full object-cover object-center"
-                  />
-                ) : product ? (
-                  <ProductJar
-                    product={product}
-                    size="small"
-                    className="origin-bottom scale-65"
-                    decorative
-                  />
-                ) : (
-                  <span className="text-xl">🌿</span>
-                )}
+                <CartProductImage item={item} product={product} />
               </div>
 
               {/* Product Info */}
               <div className="flex min-w-0 flex-col gap-1">
                 <Link
-                  href={`/shop/${item.slug}`}
+                  href={`/shop/${product?.slug || item.slug}`}
                   className="truncate font-serif text-[1.08rem] font-medium text-[var(--forest)] hover:text-[var(--botanical)] transition-colors"
                 >
                   {product?.name || item.productName}

@@ -274,7 +274,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
         typeof document !== "undefined" &&
         createPortal(
           <div
-            className="fixed inset-x-0 bottom-0 z-[9999] hidden max-[680px]:flex items-center justify-between gap-2 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3.5 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(10px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
+            className="fixed inset-x-0 bottom-0 z-[90] hidden max-[680px]:flex items-center justify-between gap-2 border-t border-[var(--line)] bg-[#fbfaf6]/98 px-3.5 py-2 max-[380px]:px-2 max-[380px]:py-1.5 pb-[calc(10px+env(safe-area-inset-bottom))] backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.16)]"
             role="region"
             aria-label="Sticky Purchase Footer"
           >

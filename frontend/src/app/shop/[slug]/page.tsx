@@ -535,33 +535,6 @@ export default async function ProductPage(props: ProductPageProps) {
           ))}
         </div>
       </section>
-
-      {/* ── Reassurance Banner Strip Attached Above Footer ── */}
-      <section className="mx-auto mt-16 w-full max-w-[1440px] px-[clamp(20px,4.5vw,72px)] max-[680px]:mt-10 max-[680px]:px-3">
-        <div className="grid grid-cols-3 gap-4 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-6 text-center shadow-xs max-[680px]:grid-cols-1 max-[680px]:gap-3 max-[680px]:p-4 max-[680px]:rounded-2xl">
-          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">📦</span>
-            <div>
-              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Fast Dispatch</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Dispatch timing is confirmed securely at checkout</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🌿</span>
-            <div>
-              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Clear Product Details</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Ingredients and directions are shown before purchase</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3.5 text-left max-[680px]:gap-2.5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-xl shadow-2xs">🛡️</span>
-            <div>
-              <strong className="block text-[0.82rem] font-bold text-[var(--forest)]">Secure Encrypted Checkout</strong>
-              <span className="text-[0.68rem] text-[var(--muted)]">Payment is processed via secure 256-bit encryption</span>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
