@@ -89,10 +89,8 @@
   padding: 8px 16px; border: 1px solid var(--hero-line); border-radius: 100px;
   background: var(--hero-button-bg); color: var(--hero-button-text);
   font-size: 12px; font-weight: 500; line-height: 1.5; pointer-events: none;
-  opacity: 0; transform: translateY(-4px);
-  transition: opacity 280ms var(--ease), transform 280ms var(--ease);
+  white-space: nowrap;
 }
-.poster[role="button"]:hover .posterBadge, .poster[role="button"]:focus-visible .posterBadge { opacity: 1; transform: none; }
 .posterBadgeArrow { font-size: 16px; }
 .posterImage { object-fit: cover; object-position: center; }
 .posterMotion { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black); }
@@ -252,7 +250,8 @@
   .purchase { align-self: start; max-width: none; margin-top: 12px; padding-bottom: 16px; }
   .scene { align-self: stretch; display: flex; align-items: stretch; max-width: none; }
   .poster { width: 100%; height: auto; min-height: clamp(280px, 42vw, 390px); touch-action: pan-y pinch-zoom; }
-  .posterBadge, .sceneFooter { display: none; }
+  .posterBadge { top: auto; right: 10px; bottom: 12px; left: auto; transform: none; gap: 6px; padding: 7px 10px; font-size: 11px; }
+  .sceneFooter { display: none; }
   /* Let the parent handle taps and vertical scrolling, even over the WebGL frame. */
   .heroPosterEffect[data-ready="true"] { pointer-events: none; }
   .featured {
