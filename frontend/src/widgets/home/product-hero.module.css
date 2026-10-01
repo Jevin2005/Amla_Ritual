@@ -16,6 +16,7 @@
 }
 .background { position: absolute; z-index: -2; inset: 0; overflow: hidden; }
 .backgroundImage { object-fit: cover; object-position: center; }
+.preload { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
 .mobileBackground { display: none; }
 .heroSheryBackground { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; pointer-events: none; }
 .layout {

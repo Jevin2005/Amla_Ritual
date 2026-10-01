@@ -13,12 +13,13 @@ export function useState(initial) {
   const h = globalThis.harness, index = h.stateIndex++;
   let value = typeof initial === 'function' ? initial() : initial;
   if (h.kind === 'hero' && (index === 4 || index === 5)) value = true;
+  if (h.kind === 'hero' && index === 8) value = ['/poster.png'];
   if (h.kind === 'model') {
     if (index === 0) value = { ...value, status: 'ready' };
     if (index === 1 || index === 3) value = true;
   }
   if (h.values.has(index)) value = h.values.get(index);
-  return [value, (next) => h.values.set(index, typeof next === 'function' ? next(value) : next)];
+  return [value, (next) => h.values.set(index, typeof next === 'function' ? next(h.values.has(index) ? h.values.get(index) : value) : next)];
 }
 export const useRef = (initial) => ({ current: globalThis.harness.refs[globalThis.harness.refIndex++] ?? initial });
 export const createElement = (type, props, ...children) => ({ type, props: { ...props, ...(children.length ? { children } : {}) } });
@@ -28,12 +29,14 @@ const result = await build({
   bundle: true, platform: "node", format: "cjs", write: false, jsx: "automatic",
   plugins: [{ name: "isolated-component-environment", setup(build) {
     build.onResolve({ filter: /^(react|react\/jsx-runtime|next\/image|next\/link|@google\/model-viewer)$/ }, ({ path }) => ({ path, namespace: "mock" }));
-    build.onResolve({ filter: /store-provider|use-motion-preferences|use-webgl|magnetic-link|shery-background$|shery-poster$/ }, ({ path }) => ({ path, namespace: "mock" }));
+    build.onResolve({ filter: /store-provider|use-motion-preferences|use-deferred-media|media-image$|use-webgl|magnetic-link|shery-background$|shery-poster$/ }, ({ path }) => ({ path, namespace: "mock" }));
     build.onResolve({ filter: /product-model$|hero-purchase$/ }, ({ path, importer }) => importer.endsWith("product-hero.tsx") ? { path: path.includes("product-model") ? "ModelPlaceholder" : "PurchasePlaceholder", namespace: "mock" } : undefined);
     build.onResolve({ filter: /\.module\.css$/ }, ({ path }) => ({ path, namespace: "css" }));
     build.onLoad({ filter: /.*/, namespace: "css" }, () => ({ contents: 'export default new Proxy({}, { get: (_, key) => String(key) });' }));
     build.onLoad({ filter: /.*/, namespace: "mock" }, ({ path }) => {
       if (path === "react") return { contents: hooks };
+      if (path.includes("use-deferred-media")) return { contents: 'export const useDeferredMedia = () => globalThis.harness.deferredReady !== false;' };
+      if (path.includes("media-image")) return { contents: 'export const MediaImage = (props) => ({ type: "img", props });' };
       if (path === "react/jsx-runtime") return { contents: 'export function jsx(type, props) { return typeof type === "function" ? type(props) : {type, props}; } export const jsxs = jsx;' };
       if (path.includes("store-provider")) return { contents: 'export const useStore = () => globalThis.harness.store;' };
       if (path.includes("use-motion-preferences")) return { contents: 'export const useReducedMotion = () => globalThis.harness.reduced; export const usePageVisible = () => true; export const useFinePointer = () => !globalThis.harness.compact; export const useCompactViewport = () => Boolean(globalThis.harness.compact);' };
@@ -54,6 +57,7 @@ const heroProduct = (product, copy = {}) => ({ ...product, heroEnabled: true, he
 
 function environment(kind, motion = {}, reduced = false) {
   const frames = new Map(); let next = 0;
+  const timers = new Map();
   const harness = { kind, reduced, stateIndex: 0, refIndex: 0, refs: [], values: new Map(), effects: [], store: {
     content: { motionSettings: { ...motionDefaults, ...motion } }, products: [reetha],
     isWishlisted: () => false, toggleWishlist() {}, isCartBusy: false, addToCart: async () => null,
@@ -62,11 +66,15 @@ function environment(kind, motion = {}, reduced = false) {
     requestAnimationFrame: (callback) => { frames.set(++next, callback); return next; },
     cancelAnimationFrame: (id) => frames.delete(id),
     IntersectionObserver: class { observe() {} disconnect() {} },
-    setTimeout, clearTimeout,
+    setTimeout: (callback) => { timers.set(++next, callback); return next; },
+    clearTimeout: (id) => timers.delete(id),
   };
   context.window = context;
   vm.createContext(context); vm.runInContext(result.outputFiles[0].text, context);
-  return { harness, components: context.module.exports, flush: () => { const pending = [...frames.values()]; frames.clear(); pending.forEach((callback) => callback()); } };
+  return { harness, components: context.module.exports,
+    flush: () => { const pending = [...frames.values()]; frames.clear(); pending.forEach((callback) => callback()); },
+    flushTimers: () => { const pending = [...timers.values()]; timers.clear(); pending.forEach((callback) => callback()); },
+  };
 }
 
 function all(node) {
@@ -99,20 +107,19 @@ test("saved Shopify copy takes priority for a recognized botanical without chang
   assert.ok(text(blank).includes("Your wash-day ritual."));
 });
 
-test("phone hero animates the complete Shopify background and poster without requiring a mouse", () => {
+test("phone hero uses lightweight image transitions and keeps a photo behind the 3D model", () => {
   const env = environment("hero");
   env.harness.compact = true;
   const tree = env.components.ProductHero({ products: [{ ...heroProduct(reetha), featuredImage: image }, heroProduct(second)], settings: defaults });
   assert.equal(tree.props["data-transition"], "fade");
   const background = all(tree).find((node) => node.type === "SheryBackground");
   const poster = all(tree).find((node) => node.type === "SheryPoster");
-  assert.equal(background.props.fit, "edges");
-  assert.equal(poster.props.cursor, false);
-  assert.equal(poster.props.active, true);
+  assert.equal(background, undefined);
+  assert.equal(poster, undefined);
   assert.equal(all(tree).find((node) => node.type === "ProductModel").props.poster.url, image.url);
   assert.ok(all(tree).some((node) => node.props?.["aria-label"] === "Pause slideshow"));
   const desktop = all(renderHero().tree);
-  assert.equal(desktop.find((node) => node.type === "ProductModel").props.poster, undefined);
+  assert.equal(desktop.find((node) => node.type === "ProductModel").props.poster.url, image.url);
   assert.equal(desktop.find((node) => node.type === "SheryBackground").props.fit, "cover");
   assert.equal(desktop.find((node) => node.type === "SheryPoster").props.cursor, true);
   for (const options of [{ reduced: true }, { motion: { enabled: false } }, { settings: { transition: "none" } }]) {
@@ -155,7 +162,7 @@ test("hover on hero does not pause autoplay, but 3D element interaction pauses a
   assert.ok(progressBar, "progress bar element rendered");
 });
 
-test("poster and background animations share synchronized duration and poster onSelect updates ritual synchronously", () => {
+test("poster and background animations share duration and navigation requests a prepared slide", () => {
   const { tree, harness } = renderHero();
   const background = all(tree).find((node) => node.type === "SheryBackground");
   const poster = all(tree).find((node) => node.type === "SheryPoster");
@@ -164,9 +171,10 @@ test("poster and background animations share synchronized duration and poster on
   assert.equal(background.props.duration, poster.props.duration, "poster and background transition durations are synchronized");
   assert.equal(typeof poster.props.onSelect, "function", "SheryPoster has onSelect callback");
 
-  // Poster interaction advances index immediately
+  // Navigation requests preparation without removing the current slide.
   poster.props.onSelect(1);
-  assert.equal(harness.values.get(0), 1, "selected index advances synchronously on poster interaction");
+  assert.equal(harness.values.get(0), undefined);
+  assert.equal(harness.values.get(9), 1);
 });
 
 test("all text blocks (copy, caption, product details) mount with transition data on ritual change", () => {
@@ -190,7 +198,7 @@ test("transition none removes both Shery effects while keeping static images and
     const tree = renderHero(options).tree;
     assert.equal(tree.props["data-transition"], "none");
     assert.ok(!all(tree).some((node) => node.type === "SheryPoster" || node.type === "SheryBackground"));
-    assert.equal(all(tree).filter((node) => node.type === "img").length, 2);
+    assert.equal(all(tree).filter((node) => node.type === "img" && node.props.fetchPriority !== "low").length, 2);
     assert.ok(all(tree).some((node) => node.props?.["aria-label"] === "Next featured product"));
   }
   for (const motion of [{ cursor: false }, { intensity: 0 }]) {
@@ -257,4 +265,92 @@ test("purchase displays supplied size without a tax assertion and never marks a 
   button.props.onClick();
   await Promise.resolve(); await Promise.resolve();
   assert.equal(env.harness.values.get(0), false);
+});
+
+test("hero stays static and defers 3D until its poster and background have loaded", () => {
+  const env = environment("hero");
+  env.harness.values.set(8, []);
+  const tree = env.components.ProductHero({ products: [heroProduct(reetha), heroProduct(second)], settings: defaults });
+  assert.equal(tree.props["data-media-ready"], false);
+  assert.equal(tree.props["data-transition"], "none");
+  assert.equal(all(tree).find((node) => node.type === "ProductModel").props.enabled, false);
+  assert.ok(!all(tree).some((node) => node.type === "SheryPoster" || node.type === "SheryBackground" || node.props?.className === "progress"));
+});
+
+test("navigation preserves the current slide until BOTH target images load", () => {
+  const env = environment("hero");
+  const products = [heroProduct(reetha), { ...heroProduct(second), heroPoster: { ...image, url: "/next-poster.png" }, heroBackground: { ...image, url: "/next-background.png" } }];
+  const render = () => {
+    env.harness.stateIndex = 0; env.harness.refIndex = 0; env.harness.effects = [];
+    return env.components.ProductHero({ products, settings: { ...defaults, autoplay: false } });
+  };
+  const runEffects = () => { env.harness.effects.forEach((effect) => effect()); env.flush(); };
+  let tree = render();
+  all(tree).find((node) => node.props?.["aria-label"] === "Next featured product").props.onClick();
+  tree = render(); runEffects();
+  assert.notEqual(env.harness.values.get(0), 1);
+  all(tree).find((node) => node.type === "img" && node.props.src === "/next-poster.png").props.onLoad();
+  tree = render(); runEffects();
+  assert.notEqual(env.harness.values.get(0), 1, "one loaded image cannot expose an incomplete slide");
+  all(tree).find((node) => node.type === "img" && node.props.src === "/next-background.png").props.onLoad();
+  render(); runEffects();
+  assert.equal(env.harness.values.get(0), 1);
+  assert.equal(env.harness.values.get(9), null);
+});
+
+test("3D loading does not hold up the ready poster slideshow", () => {
+  const env = environment("hero");
+  env.harness.values.set(10, "/jar.glb");
+  const tree = env.components.ProductHero({ products: [heroProduct(reetha), heroProduct(second)], settings: defaults });
+  assert.equal(all(tree).find((node) => node.props?.className === "progress").props.style.animationPlayState, "running");
+});
+
+test("the first poster is preloaded and the next poster warms while the background is still loading", () => {
+  const env = environment("hero");
+  const products = [{ ...heroProduct(reetha), heroBackground: { ...image, url: "/first-background.png" }, featuredImage: { ...image, url: "/first-photo.png" } },
+    { ...heroProduct(second), heroPoster: { ...image, url: "/next-poster.png" }, featuredImage: { ...image, url: "/next-photo.png" } }];
+  const tree = env.components.ProductHero({ products, settings: defaults });
+  const main = all(tree).find((node) => node.props?.className === "posterImage");
+  assert.equal(main.props.preload, true);
+  assert.equal(main.props.loading, undefined);
+  assert.equal(tree.props["data-media-ready"], false);
+  assert.ok(all(tree).some((node) => node.type === "img" && node.props.src === "/next-poster.png" && node.props.fetchPriority === "low"));
+  assert.ok(all(tree).some((node) => node.type === "img" && node.props.src === "/next-photo.png" && node.props.fetchPriority === "low"));
+});
+
+test("a ready poster starts its full interval without waiting for the mini photo or 3D", () => {
+  const env = environment("hero");
+  const products = [{ ...heroProduct(reetha), featuredImage: { ...image, url: "/slow-mini-photo.png" } }, heroProduct(second)];
+  const tree = env.components.ProductHero({ products, settings: defaults });
+  assert.equal(tree.props["data-media-ready"], true);
+  assert.equal(all(tree).find((node) => node.props?.className === "progress").props.style.animationPlayState, "running");
+});
+
+test("an offscreen model has a photo but no model-viewer element or loading label", () => {
+  const env = environment("model");
+  env.harness.deferredReady = false;
+  env.harness.values.set(0, { url: "/jar.glb", status: "loading" });
+  const tree = env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, poster: image });
+  assert.ok(all(tree).some((node) => node.type === "img"));
+  assert.ok(!all(tree).some((node) => node.type === "model-viewer"));
+  assert.ok(!text(tree).includes("Loading 3D"));
+});
+
+test("a stalled model times out to its photograph and can be retried", () => {
+  const env = environment("model");
+  env.harness.values.set(0, { url: "/jar.glb", status: "loading" });
+  env.harness.refs = [{ loaded: false, toggleAttribute() {}, addEventListener() {}, removeEventListener() {} }, {}];
+  const render = () => {
+    env.harness.stateIndex = 0; env.harness.refIndex = 0; env.harness.effects = [];
+    return env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, poster: image });
+  };
+  render();
+  const cleanups = env.harness.effects.map((effect) => effect());
+  env.flush(); env.flushTimers();
+  const tree = render();
+  assert.ok(all(tree).some((node) => node.type === "img"));
+  assert.ok(!all(tree).some((node) => node.type === "model-viewer"));
+  all(tree).find((node) => node.type === "button" && text(node) === "Retry 3D view").props.onClick();
+  assert.equal(env.harness.values.get(0).status, "loading");
+  cleanups.forEach((cleanup) => cleanup?.());
 });

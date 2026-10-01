@@ -28,12 +28,14 @@ export function markWebGLUnavailable(): void {
   cachedWebGL = false;
 }
 
-export function useWebGL(): boolean {
+export function useWebGL(enabled = true): boolean {
   const [available, setAvailable] = useState(false);
 
   useEffect(() => {
-    setAvailable(isWebGLAvailable());
-  }, []);
+    if (!enabled) return;
+    const frame = requestAnimationFrame(() => setAvailable(isWebGLAvailable()));
+    return () => cancelAnimationFrame(frame);
+  }, [enabled]);
 
   return available;
 }

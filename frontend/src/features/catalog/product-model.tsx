@@ -1,14 +1,17 @@
 "use client";
 
-import Image from "next/image";
-import { createElement, useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { MediaImage as Image } from "@/shared/ui/media-image";
+import { useCallback, useEffect, useRef, useState, type ComponentType, type PointerEvent } from "react";
 import { defaultHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { isWebGLAvailable, markWebGLUnavailable } from "@/shared/hooks/use-webgl";
 import { useStore } from "@/features/store/store-provider";
 import { resolveModelMotion } from "./model-motion";
+import { useDeferredMedia } from "@/shared/hooks/use-deferred-media";
 import styles from "./product-model.module.css";
 import type { StoreImage } from "@/domain/catalog/products";
+
+const ModelViewer = "model-viewer" as unknown as ComponentType<Record<string, unknown>>;
 
 type Props = {
   model: { url: string; altText: string };
@@ -18,13 +21,16 @@ type Props = {
   cameraDistancePercent?: number;
   presentation?: "hero" | "gallery";
   poster?: StoreImage | null;
+  enabled?: boolean;
+  onPosterReady?: () => void;
+  onLoadingChange?: (url: string, loading: boolean) => void;
 };
 
 export function ProductModel(props: Props) {
-  return <ModelStage {...props} />;
+  return <ModelStage key={`${props.model.url}:${props.poster?.url ?? ""}`} {...props} />;
 }
 
-function ModelStage({ model, settings = defaultHeroSettings, paused = false, eager = false, cameraDistancePercent = 105, presentation = "hero", poster }: Props) {
+function ModelStage({ model, settings = defaultHeroSettings, paused = false, eager = false, cameraDistancePercent = 105, presentation = "hero", poster, enabled = true, onPosterReady, onLoadingChange }: Props) {
   const viewer = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const frame = useRef(0);
@@ -33,6 +39,8 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   const [visible, setVisible] = useState(false);
   const [rotationPaused, setRotationPaused] = useState(false);
   const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
+  const [posterReady, setPosterReady] = useState(!poster?.url);
+  const [attempt, setAttempt] = useState(0);
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisible();
   const { content: { motionSettings } } = useStore();
@@ -40,15 +48,35 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   const status = loadStatus.url === model.url ? loadStatus.status : "loading";
   const moving = motion.enabled && !paused && pageVisible && visible;
   const cursorEnabled = presentation !== "gallery" && moving && motion.cursor;
+  const activated = useDeferredMedia(enabled && posterReady && visible && pageVisible, presentation === "gallery" ? 0 : 300);
+  useEffect(() => {
+    onLoadingChange?.(model.url, activated && status === "loading");
+    return () => onLoadingChange?.(model.url, false);
+  }, [model.url, activated, status, onLoadingChange]);
 
   useEffect(() => {
+    const container = stage.current;
+    if (!container) return;
+    const observer = "IntersectionObserver" in window
+      ? new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting))
+      : null;
+    observer?.observe(container);
+    const visibilityFrame = observer ? 0 : requestAnimationFrame(() => setVisible(true));
+    return () => {
+      observer?.disconnect();
+      cancelAnimationFrame(visibilityFrame);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!activated) return;
     const supported = isWebGLAvailable();
     const element = viewer.current;
     const container = stage.current;
     const initialFrame = requestAnimationFrame(() => {
       setWebglSupported(supported);
       if (!supported) setLoadStatus({ url: model.url, status: "error" });
-      else if ((element as unknown as { loaded?: boolean } | null)?.loaded) setLoadStatus({ url: model.url, status: "ready" });
+      else if ((element as unknown as { loaded?: boolean } | null)?.loaded) ready();
     });
     if (!supported) {
       return () => cancelAnimationFrame(initialFrame);
@@ -56,23 +84,24 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
 
     if (!element || !container) return () => cancelAnimationFrame(initialFrame);
     let disposed = false;
-    const ready = () => setLoadStatus({ url: model.url, status: "ready" });
-    const failed = () => setLoadStatus({ url: model.url, status: "error" });
+    const timeout = window.setTimeout(() => failed(), 20000);
+    const ready = () => {
+      window.clearTimeout(timeout);
+      if (!disposed) setLoadStatus({ url: model.url, status: "ready" });
+    };
+    const failed = () => {
+      window.clearTimeout(timeout);
+      if (!disposed) setLoadStatus({ url: model.url, status: "error" });
+    };
     const onContextLost = (event: Event) => {
       event.preventDefault();
       markWebGLUnavailable();
-      setLoadStatus({ url: model.url, status: "error" });
+      failed();
     };
 
     element.addEventListener("load", ready);
     element.addEventListener("error", failed);
     element.addEventListener("webglcontextlost", onContextLost);
-
-    const observer = "IntersectionObserver" in window
-      ? new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting))
-      : null;
-    observer?.observe(container);
-    const visibilityFrame = observer ? 0 : requestAnimationFrame(() => setVisible(true));
 
     // Use the vendor's production bundle in dev too, avoiding Lit's debug runtime.
     import("@google/model-viewer/dist/model-viewer.js").catch(() => {
@@ -81,15 +110,14 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
 
     return () => {
       disposed = true;
-      observer?.disconnect();
+      window.clearTimeout(timeout);
       cancelAnimationFrame(initialFrame);
-      cancelAnimationFrame(visibilityFrame);
       cancelAnimationFrame(frame.current);
       element.removeEventListener("load", ready);
       element.removeEventListener("error", failed);
       element.removeEventListener("webglcontextlost", onContextLost);
     };
-  }, [model.url]);
+  }, [model.url, activated, attempt]);
 
   useEffect(() => {
     const element = viewer.current;
@@ -129,10 +157,10 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
       src={poster.url}
       alt={poster.altText || model.altText}
       fill
-      priority={eager}
       loading={eager ? "eager" : "lazy"}
-      sizes="(max-width: 960px) 95vw, 48vw"
+      sizes={presentation === "gallery" ? "(max-width: 960px) 95vw, 48vw" : "(max-width: 900px) 40vw, 28vw"}
       className={styles.poster}
+      onLoad={() => { setPosterReady(true); onPosterReady?.(); }}
     />
   ) : null;
 
@@ -148,8 +176,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   return (
     <div ref={stage} className={styles.stage} data-status={status} onPointerMove={followCursor} onPointerLeave={resetPosition}>
       {status !== "ready" && fallback}
-      {createElement("model-viewer", {
-        ref: viewer,
+      {activated && status !== "error" && <ModelViewer key={attempt} ref={viewer} {...{
         src: model.url,
         alt: model.altText,
         className: styles.viewer,
@@ -171,7 +198,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
         "interaction-prompt": "none",
         loading: eager ? "eager" : "lazy",
         reveal: "auto",
-      })}
+      }} />}
       {status === "ready" && motion.autoRotate && (
         <button className={styles.pause} type="button" onClick={() => setRotationPaused((value) => !value)} aria-pressed={rotationPaused} aria-label={rotationPaused ? "Resume product rotation" : "Pause product rotation"}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -179,11 +206,15 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
           </svg>
         </button>
       )}
-      {status !== "ready" && (
+      {activated && status === "loading" && (
         <span className={styles.hint} role="status">
-          {status === "error" ? "3D view unavailable" : "Loading 3D view…"}
+          Loading 3D view…
         </span>
       )}
+      {status === "error" && <button type="button" className={styles.retry} onClick={() => {
+        setLoadStatus({ url: model.url, status: "loading" });
+        setAttempt((value) => value + 1);
+      }}>Retry 3D view</button>}
     </div>
   );
 }
