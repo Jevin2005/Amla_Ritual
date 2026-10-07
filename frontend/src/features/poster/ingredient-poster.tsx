@@ -132,14 +132,6 @@ function PosterSequence({ images, settings, pace }: { images: StoreImage[]; sett
         )}
       </div>
 
-      <div className={styles.floatingCaption} aria-hidden="true">
-        <span className={styles.captionMark}>N</span>
-        <span className={styles.captionCopy}>
-          <strong>Single-Origin Botanical</strong>
-          <span>100% pure · prepared fresh</span>
-        </span>
-        <span className={styles.captionDot} />
-      </div>
 
       {SheryEditor && (
         <>

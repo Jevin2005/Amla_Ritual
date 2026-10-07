@@ -148,6 +148,7 @@ export const products: Product[] = [
     accent: "#6f8f2f",
     accentSoft: "#dce7ad",
     pricePaise: 44900,
+    compareAtPricePaise: 59900,
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
@@ -214,6 +215,7 @@ export const products: Product[] = [
     accent: "#9a5a3d",
     accentSoft: "#ead2c3",
     pricePaise: 39900,
+    compareAtPricePaise: 49900,
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
@@ -274,6 +276,7 @@ export const products: Product[] = [
     accent: "#b18236",
     accentSoft: "#ecdfbf",
     pricePaise: 39900,
+    compareAtPricePaise: 49900,
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
@@ -334,6 +337,7 @@ export const products: Product[] = [
     accent: "#244c32",
     accentSoft: "#c5d5c7",
     pricePaise: 44900,
+    compareAtPricePaise: 59900,
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
@@ -394,6 +398,7 @@ export const products: Product[] = [
     accent: "#8b3041",
     accentSoft: "#eccbd1",
     pricePaise: 49900,
+    compareAtPricePaise: 64900,
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
@@ -454,6 +459,7 @@ export const products: Product[] = [
     accent: "#283c75",
     accentSoft: "#c9d0e7",
     pricePaise: 49900,
+    compareAtPricePaise: 64900,
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
@@ -581,6 +587,39 @@ export function formatCurrency(pricePaise: number, currencyCode = "INR") {
     currency: currencyCode,
     minimumFractionDigits: Number.isInteger(pricePaise / 100) ? 0 : undefined,
   }).format(pricePaise / 100);
+}
+
+export function calculateDiscountPercent(
+  pricePaise: number | null | undefined,
+  compareAtPricePaise: number | null | undefined,
+): number {
+  if (
+    typeof pricePaise !== "number" ||
+    typeof compareAtPricePaise !== "number" ||
+    !Number.isFinite(pricePaise) ||
+    !Number.isFinite(compareAtPricePaise) ||
+    compareAtPricePaise <= pricePaise ||
+    compareAtPricePaise <= 0
+  ) {
+    return 0;
+  }
+  return Math.round(((compareAtPricePaise - pricePaise) / compareAtPricePaise) * 100);
+}
+
+export function calculateSavingsPaise(
+  pricePaise: number | null | undefined,
+  compareAtPricePaise: number | null | undefined,
+): number {
+  if (
+    typeof pricePaise !== "number" ||
+    typeof compareAtPricePaise !== "number" ||
+    !Number.isFinite(pricePaise) ||
+    !Number.isFinite(compareAtPricePaise) ||
+    compareAtPricePaise <= pricePaise
+  ) {
+    return 0;
+  }
+  return compareAtPricePaise - pricePaise;
 }
 
 export const globalSafety =

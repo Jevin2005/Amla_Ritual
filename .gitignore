@@ -1,8 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-frontend/node_modules/
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -26,6 +25,11 @@ frontend/out/
 frontend/dist/
 frontend/.wrangler/
 frontend/public/vendor/shery/
+
+# temporary tooling and generated review exports
+/.tmp/
+/*_reviews_judgeme.csv
+/exports/*.csv
 
 # misc
 .DS_Store

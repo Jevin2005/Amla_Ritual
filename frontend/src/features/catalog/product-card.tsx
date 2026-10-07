@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, type CSSProperties } from "react";
-import { formatCurrency, type Product } from "@/domain/catalog/products";
+import { formatCurrency, calculateDiscountPercent, calculateSavingsPaise, type Product } from "@/domain/catalog/products";
 import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
 import { StarRating } from "@/features/reviews/star-rating";
 import { JudgemePreviewBadge } from "@/features/reviews/judgeme-preview-badge";
@@ -31,6 +31,8 @@ export function ProductCard({
       product.compareAtPricePaise > product.pricePaise
       ? product.compareAtPricePaise
       : null;
+  const discountPercent = calculateDiscountPercent(product.pricePaise, compareAtPrice);
+  const savingsPaise = calculateSavingsPaise(product.pricePaise, compareAtPrice);
   const stockLabel = isAvailable
     ? product.availability || "In stock"
     : "Sold out";
@@ -51,6 +53,12 @@ export function ProductCard({
     >
       {/* Product listing photo area - Full Cover */}
       <div className="relative aspect-square w-full flex-none overflow-hidden bg-[var(--paper)]">
+        {/* High-Conversion Discount Badge */}
+        {discountPercent > 0 && (
+          <span className="absolute top-3 left-3 z-[3] inline-flex items-center gap-1 rounded-full bg-[var(--forest)]/92 px-2.5 py-0.5 text-[0.68rem] font-bold tracking-wider text-[#dce7ad] shadow-[0_4px_14px_rgba(21,59,45,0.28)] backdrop-blur-md max-[680px]:top-2 max-[680px]:left-2 max-[680px]:px-2 max-[680px]:py-0.5 max-[680px]:text-[0.6rem]">
+            <span>{discountPercent}% OFF</span>
+          </span>
+        )}
         {/* Wishlist button */}
         <button
           className={`absolute top-3 right-3 z-[3] grid size-10 place-items-center rounded-full border text-[1rem] shadow-[0_4px_16px_rgba(21,59,45,0.12)] backdrop-blur-md transition-[background,color,transform,border-color] duration-200 hover:scale-105 active:scale-95 max-[680px]:top-2 max-[680px]:right-2 max-[680px]:size-8 max-[680px]:text-[0.85rem] ${
@@ -154,25 +162,37 @@ export function ProductCard({
           <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2.5">
             <div>
               <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                <span className="[font-family:var(--font-display)] text-[1.32rem] leading-none text-[var(--forest)] max-[680px]:text-[1.12rem] max-[420px]:text-[1.02rem]">
+                <span className="[font-family:var(--font-display)] text-[1.32rem] font-bold leading-none text-[var(--forest)] max-[680px]:text-[1.12rem] max-[420px]:text-[1.02rem]">
                   {formatCurrency(product.pricePaise, currencyCode)}
                 </span>
                 {compareAtPrice && (
-                  <span
-                    className="text-[0.76rem] text-[var(--muted)] line-through max-[680px]:text-[0.64rem]"
-                    aria-label={`Previously ${formatCurrency(compareAtPrice, currencyCode)}`}
-                  >
-                    {formatCurrency(compareAtPrice, currencyCode)}
-                  </span>
+                  <>
+                    <span
+                      className="text-[0.78rem] text-[var(--muted)] line-through max-[680px]:text-[0.66rem]"
+                      aria-label={`MRP ${formatCurrency(compareAtPrice, currencyCode)}`}
+                    >
+                      {formatCurrency(compareAtPrice, currencyCode)}
+                    </span>
+                    <span className="inline-flex items-center rounded-md bg-[#2d6a2f]/10 px-1.5 py-0.5 text-[0.68rem] font-bold text-[#235825] max-[680px]:text-[0.6rem]">
+                      {discountPercent}% OFF
+                    </span>
+                  </>
                 )}
               </span>
-              <span
-                className={`mt-0.5 block text-[0.64rem] font-bold tracking-[0.08em] uppercase max-[680px]:text-[0.55rem] ${
-                  isAvailable ? "text-[var(--muted)]" : "text-[#9a3f3f]"
-                }`}
-              >
-                {stockLabel}
-              </span>
+              <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                {savingsPaise > 0 && (
+                  <span className="text-[0.66rem] font-semibold text-[#2d6a2f] max-[680px]:text-[0.58rem]">
+                    Save {formatCurrency(savingsPaise, currencyCode)}
+                  </span>
+                )}
+                <span
+                  className={`block text-[0.64rem] font-bold tracking-[0.08em] uppercase max-[680px]:text-[0.55rem] ${
+                    isAvailable ? "text-[var(--muted)]" : "text-[#9a3f3f]"
+                  }`}
+                >
+                  {savingsPaise > 0 ? "·" : ""} {stockLabel}
+                </span>
+              </div>
             </div>
             <button
               type="button"

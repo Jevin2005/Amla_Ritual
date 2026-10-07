@@ -23,6 +23,16 @@ export function BundleCards() {
           (sum, product) => sum + product.pricePaise,
           0
         );
+        const originalTotal = bundleProducts.reduce((sum, product) => {
+          const comp = product.compareAtPricePaise && product.compareAtPricePaise > product.pricePaise
+            ? product.compareAtPricePaise
+            : Math.round(product.pricePaise * 1.25);
+          return sum + comp;
+        }, 0);
+        const bundleDiscountPercent = originalTotal > total
+          ? Math.round(((originalTotal - total) / originalTotal) * 100)
+          : 0;
+        const bundleSavings = originalTotal - total;
         const currencyCode = bundleProducts[0]?.currencyCode || "INR";
         const isAvailable =
           bundleProducts.length > 0 &&
@@ -44,6 +54,13 @@ export function BundleCards() {
             <div
               className={`relative aspect-square w-full flex-none overflow-hidden ${accentConfig.bg} flex items-center justify-center p-3 max-[680px]:p-2.5`}
             >
+              {/* Top-Left Bundle Savings Badge */}
+              {bundleDiscountPercent > 0 && (
+                <span className="absolute top-3 left-3 z-10 rounded-full bg-[var(--forest)] px-2.5 py-0.5 text-[0.66rem] font-bold uppercase tracking-wider text-[#dce7ad] shadow-xs backdrop-blur-xs max-[680px]:top-2 max-[680px]:left-2 max-[680px]:text-[0.58rem] max-[680px]:px-2">
+                  Save {bundleDiscountPercent}%
+                </span>
+              )}
+
               {/* Top-Right Set Badge */}
               <span className="absolute top-3 right-3 z-10 rounded-full border border-black/5 bg-white/95 px-2.5 py-0.5 text-[0.66rem] font-bold uppercase tracking-wider text-[var(--forest)] shadow-xs backdrop-blur-xs max-[680px]:top-2 max-[680px]:right-2 max-[680px]:text-[0.58rem] max-[680px]:px-2">
                 Set of {bundleProducts.length}
@@ -105,14 +122,34 @@ export function BundleCards() {
               <div className="mt-auto pt-4 max-[680px]:pt-3">
                 <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2.5">
                   <div>
-                    <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                      <span className="[font-family:var(--font-display)] text-[1.32rem] leading-none text-[var(--forest)] max-[680px]:text-[1.12rem] max-[420px]:text-[1.02rem]">
+                    <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                      <span className="[font-family:var(--font-display)] text-[1.32rem] font-bold leading-none text-[var(--forest)] max-[680px]:text-[1.12rem] max-[420px]:text-[1.02rem]">
                         {formatCurrency(total, currencyCode)}
                       </span>
+                      {originalTotal > total && (
+                        <>
+                          <span
+                            className="text-[0.78rem] text-[var(--muted)] line-through max-[680px]:text-[0.66rem]"
+                            aria-label={`Combined MRP ${formatCurrency(originalTotal, currencyCode)}`}
+                          >
+                            {formatCurrency(originalTotal, currencyCode)}
+                          </span>
+                          <span className="inline-flex items-center rounded-md bg-[#2d6a2f]/10 px-1.5 py-0.5 text-[0.66rem] font-bold text-[#235825] max-[680px]:text-[0.6rem]">
+                            {bundleDiscountPercent}% OFF
+                          </span>
+                        </>
+                      )}
                     </span>
-                    <span className="mt-0.5 block text-[0.64rem] font-bold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.55rem]">
-                      {isAvailable ? "Complete Set" : "Sold out"}
-                    </span>
+                    <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                      {bundleSavings > 0 && (
+                        <span className="text-[0.66rem] font-semibold text-[#2d6a2f] max-[680px]:text-[0.58rem]">
+                          Save {formatCurrency(bundleSavings, currencyCode)}
+                        </span>
+                      )}
+                      <span className="block text-[0.64rem] font-bold tracking-[0.08em] text-[var(--muted)] uppercase max-[680px]:text-[0.55rem]">
+                        {bundleSavings > 0 ? "· " : ""}{isAvailable ? "Complete Set" : "Sold out"}
+                      </span>
+                    </div>
                   </div>
 
                   <button

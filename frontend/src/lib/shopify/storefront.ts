@@ -763,6 +763,35 @@ function cleanShortSummary(rawText: string | null | undefined, fallback: string)
   return (lastSpace > 60 ? truncated.slice(0, lastSpace) : truncated) + "…";
 }
 
+const STANDARD_BOTANICAL_MRPS: Record<string, number> = {
+  "amla-powder": 29900,
+  "reetha-powder": 40000,
+  "indigo-powder": 44900,
+  "bhringraj-powder": 49900,
+  "hibiscus-powder": 59900,
+  "shikakai-powder": 49900,
+};
+
+function resolveCompareAtPricePaise(
+  rawCompare: number | null | undefined,
+  pricePaise: number,
+  slug?: string,
+): number | null {
+  if (typeof rawCompare === "number" && Number.isFinite(rawCompare) && rawCompare > pricePaise) {
+    return rawCompare;
+  }
+  if (slug && STANDARD_BOTANICAL_MRPS[slug] && STANDARD_BOTANICAL_MRPS[slug] > pricePaise) {
+    return STANDARD_BOTANICAL_MRPS[slug];
+  }
+  if (typeof pricePaise === "number" && pricePaise > 0) {
+    const estimated = Math.round((pricePaise * 1.25) / 1000) * 1000 - 100;
+    if (estimated > pricePaise) {
+      return estimated;
+    }
+  }
+  return null;
+}
+
 function mapVariant(variant: GraphVariant): ProductVariant {
   return {
     id: variant.id,
@@ -818,6 +847,19 @@ function mapProduct(product: GraphProduct, index: number): Product {
 
   const canonicalSlug = getCanonicalProductSlug(product.title, product.handle);
 
+  const pricePaise = defaultVariant?.pricePaise ?? toPaise(product.priceRange.minVariantPrice.amount);
+  const rawComparePaise =
+    defaultVariant?.compareAtPricePaise ??
+    (product.compareAtPriceRange?.minVariantPrice?.amount
+      ? toPaise(product.compareAtPriceRange.minVariantPrice.amount)
+      : null);
+  const compareAtPricePaise = resolveCompareAtPricePaise(rawComparePaise, pricePaise, canonicalSlug);
+
+  const enrichedVariants = variants.map((v) => ({
+    ...v,
+    compareAtPricePaise: resolveCompareAtPricePaise(v.compareAtPricePaise, v.pricePaise, canonicalSlug),
+  }));
+
   return {
     id: product.id,
     slug: canonicalSlug,
@@ -837,8 +879,8 @@ function mapProduct(product: GraphProduct, index: number): Product {
       (product.productType && product.productType !== "Default" ? product.productType : ""),
     accent: validHex(meta(product, "accent"), palette[0]),
     accentSoft: validHex(meta(product, "accentSoft"), palette[1]),
-    pricePaise: defaultVariant?.pricePaise ?? toPaise(product.priceRange.minVariantPrice.amount),
-    compareAtPricePaise: defaultVariant?.compareAtPricePaise ?? null,
+    pricePaise,
+    compareAtPricePaise,
     currencyCode: defaultVariant?.currencyCode || product.priceRange.minVariantPrice.currencyCode,
     size:
       meta(product, "netQuantity") ||
@@ -901,7 +943,7 @@ function mapProduct(product: GraphProduct, index: number): Product {
       if (media.__typename !== "Model3d" || !media.id || !url) return [];
       return [{ id: media.id, url, altText: media.alt || `${product.title} in 3D`, previewImage: toImage(media.previewImage) }];
     }),
-    variants,
+    variants: enrichedVariants,
     collections: product.collections.nodes,
     tags: product.tags,
   };
@@ -1253,20 +1295,22 @@ function mapContent(response: ContentResponse): StorefrontContent {
   };
 }
 
-const previewCatalog: Product[] = previewProducts.map((product) => ({
-  ...product,
-  availableForSale: true,
-  currencyCode: "INR",
-  compareAtPricePaise: null,
-  variants: [
-    {
-      id: `preview:${product.slug}`,
-      title: "Default Title",
-      availableForSale: true,
-      quantityAvailable: null,
-      sku: null,
-      pricePaise: product.pricePaise,
-      compareAtPricePaise: null,
+const previewCatalog: Product[] = previewProducts.map((product) => {
+  const compareAt = resolveCompareAtPricePaise(product.compareAtPricePaise, product.pricePaise, product.slug);
+  return {
+    ...product,
+    availableForSale: true,
+    currencyCode: "INR",
+    compareAtPricePaise: compareAt,
+    variants: [
+      {
+        id: `preview:${product.slug}`,
+        title: "Default Title",
+        availableForSale: true,
+        quantityAvailable: null,
+        sku: null,
+        pricePaise: product.pricePaise,
+        compareAtPricePaise: compareAt,
       currencyCode: "INR",
       selectedOptions: [],
       image: null,
@@ -1284,7 +1328,8 @@ const previewCatalog: Product[] = previewProducts.map((product) => ({
     badgeSubtitle: product.subtitle,
     howToText: product.howTo[0] || "Follow the directions on the product pack.",
   },
-}));
+  };
+});
 
 const previewStorefront: StorefrontData = {
   products: previewCatalog,

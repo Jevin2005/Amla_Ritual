@@ -5,6 +5,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import {
   formatCurrency,
+  calculateDiscountPercent,
+  calculateSavingsPaise,
   getDefaultVariant,
   type Product,
 } from "@/domain/catalog/products";
@@ -45,6 +47,8 @@ export function ProductDetailActions({ product }: { product: Product }) {
     selectedVariant?.compareAtPricePaise ?? product.compareAtPricePaise ?? null;
   const currencyCode =
     selectedVariant?.currencyCode || product.currencyCode || "INR";
+  const discountPercent = calculateDiscountPercent(pricePaise, compareAtPricePaise);
+  const savingsPaise = calculateSavingsPaise(pricePaise, compareAtPricePaise);
   const available =
     selectedVariant?.availableForSale ?? product.availableForSale ?? true;
   const maximumQuantity = Math.max(
@@ -97,32 +101,47 @@ export function ProductDetailActions({ product }: { product: Product }) {
   return (
     <div className="flex flex-col gap-3">
       {/* Price & Stock Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-y border-[var(--line)] py-2.5">
-        <div className="flex items-baseline gap-2">
-          <span className="[font-family:var(--font-display)] text-[1.85rem] font-semibold text-[var(--forest)] max-[680px]:text-[1.55rem]">
-            {formatCurrency(pricePaise, currencyCode)}
-          </span>
-          {compareAtPricePaise && compareAtPricePaise > pricePaise ? (
-            <del className="text-[0.82rem] text-[var(--muted)]">
-              {formatCurrency(compareAtPricePaise, currencyCode)}
-            </del>
-          ) : null}
+      <div className="flex flex-col gap-2 border-y border-[var(--line)] py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-baseline gap-2.5">
+            <span className="[font-family:var(--font-display)] text-[2.1rem] font-bold text-[var(--forest)] max-[680px]:text-[1.75rem]">
+              {formatCurrency(pricePaise, currencyCode)}
+            </span>
+            {compareAtPricePaise && compareAtPricePaise > pricePaise ? (
+              <>
+                <span className="text-[1.05rem] text-[var(--muted)] line-through max-[680px]:text-[0.92rem]">
+                  {formatCurrency(compareAtPricePaise, currencyCode)}
+                </span>
+                <span className="inline-flex items-center rounded-md bg-[#2d6a2f]/10 px-2.5 py-0.5 text-[0.82rem] font-bold text-[#235825] ring-1 ring-[#2d6a2f]/20 max-[680px]:text-[0.72rem]">
+                  {discountPercent}% OFF
+                </span>
+              </>
+            ) : null}
+          </div>
+
+          {/* Stock status indicator */}
+          <div className="flex items-center gap-1.5 text-[0.66rem] font-bold uppercase tracking-wider max-[680px]:text-[0.6rem]">
+            <span
+              className={`size-2 rounded-full ${available ? "bg-[#529d38] ring-2 ring-[#529d38]/30 animate-pulse" : "bg-red-500"
+                }`}
+            />
+            <span className={available ? "text-[var(--forest)]" : "text-red-600"}>
+              {available
+                ? selectedVariant?.quantityAvailable && selectedVariant.quantityAvailable <= 5
+                  ? `Only ${selectedVariant.quantityAvailable} left`
+                  : "In Stock · Ready to ship"
+                : "Sold Out"}
+            </span>
+          </div>
         </div>
 
-        {/* Stock status indicator */}
-        <div className="flex items-center gap-1.5 text-[0.66rem] font-bold uppercase tracking-wider max-[680px]:text-[0.6rem]">
-          <span
-            className={`size-2 rounded-full ${available ? "bg-[#529d38] ring-2 ring-[#529d38]/30 animate-pulse" : "bg-red-500"
-              }`}
-          />
-          <span className={available ? "text-[var(--forest)]" : "text-red-600"}>
-            {available
-              ? selectedVariant?.quantityAvailable && selectedVariant.quantityAvailable <= 5
-                ? `Only ${selectedVariant.quantityAvailable} left`
-                : "In Stock · Ready to ship"
-              : "Sold Out"}
-          </span>
-        </div>
+        {/* Special Savings Callout */}
+        {savingsPaise > 0 ? (
+          <div className="flex items-center gap-1.5 text-[0.78rem] font-semibold text-[#2d6a2f]">
+            <span aria-hidden="true">🏷️</span>
+            <span>Special Offer: You save {formatCurrency(savingsPaise, currencyCode)} ({discountPercent}% discount)</span>
+          </div>
+        ) : null}
       </div>
 
       {/* Variant Choice If Applicable */}
@@ -156,16 +175,21 @@ export function ProductDetailActions({ product }: { product: Product }) {
               clearCartError();
             }}
           >
-            {variants.map((variant) => (
-              <option
-                value={variant.id}
-                key={variant.id}
-                disabled={!variant.availableForSale}
-              >
-                {variant.title} — {formatCurrency(variant.pricePaise, variant.currencyCode)}
-                {!variant.availableForSale ? " — Sold out" : ""}
-              </option>
-            ))}
+            {variants.map((variant) => {
+              const vCompare = variant.compareAtPricePaise ?? compareAtPricePaise;
+              const vDiscount = calculateDiscountPercent(variant.pricePaise, vCompare);
+              return (
+                <option
+                  value={variant.id}
+                  key={variant.id}
+                  disabled={!variant.availableForSale}
+                >
+                  {variant.title} — {formatCurrency(variant.pricePaise, variant.currencyCode)}
+                  {vDiscount > 0 ? ` (${vDiscount}% OFF)` : ""}
+                  {!variant.availableForSale ? " — Sold out" : ""}
+                </option>
+              );
+            })}
           </select>
         </div>
       )}
@@ -280,9 +304,21 @@ export function ProductDetailActions({ product }: { product: Product }) {
           >
             {/* Left Price & Stock Info */}
             <div className="flex flex-col shrink-0 min-w-0 pr-1 max-[360px]:pr-0.5">
-              <span className="[font-family:var(--font-display)] text-[1.2rem] font-bold leading-tight text-[var(--forest)] whitespace-nowrap max-[380px]:text-[1.05rem]">
-                {formatCurrency(pricePaise, currencyCode)}
-              </span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="[font-family:var(--font-display)] text-[1.25rem] font-bold leading-tight text-[var(--forest)] whitespace-nowrap max-[380px]:text-[1.08rem]">
+                  {formatCurrency(pricePaise, currencyCode)}
+                </span>
+                {compareAtPricePaise && compareAtPricePaise > pricePaise && (
+                  <span className="text-[0.74rem] text-[var(--muted)] line-through max-[380px]:hidden">
+                    {formatCurrency(compareAtPricePaise, currencyCode)}
+                  </span>
+                )}
+                {discountPercent > 0 && (
+                  <span className="rounded bg-[#2d6a2f]/12 px-1 py-0.2 text-[0.62rem] font-bold text-[#235825]">
+                    {discountPercent}% OFF
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-1 text-[0.62rem] font-bold text-[#529d38] uppercase tracking-wider whitespace-nowrap">
                 <span className="size-1.5 rounded-full bg-[#529d38] animate-pulse shrink-0" />
                 <span>{available ? "In Stock" : "Sold Out"}</span>

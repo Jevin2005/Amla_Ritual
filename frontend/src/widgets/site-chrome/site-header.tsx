@@ -111,11 +111,11 @@ export function SiteHeader() {
             <span className="h-px w-[21px] bg-[var(--forest)]" />
           </button>
           <Link
-            className="z-10 justify-self-center px-4 py-2 max-[900px]:col-start-2 max-[900px]:row-start-1 max-[900px]:px-1 max-[900px]:py-1"
+            className={`z-10 justify-self-center px-3 transition-all duration-300 ${compact ? "py-1" : "py-1.5"} max-[900px]:col-start-2 max-[900px]:row-start-1 max-[900px]:px-1 max-[900px]:py-0.5`}
             href="/"
             aria-label="NatureMist home"
           >
-            <BrandMark />
+            <BrandMark compact={compact} />
           </Link>
           <div className="flex min-w-0 items-center justify-end gap-[clamp(16px,2vw,36px)] max-[1100px]:gap-3 max-[900px]:col-start-3 max-[900px]:row-start-1 max-[900px]:justify-self-end max-[900px]:gap-0">
             <button

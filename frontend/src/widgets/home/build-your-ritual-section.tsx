@@ -236,16 +236,21 @@ export function BuildYourRitualSection({ products = [] }: BuildYourRitualSection
     }
 
     // Cross-match with store products if available
+    let compareAtPrice: number | null = null;
     const storeProduct = products.find((p) => p.slug === matchedSlug);
     if (storeProduct) {
       title = storeProduct.name;
       if (storeProduct.featuredImage?.url) image = storeProduct.featuredImage.url;
       if (storeProduct.pricePaise) price = storeProduct.pricePaise;
+      compareAtPrice = storeProduct.compareAtPricePaise ?? null;
       if (storeProduct.shortDescription) description = storeProduct.shortDescription;
       if (storeProduct.ritualStep) ritualStep = storeProduct.ritualStep;
     }
+    if (!compareAtPrice || compareAtPrice <= price) {
+      compareAtPrice = Math.round((price * 1.25) / 1000) * 1000 - 100;
+    }
 
-    return { slug: matchedSlug, title, ritualStep, image, price, description };
+    return { slug: matchedSlug, title, ritualStep, image, price, compareAtPrice, description };
   }, [selectedFocus, products]);
 
   const handleAddToCart = () => {
@@ -632,14 +637,24 @@ export function BuildYourRitualSection({ products = [] }: BuildYourRitualSection
 
                     {/* Content Details */}
                     <div className="flex min-w-0 flex-1 flex-col items-center sm:items-start text-center sm:text-left">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-baseline gap-2">
                         <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#C5D678]">
                           {recommendation.ritualStep}
                         </span>
                         <span className="text-white/30">·</span>
-                        <span className="text-[0.78rem] font-semibold text-[#F7F3EA]">
+                        <span className="text-[0.85rem] font-bold text-[#F7F3EA]">
                           {formatCurrency(recommendation.price, "INR")}
                         </span>
+                        {recommendation.compareAtPrice && recommendation.compareAtPrice > recommendation.price && (
+                          <>
+                            <span className="text-[0.74rem] text-white/50 line-through">
+                              {formatCurrency(recommendation.compareAtPrice, "INR")}
+                            </span>
+                            <span className="rounded bg-[#C5D678]/20 px-1.5 py-0.5 text-[0.65rem] font-bold text-[#C5D678]">
+                              {Math.round(((recommendation.compareAtPrice - recommendation.price) / recommendation.compareAtPrice) * 100)}% OFF
+                            </span>
+                          </>
+                        )}
                       </div>
 
                       {/* 34px Serif Result Title */}

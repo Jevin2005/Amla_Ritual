@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { formatCurrency } from "@/domain/catalog/products";
+import { formatCurrency, calculateDiscountPercent } from "@/domain/catalog/products";
 import { CartProductImage } from "@/features/cart/cart-product-image";
 import { useStore } from "@/features/store/store-provider";
 
@@ -45,6 +45,15 @@ export function CheckoutOrderSummary({
   };
 
   const finalTotalPaise = totalPaise + shippingFeePaise;
+
+  const totalMrpPaise = cart.reduce((sum, item) => {
+    const comp = item.compareAtPricePaise && item.compareAtPricePaise > item.pricePaise ? item.compareAtPricePaise : item.pricePaise;
+    return sum + comp * item.quantity;
+  }, 0);
+  const totalMrpSavingsPaise = Math.max(0, totalMrpPaise - subtotalPaise);
+  const combinedTotalSavings = totalMrpSavingsPaise + discountAmountPaise;
+
+
 
   return (
     <aside
@@ -137,14 +146,32 @@ export function CheckoutOrderSummary({
 
               {/* Price */}
               <div className="text-right shrink-0">
-                <span className="font-serif text-[1.1rem] font-medium text-[var(--forest)]">
-                  {formatCurrency(item.lineTotalPaise, item.currencyCode)}
-                </span>
-                {item.discountAmountPaise > 0 && (
-                  <span className="block text-[0.68rem] font-bold text-[#529d38]">
-                    Save {formatCurrency(item.discountAmountPaise, item.currencyCode)}
-                  </span>
-                )}
+                {(() => {
+                  const compareAt = item.compareAtPricePaise && item.compareAtPricePaise > item.pricePaise ? item.compareAtPricePaise : null;
+                  const discPercent = calculateDiscountPercent(item.pricePaise, compareAt);
+                  const savings = compareAt ? (compareAt - item.pricePaise) * item.quantity : 0;
+                  return (
+                    <div className="flex flex-col items-end">
+                      <span className="font-serif text-[1.1rem] font-medium text-[var(--forest)]">
+                        {formatCurrency(item.lineTotalPaise, item.currencyCode)}
+                      </span>
+                      {compareAt && (
+                        <del className="text-[0.74rem] text-[var(--muted)]">
+                          {formatCurrency(compareAt * item.quantity, item.currencyCode)}
+                        </del>
+                      )}
+                      {item.discountAmountPaise > 0 ? (
+                        <span className="block text-[0.68rem] font-bold text-[#529d38]">
+                          Save {formatCurrency(item.discountAmountPaise, item.currencyCode)}
+                        </span>
+                      ) : savings > 0 ? (
+                        <span className="block text-[0.68rem] font-bold text-[#529d38]">
+                          Save {formatCurrency(savings, item.currencyCode)} ({discPercent}% OFF)
+                        </span>
+                      ) : null}
+                    </div>
+                  );
+                })()}
               </div>
             </article>
           );
@@ -210,7 +237,28 @@ export function CheckoutOrderSummary({
       </div>
 
       {/* ── Financial Breakdown ── */}
-      <dl className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-4 text-[0.84rem] text-[var(--muted)]">
+      <div className="border-t border-[var(--line)] pt-4">
+        {combinedTotalSavings > 0 && (
+          <div className="mb-3 flex items-center justify-between rounded-xl bg-[#529d38]/10 px-3.5 py-2 text-[0.76rem] font-bold text-[#235825] ring-1 ring-[#529d38]/20">
+            <span className="flex items-center gap-1.5">
+              <span>🎉</span>
+              <span>Total Savings on this order:</span>
+            </span>
+            <span>{formatCurrency(combinedTotalSavings, currencyCode)}</span>
+          </div>
+        )}
+      </div>
+
+      <dl className="flex flex-col gap-2.5 text-[0.84rem] text-[var(--muted)]">
+        {totalMrpPaise > subtotalPaise && (
+          <div className="flex items-center justify-between">
+            <dt>Total MRP</dt>
+            <dd className="line-through">
+              {formatCurrency(totalMrpPaise, currencyCode)}
+            </dd>
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <dt>Subtotal</dt>
           <dd className="font-semibold text-[var(--forest)]">
@@ -218,11 +266,11 @@ export function CheckoutOrderSummary({
           </dd>
         </div>
 
-        {discountAmountPaise > 0 && (
+        {combinedTotalSavings > 0 && (
           <div className="flex items-center justify-between text-[#529d38]">
-            <dt>Discount Savings</dt>
+            <dt>Total Discount Savings</dt>
             <dd className="font-semibold">
-              −{formatCurrency(discountAmountPaise, currencyCode)}
+              −{formatCurrency(combinedTotalSavings, currencyCode)}
             </dd>
           </div>
         )}

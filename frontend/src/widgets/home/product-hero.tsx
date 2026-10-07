@@ -359,6 +359,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         </div>
         <div className={styles.purchase} key={`purchase-${product.heroEntryId}`} data-transition={animation}>
           <HeroPurchase slug={product.slug} name={product.name} pricePaise={product.pricePaise}
+            compareAtPricePaise={product.compareAtPricePaise}
             size={product.size} currencyCode={product.currencyCode} cursorMotion={posterCursor && moving} />
         </div>
         <aside className={styles.featured} id="featured-ritual" aria-labelledby="featured-ritual-heading">
