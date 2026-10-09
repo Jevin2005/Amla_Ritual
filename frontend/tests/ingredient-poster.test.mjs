@@ -98,7 +98,7 @@ test("srcdoc controller uses parent origin, survives paused loading, and keeps a
     get id() { return this.image.source?.src.split("/").at(-1).replace(".png", ""); }
     dispose() { textureDisposals++; }
   }
-  let next = 0, now = 0, options;
+  let next = 0, now = 0, options, finePointer = true;
   const textures = ["a", "b", "c"].map((id) => ({ id, dispose() {} }));
   const uniforms = { uTexture: { value: textures }, metaball: { value: .2 }, uIntercept: { value: 0 }, mousei: { value: { x: .5, y: .5 } } };
   const attrs = { meshes: [{ visible: false, geometry: { dispose() {} }, material: { dispose() {} } }], uniforms: [uniforms],
@@ -116,7 +116,7 @@ test("srcdoc controller uses parent origin, survives paused loading, and keeps a
       return { naturalWidth: 1600, naturalHeight: 2000, decode: async () => {} };
     }, head: { appendChild: (script) => queueMicrotask(() => script.onload()) } };
   const context = { document, parent, location: { origin: "null", href: "about:srcdoc" }, URL, console, queueMicrotask,
-    performance: { now: () => now }, THREE: { Texture: FrameTexture, LinearFilter: 1 }, Shery: { imageEffect: (_, config) => { options = config; config.setAttribute(attrs); } },
+    performance: { now: () => now }, matchMedia: () => ({ matches: finePointer }), THREE: { Texture: FrameTexture, LinearFilter: 1 }, Shery: { imageEffect: (_, config) => { options = config; config.setAttribute(attrs); } },
     requestAnimationFrame: (callback) => { frames.set(++next, callback); return next; }, cancelAnimationFrame: (id) => frames.delete(id),
     setTimeout: (callback) => { timers.set(++next, callback); return next; }, clearTimeout: (id) => timers.delete(id),
     addEventListener: (name, callback) => events.set(name, callback), dispatchEvent() {}, Event: class {}, Element: class {} };
@@ -145,7 +145,15 @@ test("srcdoc controller uses parent origin, survives paused loading, and keeps a
   assert.deepEqual(textureCanvases.map(({ width, height }) => [width, height]), [[1024, 683], [1024, 683], [1024, 683]]);
   // Explicit frame enter/leave fades both ways even when the parent cursor flag
   // stays true, as it does when crossing an iframe boundary.
-  events.get("pointerenter")(); attrs.renderer.render();
+  events.get("pointerenter")({ pointerType: "touch" }); attrs.renderer.render();
+  now += 400; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 0, "touch entry never leaves a hover reveal on the photo");
+  finePointer = false;
+  events.get("mousemove")(); attrs.renderer.render();
+  now += 400; attrs.renderer.render();
+  assert.equal(uniforms.uIntercept.value, 0, "synthetic mouse movement on touch devices cannot enable hover");
+  finePointer = true;
+  events.get("pointerenter")({ pointerType: "mouse" }); attrs.renderer.render();
   assert.equal(uniforms.uIntercept.value, 0);
   now += 200; attrs.renderer.render();
   assert.ok(uniforms.uIntercept.value > 0 && uniforms.uIntercept.value < 1);
@@ -243,4 +251,85 @@ test("a broken alternate image fails back to the HTML poster before starting Web
   await new Promise((resolve) => setImmediate(resolve));
   assert.deepEqual(sent.map(({ type }) => type), ["error"]);
   assert.equal(timers.size, 0);
+});
+
+async function shopifyTextureLoading(originalAvailable) {
+  const runtime = buildSync({ entryPoints: [`${root}src/features/poster/shery-frame-runtime.ts`], bundle: true, platform: "browser", format: "iife", write: false }).outputFiles[0].text;
+  const first = "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ritual.png?v=1";
+  const alternate = "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/preparation.png?v=2";
+  const images = [], requests = [], sent = [], timers = new Map();
+  let next = 0, started = 0;
+  const parent = { location: { origin: "https://naturemist.test", href: "https://naturemist.test/" }, postMessage: (message) => sent.push(message) };
+  const poster = { appendChild: (image) => images.push(image), querySelectorAll: () => images };
+  const attrs = {
+    meshes: [{ visible: true, material: {} }],
+    uniforms: [{ uTexture: { value: [{}, {}] }, metaball: { value: .2 }, uIntercept: { value: 0 } }],
+    renderer: { debug: {}, domElement: { addEventListener() {} }, render() {} },
+  };
+  const document = {
+    hidden: false,
+    getElementById: (id) => id === "poster" ? poster : id === "shery-data" ? {
+      textContent: JSON.stringify({ debug: false, images: [{ url: first }, { url: alternate }], config: {} }),
+    } : {},
+    addEventListener() {},
+    createElement: (tag) => {
+      if (tag === "canvas") return { getContext: () => ({}) };
+      if (tag !== "img") return {};
+      return {
+        naturalWidth: 0, naturalHeight: 0,
+        set src(value) {
+          this.source = value;
+          this.naturalWidth = 0;
+          this.naturalHeight = 0;
+          requests.push({ url: value, crossOrigin: this.crossOrigin });
+        },
+        get src() { return this.source; },
+        async decode() {
+          const url = new URL(this.source);
+          if (url.pathname.endsWith("/preparation.png")) {
+            if (url.searchParams.has("width") || !originalAvailable) throw new Error("Shopify variant unavailable");
+            this.naturalWidth = 1254;
+            this.naturalHeight = 1254;
+          } else {
+            this.naturalWidth = 1024;
+            this.naturalHeight = 1536;
+          }
+        },
+      };
+    },
+    head: { appendChild: (script) => queueMicrotask(() => script.onload()) },
+  };
+  const context = {
+    document, parent, URL, console, queueMicrotask, performance,
+    Shery: { imageEffect: (_, options) => { started++; options.setAttribute(attrs); } },
+    requestAnimationFrame: () => 1, cancelAnimationFrame() {},
+    setTimeout: (callback) => { timers.set(++next, callback); return next; }, clearTimeout: (id) => timers.delete(id),
+    addEventListener() {},
+  };
+  context.window = context;
+  vm.createContext(context); vm.runInContext(runtime, context);
+  await new Promise((resolve) => setImmediate(resolve));
+  if (started) attrs.renderer.render();
+  return { first, alternate, images, requests, sent, started, timers };
+}
+
+test("a missing Shopify resized texture retries its original and keeps the gooey animation", async () => {
+  const env = await shopifyTextureLoading(true);
+  assert.deepEqual(env.requests.map(({ url }) => url), [env.first + "&width=1024", env.alternate + "&width=1024", env.alternate]);
+  assert.ok(env.requests.every(({ crossOrigin }) => crossOrigin === "anonymous"), "every source request remains safe for WebGL canvas textures");
+  assert.equal(env.images.length, 2, "retry replaces the source without adding another slide");
+  assert.deepEqual(env.images.map(({ naturalWidth, naturalHeight }) => [naturalWidth, naturalHeight]), [[1024, 1536], [1254, 1254]]);
+  assert.equal(env.started, 1);
+  assert.deepEqual(env.sent.map(({ type }) => type), ["ready"]);
+  assert.equal(env.timers.size, 0);
+});
+
+test("a Shopify texture with both resized and original files missing still falls back safely", async () => {
+  const env = await shopifyTextureLoading(false);
+  assert.deepEqual(env.requests.map(({ url }) => url), [env.first + "&width=1024", env.alternate + "&width=1024", env.alternate]);
+  assert.ok(env.requests.every(({ crossOrigin }) => crossOrigin === "anonymous"));
+  assert.equal(env.images[1].naturalWidth, 0);
+  assert.equal(env.started, 0, "WebGL must not start with an undecodable original");
+  assert.deepEqual(env.sent.map(({ type }) => type), ["error"]);
+  assert.equal(env.timers.size, 0);
 });

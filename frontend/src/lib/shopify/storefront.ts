@@ -4,7 +4,7 @@ import { cache } from "react";
 import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
 import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { defaultMotionSettings, parseMotionSettings, type MotionSettings } from "@/domain/motion";
-import { defaultIngredientPosterSettings, parseIngredientPosterSettings, posterImages, type IngredientPosterSettings } from "@/domain/ingredient-poster";
+import { defaultIngredientClarity, defaultIngredientPosterSettings, parseIngredientPosterSettings, posterImages, type IngredientClarityContent, type IngredientPosterSettings } from "@/domain/ingredient-poster";
 import {
   bundles as previewBundles,
   products as previewProducts,
@@ -287,6 +287,24 @@ const SITE_CONTENT_QUERY = `#graphql
       ritualPosterInterval: field(key: "ritual_poster_interval") { value }
       ritualPosterStrength: field(key: "ritual_poster_strength") { value }
       ritualPosterConfig: field(key: "ritual_poster_config") { value }
+      ingredientPlantImages: field(key: "ingredient_plant_images") {
+        references(first: 8) { nodes { ... on MediaImage { image { url altText width height } } } }
+      }
+      ingredientPreparationImages: field(key: "ingredient_preparation_images") {
+        references(first: 8) { nodes { ... on MediaImage { image { url altText width height } } } }
+      }
+      ingredientLifestyleImages: field(key: "ingredient_lifestyle_images") {
+        references(first: 8) { nodes { ... on MediaImage { image { url altText width height } } } }
+      }
+      ingredientBackground: field(key: "ingredient_background") {
+        reference { ... on MediaImage { image { url altText width height } } }
+      }
+      ingredientMobileBackground: field(key: "ingredient_mobile_background") {
+        reference { ... on MediaImage { image { url altText width height } } }
+      }
+      ingredientBotanical: field(key: "ingredient_botanical") {
+        reference { ... on MediaImage { image { url altText width height } } }
+      }
       storyPoster: field(key: "story_poster") {
         reference { ... on MediaImage { image { url altText width height } } }
       }
@@ -497,6 +515,7 @@ export type StorefrontContent = {
   ritualPoster: StoreImage;
   ritualPosters: StoreImage[];
   ritualPosterSettings: IngredientPosterSettings;
+  ingredientClarity: IngredientClarityContent;
   storyPoster: StoreImage;
   primaryNavigation: NavigationItem[];
   footerNavigation: NavigationItem[];
@@ -556,6 +575,7 @@ export const previewContent: StorefrontContent = {
   motionSettings: defaultMotionSettings,
   ritualPosters: defaultRitualPosters,
   ritualPosterSettings: defaultIngredientPosterSettings,
+  ingredientClarity: defaultIngredientClarity,
   announcementText: "Rooted in Ayurveda · Made for modern rituals",
   announcementLinkLabel: "",
   announcementLinkUrl: "",
@@ -978,6 +998,14 @@ function contentImage(content: GraphSiteContent | null, key: string, fallback: S
   return toImage(content?.[key]?.reference?.image) || fallback;
 }
 
+function contentImages(content: GraphSiteContent | null, key: string, fallback: StoreImage): StoreImage[] {
+  const images = (content?.[key]?.references?.nodes || []).flatMap((node) => {
+    const image = toImage(node.image);
+    return image ? [image] : [];
+  });
+  return posterImages(images, fallback);
+}
+
 function storefrontPath(value: string) {
   try {
     const config = configuration();
@@ -1284,6 +1312,14 @@ function mapContent(response: ContentResponse): StorefrontContent {
     ritualPoster,
     ritualPosters: posterImages(ritualPosters.length ? ritualPosters : defaultRitualPosters, ritualPoster),
     ritualPosterSettings: parseIngredientPosterSettings(content),
+    ingredientClarity: {
+      plantImages: contentImages(content, "ingredientPlantImages", defaultIngredientClarity.plantImages[0]),
+      preparationImages: contentImages(content, "ingredientPreparationImages", defaultIngredientClarity.preparationImages[0]),
+      lifestyleImages: contentImages(content, "ingredientLifestyleImages", defaultIngredientClarity.lifestyleImages[0]),
+      background: toImage(content?.ingredientBackground?.reference?.image),
+      mobileBackground: toImage(content?.ingredientMobileBackground?.reference?.image),
+      botanical: toImage(content?.ingredientBotanical?.reference?.image),
+    },
     storyPoster: contentImage(content, "storyPoster", previewContent.storyPoster),
     primaryNavigation:
       mapMenu(response.mainMenu?.items).length > 0

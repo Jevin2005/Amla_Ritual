@@ -78,26 +78,26 @@ Phones use shorter scroll reveals and no cursor effects. Operating-system reduce
 
 The shared effects use React, CSS and native browser animation APIs. The ingredient poster uses the installed Shery.js library for its native gooey effect and built-in debug panels.
 
-## Ingredient clarity: multiple posters and gooey effect
+## Ingredient clarity: responsive collage and gooey effect
 
-Open **Content → Metaobjects → Storefront content → Homepage settings**. These fields manage only the poster beside **One ingredient. Nothing hidden.**
+Open **Content → Metaobjects → Storefront content → Homepage settings**. The ingredient section now has three image galleries, plus desktop/phone backgrounds and botanical artwork. See [Ingredient clarity images in Shopify](ingredient-clarity-admin.md) for the field definitions and image guidance.
 
-1. In **Ingredient clarity — poster images**, upload or select **1–8 images**.
-2. Drag the selected images into the desired order. The first image appears first.
+1. Upload or select **1–8 images** independently in `ingredient_plant_images`, `ingredient_preparation_images`, and `ingredient_lifestyle_images`.
+2. Drag each gallery's images into the desired order. The first image in each gallery appears first.
 3. Save. Allow approximately two minutes for the storefront cache to refresh.
 
 | Field | Initial value | Usage |
 | --- | --- | --- |
-| Ingredient clarity — poster images | Original ritual image, then the existing green lifestyle image | Ordered list of Shopify images; portrait images work best. |
+| Plant, preparation and lifestyle images | Separate botanical, mixing and lifestyle fallbacks | Ordered Shopify image lists; each list has its own subject and slideshow. |
 | Ingredient clarity — gooey effect | True | Cursor reveals the next image through an animated liquid mask. |
 | Ingredient clarity — automatically change images | True | Cycle images while the poster is visible. |
 | Ingredient clarity — image duration (seconds) | 6 | 3–30 seconds between automatic changes. |
 | Ingredient clarity — gooey strength | 1 | 0.5 subtle, 1 recommended, 1.5 stronger. |
 | Ingredient clarity — Shery preset (JSON) | `{}` | Paste the complete JSON from Shery's native Save To Clipboard button. Saved shader settings override the strength defaults. |
 
-Two or more images enable previous/next arrows, an image counter and a slideshow pause control. One image stays still. An empty list falls back to the original ritual poster. Removing an image here does not delete the file or change product galleries.
+Two or more images in a gallery enable compact previous/next arrows, an image counter and a slideshow pause control. One image stays still. Each empty list uses its own bundled fallback. Removing an image here does not delete the file or change product galleries. The old `ritual_poster` and `ritual_posters` fields remain for compatibility. The existing animation settings below continue to govern the new galleries; all three ingredient galleries change together on one timer. The saved duration is exact (currently 6 seconds); the 2× multiplier applies only to transition animation (2.64 seconds at the default website timing). Navigation and pause/resume control the whole group.
 
-The poster calls the original [Shery.js Dynamic Gooey Effect](https://github.com/sheryianscodingschool/sheryjs#dynamic-gooey-effect) with `style: 6` and `gooey: true`. The arch and cover crop are retained. The website supplies image selection and timed transitions through the library's exposed uniforms; it does not pass `slideStyle`, which would disable Shery's gooey shader.
+Each gallery calls the original [Shery.js Dynamic Gooey Effect](https://github.com/sheryianscodingschool/sheryjs#dynamic-gooey-effect) with `style: 6` and `gooey: true`. The responsive frames retain the same cover crop for static and animated images. The website supplies image selection and timed transitions through the library's exposed uniforms; it does not pass `slideStyle`, which would disable Shery's gooey shader.
 
 The effect loads when the poster first enters the viewport. Automatic changes pause on mouse hover, keyboard focus, hidden tabs, leaving the viewport or opening the editor. Reduced motion disables automatic changes and WebGL effects; manual navigation remains available. Website animations, Cursor effects, Animation timing and zero Cursor movement strength are respected. If WebGL or texture loading fails, the regular image gallery remains available. Shopify poster textures request a 1024px width. The library runs in its own iframe because it has no complete teardown API. Its animation callbacks pause offscreen, and removing the iframe releases its entire runtime without affecting the rest of the website.
 
@@ -105,7 +105,7 @@ The source attribution and notices are served at `/THIRD_PARTY_NOTICES.md`. `npm
 
 ### Shery's built-in adjustment panel
 
-1. In the local development website (`npm run dev`), scroll to **One ingredient. Nothing hidden.** and click **Open Shery controls** beneath the poster.
+1. In the local development website (`npm run dev`), scroll to **One ingredient. Nothing hidden.** and click the small gear in the top-left corner of a photo (labelled **Open Shery controls**).
 2. Expand the original **Gooey Panel**. It contains Speed, GooeyBall, Threshold, Antialias, Height and Scale, plus Shery's InfiniteGooey controls. The **Debug Panel** contains the base effect and shape controls.
 3. Hover over the image while adjusting. Both panels are created by the installed library through `Shery.imageEffect("#poster", { style: 6, gooey: true, debug: true, config })`. No replacement sliders are rendered by React.
 4. Expand **Debug Panel**, then click its built-in **Save To Clipboard** button.

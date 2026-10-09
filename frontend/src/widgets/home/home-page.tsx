@@ -6,7 +6,7 @@ import { getHomepageHeroProducts } from "@/domain/catalog/products";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
-import { IngredientPoster } from "@/features/poster/ingredient-poster";
+import { IngredientClarity } from "./ingredient-clarity";
 import { FeaturedProductSwitcher } from "./featured-product-switcher";
 import { ProductHero } from "./product-hero";
 import { ProductBenefits } from "./product-benefits";
@@ -226,108 +226,7 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ── Ingredient Clarity (One ingredient. Nothing hidden) ── */}
-      <section
-        className={`mx-auto grid w-full max-w-[1440px] scroll-mt-[calc(var(--header-height)+24px)] grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] items-center gap-[clamp(32px,5.5vw,88px)] px-[clamp(24px,5vw,72px)] py-[clamp(60px,7vw,110px)] max-[900px]:gap-8 max-[768px]:grid-cols-1 max-[768px]:gap-8 max-[680px]:px-4 max-[680px]:py-9 ${revealClass}`}
-        id="ingredient-standards"
-        aria-labelledby="purity-title"
-      >
-        {/* Left Column: Arched Image with Badge */}
-        <IngredientPoster images={content.ritualPosters} fallback={content.ritualPoster} settings={content.ritualPosterSettings} pace={1.25} />
-
-        {/* Right Column: Heading, description, 3 numbered points, CTA */}
-        <div>
-          <div data-motion-reveal className="mb-3 flex items-center gap-2.5">
-            <span className="inline-block h-2 w-2 rounded-full bg-[var(--amla)] shadow-[0_0_8px_var(--amla)] animate-pulse" aria-hidden="true" />
-            <p className="m-0 text-[0.74rem] font-bold uppercase tracking-[0.2em] text-[var(--botanical)] max-[680px]:text-[0.68rem]">
-              Ingredient clarity
-            </p>
-          </div>
-          <h2
-            className="m-0 [font-family:var(--font-display)] text-[clamp(2.4rem,3.8vw,4rem)] font-normal leading-[1.04] tracking-[-0.035em] text-[var(--forest)] max-[900px]:text-[2.2rem] max-[680px]:text-[1.85rem]"
-            id="purity-title"
-            data-motion-reveal
-          >
-            <span className="line-reveal-wrap block">
-              <span className="line-reveal-text">One ingredient.</span>
-            </span>
-            <span className="line-reveal-wrap block">
-              <span className="line-reveal-text italic text-[var(--botanical)]">Nothing hidden.</span>
-            </span>
-          </h2>
-          <p
-            data-motion-reveal
-            className="my-5 max-w-[540px] text-[0.95rem] leading-[1.7] text-[var(--muted)] max-[900px]:text-[0.9rem] max-[680px]:my-3 max-[680px]:text-[0.84rem] max-[680px]:leading-[1.5]"
-          >
-            NatureMist translates a time-honoured botanical practice into a clear, unhurried ritual you can understand from first scoop to final rinse.
-          </p>
-
-          {/* 3 Points List */}
-          <div className="border-t border-[var(--line)]">
-            <article
-              data-motion-reveal
-              className="group grid grid-cols-[38px_1fr] items-start gap-3.5 border-b border-[var(--line)] py-5 transition-all duration-300 hover:translate-x-1.5 hover:bg-[rgb(82_119_68_/_4%)] px-3 -mx-3 rounded-lg max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3.5 max-[680px]:hover:translate-x-0"
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgb(82_119_68_/_12%)] font-mono text-[0.78rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none transition-colors duration-200 group-hover:bg-[var(--botanical)] group-hover:text-[var(--ivory)] max-[680px]:h-6 max-[680px]:w-6 max-[680px]:text-[0.72rem]">
-                01
-              </span>
-              <div>
-                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.2rem,1.5vw,1.45rem)] font-medium leading-[1.25] transition-colors duration-200 group-hover:text-[var(--botanical)] max-[680px]:text-[1.08rem]">
-                  Name the botanical
-                </h3>
-                <p className="mt-1.5 mb-0 text-[0.88rem] leading-[1.65] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.45]">
-                  Common name, botanical identity, and plant part—clearly stated on every single pack.
-                </p>
-              </div>
-            </article>
-
-            <article
-              data-motion-reveal
-              className="group grid grid-cols-[38px_1fr] items-start gap-3.5 border-b border-[var(--line)] py-5 transition-all duration-300 hover:translate-x-1.5 hover:bg-[rgb(82_119_68_/_4%)] px-3 -mx-3 rounded-lg max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3.5 max-[680px]:hover:translate-x-0"
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgb(82_119_68_/_12%)] font-mono text-[0.78rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none transition-colors duration-200 group-hover:bg-[var(--botanical)] group-hover:text-[var(--ivory)] max-[680px]:h-6 max-[680px]:w-6 max-[680px]:text-[0.72rem]">
-                02
-              </span>
-              <div>
-                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.2rem,1.5vw,1.45rem)] font-medium leading-[1.25] transition-colors duration-200 group-hover:text-[var(--botanical)] max-[680px]:text-[1.08rem]">
-                  Explain the ritual
-                </h3>
-                <p className="mt-1.5 mb-0 text-[0.88rem] leading-[1.65] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.45]">
-                  Preparation, pairing, and safety guidance written for beginners as well as familiar practitioners.
-                </p>
-              </div>
-            </article>
-
-            <article
-              data-motion-reveal
-              className="group grid grid-cols-[38px_1fr] items-start gap-3.5 border-b border-[var(--line)] py-5 transition-all duration-300 hover:translate-x-1.5 hover:bg-[rgb(82_119_68_/_4%)] px-3 -mx-3 rounded-lg max-[680px]:grid-cols-[28px_1fr] max-[680px]:gap-2.5 max-[680px]:py-3.5 max-[680px]:hover:translate-x-0"
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgb(82_119_68_/_12%)] font-mono text-[0.78rem] font-bold text-[var(--botanical)] pt-0.5 tracking-wider leading-none select-none transition-colors duration-200 group-hover:bg-[var(--botanical)] group-hover:text-[var(--ivory)] max-[680px]:h-6 max-[680px]:w-6 max-[680px]:text-[0.72rem]">
-                03
-              </span>
-              <div>
-                <h3 className="m-0 [color:var(--forest)] [font-family:var(--font-display)] text-[clamp(1.2rem,1.5vw,1.45rem)] font-medium leading-[1.25] transition-colors duration-200 group-hover:text-[var(--botanical)] max-[680px]:text-[1.08rem]">
-                  Keep claims honest
-                </h3>
-                <p className="mt-1.5 mb-0 text-[0.88rem] leading-[1.65] text-[var(--muted)] max-[680px]:text-[0.78rem] max-[680px]:leading-[1.45]">
-                  Thoughtful cosmetic language rooted in herbal tradition without miracle promises or invented proof.
-                </p>
-              </div>
-            </article>
-          </div>
-
-          {/* Philosophy CTA Button */}
-          <div data-motion-reveal className="mt-8 max-[680px]:mt-6">
-            <MagneticLink
-              className="group inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full border border-[var(--forest)] bg-transparent px-8 py-3.5 text-[0.76rem] font-bold uppercase tracking-[0.12em] text-[var(--forest)] shadow-[0_4px_14px_rgb(35_52_25_/_8%)] transition-all duration-300 hover:bg-[var(--forest)] hover:text-[var(--paper)] hover:shadow-[0_8px_24px_rgb(35_52_25_/_18%)] max-[680px]:min-h-[42px] max-[680px]:px-6 max-[680px]:text-[0.7rem]"
-              href="/our-story"
-            >
-              <span>Read our philosophy</span>
-              <span className="transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
-            </MagneticLink>
-          </div>
-        </div>
-      </section>
+      <IngredientClarity />
 
       <section
         className={`${sectionClass} ${revealClass} max-[680px]:py-8 max-[680px]:px-4`}

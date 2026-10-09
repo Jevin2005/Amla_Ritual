@@ -182,10 +182,13 @@ window.addEventListener("click", (event) => {
   select(next);
   parent.postMessage({ channel: "naturemist-shery", type: "click", selected: next }, parentOrigin);
 });
-window.addEventListener("pointerenter", () => { pointerInside = true; }, true);
+window.addEventListener("pointerenter", (event) => { if (event.pointerType === "mouse") pointerInside = true; }, true);
 // An iframe can become interactive under an already stationary pointer, so its
 // first movement may arrive without a matching pointerenter event.
-window.addEventListener("mousemove", () => { if (active && !document.hidden) pointerInside = true; }, true);
+window.addEventListener("mousemove", () => {
+  const canHover = !window.matchMedia || window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (canHover && active && !document.hidden) pointerInside = true;
+}, true);
 window.addEventListener("pointerleave", (event) => {
   if (!event.relatedTarget) pointerInside = false;
 }, true);
@@ -223,15 +226,22 @@ async function start() {
   if (data.debug) await loadScript("controlkit.js");
   await loadScript("Shery.js");
   if (disposed) return;
-  for (const image of data.images) {
+  await Promise.all(data.images.map(async (image) => {
     const element = document.createElement("img");
-    const url = new URL(image.url, parentUrl);
+    const original = new URL(image.url, parentUrl);
+    const url = new URL(original.href);
     if (url.hostname === "cdn.shopify.com") url.searchParams.set("width", "1024");
     element.crossOrigin = "anonymous"; element.src = url.href; element.alt = image.altText || "Botanical ritual";
     poster.appendChild(element);
-  }
-  await Promise.all(Array.from(poster.querySelectorAll("img"), (image) => image.decode().catch(() => {})));
-  if (disposed) return;
+    await element.decode().catch(() => {});
+    // Shopify can serve the original before a resized variant is available.
+    // Keep the gooey transition when the same photo can still load in full.
+    if ((!element.naturalWidth || !element.naturalHeight) && url.href !== original.href && !disposed && !failed) {
+      element.src = original.href;
+      await element.decode().catch(() => {});
+    }
+  }));
+  if (disposed || failed) return;
 
   // All textures share the actual frame aspect, preserving the same cover crop
   // as the HTML fallback without stretching jars or labels.

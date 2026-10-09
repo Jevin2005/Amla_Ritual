@@ -38,6 +38,6 @@ export function SheryPoster({ images, config, selected, active, cursor, duration
   if (failed && !debug) return null;
   return <iframe ref={frame} title={debug ? "Shery.js native Gooey Panel and Debug Panel" : "Interactive botanical poster"}
     className={[styles.sheryFrame, className].filter(Boolean).join(" ")} data-ready={ready} data-debug={debug} srcDoc={document} onLoad={sendState}
-    onPointerEnter={() => sendPointer(true)} onPointerLeave={() => sendPointer(false)}
+    onPointerEnter={(event) => { if (event.pointerType === "mouse") sendPointer(true); }} onPointerLeave={() => sendPointer(false)}
     allow={debug ? "clipboard-write" : undefined} tabIndex={debug ? 0 : -1} aria-hidden={debug ? undefined : true} />;
 }

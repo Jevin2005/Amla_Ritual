@@ -50,7 +50,7 @@ const shop = {
   privacyPolicy: policy, termsOfService: policy, shippingPolicy: policy, refundPolicy: policy,
 };
 
-async function withShopify({ products = [], product = null, catalogError = false, detailError = false, configured = true, strict = false, heroes = [] } = {}, callback) {
+async function withShopify({ products = [], product = null, catalogError = false, detailError = false, configured = true, strict = false, heroes = [], metaobject = null } = {}, callback) {
   const savedFetch = globalThis.fetch;
   const savedEnv = { ...process.env };
   const requests = [];
@@ -72,7 +72,7 @@ async function withShopify({ products = [], product = null, catalogError = false
       data = { product };
     } else if (query.includes("query NatureMistCollections(")) data = { collections: connection() };
     else if (query.includes("query NatureMistShop(")) data = { shop };
-    else if (query.includes("query NatureMistSiteContent(")) data = { metaobject: null, mainMenu: null, footerMenu: null };
+    else if (query.includes("query NatureMistSiteContent(")) data = { metaobject, mainMenu: null, footerMenu: null };
     else if (query.includes("query NatureMistReviews(")) data = { videoReviews: connection(), customerReviews: connection() };
     else if (query.includes("query NatureMistHomepageHeroes(")) data = { metaobjects: connection(heroes) };
     else throw new Error("Unexpected Shopify request");
@@ -109,6 +109,68 @@ test("product metafields control hero selection, references, all copy, order and
     const query = requests.find((request) => request.query.includes("NatureMistCatalog")).query;
     for (const key of ["hero_enabled", "hero_order", "hero_duration", "hero_poster", "hero_background", "hero_model", "hero_eyebrow"]) assert.ok(query.includes(`key: "${key}"`));
     assert.ok(!requests.some((request) => request.query.includes("NatureMistHomepageHeroes")));
+  });
+});
+
+test("ingredient media keeps each Shopify role, image order and optional artwork independent", async () => {
+  const image = (name) => ({ url: `https://cdn.shopify.com/${name}.png`, altText: name, width: 1200, height: 1600 });
+  const plant = image("plant"), preparation = image("preparation"), lifestyle = image("lifestyle");
+  const background = image("paper"), mobileBackground = image("mobile-paper"), botanical = image("botanical");
+  const images = (items) => ({ references: { nodes: items.map((item) => ({ image: item })) } });
+  const metaobject = {
+    ingredientPlantImages: images([plant, image("plant-second"), plant]),
+    ingredientPreparationImages: images([preparation]),
+    ingredientLifestyleImages: images([lifestyle, image("lifestyle-second")]),
+    ingredientBackground: { reference: { image: background } },
+    ingredientMobileBackground: { reference: { image: mobileBackground } },
+    ingredientBotanical: { reference: { image: botanical } },
+    ritualPosterAutoplay: field("false"), ritualPosterInterval: field("12"),
+    ritualPosters: images([image("legacy-poster")]),
+  };
+  await withShopify({ products: [rawProduct()], metaobject }, async (requests) => {
+    const { content } = await getStorefront();
+    assert.deepEqual(content.ingredientClarity, {
+      plantImages: [plant, image("plant-second")], preparationImages: [preparation],
+      lifestyleImages: [lifestyle, image("lifestyle-second")], background, mobileBackground, botanical,
+    });
+    assert.equal(content.ritualPosterSettings.autoplay, false);
+    assert.equal(content.ritualPosterSettings.interval, 12);
+    assert.deepEqual(content.ritualPosters, [image("legacy-poster")]);
+    const query = requests.find(({ query }) => query.includes("NatureMistSiteContent")).query;
+    for (const key of ["ingredient_plant_images", "ingredient_preparation_images", "ingredient_lifestyle_images", "ingredient_background", "ingredient_mobile_background", "ingredient_botanical"]) {
+      assert.ok(query.includes(`key: "${key}"`), key);
+    }
+  });
+});
+
+test("missing or removed ingredient files use distinct role fallbacks without borrowing a different gallery", async () => {
+  const metaobject = {
+    ingredientPlantImages: { references: { nodes: [{ image: null }, {}, { image: { url: "" } }] } },
+    ingredientPreparationImages: { references: { nodes: [] } },
+    ingredientLifestyleImages: { references: null },
+    ingredientBackground: { reference: null },
+    ingredientMobileBackground: { reference: { url: "https://cdn.shopify.com/not-an-image.pdf" } },
+    ingredientBotanical: { reference: { image: null } },
+    ritualPosters: { references: { nodes: [{ image: { url: "https://cdn.shopify.com/legacy.png" } }] } },
+  };
+  for (const entry of [null, metaobject]) {
+    await withShopify({ products: [rawProduct()], metaobject: entry }, async () => {
+      const { ingredientClarity } = (await getStorefront()).content;
+      assert.equal(ingredientClarity.plantImages[0].url, "/images/ingredient-plant-v1.png");
+      assert.equal(ingredientClarity.preparationImages[0].url, "/images/naturemist-ritual.png");
+      assert.equal(ingredientClarity.lifestyleImages[0].url, "/images/ingredient-lifestyle-v1.png");
+      assert.equal(ingredientClarity.background, null);
+      assert.equal(ingredientClarity.mobileBackground, null);
+      assert.equal(ingredientClarity.botanical, null);
+    });
+  }
+});
+
+test("ingredient galleries cap usable images at eight after removing duplicates", async () => {
+  const images = Array.from({ length: 10 }, (_, index) => ({ url: `https://cdn.shopify.com/plant-${index}.png`, width: 800, height: 800, altText: "Plant" }));
+  const metaobject = { ingredientPlantImages: { references: { nodes: [images[0], ...images].map((image) => ({ image })) } } };
+  await withShopify({ products: [rawProduct()], metaobject }, async () => {
+    assert.deepEqual((await getStorefront()).content.ingredientClarity.plantImages, images.slice(0, 8));
   });
 });
 
