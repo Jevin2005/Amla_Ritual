@@ -4,7 +4,7 @@ import { cache } from "react";
 import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
 import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { defaultMotionSettings, parseMotionSettings, type MotionSettings } from "@/domain/motion";
-import { defaultIngredientClarity, defaultIngredientPosterSettings, parseIngredientPosterSettings, posterImages, type IngredientClarityContent, type IngredientPosterSettings } from "@/domain/ingredient-poster";
+import { defaultIngredientClarity, defaultIngredientPosterSettings, parseIngredientClaritySettings, parseIngredientPosterSettings, posterImages, type IngredientClarityContent, type IngredientPosterSettings } from "@/domain/ingredient-poster";
 import {
   bundles as previewBundles,
   products as previewProducts,
@@ -259,6 +259,52 @@ const SITE_CONTENT_QUERY = `#graphql
         }
       }
     }
+    ingredientSection: metaobject(handle: { type: "ingredient_clarity", handle: "main" }) {
+      ingredientEnabled: field(key: "ingredient_enabled") { value }
+      ingredientWordmark: field(key: "ingredient_wordmark") { value }
+      ingredientEyebrow: field(key: "ingredient_eyebrow") { value }
+      ingredientHeading: field(key: "ingredient_heading") { value }
+      ingredientHeadingEmphasis: field(key: "ingredient_heading_emphasis") { value }
+      ingredientPlantTitle: field(key: "ingredient_plant_title") { value }
+      ingredientPlantText: field(key: "ingredient_plant_text") { value }
+      ingredientPreparationTitle: field(key: "ingredient_preparation_title") { value }
+      ingredientPreparationText: field(key: "ingredient_preparation_text") { value }
+      ingredientLifestyleTitle: field(key: "ingredient_lifestyle_title") { value }
+      ingredientLifestyleText: field(key: "ingredient_lifestyle_text") { value }
+      ingredientButtonEnabled: field(key: "ingredient_button_enabled") { value }
+      ingredientButtonLabel: field(key: "ingredient_button_label") { value }
+      ingredientButtonHref: field(key: "ingredient_button_href") { value }
+      ingredientShowBotanical: field(key: "ingredient_show_botanical") { value }
+      ingredientTransitionPace: field(key: "ingredient_transition_pace") { value }
+      ingredientPaperColor: field(key: "ingredient_paper_color") { value }
+      ingredientInkColor: field(key: "ingredient_ink_color") { value }
+      ingredientAccentColor: field(key: "ingredient_accent_color") { value }
+      ingredientPanelColor: field(key: "ingredient_panel_color") { value }
+      ingredientPanelTextColor: field(key: "ingredient_panel_text_color") { value }
+      ingredientPlantImages: field(key: "ingredient_plant_images") {
+        references(first: 8) { nodes { ... on MediaImage { image { url altText width height } } } }
+      }
+      ingredientPreparationImages: field(key: "ingredient_preparation_images") {
+        references(first: 8) { nodes { ... on MediaImage { image { url altText width height } } } }
+      }
+      ingredientLifestyleImages: field(key: "ingredient_lifestyle_images") {
+        references(first: 8) { nodes { ... on MediaImage { image { url altText width height } } } }
+      }
+      ingredientBackground: field(key: "ingredient_background") {
+        reference { ... on MediaImage { image { url altText width height } } }
+      }
+      ingredientMobileBackground: field(key: "ingredient_mobile_background") {
+        reference { ... on MediaImage { image { url altText width height } } }
+      }
+      ingredientBotanical: field(key: "ingredient_botanical") {
+        reference { ... on MediaImage { image { url altText width height } } }
+      }
+      ritualPosterGooey: field(key: "ritual_poster_gooey") { value }
+      ritualPosterAutoplay: field(key: "ritual_poster_autoplay") { value }
+      ritualPosterInterval: field(key: "ritual_poster_interval") { value }
+      ritualPosterStrength: field(key: "ritual_poster_strength") { value }
+      ritualPosterConfig: field(key: "ritual_poster_config") { value }
+    }
     metaobject(handle: { type: "storefront_content", handle: "main" }) {
       heroAutoplay: field(key: "hero_autoplay") { value }
       heroInterval: field(key: "hero_interval") { value }
@@ -485,6 +531,7 @@ type GraphMetaobjectConnection = {
 };
 
 type ContentResponse = {
+  ingredientSection?: GraphSiteContent | null;
   metaobject: GraphSiteContent | null;
   mainMenu: { items: GraphMenuItem[] } | null;
   footerMenu: { items: GraphMenuItem[] } | null;
@@ -1289,6 +1336,8 @@ function mapCustomerReviews(nodes: GraphMetaobjectNode[] | undefined | null): St
 
 function mapContent(response: ContentResponse): StorefrontContent {
   const content = response.metaobject;
+  // The dedicated entry owns this section. Keep older stores working until it exists.
+  const ingredient = response.ingredientSection || content;
   const ritualPoster = contentImage(content, "ritualPoster", previewContent.ritualPoster);
   const ritualPosters = (content?.ritualPosters?.references?.nodes || []).flatMap((node) => {
     const image = toImage(node.image);
@@ -1311,14 +1360,15 @@ function mapContent(response: ContentResponse): StorefrontContent {
     homeHeroPoster: contentImage(content, "homeHeroPoster", previewContent.homeHeroPoster),
     ritualPoster,
     ritualPosters: posterImages(ritualPosters.length ? ritualPosters : defaultRitualPosters, ritualPoster),
-    ritualPosterSettings: parseIngredientPosterSettings(content),
+    ritualPosterSettings: parseIngredientPosterSettings(ingredient),
     ingredientClarity: {
-      plantImages: contentImages(content, "ingredientPlantImages", defaultIngredientClarity.plantImages[0]),
-      preparationImages: contentImages(content, "ingredientPreparationImages", defaultIngredientClarity.preparationImages[0]),
-      lifestyleImages: contentImages(content, "ingredientLifestyleImages", defaultIngredientClarity.lifestyleImages[0]),
-      background: toImage(content?.ingredientBackground?.reference?.image),
-      mobileBackground: toImage(content?.ingredientMobileBackground?.reference?.image),
-      botanical: toImage(content?.ingredientBotanical?.reference?.image),
+      settings: parseIngredientClaritySettings(ingredient),
+      plantImages: contentImages(ingredient, "ingredientPlantImages", defaultIngredientClarity.plantImages[0]),
+      preparationImages: contentImages(ingredient, "ingredientPreparationImages", defaultIngredientClarity.preparationImages[0]),
+      lifestyleImages: contentImages(ingredient, "ingredientLifestyleImages", defaultIngredientClarity.lifestyleImages[0]),
+      background: toImage(ingredient?.ingredientBackground?.reference?.image),
+      mobileBackground: toImage(ingredient?.ingredientMobileBackground?.reference?.image),
+      botanical: toImage(ingredient?.ingredientBotanical?.reference?.image),
     },
     storyPoster: contentImage(content, "storyPoster", previewContent.storyPoster),
     primaryNavigation:

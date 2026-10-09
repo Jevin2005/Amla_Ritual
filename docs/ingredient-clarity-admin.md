@@ -1,54 +1,98 @@
-# Ingredient clarity images in Shopify
+# Ingredient section controls in Shopify
 
-The homepage ingredient section uses three synchronized image galleries: **Meet the plant**, **Make it simply**, and **Keep it honest**. Desktop arranges them as an editorial collage; phones stack them into an arched plant image, a preparation card, and a green lifestyle panel. The wording remains real page text rather than being baked into an uploaded poster.
+Open **Shopify Admin → Content → Metaobjects → Ingredient clarity → Homepage ingredient section** (handle `main`).
 
-## 1. Field definitions
+[Open the installed Shopify entry](https://admin.shopify.com/store/zyv78m-p7/content/metaobjects/entries/ingredient_clarity/431726788794).
 
-Extend the existing merchant-owned **Storefront content** definition (`storefront_content`). Keep its Storefront access set to `PUBLIC_READ` and the **Homepage settings** entry (`main`) active. Add these optional fields before entering their values:
+This one entry manages the whole homepage ingredient collage on phones and desktop. The website builds the responsive curves, captions and animations from the saved content; upload individual photos rather than a finished poster containing text.
 
-| Key | Shopify type | Image usage |
+## Definition and initial values
+
+The merchant-owned `ingredient_clarity` definition contains 33 fields and has public Storefront read access. Its `main` entry must remain **Active**. Use **Show ingredient section = false** to hide the section.
+
+The complete definition and initial entry values are versioned in [ingredient-clarity-schema.json](ingredient-clarity-schema.json). Setup order is: create the definition, upsert the initial entry, then retrieve it to verify. This uses a merchant-owned definition because the Shopify Admin and the independent storefront share the content. The shared `storefront_content` entry already contains hero and motion settings; a dedicated definition keeps this section within [Shopify's 40-field limit](https://shopify.dev/docs/apps/build/metaobjects/metaobject-limits).
+
+Existing photo references and animation settings are copied into the new entry. Existing shared fields remain for compatibility. Once the dedicated entry exists, edit the ingredient fields **here**, rather than their legacy copies under Storefront content.
+
+## Photos, backgrounds and artwork
+
+Upload files through **Content → Files**, add descriptive alt text, then select them in this entry. Save after replacing or reordering selections.
+
+| Admin field | Key | How to use it |
 | --- | --- | --- |
-| `ingredient_plant_images` | `list.file_reference`, images only, maximum 8 | Plant/ingredient photograph gallery |
-| `ingredient_preparation_images` | `list.file_reference`, images only, maximum 8 | Mixing/preparation photograph gallery |
-| `ingredient_lifestyle_images` | `list.file_reference`, images only, maximum 8 | Product/lifestyle photograph gallery |
-| `ingredient_background` | `file_reference`, images only | Section background on desktop and default background on phones |
-| `ingredient_mobile_background` | `file_reference`, images only | Optional phone background override |
-| `ingredient_botanical` | `file_reference`, images only | Decorative botanical artwork; a transparent image works well |
+| meet the plant images | `ingredient_plant_images` | 1–8 plant photos in display order |
+| preparation images | `ingredient_preparation_images` | 1–8 preparation photos in display order |
+| lifestyle images | `ingredient_lifestyle_images` | 1–8 product/lifestyle photos in display order |
+| desktop background | `ingredient_background` | Section texture; also used on phones when their override is empty |
+| mobile background | `ingredient_mobile_background` | Optional phone-specific background |
+| botanical decoration | `ingredient_botanical` | Transparent botanical artwork used in both decorative positions |
+| Show botanical decoration | `ingredient_show_botanical` | Hide or show the decorative artwork |
 
-These fields belong to the existing shared content definition. They do not require a new product or a new metaobject entry.
+All six media fields accept Shopify images only. Each gallery is independent, supports up to eight images, and follows its saved order. Two or more images enable photo changes. Removing a reference does not delete its file.
 
-## 2. Choose and save images
+Landscape plant photos, square/portrait preparation photos and portrait lifestyle photos work well. Keep subjects near the center: responsive frames crop with cover behavior rather than stretching. Shopify supplies resized variants and image alt text.
 
-Open **Content → Metaobjects → Storefront content → Homepage settings**. Upload images to **Content → Files**, add useful alt text, then select those files in each gallery or artwork field. Drag gallery images into the desired order and save the entry. Select only the photograph or artwork for each field; the website creates the layout and captions.
+Empty galleries use their own bundled fallback photo. Empty artwork removes the decoration. Empty backgrounds reveal the paper background color; an empty phone background falls back to the desktop image. If a resized animated texture fails, the original Shopify image is retried before the ordinary fallback photo is shown.
 
-The first valid image appears first. Two or more images in a gallery enable the Shery gooey transition. All three galleries share one timer and advance together. Each gallery keeps its own order and wraps at the end of its own list; it never borrows another gallery's images. Removing a reference from the entry does not delete the file from Shopify.
+## Wording, visibility and button
 
-Use a landscape plant image, a square or portrait preparation photograph, and a portrait lifestyle photograph with the main subject near the centre. The responsive frames use a cover crop without stretching. Shopify stores the originals and supplies the resized image variants. Common raster image formats supported by Shopify can be selected; video, documents, and 3D files are not image fields.
+| Admin field | Key |
+| --- | --- |
+| Show ingredient section | `ingredient_enabled` |
+| Brand name | `ingredient_wordmark` |
+| Small heading | `ingredient_eyebrow` |
+| Main heading | `ingredient_heading` |
+| Italic heading | `ingredient_heading_emphasis` |
+| 01 — Plant title / description | `ingredient_plant_title` / `ingredient_plant_text` |
+| 02 — Preparation title / description | `ingredient_preparation_title` / `ingredient_preparation_text` |
+| 03 — Lifestyle title / description | `ingredient_lifestyle_title` / `ingredient_lifestyle_text` |
+| Show ingredient promise button | `ingredient_button_enabled` |
+| Button text | `ingredient_button_label` |
+| Button link | `ingredient_button_href` |
 
-## 3. Storefront loading and fallbacks
+Use short headings and captions to preserve the reference layout. Shopify enforces character limits. Cleared text falls back to the original wording; use the explicit visibility switches to hide the section, decoration or button.
 
-The Storefront API reads all six fields from `storefront_content/main`, including the file's image URL, alt text, width, and height. Content refreshes within approximately two minutes; an authenticated Shopify webhook can refresh it sooner. Deploy the website changes to make the new layout available.
+The link accepts a website path such as `/our-story` or `/our-story#promise`, or a complete `https://` address. Invalid links fall back to `/our-story`. Text renders as text, not HTML. Gallery accessibility labels follow the saved titles.
 
-Empty, deleted, or non-image references fall back independently: the plant gallery uses the bundled amla basket photograph (`ingredient-plant-v1.png`), the preparation gallery uses the bundled amla mixing photograph (`naturemist-ritual.png`), and the lifestyle gallery uses the bundled bathroom photograph (`ingredient-lifestyle-v1.png`). The botanical artwork has a bundled transparent engraving (`ingredient-botanical-v1.png`). Missing backgrounds use the section's built-in paper styling; an omitted phone background uses the desktop background. The legacy `ritual_poster` and `ritual_posters` fields remain available for compatibility.
+## Colors
 
-If a gallery image fails to load, the website retries the original Shopify file before showing the gallery's bundled fallback. A failed selected file cannot leave its WebGL layer covering that fallback. Other galleries and working slide images keep their normal animation behavior.
+Use Shopify's color pickers:
 
-## Animation settings
+| Admin field | Key | Initial color |
+| --- | --- | --- |
+| Paper background color | `ingredient_paper_color` | `#f8f4e9` |
+| Text color | `ingredient_ink_color` | `#292d1c` |
+| Accent and desktop button color | `ingredient_accent_color` | `#af603c` |
+| Phone arch background color | `ingredient_panel_color` | `#28331c` |
+| Phone arch text color | `ingredient_panel_text_color` | `#f8f4e9` |
 
-The existing `ritual_poster_gooey`, `ritual_poster_autoplay`, `ritual_poster_interval`, `ritual_poster_strength`, and `ritual_poster_config` fields still control these galleries. The shared slideshow changes all three photographs every **6 seconds**, exactly matching the saved image duration. Set **Ingredient clarity — image duration (seconds)** to change this interval for all three panels. The 2× pace multiplier applies only to the transition effect, giving a slower 2.64-second animation at the default website timing without changing the interval. Website animation and cursor controls continue to apply.
+Background photos cover the paper color. Clear the background images to show a solid-color section. The paper color also controls the first caption card and preparation frame. Keep text and background colors readable.
 
-All three photos use the same Shery organic bloom with a longer reveal phase. The default phase weights are `durationOut: 2.4` and `durationIn: 0.6`; values saved in the Shopify effect configuration override these defaults. If a Shopify resized texture fails to load, the animation retries the original image before falling back to the regular photo.
+## Animation
 
-Each photo has compact, subdued navigation and pause controls with no hover enlargement or highlight. Touch controls retain larger tap areas and keyboard focus remains visible. The extra “Next photos” badge is omitted. In local development, a small gear opens the existing Shery editor; the editor is not included in production.
+The following settings now live in this same ingredient entry:
 
-Hovering or focusing any gallery, or opening its Shery editor, pauses the whole group. Automatic changes also pause when the entire section leaves the viewport or the browser tab is hidden. Previous/next and pause/resume controls in any panel control all three photographs together; a manual change starts a fresh full interval. Reduced-motion preferences disable autoplay and WebGL effects. Previous/next controls remain available. A WebGL or texture failure leaves the ordinary image visible.
+| Admin field | Key | Initial behavior |
+| --- | --- | --- |
+| automatically change images | `ritual_poster_autoplay` | On |
+| image duration (seconds) | `ritual_poster_interval` | 6 seconds; allowed 3–30 |
+| gooey effect | `ritual_poster_gooey` | On |
+| gooey strength | `ritual_poster_strength` | 1; allowed 0.5–1.5 |
+| Shery preset (JSON) | `ritual_poster_config` | `{}`; optional advanced effect preset |
+| Photo transition pace | `ingredient_transition_pace` | 2; allowed 0.5–4; higher is slower |
 
-## Homepage hero media
+All three galleries share one timer and advance together every six seconds at the initial setting. Each wraps independently through its own list. Photo transition pace affects the animation duration, not the slideshow interval; 2 gives the current slow effect. Default reveal weights are `durationOut: 2.4` and `durationIn: 0.6`, overridden by an explicit saved Shery preset.
 
-The top homepage hero continues to use each enabled product's `custom.hero_poster`, `custom.hero_background`, and `custom.hero_model`, with its existing slide order and animation settings. The separate `home_hero_poster` field is the social-preview fallback. Manage those fields using [the homepage hero guide](homepage-hero-admin.md); ingredient image changes do not alter product hero slides.
+The compact navigation and pause controls operate all three photos together. Hovering or focusing any gallery, or opening its local Shery editor, pauses the group. Offscreen sections and hidden browser tabs pause automatically. Reduced-motion preferences disable autoplay and WebGL effects; previous/next controls stay available. The middle photo retains its mouse hover effect.
 
-## Installed image setup
+Global website animation and cursor switches remain in **Storefront content → Homepage settings** and take priority over the section effects.
 
-The six fields are created and populated in Shopify. The plant gallery starts with the new amla basket photograph and then the existing amla harvest image. The lifestyle gallery starts with the new bathroom jar photograph and then the existing sunlit alcove jar image. Preparation starts with the existing amla mixing photograph and then the new overhead preparation photograph (`ingredient-preparation-v2.png`). All three lists currently contain two images. Both backgrounds use the new ivory paper texture, and the botanical field uses the new transparent amla engraving.
+## Loading and rollout
 
-The original hero and animation settings were preserved. Local copies of the generated assets and their exact prompts are listed in [ingredient-image-prompts.md](ingredient-image-prompts.md). These are generated reference-matching photographs rather than crops of the supplied poster designs.
+The Storefront API reads `ingredient_clarity/main` including all image URLs, alt text and dimensions. The website refreshes content on its roughly two-minute revalidation cycle; the existing authenticated Shopify webhook can refresh it sooner.
+
+The updated frontend must be deployed before the live website uses the new section controls. The Shopify definition and entry can be installed first without changing the older deployed frontend.
+
+If the dedicated entry is absent, deleted or Draft, the frontend uses the previous ingredient media and animation fields from `storefront_content/main` with default wording. To intentionally hide the section, keep the entry Active and switch **Show ingredient section** off.
+
+The homepage hero remains separate. Its product media, slide order, 3D and poster settings are documented in [homepage-hero-admin.md](homepage-hero-admin.md). Generated ingredient assets and prompts are documented in [ingredient-image-prompts.md](ingredient-image-prompts.md).

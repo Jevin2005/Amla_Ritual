@@ -11,7 +11,29 @@ const bundle = buildSync({
   stdin: { contents: 'export * from "./src/domain/ingredient-poster.ts"; export * from "./src/domain/shery-config.ts"; export * from "./src/features/poster/shery-frame-clock.ts"; export * from "./src/features/poster/shery-frame-document.ts";', resolveDir: root },
   bundle: true, platform: "node", format: "esm", write: false,
 });
-const { posterImages, parseIngredientPosterSettings, parseSheryConfig, sheryFrameDocument, createFrameClock } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { posterImages, parseIngredientPosterSettings, parseIngredientClaritySettings, defaultIngredientClaritySettings, parseSheryConfig, sheryFrameDocument, createFrameClock } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+
+test("ingredient settings preserve defaults and reject invalid links, colors and timing", () => {
+  assert.deepEqual(parseIngredientClaritySettings(null), defaultIngredientClaritySettings);
+  const saved = parseIngredientClaritySettings({
+    ingredientEnabled: { value: "false" }, ingredientWordmark: { value: "  New brand  " },
+    ingredientHeading: { value: " " }, ingredientTransitionPace: { value: "99" },
+    ingredientPaperColor: { value: "#112233" }, ingredientInkColor: { value: "red; display:none" },
+  });
+  assert.equal(saved.enabled, false);
+  assert.equal(saved.wordmark, "New brand");
+  assert.equal(saved.heading, defaultIngredientClaritySettings.heading);
+  assert.equal(saved.transitionPace, 4);
+  assert.equal(saved.paperColor, "#112233");
+  assert.equal(saved.inkColor, defaultIngredientClaritySettings.inkColor);
+  for (const value of ["javascript:alert(1)", "//example.com", "/\\example.com", "https://user:pass@example.com", "https://", "data:text/html,bad"]) {
+    assert.equal(parseIngredientClaritySettings({ ingredientButtonHref: { value } }).buttonHref, "/our-story", value);
+  }
+  for (const value of ["/our-story#promise", "https://example.com/standards"]) {
+    assert.equal(parseIngredientClaritySettings({ ingredientButtonHref: { value } }).buttonHref, value);
+  }
+  assert.equal(parseIngredientClaritySettings({ ingredientTransitionPace: { value: "oops" } }).transitionPace, 2);
+});
 
 test("poster image order and fallback remain controlled by admin", () => {
   const a = { url: "a" }, b = { url: "b" };

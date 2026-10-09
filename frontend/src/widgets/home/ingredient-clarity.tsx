@@ -28,6 +28,7 @@ export function IngredientClarity() {
   const { content } = useStore();
   const plantClipId = `ingredient-plant-${useId().replace(/:/g, "")}`;
   const media = content.ingredientClarity;
+  const settings = media.settings;
   const posterSettings = useMemo(() => ({
     ...content.ritualPosterSettings,
     config: {
@@ -38,13 +39,21 @@ export function IngredientClarity() {
       ...content.ritualPosterSettings.config,
     },
   }), [content.ritualPosterSettings]);
-  const posterProps = { settings: posterSettings, pace: 2, variant: "editorial" as const };
+  const posterProps = { settings: posterSettings, pace: settings.transitionPace, variant: "editorial" as const };
   const galleries = [media.plantImages, media.preparationImages, media.lifestyleImages];
   const sequenceKey = JSON.stringify(galleries.map((images) => images.map((image) => image.url)));
 
+  if (!settings.enabled) return null;
+
   return (
     <IngredientSlideshow key={sequenceKey} settings={content.ritualPosterSettings} hasSlides={galleries.some((images) => images.length > 1)}>
-    <section id="ingredient-standards" aria-labelledby="purity-title" className={styles.section}>
+    <section id="ingredient-standards" aria-labelledby="purity-title" className={styles.section} style={{
+      "--clarity-ink": settings.inkColor,
+      "--clarity-paper": settings.paperColor,
+      "--clarity-clay": settings.accentColor,
+      "--clarity-panel": settings.panelColor,
+      "--clarity-panel-text": settings.panelTextColor,
+    } as CSSProperties}>
       <svg className={styles.curveDefinitions} aria-hidden="true" focusable="false" width="0" height="0">
         <defs><clipPath id={plantClipId} clipPathUnits="objectBoundingBox"><path d={plantCurve} /></clipPath></defs>
       </svg>
@@ -56,7 +65,7 @@ export function IngredientClarity() {
       )}
 
       <div className={styles.composition}>
-        {media.botanical && <>
+        {settings.showBotanical && media.botanical && <>
           <div className={`${styles.botanical} ${styles.botanicalTop}`} aria-hidden="true">
             <Image src={media.botanical.url} alt="" fill sizes="(max-width: 760px) 38vw, 240px" />
           </div>
@@ -66,43 +75,42 @@ export function IngredientClarity() {
         </>}
 
         <header className={styles.heading}>
-          <p className={styles.wordmark} data-motion-reveal>NatureMist</p>
-          <p className={styles.eyebrow} data-motion-reveal>Notes on botanical care</p>
+          <p className={styles.wordmark} data-motion-reveal>{settings.wordmark}</p>
+          <p className={styles.eyebrow} data-motion-reveal>{settings.eyebrow}</p>
           <h2 id="purity-title" data-motion-reveal>
-            <span className="line-reveal-wrap"><span className="line-reveal-text">A thoughtful ritual</span></span>
-            <span className="line-reveal-wrap"><em className="line-reveal-text">starts with understanding.</em></span>
+            <span className="line-reveal-wrap"><span className="line-reveal-text">{settings.heading}</span></span>
+            <span className="line-reveal-wrap"><em className="line-reveal-text">{settings.headingEmphasis}</em></span>
           </h2>
-          <p className={styles.srOnly}>One ingredient. Nothing hidden.</p>
         </header>
 
         <figure className={styles.plant}>
           <div className={styles.plantPhoto} style={{ "--plant-photo-clip": `url(#${plantClipId})` } as CSSProperties}>
             <div className={styles.plantPhotoMedia}>
-              <IngredientPoster {...posterProps} images={media.plantImages} fallback={defaultIngredientClarity.plantImages[0]} label="Meet the plant" sizes="(max-width: 760px) 92vw, 50vw" />
+              <IngredientPoster {...posterProps} images={media.plantImages} fallback={defaultIngredientClarity.plantImages[0]} label={settings.plantTitle} sizes="(max-width: 760px) 92vw, 50vw" />
             </div>
           </div>
-          <StepCaption number="01" title="Meet the plant.">Know the botanical and the part used.</StepCaption>
+          <StepCaption number="01" title={settings.plantTitle}>{settings.plantText}</StepCaption>
         </figure>
 
         <figure className={styles.preparation}>
           <div className={styles.preparationPhoto}>
-            <IngredientPoster {...posterProps} images={media.preparationImages} fallback={defaultIngredientClarity.preparationImages[0]} label="Make it simply" sizes="(max-width: 760px) 60vw, 26vw" />
+            <IngredientPoster {...posterProps} images={media.preparationImages} fallback={defaultIngredientClarity.preparationImages[0]} label={settings.preparationTitle} sizes="(max-width: 760px) 60vw, 26vw" />
           </div>
-          <StepCaption number="02" title="Make it simply.">Clear preparation and safety guidance.</StepCaption>
+          <StepCaption number="02" title={settings.preparationTitle}>{settings.preparationText}</StepCaption>
         </figure>
 
         <div className={styles.honesty}>
           <figure className={styles.lifestyle}>
             <div className={styles.lifestylePhoto}>
-              <IngredientPoster {...posterProps} images={media.lifestyleImages} fallback={defaultIngredientClarity.lifestyleImages[0]} label="Keep it honest" sizes="(max-width: 760px) 82vw, 28vw" />
+              <IngredientPoster {...posterProps} images={media.lifestyleImages} fallback={defaultIngredientClarity.lifestyleImages[0]} label={settings.lifestyleTitle} sizes="(max-width: 760px) 82vw, 28vw" />
             </div>
-            <StepCaption number="03" title="Keep it honest.">Realistic claims. No miracle promises.</StepCaption>
+            <StepCaption number="03" title={settings.lifestyleTitle}>{settings.lifestyleText}</StepCaption>
           </figure>
-          <div className={styles.ctaWrap} data-motion-reveal>
-            <MagneticLink className={styles.cta} href="/our-story">
-              <span>Read our ingredient promise</span><span className={styles.arrow} aria-hidden="true">⟶</span>
+          {settings.buttonEnabled && <div className={styles.ctaWrap} data-motion-reveal>
+            <MagneticLink className={styles.cta} href={settings.buttonHref}>
+              <span>{settings.buttonLabel}</span><span className={styles.arrow} aria-hidden="true">⟶</span>
             </MagneticLink>
-          </div>
+          </div>}
         </div>
       </div>
     </section>

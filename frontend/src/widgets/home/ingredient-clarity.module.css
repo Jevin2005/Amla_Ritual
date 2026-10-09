@@ -2,6 +2,8 @@
   --clarity-ink: #292d1c;
   --clarity-paper: #f8f4e9;
   --clarity-clay: #af603c;
+  --clarity-panel: #28331c;
+  --clarity-panel-text: #f8f4e9;
   position: relative;
   isolation: isolate;
   overflow: clip;
@@ -32,7 +34,7 @@
 .heading h2 { width: 111%; margin: 22px 0 0; font-size: clamp(32px, 4.65vw, 76px); font-weight: 400; letter-spacing: -.045em; line-height: 1.04; }
 .heading h2 > span { display: block; }
 .heading em { font-weight: 400; }
-.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.heading, .caption, .cta { overflow-wrap: anywhere; }
 
 .plant, .preparation, .lifestyle { min-width: 0; margin: 0; }
 .plant { grid-column: 1; grid-row: 2; }
@@ -59,7 +61,7 @@
 .ctaWrap { width: 100%; }
 .cta { display: flex; min-height: 58px; align-items: center; justify-content: center; width: 100%; padding: 13px 12px; background: var(--clarity-clay); color: #fff8ea; font-size: clamp(15px, 1.28vw, 20px); line-height: 1.2; text-decoration: none; transition: background 200ms ease; }
 .cta > span { display: flex; align-items: center; justify-content: center; gap: clamp(12px, 1.1vw, 18px); }
-.cta:hover { background: #944a2b; }
+.cta:hover { background: color-mix(in srgb, var(--clarity-clay) 85%, #000); }
 .cta:focus-visible { outline: 2px solid var(--clarity-ink); outline-offset: 5px; }
 .arrow { font-family: serif; font-size: 1.65em; font-weight: 300; line-height: .8; }
 .botanical { position: absolute; pointer-events: none; opacity: .72; }
@@ -104,7 +106,7 @@
   .preparation .caption { grid-column: 1; grid-row: 1; margin: -8px 11px 0 0; padding-left: 12px; }
   .preparation .caption h3 { max-width: 140px; font-size: clamp(27px, 6.5vw, 46px); line-height: .96; margin-top: 9px; }
   .preparation .caption p { margin: 10px 0 0 -7px; font-size: clamp(15px, 3.5vw, 25px); }
-  .honesty { display: block; margin: -13px -22px 0; padding: 46px 28px 34px; border-radius: 50% 50% 0 0 / 27% 27% 0 0; background: #28331c; color: #f8f4e9; }
+  .honesty { display: block; margin: -13px -22px 0; padding: 46px 28px 34px; border-radius: 50% 50% 0 0 / 27% 27% 0 0; background: var(--clarity-panel); color: var(--clarity-panel-text); }
   .lifestylePhoto { aspect-ratio: 1.41; overflow: hidden; border-radius: 50% 50% 0 0 / 66% 66% 0 0; }
   .lifestyle .caption { margin-top: 16px; gap: 12px; }
   .lifestyle .number { color: #d2855d; border-color: #d2855d; padding-inline: 8px; }
@@ -112,7 +114,7 @@
   .lifestyle .caption p { font-size: clamp(16px, 3.8vw, 27px); }
   .ctaWrap { margin-top: 25px; }
   .cta { min-height: 52px; padding: 13px 12px; border: 1px solid #a97037; outline: 1px solid #f5e5b4; outline-offset: 2px; border-radius: 10px; background: var(--clarity-paper); color: #4b3423; font-size: clamp(17px, 4.05vw, 29px); }
-  .cta:hover { background: #ebdfc9; }
+  .cta:hover { background: color-mix(in srgb, var(--clarity-paper) 92%, #4b3423); }
   .cta:focus-visible { outline: 3px solid #e0b87c; outline-offset: 4px; }
   .cta > span { gap: 13px; }
   .botanicalTop { top: 5px; left: auto; right: 5px; width: 38%; height: 120px; }

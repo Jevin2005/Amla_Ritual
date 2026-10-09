@@ -80,7 +80,7 @@ The shared effects use React, CSS and native browser animation APIs. The ingredi
 
 ## Ingredient clarity: responsive collage and gooey effect
 
-Open **Content → Metaobjects → Storefront content → Homepage settings**. The ingredient section now has three image galleries, plus desktop/phone backgrounds and botanical artwork. See [Ingredient clarity images in Shopify](ingredient-clarity-admin.md) for the field definitions and image guidance.
+Open **Content → Metaobjects → Ingredient clarity → Homepage ingredient section**. This dedicated entry manages all three image galleries, backgrounds, botanical artwork, headings, captions, button, colors and section visibility. See [Ingredient section controls in Shopify](ingredient-clarity-admin.md) for the complete guide. The legacy ingredient fields under Storefront content are used only when the dedicated entry is unavailable.
 
 1. Upload or select **1–8 images** independently in `ingredient_plant_images`, `ingredient_preparation_images`, and `ingredient_lifestyle_images`.
 2. Drag each gallery's images into the desired order. The first image in each gallery appears first.
@@ -105,11 +105,11 @@ The source attribution and notices are served at `/THIRD_PARTY_NOTICES.md`. `npm
 
 ### Shery's built-in adjustment panel
 
-1. In the local development website (`npm run dev`), scroll to **One ingredient. Nothing hidden.** and click the small gear in the top-left corner of a photo (labelled **Open Shery controls**).
+1. In the local development website (`npm run dev`), scroll to the ingredient section (**A thoughtful ritual** by default) and click the small gear in the top-left corner of a photo (labelled **Open Shery controls**).
 2. Expand the original **Gooey Panel**. It contains Speed, GooeyBall, Threshold, Antialias, Height and Scale, plus Shery's InfiniteGooey controls. The **Debug Panel** contains the base effect and shape controls.
 3. Hover over the image while adjusting. Both panels are created by the installed library through `Shery.imageEffect("#poster", { style: 6, gooey: true, debug: true, config })`. No replacement sliders are rendered by React.
 4. Expand **Debug Panel**, then click its built-in **Save To Clipboard** button.
-5. Paste that JSON into **Content → Metaobjects → Storefront content → Homepage settings → Ingredient clarity — Shery preset (JSON)**. Save and allow approximately two minutes for the storefront cache to refresh.
+5. Paste that JSON into **Content → Metaobjects → Ingredient clarity → Homepage ingredient section → Shery preset (JSON)**. Save and allow approximately two minutes for the storefront cache to refresh.
 
 Clear the preset to `{}` to restore defaults. Existing admin fields still control automatic image changes and timing. Native InfiniteGooey click cycling is available inside the editor; the storefront uses its existing previous/next buttons, counter and autoplay instead. The preset parser retains supported shader controls and discards runtime data such as textures, aspect ratio, time and canvas z-index. Closing the editor discards unsaved adjustments.
 

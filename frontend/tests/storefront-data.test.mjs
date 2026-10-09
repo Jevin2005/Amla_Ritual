@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 // framework's server marker/render cache and the network boundary are stubbed.
 const bundle = await build({
   stdin: {
-    contents: 'export * from "./src/lib/shopify/storefront.ts"; export { formatCurrency, getHomepageHeroProducts } from "./src/domain/catalog/products.ts";',
+    contents: 'export * from "./src/lib/shopify/storefront.ts"; export { defaultIngredientClaritySettings } from "./src/domain/ingredient-poster.ts"; export { formatCurrency, getHomepageHeroProducts } from "./src/domain/catalog/products.ts";',
     resolveDir: fileURLToPath(new URL("../", import.meta.url)),
   },
   tsconfig: fileURLToPath(new URL("../tsconfig.json", import.meta.url)),
@@ -25,7 +25,7 @@ const bundle = await build({
     },
   }],
 });
-const { getStorefront, getStorefrontProduct, formatCurrency, getHomepageHeroProducts } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { getStorefront, getStorefrontProduct, formatCurrency, getHomepageHeroProducts, defaultIngredientClaritySettings } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 
 const pageInfo = { hasNextPage: false, endCursor: null };
 const connection = (nodes = []) => ({ nodes, pageInfo });
@@ -50,7 +50,7 @@ const shop = {
   privacyPolicy: policy, termsOfService: policy, shippingPolicy: policy, refundPolicy: policy,
 };
 
-async function withShopify({ products = [], product = null, catalogError = false, detailError = false, configured = true, strict = false, heroes = [], metaobject = null } = {}, callback) {
+async function withShopify({ products = [], product = null, catalogError = false, detailError = false, configured = true, strict = false, heroes = [], metaobject = null, ingredientSection = null } = {}, callback) {
   const savedFetch = globalThis.fetch;
   const savedEnv = { ...process.env };
   const requests = [];
@@ -72,7 +72,7 @@ async function withShopify({ products = [], product = null, catalogError = false
       data = { product };
     } else if (query.includes("query NatureMistCollections(")) data = { collections: connection() };
     else if (query.includes("query NatureMistShop(")) data = { shop };
-    else if (query.includes("query NatureMistSiteContent(")) data = { metaobject, mainMenu: null, footerMenu: null };
+    else if (query.includes("query NatureMistSiteContent(")) data = { metaobject, ingredientSection, mainMenu: null, footerMenu: null };
     else if (query.includes("query NatureMistReviews(")) data = { videoReviews: connection(), customerReviews: connection() };
     else if (query.includes("query NatureMistHomepageHeroes(")) data = { metaobjects: connection(heroes) };
     else throw new Error("Unexpected Shopify request");
@@ -130,6 +130,7 @@ test("ingredient media keeps each Shopify role, image order and optional artwork
   await withShopify({ products: [rawProduct()], metaobject }, async (requests) => {
     const { content } = await getStorefront();
     assert.deepEqual(content.ingredientClarity, {
+      settings: defaultIngredientClaritySettings,
       plantImages: [plant, image("plant-second")], preparationImages: [preparation],
       lifestyleImages: [lifestyle, image("lifestyle-second")], background, mobileBackground, botanical,
     });
@@ -140,6 +141,41 @@ test("ingredient media keeps each Shopify role, image order and optional artwork
     for (const key of ["ingredient_plant_images", "ingredient_preparation_images", "ingredient_lifestyle_images", "ingredient_background", "ingredient_mobile_background", "ingredient_botanical"]) {
       assert.ok(query.includes(`key: "${key}"`), key);
     }
+  });
+});
+
+test("dedicated ingredient entry controls copy, visibility, color, media and timing ahead of legacy settings", async () => {
+  const photo = { url: "https://cdn.shopify.com/section-plant.png", altText: "Shopify plant", width: 800, height: 600 };
+  const ingredientSection = {
+    ingredientEnabled: field("false"), ingredientHeading: field("Saved section heading"),
+    ingredientHeadingEmphasis: field("Saved italic line"), ingredientPlantTitle: field("Saved plant"),
+    ingredientPlantText: field("Saved plant description"), ingredientButtonEnabled: field("false"),
+    ingredientButtonLabel: field("Our standards"), ingredientButtonHref: field("/our-story#standards"),
+    ingredientShowBotanical: field("false"), ingredientTransitionPace: field("3"), ingredientPanelColor: field("#123456"),
+    ingredientPlantImages: { references: { nodes: [{ image: photo }] } },
+    ritualPosterAutoplay: field("false"), ritualPosterInterval: field("9"),
+  };
+  await withShopify({ ingredientSection, metaobject: { ritualPosterInterval: field("6"), heroInterval: field("12") } }, async (requests) => {
+    const { content } = await getStorefront();
+    const { settings, plantImages } = content.ingredientClarity;
+    assert.equal(settings.enabled, false);
+    assert.equal(settings.heading, "Saved section heading");
+    assert.equal(settings.headingEmphasis, "Saved italic line");
+    assert.equal(settings.plantTitle, "Saved plant");
+    assert.equal(settings.plantText, "Saved plant description");
+    assert.equal(settings.buttonEnabled, false);
+    assert.equal(settings.buttonLabel, "Our standards");
+    assert.equal(settings.buttonHref, "/our-story#standards");
+    assert.equal(settings.showBotanical, false);
+    assert.equal(settings.transitionPace, 3);
+    assert.equal(settings.panelColor, "#123456");
+    assert.deepEqual(plantImages, [photo]);
+    assert.equal(content.ritualPosterSettings.interval, 9);
+    assert.equal(content.ritualPosterSettings.autoplay, false);
+    assert.equal(content.heroSettings.intervalSeconds, 12);
+    const query = requests.find(({ query }) => query.includes("NatureMistSiteContent")).query;
+    assert.ok(query.includes('type: "ingredient_clarity"'));
+    for (const key of ["ingredient_enabled", "ingredient_button_href", "ingredient_plant_text", "ingredient_transition_pace", "ingredient_panel_color"]) assert.ok(query.includes(`key: "${key}"`));
   });
 });
 

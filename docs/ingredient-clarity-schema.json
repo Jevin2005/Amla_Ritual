@@ -1,0 +1,548 @@
+{
+  "definition": {
+    "name": "Ingredient clarity",
+    "type": "ingredient_clarity",
+    "description": "Homepage ingredient collage: all photos, backgrounds, wording, colors and animation. Edit the main entry.",
+    "displayNameKey": "name",
+    "access": {
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": true
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "name",
+        "name": "Name",
+        "type": "single_line_text_field",
+        "required": true
+      },
+      {
+        "key": "ingredient_enabled",
+        "name": "Show ingredient section",
+        "type": "boolean",
+        "description": "Turn off to hide the entire section on phones and desktop.",
+        "required": false
+      },
+      {
+        "key": "ingredient_wordmark",
+        "name": "Brand name",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "40"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_eyebrow",
+        "name": "Small heading",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "70"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_heading",
+        "name": "Main heading",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "70"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_heading_emphasis",
+        "name": "Italic heading",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "90"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_plant_images",
+        "name": "meet the plant images",
+        "description": "Ordered photos for the Meet the plant panel. Up to 8 images; the first is the poster.",
+        "type": "list.file_reference",
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          },
+          {
+            "name": "list.max",
+            "value": "8"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_preparation_images",
+        "name": "preparation images",
+        "description": "Ordered photos for the Make it simply panel. Up to 8 images; the first is the poster.",
+        "type": "list.file_reference",
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          },
+          {
+            "name": "list.max",
+            "value": "8"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_lifestyle_images",
+        "name": "lifestyle images",
+        "description": "Ordered photos for the Keep it honest panel. Up to 8 images; the first is the poster.",
+        "type": "list.file_reference",
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          },
+          {
+            "name": "list.max",
+            "value": "8"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_background",
+        "name": "desktop background",
+        "description": "Optional paper or texture background for the ingredient collage.",
+        "type": "file_reference",
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_mobile_background",
+        "name": "mobile background",
+        "description": "Optional portrait background for phones; desktop background is used when empty.",
+        "type": "file_reference",
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_botanical",
+        "name": "botanical decoration",
+        "description": "Optional transparent botanical artwork around the ingredient collage.",
+        "type": "file_reference",
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_plant_title",
+        "name": "01 — Plant title",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "60"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_plant_text",
+        "name": "01 — Plant description",
+        "type": "multi_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "180"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_preparation_title",
+        "name": "02 — Preparation title",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "60"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_preparation_text",
+        "name": "02 — Preparation description",
+        "type": "multi_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "180"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_lifestyle_title",
+        "name": "03 — Lifestyle title",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "60"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_lifestyle_text",
+        "name": "03 — Lifestyle description",
+        "type": "multi_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "180"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_button_enabled",
+        "name": "Show ingredient promise button",
+        "type": "boolean",
+        "description": "Turn off to hide the button.",
+        "required": false
+      },
+      {
+        "key": "ingredient_button_label",
+        "name": "Button text",
+        "type": "single_line_text_field",
+        "description": "Leave empty to use the original website wording.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "70"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_button_href",
+        "name": "Button link",
+        "type": "single_line_text_field",
+        "description": "Use a website path such as /our-story or a full https:// address.",
+        "validations": [
+          {
+            "name": "max",
+            "value": "500"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_show_botanical",
+        "name": "Show botanical decoration",
+        "type": "boolean",
+        "description": "Turn off to hide both decorative botanical illustrations.",
+        "required": false
+      },
+      {
+        "key": "ingredient_transition_pace",
+        "name": "Photo transition pace",
+        "type": "number_decimal",
+        "description": "2 = current slow animation. 1 = faster; 4 = slowest. Does not change the six-second slideshow interval.",
+        "validations": [
+          {
+            "name": "min",
+            "value": "0.5"
+          },
+          {
+            "name": "max",
+            "value": "4"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ingredient_paper_color",
+        "name": "Paper background color",
+        "type": "color",
+        "description": "Used behind background images and for the caption card. Clear background images to see a solid section color.",
+        "required": false
+      },
+      {
+        "key": "ingredient_ink_color",
+        "name": "Text color",
+        "type": "color",
+        "description": "Choose the section color.",
+        "required": false
+      },
+      {
+        "key": "ingredient_accent_color",
+        "name": "Accent and desktop button color",
+        "type": "color",
+        "description": "Choose the section color.",
+        "required": false
+      },
+      {
+        "key": "ingredient_panel_color",
+        "name": "Phone arch background color",
+        "type": "color",
+        "description": "Choose the section color.",
+        "required": false
+      },
+      {
+        "key": "ingredient_panel_text_color",
+        "name": "Phone arch text color",
+        "type": "color",
+        "description": "Choose the section color.",
+        "required": false
+      },
+      {
+        "key": "ritual_poster_gooey",
+        "name": "gooey effect",
+        "description": "Reveal the next image through a liquid mask around the cursor. Uses a simple image transition when animations are disabled or WebGL is unavailable.",
+        "type": "boolean",
+        "validations": [],
+        "required": false
+      },
+      {
+        "key": "ritual_poster_autoplay",
+        "name": "automatically change images",
+        "description": "Automatically cycle through the poster images while this section is visible. Pauses on hover, keyboard focus, or a background tab.",
+        "type": "boolean",
+        "validations": [],
+        "required": false
+      },
+      {
+        "key": "ritual_poster_interval",
+        "name": "image duration (seconds)",
+        "description": "Time each poster stays visible before changing. Recommended: 6 seconds.",
+        "type": "number_integer",
+        "validations": [
+          {
+            "name": "min",
+            "value": "3"
+          },
+          {
+            "name": "max",
+            "value": "30"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ritual_poster_strength",
+        "name": "gooey strength",
+        "description": "0.5 = subtle, 1 = recommended, 1.5 = stronger liquid distortion. Global motion settings and visitor reduced-motion preferences take priority.",
+        "type": "number_decimal",
+        "validations": [
+          {
+            "name": "min",
+            "value": "0.5"
+          },
+          {
+            "name": "max",
+            "value": "1.5"
+          }
+        ],
+        "required": false
+      },
+      {
+        "key": "ritual_poster_config",
+        "name": "Shery preset (JSON)",
+        "description": "Paste the complete JSON from Shery Debug Panel > Save To Clipboard. Leave {} to use the default gooey settings. Image order and slideshow timing are managed in their existing fields.",
+        "type": "json",
+        "validations": [],
+        "required": false
+      }
+    ]
+  },
+  "entry": {
+    "handle": {
+      "type": "ingredient_clarity",
+      "handle": "main"
+    },
+    "metaobject": {
+      "capabilities": {
+        "publishable": {
+          "status": "ACTIVE"
+        }
+      },
+      "fields": [
+        {
+          "key": "name",
+          "value": "Homepage ingredient section"
+        },
+        {
+          "key": "ingredient_enabled",
+          "value": "true"
+        },
+        {
+          "key": "ingredient_wordmark",
+          "value": "NatureMist"
+        },
+        {
+          "key": "ingredient_eyebrow",
+          "value": "Notes on botanical care"
+        },
+        {
+          "key": "ingredient_heading",
+          "value": "A thoughtful ritual"
+        },
+        {
+          "key": "ingredient_heading_emphasis",
+          "value": "starts with understanding."
+        },
+        {
+          "key": "ingredient_plant_images",
+          "value": "[\"gid://shopify/MediaImage/46633930031290\",\"gid://shopify/MediaImage/33856343113914\"]"
+        },
+        {
+          "key": "ingredient_preparation_images",
+          "value": "[\"gid://shopify/MediaImage/34191091466426\",\"gid://shopify/MediaImage/46666249044154\"]"
+        },
+        {
+          "key": "ingredient_lifestyle_images",
+          "value": "[\"gid://shopify/MediaImage/46633934782650\",\"gid://shopify/MediaImage/34403657515194\"]"
+        },
+        {
+          "key": "ingredient_background",
+          "value": "gid://shopify/MediaImage/46634207674554"
+        },
+        {
+          "key": "ingredient_mobile_background",
+          "value": "gid://shopify/MediaImage/46634207674554"
+        },
+        {
+          "key": "ingredient_botanical",
+          "value": "gid://shopify/MediaImage/46633948938426"
+        },
+        {
+          "key": "ingredient_plant_title",
+          "value": "Meet the plant."
+        },
+        {
+          "key": "ingredient_plant_text",
+          "value": "Know the botanical and the part used."
+        },
+        {
+          "key": "ingredient_preparation_title",
+          "value": "Make it simply."
+        },
+        {
+          "key": "ingredient_preparation_text",
+          "value": "Clear preparation and safety guidance."
+        },
+        {
+          "key": "ingredient_lifestyle_title",
+          "value": "Keep it honest."
+        },
+        {
+          "key": "ingredient_lifestyle_text",
+          "value": "Realistic claims. No miracle promises."
+        },
+        {
+          "key": "ingredient_button_enabled",
+          "value": "true"
+        },
+        {
+          "key": "ingredient_button_label",
+          "value": "Read our ingredient promise"
+        },
+        {
+          "key": "ingredient_button_href",
+          "value": "/our-story"
+        },
+        {
+          "key": "ingredient_show_botanical",
+          "value": "true"
+        },
+        {
+          "key": "ingredient_transition_pace",
+          "value": "2.0"
+        },
+        {
+          "key": "ingredient_paper_color",
+          "value": "#f8f4e9"
+        },
+        {
+          "key": "ingredient_ink_color",
+          "value": "#292d1c"
+        },
+        {
+          "key": "ingredient_accent_color",
+          "value": "#af603c"
+        },
+        {
+          "key": "ingredient_panel_color",
+          "value": "#28331c"
+        },
+        {
+          "key": "ingredient_panel_text_color",
+          "value": "#f8f4e9"
+        },
+        {
+          "key": "ritual_poster_gooey",
+          "value": "true"
+        },
+        {
+          "key": "ritual_poster_autoplay",
+          "value": "true"
+        },
+        {
+          "key": "ritual_poster_interval",
+          "value": "6"
+        },
+        {
+          "key": "ritual_poster_strength",
+          "value": "1.0"
+        },
+        {
+          "key": "ritual_poster_config",
+          "value": "{}"
+        }
+      ]
+    }
+  }
+}
