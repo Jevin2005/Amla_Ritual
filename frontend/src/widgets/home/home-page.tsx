@@ -7,7 +7,7 @@ import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
 import { IngredientClarity } from "./ingredient-clarity";
-import { FeaturedProductSwitcher } from "./featured-product-switcher";
+import { BotanicalCombos } from "./botanical-combos";
 import { ProductHero } from "./product-hero";
 import { ProductBenefits } from "./product-benefits";
 import { BuildYourRitual } from "./build-your-ritual";
@@ -22,8 +22,6 @@ const sectionClass =
   "mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(80px,8vw,124px)] max-[680px]:px-5 max-[680px]:py-16";
 const splitHeadingClass =
   "grid grid-cols-[minmax(0,1.35fr)_minmax(260px,0.65fr)] items-end gap-[clamp(48px,6vw,88px)] max-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(210px,0.85fr)] max-[900px]:gap-8 max-[680px]:grid-cols-1 max-[680px]:gap-6";
-const centeredHeadingClass =
-  "mx-auto mb-[clamp(46px,5vw,72px)] max-w-[820px] text-center max-[680px]:mb-9";
 const textLinkClass =
   "inline-flex items-center gap-[14px] border-b border-[var(--forest)] pb-[5px] text-[0.76rem] font-bold tracking-[0.08em] text-[var(--forest)] uppercase [transition:gap_260ms_var(--ease)] motion-reduce:transition-none hover:gap-[22px] max-[680px]:min-h-11";
 const revealClass =
@@ -228,22 +226,7 @@ export function HomePage() {
 
       <IngredientClarity />
 
-      <section
-        className={`${sectionClass} ${revealClass} max-[680px]:py-8 max-[680px]:px-4`}
-        aria-labelledby="family-title"
-      >
-        <div className={`${centeredHeadingClass} max-[680px]:mb-5`}>
-          <p className={`${eyebrowClass} max-[680px]:mb-1.5 max-[680px]:text-[0.68rem]`}>The Botanical Family</p>
-          <h2 className={`${sectionTitleClass} max-[680px]:!text-[clamp(1.4rem,5.5vw,1.95rem)] max-[680px]:!leading-[1.12]`} id="family-title">
-            Same ritual language. <br className="hidden max-[680px]:inline" />
-            A different botanical note.
-          </h2>
-          <p className="mx-auto mt-6 max-w-[620px] text-[var(--muted)] max-[680px]:hidden">
-            Move through the collection and find the ingredient that meets you where your hair is today.
-          </p>
-        </div>
-        <FeaturedProductSwitcher />
-      </section>
+      <BotanicalCombos />
 
       <VideoReviewsSection />
 

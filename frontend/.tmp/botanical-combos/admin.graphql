@@ -1,0 +1,13 @@
+query InspectBotanicalCombos {
+    shop { name myshopifyDomain }
+    currentAppInstallation { accessScopes { handle } }
+    products(first: 100) { nodes { id title handle } pageInfo { hasNextPage } }
+  }
+query ComboDefinition($type: String!) { metaobjectDefinitionByType(type: $type) { id type fieldDefinitions { key type { name } } } }
+query ComboEntry($handle: MetaobjectHandleInput!) { metaobjectByHandle(handle: $handle) { id handle fields { key value } capabilities { publishable { status } } } }
+mutation CreateComboDefinition($definition: MetaobjectDefinitionCreateInput!) { metaobjectDefinitionCreate(definition: $definition) { metaobjectDefinition { id type } userErrors { field message code } } }
+mutation SaveCombo($handle: MetaobjectHandleInput!, $metaobject: MetaobjectUpsertInput!) { metaobjectUpsert(handle: $handle, metaobject: $metaobject) { metaobject { id handle fields { key value } } userErrors { field message code } } }
+query ComboFiles($query: String!) { files(first: 10, query: $query) { nodes { id fileStatus ... on MediaImage { image { url } } } } }
+mutation StageComboImage($input: [StagedUploadInput!]!) { stagedUploadsCreate(input: $input) { stagedTargets { url resourceUrl parameters { name value } } userErrors { field message } } }
+mutation CreateComboImage($files: [FileCreateInput!]!) { fileCreate(files: $files) { files { id fileStatus } userErrors { field message code } } }
+query ComboImageStatus($id: ID!) { node(id: $id) { ... on MediaImage { id fileStatus image { url altText width height } } } }

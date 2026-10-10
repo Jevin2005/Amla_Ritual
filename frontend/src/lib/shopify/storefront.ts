@@ -1,6 +1,8 @@
 import "server-only";
 
 import { cache } from "react";
+import { defaultBotanicalCombos, emptyBotanicalCombos, parseBotanicalCombos, type BotanicalCombosContent, type GraphBotanicalCombos } from "@/domain/botanical-combos";
+import { botanicalCombosSelection } from "./botanical-combos-query";
 import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
 import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { defaultMotionSettings, parseMotionSettings, type MotionSettings } from "@/domain/motion";
@@ -259,6 +261,7 @@ const SITE_CONTENT_QUERY = `#graphql
         }
       }
     }
+    ${botanicalCombosSelection}
     ingredientSection: metaobject(handle: { type: "ingredient_clarity", handle: "main" }) {
       ingredientEnabled: field(key: "ingredient_enabled") { value }
       ingredientWordmark: field(key: "ingredient_wordmark") { value }
@@ -531,6 +534,7 @@ type GraphMetaobjectConnection = {
 };
 
 type ContentResponse = {
+  botanicalCombos?: GraphBotanicalCombos | null;
   ingredientSection?: GraphSiteContent | null;
   metaobject: GraphSiteContent | null;
   mainMenu: { items: GraphMenuItem[] } | null;
@@ -553,6 +557,7 @@ export type StorefrontVideoReview = VideoReview;
 export type StorefrontCustomerReview = CustomerReview;
 
 export type StorefrontContent = {
+  botanicalCombos: BotanicalCombosContent;
   heroSettings: HeroSettings;
   motionSettings: MotionSettings;
   announcementText: string;
@@ -618,6 +623,7 @@ export const defaultRitualPosters: StoreImage[] = [
 ];
 
 export const previewContent: StorefrontContent = {
+  botanicalCombos: defaultBotanicalCombos,
   heroSettings: defaultHeroSettings,
   motionSettings: defaultMotionSettings,
   ritualPosters: defaultRitualPosters,
@@ -1345,6 +1351,7 @@ function mapContent(response: ContentResponse): StorefrontContent {
   });
   return {
     heroSettings: parseHeroSettings(content),
+    botanicalCombos: parseBotanicalCombos(response.botanicalCombos),
     motionSettings: parseMotionSettings(content),
     announcementText: contentText(content, "announcementText", previewContent.announcementText),
     announcementLinkLabel: contentText(
@@ -1617,7 +1624,7 @@ async function loadStorefront(): Promise<StorefrontData> {
   const content =
     contentResult.status === "fulfilled"
       ? mapContent(contentResult.value)
-      : previewContent;
+      : { ...previewContent, botanicalCombos: emptyBotanicalCombos };
   const shop = shopResult.status === "fulfilled" ? shopResult.value.shop : null;
   if (
     strict &&

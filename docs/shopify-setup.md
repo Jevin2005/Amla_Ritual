@@ -168,6 +168,7 @@ Reference: [Shopify Storefront API setup](https://shopify.dev/docs/storefronts/h
 
 ## 10. Everyday store management
 
+- **Edit the botanical combo book:** Content → Metaobjects → **Botanical combos section** → **Homepage botanical book**. Change headings, visibility, page-turn settings and combo order. Edit each **Botanical combo** entry for photos, copy and product selections. See [Botanical book editor](botanical-combos-admin.md).
 - **Add or edit a product:** Shopify Admin → Products. Use the pinned NatureMist fields and the [product entry form](product-entry-form.md).
 - **Feature or remove a product in the homepage hero:** Content → Metaobjects → Homepage hero. Choose a product, upload its model, poster and background, then set the entry Active. Use Draft to hide it. Normal product listings remain independent. See [Homepage hero editor](homepage-hero-admin.md).
 - **Change the Rituals/Our Story poster or site social fallback:** Shopify Admin → Content → Metaobjects → Storefront content → `main`. Choose a new image from Shopify Files and save.

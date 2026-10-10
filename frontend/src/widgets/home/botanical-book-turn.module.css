@@ -1,0 +1,86 @@
+.overlay {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+  perspective: 2200px;
+  perspective-origin: 56% 50%;
+  transform-style: preserve-3d;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  background: var(--combo-paper, #f7f2e5) url('/images/ingredient-paper-v1.png') center / 1000px;
+}
+
+.left {
+  left: 0;
+  width: 56%;
+  transform-origin: right center;
+}
+
+.right {
+  right: 0;
+  width: 44%;
+  transform-origin: left center;
+}
+
+.underlay { z-index: 0; }
+
+.pageContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.pageContent > * {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
+/* The leaf owns the motion; its printed image and lettering stay on the page. */
+.pageContent *, .pageContent *::before, .pageContent *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
+.outgoing { z-index: 3; transform: rotateY(0deg); }
+.incoming { z-index: 4; }
+.incoming.left { transform: rotateY(90deg); }
+.incoming.right { transform: rotateY(-90deg); }
+
+.faceShade {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgb(47 36 20 / 65%), rgb(47 36 20 / 12%) 55%, rgb(255 253 241 / 22%));
+}
+
+.left > .faceShade { background: linear-gradient(270deg, rgb(47 36 20 / 65%), rgb(47 36 20 / 12%) 55%, rgb(255 253 241 / 22%)); }
+
+.castShadow {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(270deg, #372712 0, rgb(55 39 18 / 28%) 48%, transparent 100%);
+  will-change: opacity, transform;
+}
+
+.castShadow.right { background: linear-gradient(90deg, #372712 0, rgb(55 39 18 / 28%) 48%, transparent 100%); }
