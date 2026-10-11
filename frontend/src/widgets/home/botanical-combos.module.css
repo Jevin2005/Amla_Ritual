@@ -15,8 +15,8 @@
 }
 
 .section {
-  --combo-ink: #142016;
-  --combo-wine: #850b16;
+  --combo-ink: var(--forest);
+  --combo-wine: var(--botanical);
   --combo-paper: #f7f2e5;
   --combo-line: #7378669c;
   position: relative;
@@ -94,11 +94,16 @@
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .section button:focus-visible { outline: 2px solid var(--combo-wine); outline-offset: 5px; }
 
+/* Use the site palette without changing the book's lettering or proportions. */
+.eyebrow { color: var(--botanical); }
+.description, .ingredients, .jarCount, .captionText { color: var(--muted); }
+.primaryButton { background: var(--forest); border-color: var(--forest); color: var(--paper); }
+
 @keyframes inkSettle { from { opacity: .2; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (hover: hover) {
   .comboButton:hover { background: var(--combo-ink); color: var(--combo-paper); }
-  .primaryButton:hover { background: #650813; box-shadow: 0 5px 15px #850b161c; }
+  .primaryButton:hover { background: var(--forest-dark); box-shadow: 0 5px 15px rgb(21 59 45 / .11); }
   .comboButton:hover .arrow { translate: 4px 0; }
   .thumbnail:hover img { transform: scale(1.035); }
   .pageArrow:hover .arrow { translate: 4px 0; }

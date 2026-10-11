@@ -19,7 +19,7 @@ type Props = {
   paused?: boolean;
   eager?: boolean;
   cameraDistancePercent?: number;
-  presentation?: "hero" | "gallery";
+  presentation?: "hero" | "gallery" | "showcase";
   poster?: StoreImage | null;
   enabled?: boolean;
   onPosterReady?: () => void;
@@ -35,6 +35,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   const stage = useRef<HTMLDivElement>(null);
   const frame = useRef(0);
   const tracking = useRef(false);
+  const dragging = useRef(false);
   const [loadStatus, setLoadStatus] = useState<{ url: string; status: "loading" | "ready" | "error" }>({ url: model.url, status: "loading" });
   const [visible, setVisible] = useState(false);
   const [rotationPaused, setRotationPaused] = useState(false);
@@ -47,6 +48,8 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   const motion = resolveModelMotion(settings, motionSettings, reducedMotion);
   const status = loadStatus.url === model.url ? loadStatus.status : "loading";
   const moving = motion.enabled && !paused && pageVisible && visible;
+  const showcase = presentation === "showcase";
+  const autoRotate = motion.autoRotate && !showcase;
   const cursorEnabled = presentation !== "gallery" && moving && motion.cursor;
   const activated = useDeferredMedia(enabled && posterReady && visible && pageVisible, presentation === "gallery" ? 0 : 300);
   useEffect(() => {
@@ -104,7 +107,11 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     element.addEventListener("webglcontextlost", onContextLost);
 
     // Use the vendor's production bundle in dev too, avoiding Lit's debug runtime.
-    import("@google/model-viewer/dist/model-viewer.js").catch(() => {
+    import("@google/model-viewer/dist/model-viewer.js").then(({ ModelViewerElement }) => {
+      // Each botanical has about 80–91 MiB of decoded textures. Retain only
+      // the current/recent models; active viewers are protected by the cache.
+      ModelViewerElement.modelCacheSize = 2;
+    }).catch(() => {
       if (!disposed) failed();
     });
 
@@ -122,33 +129,65 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   useEffect(() => {
     const element = viewer.current;
     if (!element) return;
-    element.toggleAttribute("auto-rotate", moving && motion.autoRotate && !rotationPaused && status === "ready");
-  }, [moving, motion.autoRotate, rotationPaused, status]);
+    element.toggleAttribute("auto-rotate", moving && autoRotate && !rotationPaused && status === "ready");
+  }, [moving, autoRotate, rotationPaused, status]);
+
+  const resetVisuals = useCallback(() => {
+    const container = stage.current;
+    if (!container) return;
+    container.style.setProperty("--model-x", "0px");
+    container.style.setProperty("--model-y", "0px");
+    container.style.setProperty("--model-roll", "0deg");
+    container.style.setProperty("--model-scale", "1");
+    container.style.setProperty("--model-glow-x", "50%");
+    container.style.setProperty("--model-glow-y", "50%");
+    container.removeAttribute("data-hovered");
+  }, []);
 
   const resetPosition = useCallback(() => {
+    dragging.current = false;
     if (!tracking.current) return;
     tracking.current = false;
     cancelAnimationFrame(frame.current);
-    stage.current?.style.setProperty("--model-x", "0px");
-    stage.current?.style.setProperty("--model-y", "0px");
+    resetVisuals();
     viewer.current?.setAttribute("camera-orbit", `0deg 90deg ${cameraDistancePercent}%`);
-  }, [cameraDistancePercent]);
+  }, [cameraDistancePercent, resetVisuals]);
 
   useEffect(() => {
     if (!cursorEnabled || status !== "ready") resetPosition();
   }, [cursorEnabled, status, resetPosition]);
 
+  const startDrag = () => {
+    if (!showcase) return;
+    // Native camera controls own the gesture until the pointer leaves the stage.
+    dragging.current = true;
+    tracking.current = false;
+    cancelAnimationFrame(frame.current);
+    resetVisuals();
+  };
+
   const followCursor = (event: PointerEvent<HTMLDivElement>) => {
-    if (!cursorEnabled || event.pointerType !== "mouse" || event.buttons || status !== "ready") return;
+    if (!cursorEnabled || dragging.current || event.pointerType !== "mouse" || event.buttons || status !== "ready") return;
     const bounds = event.currentTarget.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return;
     tracking.current = true;
     const x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
     const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
     cancelAnimationFrame(frame.current);
     frame.current = requestAnimationFrame(() => {
-      stage.current?.style.setProperty("--model-x", `${x * 12 * motion.intensity}px`);
-      stage.current?.style.setProperty("--model-y", `${y * 8 * motion.intensity}px`);
-      viewer.current?.setAttribute("camera-orbit", `${x * 25 * motion.intensity}deg ${90 + y * 12 * motion.intensity}deg ${cameraDistancePercent}%`);
+      const container = stage.current;
+      if (!container) return;
+      const strength = motion.intensity;
+      container.style.setProperty("--model-x", `${x * (showcase ? 7 : 12) * strength}px`);
+      container.style.setProperty("--model-y", `${(showcase ? y * 3 - 9 : y * 8) * strength}px`);
+      if (showcase) {
+        container.setAttribute("data-hovered", "true");
+        container.style.setProperty("--model-roll", `${-x * 1.6 * strength}deg`);
+        container.style.setProperty("--model-scale", `${1 + .035 * strength}`);
+        container.style.setProperty("--model-glow-x", `${50 + x * 18}%`);
+        container.style.setProperty("--model-glow-y", `${50 + y * 12}%`);
+      }
+      viewer.current?.setAttribute("camera-orbit", `${x * (showcase ? 14 : 25) * strength}deg ${90 + y * (showcase ? 7 : 12) * strength}deg ${cameraDistancePercent}%`);
     });
   };
 
@@ -174,7 +213,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
   }
 
   return (
-    <div ref={stage} className={styles.stage} data-status={status} onPointerMove={followCursor} onPointerLeave={resetPosition}>
+    <div ref={stage} className={styles.stage} data-status={status} data-presentation={presentation} data-motion={cursorEnabled} onPointerMove={followCursor} onPointerLeave={resetPosition} onPointerCancel={resetPosition} onPointerDown={startDrag}>
       {status !== "ready" && fallback}
       {activated && status !== "error" && <ModelViewer key={attempt} ref={viewer} {...{
         src: model.url,
@@ -189,6 +228,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
         "touch-action": "pan-y",
         "camera-orbit": `0deg 90deg ${cameraDistancePercent}%`,
         "camera-target": "auto auto auto",
+        "interpolation-decay": showcase ? "100" : undefined,
         "min-field-of-view": "25deg",
         "max-field-of-view": "45deg",
         "rotation-per-second": `${settings.rotationSpeed}deg`,
@@ -199,7 +239,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
         loading: eager ? "eager" : "lazy",
         reveal: "auto",
       }} />}
-      {status === "ready" && motion.autoRotate && (
+      {status === "ready" && autoRotate && (
         <button className={styles.pause} type="button" onClick={() => setRotationPaused((value) => !value)} aria-pressed={rotationPaused} aria-label={rotationPaused ? "Resume product rotation" : "Pause product rotation"}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
             {rotationPaused ? <path d="M5 2.5 13 8l-8 5.5z" /> : <path d="M4 3h3v10H4zm5 0h3v10H9z" />}

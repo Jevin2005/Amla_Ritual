@@ -16,6 +16,9 @@ type MobileMenuProps = {
   menuRef: RefObject<HTMLElement | null>;
   onClose: () => void;
   onSearch: () => void;
+  desktop?: boolean;
+  onCart?: () => void;
+  cartCount?: number;
 };
 
 export function MobileMenu({
@@ -26,6 +29,9 @@ export function MobileMenu({
   menuRef,
   onClose,
   onSearch,
+  desktop = false,
+  onCart,
+  cartCount = 0,
 }: MobileMenuProps) {
   const mobileLinkClass =
     "flex min-h-[72px] items-center justify-between gap-5 border-b border-[var(--line)] px-1 font-serif text-[clamp(1.5rem,5vw,1.85rem)] text-[var(--forest)] transition-[padding,color,background-color] duration-300 ease-[var(--ease)] hover:bg-[color-mix(in_srgb,var(--botanical)_5%,transparent)] hover:pl-3 hover:pr-3 hover:text-[var(--botanical)] aria-[current=page]:text-[var(--botanical)]";
@@ -36,6 +42,10 @@ export function MobileMenu({
     onClose();
     window.setTimeout(onSearch, 0);
   };
+  const handleCart = () => {
+    onClose();
+    if (onCart) window.setTimeout(onCart, 0);
+  };
 
   return (
     <div
@@ -43,6 +53,7 @@ export function MobileMenu({
         open ? "visible pointer-events-auto" : "invisible pointer-events-none"
       }`}
       aria-hidden={!open}
+      inert={!open}
     >
       <button
         className={`absolute inset-0 rounded-none bg-[rgba(8,31,22,0.62)] backdrop-blur-[6px] transition-opacity duration-[380ms] ease-[ease] ${
@@ -54,14 +65,14 @@ export function MobileMenu({
         tabIndex={-1}
       />
       <aside
-        className={`absolute inset-y-0 right-0 hidden w-[min(470px,100%)] overflow-y-auto overscroll-contain rounded-l-[var(--radius-lg)] border-l border-[var(--line)] bg-[var(--paper)] pb-[calc(28px+env(safe-area-inset-bottom))] shadow-[-30px_0_70px_rgba(8,31,22,0.22)] transition-[transform] duration-[520ms] ease-[var(--ease)] max-[900px]:block max-[680px]:rounded-none ${
+        className={`absolute inset-y-0 right-0 ${desktop ? "block" : "hidden max-[900px]:block"} w-[min(470px,100%)] overflow-y-auto overscroll-contain rounded-l-[var(--radius-lg)] border-l border-[var(--line)] bg-[var(--paper)] pb-[calc(28px+env(safe-area-inset-bottom))] shadow-[-30px_0_70px_rgba(8,31,22,0.22)] transition-[transform] duration-[520ms] ease-[var(--ease)] max-[680px]:rounded-none ${
           open ? "[transform:translateX(0)]" : "[transform:translateX(102%)]"
         }`}
         ref={menuRef}
         id="mobile-navigation"
         role="dialog"
         aria-modal="true"
-        aria-label="Mobile navigation"
+        aria-label={desktop ? "Site navigation" : "Mobile navigation"}
       >
         <div className="flex min-h-[92px] items-center justify-between border-b border-[var(--line)] bg-[linear-gradient(135deg,var(--paper),var(--surface-warm))] pr-[max(24px,env(safe-area-inset-right))] pb-[17px] pl-[max(24px,env(safe-area-inset-left))] pt-[calc(17px+env(safe-area-inset-top))] max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]">
           <Link href="/" aria-label="NatureMist home" onClick={onClose}>
@@ -79,7 +90,7 @@ export function MobileMenu({
         </div>
         <nav
           className="grid pr-[max(24px,env(safe-area-inset-right))] pb-8 pl-[max(24px,env(safe-area-inset-left))] pt-4 max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]"
-          aria-label="Mobile primary navigation"
+          aria-label={desktop ? "Site menu navigation" : "Mobile primary navigation"}
         >
           {navigationItems.map((item, index) => (
             <Link
@@ -114,6 +125,15 @@ export function MobileMenu({
               {wishlistCount.toString().padStart(2, "0")}
             </span>
           </Link>
+          {onCart && (
+            <button className={`${mobileLinkClass} w-full bg-transparent text-left`} type="button" onClick={handleCart}>
+              Your bag
+              <span className="font-sans text-[0.57rem] text-[var(--botanical)]" aria-live="polite" aria-atomic="true">
+                <span aria-hidden="true">{cartCount.toString().padStart(2, "0")}</span>
+                <span className="sr-only">{cartCount} {cartCount === 1 ? "item" : "items"} in bag</span>
+              </span>
+            </button>
+          )}
         </nav>
         <div className="pr-[max(24px,env(safe-area-inset-right))] pl-[max(24px,env(safe-area-inset-left))] max-[680px]:pr-[max(20px,env(safe-area-inset-right))] max-[680px]:pl-[max(20px,env(safe-area-inset-left))]">
           <button

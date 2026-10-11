@@ -7,6 +7,7 @@ import { IngredientPoster } from "@/features/poster/ingredient-poster";
 import { IngredientSlideshow } from "@/features/poster/ingredient-slideshow";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
+import { BrandMark } from "@/widgets/site-chrome/brand-mark";
 import styles from "./ingredient-clarity.module.css";
 
 // Organic cutout for the mobile plant photo.
@@ -75,7 +76,9 @@ export function IngredientClarity() {
         </>}
 
         <header className={styles.heading}>
-          <p className={styles.wordmark} data-motion-reveal>{settings.wordmark}</p>
+          <div className={styles.wordmark} data-motion-reveal>
+            {settings.wordmark.trim().toLowerCase() === "naturemist" ? <BrandMark /> : settings.wordmark}
+          </div>
           <p className={styles.eyebrow} data-motion-reveal>{settings.eyebrow}</p>
           <h2 id="purity-title" data-motion-reveal>
             <span className="line-reveal-wrap"><span className="line-reveal-text">{settings.heading}</span></span>

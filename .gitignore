@@ -11,19 +11,17 @@ node_modules/
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
-# next.js
-/.next/
-/out/
-frontend/.next/
-frontend/out/
+# Next.js build output in any workspace
+.next/
+out/
 
-# generated deployment output
-/dist
-/.wrangler
-frontend/dist/
-frontend/.wrangler/
+# generated deployment output and tool caches in any workspace
+dist/
+.wrangler/
+.vite/
+# frontend/build/ contains source plugins, not generated output.
 frontend/public/vendor/shery/
 
 # temporary tooling and generated review exports

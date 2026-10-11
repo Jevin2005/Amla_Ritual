@@ -1,0 +1,293 @@
+NATUREMIST — ADAPTIVE RITUAL QUIZ
+Question bank and product-routing specification
+Prepared 11 October 2026
+
+Scope: Amla, Reetha, Shikakai, Hibiscus, Bhringraj and Indigo powders. This is proposed shopping logic grounded in the published product descriptions, not a diagnosis or a claim of a perfect outcome. It has not been deployed to the website.
+
+CUSTOMER EXPERIENCE
+One question at a time. Questions change with earlier answers. Start without a preselection. Use Continue and Back. Show Question N and the stage name. Use "Your suggested starting ritual" for a candidate result.
+
+ALL QUESTIONS
+
+GOAL | Your goal
+Show when: Everyone; first question.
+Question: What would you like to focus on?
+Helper: Choose one main goal.
+Selection: Single choice.
+  cleanse — Cleanse (A botanical wash-day routine.)
+  softness — Softness + shine (Condition and care for your lengths.)
+  scalp — Scalp care (Choose between cleansing and conditioning.)
+  colour — Botanical colour (Explore a suitable colour method.)
+
+CHECK | Quick check
+Show when: After any goal. This check takes priority over product preferences.
+Question: Anything we should consider first?
+Helper: Select all that apply.
+Selection: Multiple; none, unsure must be exclusive.
+  irritated — My scalp is irritated or the skin is broken
+  reaction — I have reacted to a hair product or botanical
+  none — Neither applies
+  unsure — I am not sure
+
+REACTIONINGREDIENT | Ingredient review
+Show when: Previous reaction selected, with no active irritation. End with ingredient review; do not automatically substitute another powder.
+Question: Do you know what you reacted to?
+Helper: Select known ingredients, or choose Not sure.
+Selection: Multiple; other, unsure must be exclusive.
+  reetha — Reetha Powder
+  shikakai — Shikakai Powder
+  amla — Amla Powder
+  hibiscus — Hibiscus Powder
+  bhringraj — Bhringraj Powder
+  indigo — Indigo Powder
+  other — Another ingredient
+  unsure — I do not know the ingredient
+
+WASHNEED | Your wash
+Show when: Cleanse goal; or Scalp care → Not sure → A wash.
+Question: What matters most in your wash?
+Helper: Choose the closest match.
+Selection: Single choice.
+  oil — Removing oil and everyday buildup
+  manage — Cleansing and easier-to-manage lengths
+  beginner — Trying my first botanical wash
+  unsure — I am not sure
+
+CONDITIONNEED | Your lengths
+Show when: Softness + shine goal.
+Question: What would you like from a hair mask?
+Helper: Choose your main priority.
+Selection: Single choice.
+  dry — Care for dry or rough-feeling hair
+  manage — More manageable-feeling lengths
+  shine — More natural-looking shine
+  general — A simple conditioning routine
+  unsure — I am not sure
+
+SCALPNEED | Your scalp
+Show when: Scalp care goal.
+Question: What brings you to scalp care?
+Helper: Choose the closest match.
+Selection: Single choice.
+  oil — Oil and everyday buildup
+  condition — A general hair-and-scalp conditioning ritual
+  irritation — Persistent itching, flaking or discomfort
+  loss — Sudden or patchy hair loss
+  unsure — I am not sure
+
+SCALPTYPE | Your scalp
+Show when: Scalp care → Not sure.
+Question: Which kind of step are you looking for?
+Helper: A wash cleanses. A mask adds a conditioning step.
+Selection: Single choice.
+  wash — A wash for my scalp and hair
+  mask — A conditioning mask
+  unsure — I need help choosing
+
+HAIRHISTORY | Your hair
+Show when: All non-colour paths that have a cosmetic product candidate.
+Question: Which best describes your hair now?
+Helper: If your hair is treated, choose the treated option.
+Selection: Single choice.
+  natural — Untreated brown or black hair
+  light — Naturally light, grey or white hair
+  treated — Coloured, bleached or chemically treated hair
+  unsure — I am not sure
+
+TREATMENTTYPE | Hair history
+Show when: Hair history → Coloured, bleached or chemically treated.
+Question: Which treatments are on your hair?
+Helper: Select all that apply.
+Selection: Multiple; unsure must be exclusive.
+  colour — Hair dye
+  bleach — Bleach or highlights
+  chemical — Perming, relaxing or chemical straightening
+  unsure — I am not sure
+
+ROUTINE | Your routine
+Show when: After non-colour hair history questions.
+Question: How simple would you like your routine?
+Helper: Choose the number of steps you actually want.
+Selection: Single choice.
+  one — One product to start
+  two — Two complementary steps
+  unsure — I am not sure — keep it simple
+
+CONDITIONADDON | Your second step
+Show when: Two steps requested and the main product is a cleanser.
+Question: What should your conditioning step focus on?
+Helper: This would be a separate mask step.
+Selection: Single choice.
+  dry — Dry-feeling or hard-to-manage lengths
+  shine — General conditioning and shine
+  scalp — Hair-and-scalp conditioning
+  skip — Keep just the cleanser
+
+CLEANSEADDON | Your second step
+Show when: Two steps requested and the main product is a conditioner.
+Question: What should your cleansing step focus on?
+Helper: This would be a separate wash step.
+Selection: Single choice.
+  oil — Oil and everyday buildup
+  manage — Cleansing and manageability
+  skip — Keep just the mask
+
+STRAND | Check before starting
+Show when: Non-colour path with naturally light/grey hair or any treatment history. Select and name the exact candidate products before asking this question.
+Question: Have you checked these botanicals on a hidden strand?
+Helper: Show the candidate product names here. Yes means every suggested product was checked. A strand check does not replace a skin patch test.
+Selection: Single choice.
+  passed — Yes — I checked each one and am happy with the results
+  notyet — Not yet
+  changed — The colour or feel changed unexpectedly
+  unsure — I am not sure
+
+COLOURTARGET | Your colour goal
+Show when: Botanical colour goal after quick check.
+Question: What colour result are you hoping for?
+Helper: Choose a direction, rather than an exact promised shade.
+Selection: Single choice.
+  deeper — Deeper brown-to-dark tones
+  grey — A darker result on greys
+  lighter — A lighter or blonde result
+  copper — Red or copper tones
+  unsure — I am not sure yet
+
+COLOURBASE | Your starting colour
+Show when: Colour goal → Deeper tones or darker result on greys.
+Question: What colour are you starting with?
+Helper: Choose the closest match.
+Selection: Single choice.
+  dark — Dark brown or black
+  brown — Light or medium brown
+  light — Blonde or lightened hair
+  grey — Mostly grey or white
+  mixed — Dark hair with some greys
+  unsure — I am not sure
+
+COLOURHISTORY | Your colour history
+Show when: Supported colour goal and known starting colour. Unknown starting colour goes to guidance.
+Question: Which colour treatments are on your hair?
+Helper: Select all that apply.
+Selection: Multiple; none, unsure must be exclusive.
+  henna — Henna
+  dye — Other hair dye
+  bleach — Bleach or highlights
+  chemical — Perming, relaxing or chemical straightening
+  none — No previous colour or chemical treatment
+  unsure — I am not sure
+
+HENNA | Your colour method
+Show when: Supported darkening goal; no uncertain, bleached or chemically treated history; starting hair is not lightened.
+Question: Does your colour plan include a suitable henna-first step?
+Helper: Indigo is only one stage of this colour method.
+Selection: Single choice.
+  ready — Yes — I have the henna step and product directions
+  no — No, I only have or want Indigo
+  unsure — I need help with the method
+
+COLOURCHECKS | Before full colour
+Show when: Henna-first method and directions confirmed.
+Question: Have you completed the product patch and strand checks?
+Helper: Check the complete henna-and-indigo method using its product instructions. A clear test cannot guarantee that a reaction will never happen.
+Selection: Single choice.
+  passed — Yes — no reaction and an acceptable strand result
+  notyet — Not yet
+  reaction — I noticed irritation or a reaction
+  shade — The strand colour was not what I wanted
+
+ROUTING AND RESULT RULES
+1. Resolve exclusions and guidance routes before ranking products. A preference score must never override an irritation, reaction or unsupported colour route.
+
+2. Cleanse → oil/buildup: Reetha. Cleanse → manageability, first wash or not sure: Shikakai. The last two are modest starting suggestions based on product roles, not proof that one powder is clinically superior.
+
+3. Softness + shine → dry/rough or manageability: Hibiscus. Shine, general conditioning or not sure: Amla.
+
+4. Scalp care → oil/buildup: Reetha. General hair-and-scalp conditioning or an explicitly requested mask: Bhringraj. Uncertain users choose wash versus mask next.
+
+5. Persistent scalp symptoms and sudden/patchy loss end in professional guidance. Do not recommend Bhringraj as a treatment for dandruff or hair loss.
+
+6. One product or uncertain routine: return one main powder. Two steps: ask what the additional step should do. Never add a second item merely to increase basket value.
+
+7. For a cleanser plus mask: dry/manageability → Hibiscus; shine/general conditioning → Amla; scalp conditioning → Bhringraj. Keep the cleanser if the customer skips.
+
+8. For a mask plus cleanser: oil/buildup → Reetha; cleanse/manageability → Shikakai. Keep the mask if the customer skips.
+
+9. Treat two products as separate care steps, not an invented mixed recipe. When a pre-wash mask and a cleanser are both selected, show the mask first and the wash second; use the pack instructions for each.
+
+10. Light/grey or treated hair triggers strand guidance. Unknown history or unexpected strand results ends in review. An uncompleted test shows a conditional candidate with a directions link, not an instruction to begin.
+
+11. Botanical Colour is a separate path. Lighter/blonde and red/copper goals have no verified match within this six-powder catalogue. Unknown desired or starting colour goes to guidance.
+
+12. Existing non-henna dye, bleach, chemical treatment or unknown colour history goes to compatibility review before automatic colour selection.
+
+13. Indigo can appear only for a deeper-tone/grey-darkening goal with known starting colour and a suitable henna-first plan. Never promise that Indigo alone makes grey or blonde hair black. Henna is not a verified SKU in this six-product scope.
+
+14. Before an Indigo full-application suggestion, ask about label-directed patch and strand checks. Not done: conditional candidate. Reaction: stop. Unwanted shade: review. Passed: colour-stage candidate, not a guaranteed shade or safety certification.
+
+15. No known reactions is self-reported, not evidence of allergy safety. Previous reactions end in ingredient review; do not recommend an alternative as allergy-safe.
+
+16. The result contains at most two products, an answer-specific explanation, the current product-directions link and Edit answers. No match percentages, invented discounts, review counts or treatment promises.
+
+17. Live implementation: use verified SKU IDs, ingredient lists, compatibility flags and availability. Suppress unavailable products; if no suitable verified alternative remains, show no available match rather than silently switching roles.
+
+18. Start with no preselected answers. Keep Continue inactive until an answer is selected. Back preserves answers. Changing an earlier answer clears all dependent later answers. Do not keep a product from a previous branch.
+
+19. Do not promise five questions for every branch: routine care usually takes five; colour, treatment and second-step follow-ups add only relevant questions. Display Question N and a stage label, or count actual steps after branching.
+
+20. Copy quantities, timing and frequency only from the current approved label. The public site currently has some 250 g text while recent artwork work uses 200 g; this quiz intentionally omits weight, price and dose until the live SKU and pack are reconciled.
+
+21. Classify Shikakai as a cleanser in the quiz. The live collection displays a conflicting colour-ritual tag, while the detailed product page describes cleansing.
+
+EXACT QUESTION ORDER
+Everyone: goal → check.
+check irritation → pause; reaction → reactionIngredient → review; unsure → review.
+Cleanse: washNeed → hairHistory.
+Softness: conditionNeed → hairHistory.
+Scalp: scalpNeed; oil/condition → hairHistory; irritation/loss → review; unsure → scalpType. scalpType wash → washNeed → hairHistory; mask → hairHistory; unsure → guidance.
+Non-colour hairHistory: unsure → review; treated → treatmentType (unsure → review); otherwise continue.
+Then routine. One/unsure → one candidate. Two → conditionAddon for cleanser mains, cleanseAddon for mask mains. Skip option keeps one.
+If hairHistory light/treated → strand. Passed → candidate; not yet → conditional; unexpected/unsure → review. Natural untreated brown/black → candidate.
+Colour: colourTarget. Lighter/copper → no match; unsure → guidance; supported darker/grey goal → colourBase. Unknown base → guidance.
+Known base → colourHistory. Lightened base or other dye/bleach/chemical/unknown history → compatibility review. Otherwise henna.
+Henna not ready → method guidance. Ready → colourChecks. Passed → Indigo-stage candidate; not yet → conditional Indigo-stage candidate; reaction → pause; unwanted strand shade → review.
+
+RESULT TEMPLATE
+Title: Your suggested starting ritual.
+Main product: determined by goal and branch.
+Why it fits: repeat the relevant customer priority in plain language.
+Second product: only after the customer asks for two steps and selects a complementary goal.
+Directions: link to the specific product. Use approved pack timing, quantities and frequency.
+Actions: View product directions; Edit my answers.
+For conditional matches: title Check before starting; no start-now or automatic add-to-cart message.
+For review, guidance or no match: explain the unresolved point, show no product recommendation, allow editing.
+
+PRODUCT ROLES AND SOURCES
+REETHA — Cleanse
+A cleansing powder for a wash focused on everyday oil and buildup.
+https://naturemist.shop/shop/reetha-powder
+
+SHIKAKAI — Cleanse
+A botanical wash for cleansing and more manageable-feeling hair.
+https://naturemist.shop/shop/shikakai-powder
+
+AMLA — Condition
+A pre-wash mask option for general conditioning and natural-looking shine.
+https://naturemist.shop/shop/amla-powder
+
+HIBISCUS — Condition
+A conditioning mask option for dry-feeling or difficult-to-manage lengths.
+https://naturemist.shop/shop/hibiscus-powder
+
+BHRINGRAJ — Condition
+A hair-and-scalp conditioning mask for a general botanical care routine.
+https://naturemist.shop/shop/bhringraj-powder
+
+INDIGO — Colour
+The Indigo stage of a suitable henna-and-indigo colour method; a complete colour method needs more than this jar.
+https://naturemist.shop/shop/indigo-powder
+
+Additional colour-safety reference: https://www.fda.gov/cosmetics/cosmetic-products/hair-dyes
+
+VALIDATION
+18 targeted cases and 3499 completed reachable answer paths checked. Every question is reachable. No product appears in review/pause/no-match outcomes; Indigo stays on supported colour branches; one-product choices return no more than one powder.

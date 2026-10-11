@@ -1,0 +1,56 @@
+{
+  "scope": "First hero jar showcase only",
+  "files": [
+    "frontend/src/domain/catalog/image-hero.ts",
+    "frontend/src/widgets/home/product-hero.tsx",
+    "frontend/src/widgets/home/product-hero.module.css",
+    "frontend/src/widgets/home/hero-motion.ts",
+    "frontend/tests/hero-admin-controls.test.mjs",
+    "frontend/tests/hero-scroll-motion.test.mjs",
+    "frontend/public/images/hero/naturemist-*-200g.png"
+  ],
+  "added": [
+    "Six label-based image jars and correct product destinations",
+    "Horizontal pointer drag and touch swipe with momentum projection and gentle settling",
+    "Scoped horizontal wheel input; native vertical gestures and pinch zoom preserved",
+    "Arrow/Home/End keyboard browsing and drag/click separation",
+    "Center prominence, outer darkening, restrained depth and speed blur, directional tilt",
+    "One-time inner-artwork entrance (700ms, 70ms stagger), disabled for reduced motion",
+    "Interrupted gesture cleanup and fine-scroll recovery"
+  ],
+  "preserved": [
+    "Amla opening position and proportions",
+    "Header, scalloped background, curved lettering, page dimensions and hero handoff timing",
+    "Existing tooltip styling and cursor behavior",
+    "Finite non-looping scroll chain",
+    "Previous full hero and its 3D renderer, remaining page sections, catalog sizes/prices"
+  ],
+  "unverifiedOrOmitted": [
+    "Exact reference label deformation/360-degree spin was not verified and was not added",
+    "No isolated travelling-jar navigation hook exists; current links navigate normally",
+    "Wrapping would change the established finite chain, so endpoints remain finite"
+  ],
+  "assets": {
+    "mode": "Built-in image_gen",
+    "promptManifest": "jar-assets-manifest.json",
+    "note": "200 g mockup labels follow the supplied PDF. Existing catalog information was not modified."
+  },
+  "verification": {
+    "tests": "62 focused hero regression tests passed; scoped ESLint and git diff --check passed",
+    "build": "Next production build, 32 routes",
+    "visual": [
+      "Matched desktop and mobile baseline captures",
+      "Desktop drag, settling and keyboard navigation to all six products",
+      "Mobile horizontal browsing and normal vertical page handoff",
+      "Correct product page navigation from Enter",
+      "All six image resources loaded"
+    ],
+    "screenshots": [
+      "six-before-desktop.jpg",
+      "six-before-mobile.jpg",
+      "six-jars-desktop.jpg",
+      "six-after-mobile.jpg",
+      "six-mobile-handoff.jpg"
+    ]
+  }
+}

@@ -5,173 +5,83 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "@/features/store/store-provider";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
+import { getImageHeroProducts } from "@/domain/catalog/image-hero";
 import { BrandMark } from "./brand-mark";
 import { MobileMenu } from "./mobile-menu";
-import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
-
-const interactiveNavClass =
-  "relative inline-flex min-h-11 items-center justify-center whitespace-nowrap bg-transparent px-0.5 py-0 text-[0.7rem] font-bold tracking-[0.115em] text-[var(--forest)] uppercase after:absolute after:inset-x-0.5 after:bottom-1.5 after:h-px after:bg-[var(--forest)] after:transition-[transform] after:duration-[350ms] after:ease-[var(--ease)] after:content-[''] after:[transform:scaleX(0)] after:[transform-origin:right] hover:after:[transform:scaleX(1)] hover:after:[transform-origin:left] focus-visible:after:[transform:scaleX(1)] focus-visible:after:[transform-origin:left] aria-[current=page]:after:[transform:scaleX(1)] aria-[current=page]:after:[transform-origin:left]";
+import styles from "./site-header.module.css";
 
 function isCurrentPath(pathname: string, href: string) {
-  return pathname === href || pathname.startsWith(`${href}/`);
+  return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 }
 
 export function SiteHeader() {
-  const { content, cartCount, wishlist, openCart, openSearch } = useStore();
+  const { content, products, cartCount, wishlist, openCart, openSearch, isSearchOpen } = useStore();
   const pathname = usePathname();
-  const wishlistCount = wishlist.length;
-  const showAnnouncementLink = content.announcementLinkLabel && content.announcementLinkUrl && !isRetiredRitualUrl(content.announcementLinkUrl);
+  const ritualHeader = pathname === "/" && getImageHeroProducts(products).length > 0;
   const [compact, setCompact] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuPath, setMenuPath] = useState<string | null>(null);
+  const mobileOpen = menuPath === pathname;
   const mobileRef = useRef<HTMLElement>(null);
-  const closeMobile = useCallback(() => setMobileOpen(false), []);
+  const closeMobile = useCallback(() => setMenuPath(null), []);
 
   useEffect(() => {
-    const onScroll = () => setCompact(window.scrollY > 28);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const desktopNavigation = window.matchMedia("(min-width: 901px)");
-    const handleBreakpointChange = (event: MediaQueryListEvent) => {
-      if (event.matches) setMobileOpen(false);
+    const onScroll = () => {
+      const hero = ritualHeader ? document.querySelector("[data-ritual-hero]") : null;
+      const incoming = hero?.getAttribute("data-handoff") === "true" && hero.getAttribute("data-reduced-motion") !== "true"
+        ? hero.nextElementSibling : null;
+      setCompact(incoming ? incoming.getBoundingClientRect().top < window.innerHeight * 0.22
+        : hero ? hero.getBoundingClientRect().bottom < 100 : window.scrollY > 28);
     };
-
-    desktopNavigation.addEventListener("change", handleBreakpointChange);
-    return () =>
-      desktopNavigation.removeEventListener("change", handleBreakpointChange);
-  }, []);
+    onScroll();
+    const resizeObserver = new ResizeObserver(onScroll);
+    resizeObserver.observe(document.body);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [ritualHeader, pathname]);
 
   useModalFocus(mobileOpen, mobileRef, closeMobile);
 
   return (
     <>
-      <a
-        className="fixed left-[max(12px,env(safe-area-inset-left))] top-[max(12px,env(safe-area-inset-top))] z-[9999] inline-flex min-h-11 items-center rounded-[var(--radius-pill)] border border-[var(--line)] bg-[var(--paper)] px-[18px] py-[11px] text-[0.8rem] font-bold text-[var(--forest)] shadow-[var(--shadow-float)] transition-[transform] duration-[180ms] ease-[ease] [transform:translateY(calc(-100%_-_max(24px,env(safe-area-inset-top))))] focus:[transform:translateY(0)]"
-        href="#main-content"
-      >
-        Skip to content
-      </a>
-      <div className="bg-[linear-gradient(90deg,var(--forest-dark),var(--forest))] text-white/88 max-[900px]:hidden">
-        <div className="mx-auto flex min-h-9 w-full max-w-[1440px] items-center justify-between gap-6 px-[clamp(20px,3.35vw,48px)] py-1.5 text-[0.7rem] font-[650] tracking-[0.12em] uppercase max-[900px]:justify-center max-[680px]:min-h-[32px] max-[680px]:pr-[max(12px,env(safe-area-inset-right))] max-[680px]:pl-[max(12px,env(safe-area-inset-left))] max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.08em]">
-          <p className="m-0 text-center leading-normal">
-            {content.announcementText}
-          </p>
-          <div className="flex items-center gap-3.5 text-[0.68rem] max-[900px]:hidden">
-            {showAnnouncementLink && <><Link
-              className="shrink-0 border-b border-white/40 transition-colors hover:border-white hover:text-white"
-              href={content.announcementLinkUrl}
-            >
-              {content.announcementLinkLabel} <span aria-hidden="true">↗</span>
-            </Link>
-            <span className="opacity-40 select-none" aria-hidden="true">|</span></>}
-            <Link
-              className="shrink-0 border-b border-transparent transition-colors hover:border-white hover:text-white"
-              href="/track-order"
-            >
-              Track Order
-            </Link>
-          </div>
-        </div>
-      </div>
-      <header
-        className={`sticky top-0 z-[100] border-b border-[var(--line)] bg-[rgba(245,241,232,0.9)] backdrop-blur-[18px] transition-[height,box-shadow,background-color] duration-[420ms] ease-[var(--ease)] max-[1024px]:h-[72px] max-[900px]:h-[calc(68px+env(safe-area-inset-top))] max-[900px]:pt-[env(safe-area-inset-top)] ${compact
-            ? "h-[68px] bg-[rgba(255,252,245,0.94)] shadow-[0_12px_35px_rgba(21,59,45,0.09)] max-[1024px]:h-[66px] max-[900px]:h-[calc(68px+env(safe-area-inset-top))]"
-            : "h-[var(--header-height)]"
-          }`}
-      >
-        <nav
-          className="mx-auto grid h-full w-full max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-[clamp(20px,3.35vw,48px)] max-[900px]:pr-[max(18px,env(safe-area-inset-right))] max-[900px]:pl-[max(18px,env(safe-area-inset-left))] max-[680px]:pr-[max(16px,env(safe-area-inset-right))] max-[680px]:pl-[max(16px,env(safe-area-inset-left))]"
-          aria-label="Primary navigation"
-        >
-          <div className="flex min-w-0 items-center gap-[clamp(16px,2vw,36px)] max-[1100px]:gap-3.5 max-[900px]:hidden">
-            {content.primaryNavigation.map((item) => (
-              <Link
-                className={interactiveNavClass}
-                href={item.url}
-                aria-current={isCurrentPath(pathname, item.url) ? "page" : undefined}
-                key={item.id}
-              >
+      <a className={styles.skipLink} href="#main-content">Skip to content</a>
+      <header className={styles.header} data-compact={compact} data-overlay={ritualHeader} data-ritual-header={ritualHeader ? "" : undefined}>
+        <nav className={styles.navigation} aria-label="Primary navigation">
+          <div className={styles.desktopLinks}>
+            {content.primaryNavigation.slice(0, 2).map((item) => (
+              <Link className={styles.navLink} href={item.url} aria-current={isCurrentPath(pathname, item.url) ? "page" : undefined} key={item.id}>
                 {item.title}
               </Link>
             ))}
-          </div>
-          <button
-            className="hidden h-11 w-11 shrink-0 flex-col items-center justify-center gap-1.5 border border-transparent bg-transparent transition-colors hover:border-[var(--line)] hover:bg-[var(--paper)] max-[900px]:col-start-1 max-[900px]:row-start-1 max-[900px]:flex max-[900px]:justify-self-start"
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-navigation"
-            aria-haspopup="dialog"
-          >
-            <span className="h-px w-[21px] bg-[var(--forest)]" />
-            <span className="h-px w-[21px] bg-[var(--forest)]" />
-          </button>
-          <Link
-            className={`z-10 justify-self-center px-3 transition-all duration-300 ${compact ? "py-1" : "py-1.5"} max-[900px]:col-start-2 max-[900px]:row-start-1 max-[900px]:px-1 max-[900px]:py-0.5`}
-            href="/"
-            aria-label="NatureMist home"
-          >
-            <BrandMark compact={compact} />
-          </Link>
-          <div className="flex min-w-0 items-center justify-end gap-[clamp(16px,2vw,36px)] max-[1100px]:gap-3 max-[900px]:col-start-3 max-[900px]:row-start-1 max-[900px]:justify-self-end max-[900px]:gap-0">
-            <button
-              className={`gap-1.5 max-[900px]:hidden ${interactiveNavClass}`}
-              type="button"
-              onClick={openSearch}
-            >
-              Search
-            </button>
-            <Link
-              className={`gap-1.5 max-[900px]:hidden ${interactiveNavClass}`}
-              href="/wishlist"
-              aria-current={pathname === "/wishlist" ? "page" : undefined}
-            >
-              Wishlist{" "}
-              <span
-                className="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[var(--forest)] px-1.5 text-[0.66rem] font-semibold leading-none tracking-normal text-[var(--paper)] align-middle"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <span aria-hidden="true">{wishlistCount}</span>
-                <span className="sr-only">
-                  {wishlistCount} saved {wishlistCount === 1 ? "item" : "items"}
-                </span>
-              </span>
+            <Link className={styles.navLink} href="/wishlist" aria-current={pathname === "/wishlist" ? "page" : undefined}>
+              Wishlist <span className={styles.count} aria-label={`${wishlist.length} saved items`}>{wishlist.length}</span>
             </Link>
-            <button
-              className={`gap-1.5 max-[900px]:px-1 max-[900px]:text-[0.68rem] ${interactiveNavClass}`}
-              type="button"
-              onClick={openCart}
-            >
-              Bag{" "}
-              <span
-                className="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[var(--forest)] px-1.5 text-[0.66rem] font-semibold leading-none tracking-normal text-[var(--paper)] align-middle"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <span aria-hidden="true">{cartCount}</span>
-                <span className="sr-only">
-                  {cartCount} {cartCount === 1 ? "item" : "items"} in bag
-                </span>
-              </span>
+          </div>
+          <Link className={styles.brand} href="/" aria-label="NatureMist home">
+            <BrandMark variant="hero" />
+          </Link>
+          <div className={styles.actions}>
+            <button className={styles.search} type="button" onClick={openSearch} aria-label="Open search" aria-haspopup="dialog" aria-expanded={isSearchOpen} aria-controls="site-search-dialog">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="10.75" cy="10.75" r="6.75" /><path d="m16 16 4.5 4.5" strokeLinecap="round" /></svg>
+              <span>Search</span>
+            </button>
+            <button className={styles.bag} type="button" onClick={openCart} aria-label={`Open bag, ${cartCount} ${cartCount === 1 ? "item" : "items"}`} aria-haspopup="dialog">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z" strokeLinejoin="round" /><path d="M8 8V6a4 4 0 0 1 8 0v2" strokeLinecap="round" /></svg>
+              <span>Bag</span><span className={styles.count} aria-live="polite" aria-atomic="true">{cartCount}</span>
+            </button>
+            <button className={styles.menu} type="button" onClick={() => setMenuPath(pathname)} aria-label="Open menu" aria-expanded={mobileOpen} aria-controls="mobile-navigation" aria-haspopup="dialog">
+              <span className={styles.menuLabel}>Menu</span>
+              <span className={styles.menuLines} aria-hidden="true"><i /><i /></span>
+              {cartCount > 0 && <span className={styles.mobileBagCount} aria-hidden="true">{cartCount}</span>}
             </button>
           </div>
         </nav>
       </header>
-
-      <MobileMenu
-        open={mobileOpen}
-        navigationItems={content.primaryNavigation}
-        wishlistCount={wishlistCount}
-        currentPath={pathname}
-        menuRef={mobileRef}
-        onClose={closeMobile}
-        onSearch={openSearch}
-      />
+      <MobileMenu open={mobileOpen} navigationItems={content.primaryNavigation} wishlistCount={wishlist.length} currentPath={pathname} menuRef={mobileRef} onClose={closeMobile} onSearch={openSearch} desktop onCart={openCart} cartCount={cartCount} />
     </>
   );
 }

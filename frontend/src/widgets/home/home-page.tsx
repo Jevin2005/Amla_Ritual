@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useMemo, type CSSProperties } from "react";
-import { getHomepageHeroProducts } from "@/domain/catalog/products";
+import { getImageHeroProducts } from "@/domain/catalog/image-hero";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
 import { IngredientClarity } from "./ingredient-clarity";
 import { BotanicalCombos } from "./botanical-combos";
 import { ProductHero } from "./product-hero";
+import { PreviousProductHero } from "./previous-product-hero";
 import { ProductBenefits } from "./product-benefits";
 import { BuildYourRitual } from "./build-your-ritual";
 import { VideoReviewsSection } from "./video-reviews-section";
@@ -47,12 +48,14 @@ export function HomePage() {
     );
   }
 
-  const hasHero = getHomepageHeroProducts(products).length > 0;
+  const hasHero = getImageHeroProducts(products).length > 0;
   const CollectionHeading = hasHero ? "h2" : "h1";
   return (
     <main className="overflow-x-clip" id="main-content" data-home-motion="calm" style={{ "--motion-duration": homeMotion.duration } as CSSProperties}>
       <ProductHero products={products} settings={content.heroSettings} />
+      <PreviousProductHero products={products} settings={content.heroSettings} />
       <section
+        id="botanical-collection"
         className={`mx-auto w-full max-w-[1440px] px-[clamp(24px,5vw,72px)] py-[clamp(70px,7vw,110px)] max-[680px]:px-3 max-[680px]:py-8 max-[420px]:px-2.5 max-[420px]:py-6 ${revealClass}`}
         aria-labelledby="collection-title"
       >

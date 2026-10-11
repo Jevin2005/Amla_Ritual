@@ -1448,7 +1448,7 @@ function getMarketContext(): MarketContext {
   };
 }
 
-async function loadAllProducts(marketContext: MarketContext) {
+async function loadAllProducts(marketContext: MarketContext, revalidate = 300) {
   const products: GraphProduct[] = [];
   let after: string | null = null;
 
@@ -1456,7 +1456,7 @@ async function loadAllProducts(marketContext: MarketContext) {
     const page: CatalogResponse = await shopifyStorefrontRequest<CatalogResponse>(
       CATALOG_QUERY,
       { first: DEFAULT_PRODUCT_LIMIT, after, ...marketContext },
-      { revalidate: 300, tags: ["shopify-storefront"] },
+      { revalidate, tags: ["shopify-storefront"] },
     );
     products.push(...page.products.nodes);
 
@@ -1697,6 +1697,13 @@ async function loadStorefront(): Promise<StorefrontData> {
 }
 
 export const getStorefront = cache(loadStorefront);
+
+// Search refreshes published products independently of the cached page layout.
+// Reuse the complete cursor-paginated catalog; never restrict it to hero products.
+export async function getSearchCatalog(): Promise<Product[]> {
+  if (!isShopifyConfigured()) return previewProducts;
+  return (await loadAllProducts(getMarketContext(), 0)).map(mapProduct);
+}
 
 async function loadStorefrontProduct(handleOrSlug: string) {
   const storefront = await getStorefront();

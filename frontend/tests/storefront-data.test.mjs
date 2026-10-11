@@ -25,7 +25,7 @@ const bundle = await build({
     },
   }],
 });
-const { getStorefront, getStorefrontProduct, formatCurrency, getHomepageHeroProducts, defaultIngredientClaritySettings } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { getStorefront, getSearchCatalog, getStorefrontProduct, formatCurrency, getHomepageHeroProducts, defaultIngredientClaritySettings } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 
 const pageInfo = { hasNextPage: false, endCursor: null };
 const connection = (nodes = []) => ({ nodes, pageInfo });
@@ -50,7 +50,7 @@ const shop = {
   privacyPolicy: policy, termsOfService: policy, shippingPolicy: policy, refundPolicy: policy,
 };
 
-async function withShopify({ products = [], product = null, catalogError = false, detailError = false, configured = true, strict = false, heroes = [], metaobject = null, ingredientSection = null } = {}, callback) {
+async function withShopify({ products = [], catalogPages = null, product = null, catalogError = false, detailError = false, configured = true, strict = false, heroes = [], metaobject = null, ingredientSection = null } = {}, callback) {
   const savedFetch = globalThis.fetch;
   const savedEnv = { ...process.env };
   const requests = [];
@@ -61,12 +61,12 @@ async function withShopify({ products = [], product = null, catalogError = false
   });
   globalThis.fetch = async (_url, options) => {
     const request = JSON.parse(options.body);
-    requests.push(request);
+    requests.push({ ...request, cache: options.cache });
     const query = request.query;
     let data;
     if (query.includes("query NatureMistCatalog(")) {
       if (catalogError) throw new Error("Catalog unavailable");
-      data = { products: connection(products) };
+      data = { products: catalogPages ? catalogPages[request.variables.after || "start"] : connection(products) };
     } else if (query.includes("query NatureMistProductDetail(")) {
       if (detailError) throw new Error("Product unavailable");
       data = { product };
@@ -86,6 +86,38 @@ async function withShopify({ products = [], product = null, catalogError = false
     Object.assign(process.env, savedEnv);
   }
 }
+
+test("search fetches every catalog page without cache or hero restrictions", async () => {
+  const first = Array.from({ length: 50 }, (_, i) => rawProduct({ id: `product-${i}`, handle: `botanical-${i}` }));
+  const added = rawProduct({ id: "new-neem", handle: "neem-powder", title: "Neem Powder", heroEnabled: field("false") });
+  await withShopify({ catalogPages: {
+    start: { nodes: first, pageInfo: { hasNextPage: true, endCursor: "page-2" } },
+    "page-2": connection([added]),
+  } }, async (requests) => {
+    const catalog = await getSearchCatalog();
+    assert.equal(catalog.length, 51);
+    assert.equal(catalog.at(-1).name, "Neem Powder");
+    assert.deepEqual(requests.map(({ variables }) => variables.after), [null, "page-2"]);
+    assert.ok(requests.every(({ cache }) => cache === "no-store"));
+  });
+});
+
+test("search refresh reads newly added products and accepts an empty published catalog", async () => {
+  const published = [rawProduct()];
+  await withShopify({ products: published }, async () => {
+    assert.equal((await getSearchCatalog()).length, 1);
+    published.push(rawProduct({ id: "new-neem", handle: "neem-powder", title: "Neem Powder" }));
+    assert.equal((await getSearchCatalog()).length, 2);
+    published.length = 0;
+    assert.deepEqual(await getSearchCatalog(), []);
+  });
+});
+
+test("search surfaces upstream failures so the UI can retain its previous results", async () => {
+  await withShopify({ catalogError: true }, async () => {
+    await assert.rejects(getSearchCatalog(), /Catalog unavailable/);
+  });
+});
 
 test("product metafields control hero selection, references, all copy, order and timing", async () => {
   const image = { url: "https://cdn.shopify.com/hero.png", width: 900, height: 900, altText: "Saved poster" };
@@ -356,8 +388,10 @@ test("connected catalog and detail failures or empty responses never expose prev
 });
 
 test("strict live catalog validation still rejects failures and an empty published catalog", async () => {
-  await withShopify({ strict: true, catalogError: true, detailError: true }, async () => {
+  await withShopify({ strict: true, catalogError: true }, async () => {
     await assert.rejects(getStorefront(), /Catalog unavailable/);
+  });
+  await withShopify({ strict: true, products: [rawProduct()], detailError: true }, async () => {
     await assert.rejects(getStorefrontProduct("amla-powder"), /Product unavailable/);
   });
   await withShopify({ strict: true }, async () => {

@@ -1,453 +1,451 @@
 "use client";
 
-import { MediaImage as Image } from "@/shared/ui/media-image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
-import { nextHeroIndex, type HeroSettings } from "@/domain/catalog/hero";
-import { getHeroPresentation } from "./hero-presentation";
-import { ProductModel } from "@/features/catalog/product-model";
-import { SheryBackground } from "@/features/background/shery-background";
-import { backgroundTextureSize, paintBackground } from "@/features/background/background-fit";
-import { SheryPoster } from "@/features/poster/shery-poster";
-import { defaultSheryBackgroundConfig, heroPosterGooeyConfig } from "@/domain/shery-config";
+import { useEffect, useMemo, useRef, type CSSProperties } from "react";
+import type { Product } from "@/domain/catalog/products";
+import { getImageHeroProducts } from "@/domain/catalog/image-hero";
+import type { HeroSettings } from "@/domain/catalog/hero";
 import { useStore } from "@/features/store/store-provider";
-import { useCompactViewport, useFinePointer, usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
-import { useWebGL } from "@/shared/hooks/use-webgl";
-import { useDeferredMedia } from "@/shared/hooks/use-deferred-media";
-import { shopifyImageLoader } from "@/shared/media/image-delivery";
-import { HeroPurchase } from "./hero-purchase";
+import { MediaImage } from "@/shared/ui/media-image";
+import { clamp, getCoverScale, getHeroBackdrop, getHeroFrame, getHeroHandoffMetrics, getHeroLayout, getHeroScrollMetrics, getHeroScrollProgress, smoothstep } from "./hero-motion";
+import { heroSealPath, heroSealTitleLength, heroSealTitlePath } from "./hero-seal";
+import { HeroDiscoverHint } from "./hero-discover-hint";
 import styles from "./product-hero.module.css";
 
 export function ProductHero({ products, settings }: { products: Product[]; settings: HeroSettings }) {
   const { content: { motionSettings } } = useStore();
-  const slides = useMemo(() => getHomepageHeroProducts(products), [products]);
-  const [selected, setSelected] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [inView, setInView] = useState(false);
-  const [visited, setVisited] = useState(false);
-  const [revision, setRevision] = useState(0);
-  const [modelInteracting, setModelInteracting] = useState(false);
-  const [readyImages, setReadyImages] = useState<string[]>([]);
-  const [requested, setRequested] = useState<number | null>(null);
-  const [loadingModel, setLoadingModel] = useState<string | null>(null);
+  const slides = useMemo(() => getImageHeroProducts(products), [products]);
   const root = useRef<HTMLElement>(null);
-  const backgroundImage = useRef<HTMLImageElement>(null);
-  const mobileBackground = useRef<HTMLCanvasElement>(null);
-  const modelContainerRef = useRef<HTMLDivElement>(null);
-  const interactingRef = useRef(false);
-  const finePointer = useFinePointer();
-  const compactViewport = useCompactViewport();
-  const reducedMotion = useReducedMotion();
-  const pageVisible = usePageVisible();
-  const index = nextHeroIndex(selected, slides.length, 0);
-  const product = slides[index];
-  const posterReady = Boolean(product && readyImages.includes(product.heroPoster.url));
-  const mediaReady = Boolean(posterReady && product && readyImages.includes(product.heroBackground.url));
-  const markReady = useCallback((url: string) => {
-    setReadyImages((ready) => ready.includes(url) ? ready : [...ready, url]);
-  }, []);
-  const effectsReady = useDeferredMedia(mediaReady && loadingModel !== product?.heroModel.url && finePointer && !compactViewport && inView && pageVisible);
-  const webgl = useWebGL(effectsReady && finePointer && !compactViewport);
-  const hasProduct = Boolean(product);
-  const duration = (product?.heroDurationSeconds ?? settings.intervalSeconds) * 1.2;
-  const moving = motionSettings.enabled && !reducedMotion;
-  const transitioning = moving && settings.transition !== "none";
-  const playing = mediaReady && requested === null && slides.length > 1 && settings.autoplay && !paused && !focused && !modelInteracting && moving && pageVisible && inView;
-  const showProgress = mediaReady && slides.length > 1 && settings.autoplay && moving && pageVisible && inView;
-  const heroBackgrounds = useMemo(() => slides.map((slide) => ({ ...slide.heroBackground, url: shopifyImageLoader({ src: slide.heroBackground.url, width: 1600 }) })), [slides]);
-  const heroPosters = useMemo(() => slides.map((slide) => ({ ...slide.heroPoster, url: shopifyImageLoader({ src: slide.heroPoster.url, width: 960 }) })), [slides]);
-  const posterCursor = finePointer && settings.cursorMotion && motionSettings.cursor && motionSettings.intensity > 0;
-  const handleModelLoading = useCallback((url: string, loading: boolean) => {
-    setLoadingModel((current) => loading ? url : current === url ? null : current);
-  }, []);
-  const remainingTimeRef = useRef<number>(duration * 1000);
-  const startTimeRef = useRef<number>(0);
-  const timerRef = useRef<number | null>(null);
-  useEffect(() => {
-    remainingTimeRef.current = duration * 1000;
-    startTimeRef.current = 0;
-  }, [index, revision, duration]);
-
-  const start3DInteraction = useCallback(() => {
-    if (interactingRef.current) return;
-    interactingRef.current = true;
-    setModelInteracting(true);
-
-    const onRelease = () => {
-      if (!interactingRef.current) return;
-      interactingRef.current = false;
-      setModelInteracting(false);
-      if (typeof window !== "undefined" && typeof window.removeEventListener === "function") {
-        window.removeEventListener("pointerup", onRelease, true);
-        window.removeEventListener("pointercancel", onRelease, true);
-        window.removeEventListener("mouseup", onRelease, true);
-        window.removeEventListener("touchend", onRelease, true);
-        window.removeEventListener("touchcancel", onRelease, true);
-        window.removeEventListener("blur", onRelease);
-      }
-    };
-
-    if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
-      window.addEventListener("pointerup", onRelease, { capture: true, passive: true });
-      window.addEventListener("pointercancel", onRelease, { capture: true, passive: true });
-      window.addEventListener("mouseup", onRelease, { capture: true, passive: true });
-      window.addEventListener("touchend", onRelease, { capture: true, passive: true });
-      window.addEventListener("touchcancel", onRelease, { capture: true, passive: true });
-      window.addEventListener("blur", onRelease);
-    }
-  }, []);
-
-  useEffect(() => {
-    const el = modelContainerRef.current;
-    if (!el) return;
-
-    const handleStart = () => start3DInteraction();
-    const onCameraChange = (e: Event) => {
-      const customEvent = e as CustomEvent<{ source?: string }>;
-      if (customEvent.detail?.source === "user-interaction") {
-        start3DInteraction();
-      }
-    };
-
-    el.addEventListener("pointerdown", handleStart, { capture: true, passive: true });
-    el.addEventListener("mousedown", handleStart, { capture: true });
-    el.addEventListener("touchstart", handleStart, { capture: true, passive: true });
-    el.addEventListener("camera-change", onCameraChange as EventListener, { capture: true });
-
-    return () => {
-      el.removeEventListener("pointerdown", handleStart, { capture: true });
-      el.removeEventListener("mousedown", handleStart, { capture: true });
-      el.removeEventListener("touchstart", handleStart, { capture: true });
-      el.removeEventListener("camera-change", onCameraChange as EventListener, { capture: true });
-    };
-  }, [start3DInteraction, compactViewport, product?.heroEntryId]);
-
-  useEffect(() => {
-    if (!compactViewport) return;
-    const image = backgroundImage.current;
-    const canvas = mobileBackground.current;
-    if (!image || !canvas) return;
-    let frame = 0;
-    const draw = () => {
-      if (!image.complete || !image.naturalWidth || !image.naturalHeight) return;
-      const bounds = canvas.getBoundingClientRect();
-      if (!bounds.width || !bounds.height) return;
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-      const size = backgroundTextureSize(bounds.width * pixelRatio, bounds.height * pixelRatio);
-      const context = canvas.getContext("2d");
-      if (!context) return;
-      canvas.width = size.width;
-      canvas.height = size.height;
-      paintBackground(context, image, size.width, size.height, "edges");
-      canvas.dataset.ready = "true";
-    };
-    const schedule = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(draw);
-    };
-    const observer = typeof ResizeObserver === "function" ? new ResizeObserver(schedule) : null;
-    observer?.observe(canvas);
-    image.addEventListener("load", schedule);
-    window.addEventListener("resize", schedule, { passive: true });
-    schedule();
-    return () => {
-      cancelAnimationFrame(frame);
-      observer?.disconnect();
-      image.removeEventListener("load", schedule);
-      window.removeEventListener("resize", schedule);
-    };
-  }, [compactViewport, product?.heroBackground.url]);
+  const stage = useRef<HTMLDivElement>(null);
+  const seal = useRef<HTMLDivElement>(null);
+  const arc = useRef<SVGSVGElement>(null);
+  const cue = useRef<HTMLAnchorElement>(null);
+  const productLinks = useRef<(HTMLAnchorElement | null)[]>([]);
+  const counter = useRef<HTMLSpanElement>(null);
+  const progressBar = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const section = root.current;
-    if (!section) return;
-    if (!("IntersectionObserver" in window)) {
-      const frame = requestAnimationFrame(() => {
-        setInView(true);
-        setVisited(true);
+    const surface = stage.current;
+    if (!section || !surface || !slides.length) return;
+    const next = section.nextElementSibling;
+    const incoming = next?.hasAttribute("data-previous-hero") ? next as HTMLElement : null;
+    const header = document.querySelector<HTMLElement>("[data-ritual-header]");
+    section.dataset.handoff = String(Boolean(incoming));
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    let disposed = false;
+    let frame = 0;
+    let width = 1;
+    let height = 1;
+    let layout = getHeroLayout(1440, 900);
+    let start = 0;
+    let diameter = 1;
+    let centerY = 1;
+    let target = 0;
+    let current = 0;
+    let lastTime = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+    let aimX = 0;
+    let aimY = 0;
+    let active = true;
+    let reduced = media.matches || !motionSettings.enabled;
+    let manualTarget = 0;
+    let manualCurrent = 0;
+    let previousTravel = 0;
+    let travelSpeed = 0;
+    let suppressClickUntil = 0;
+    let pendingFocus: number | null = null;
+    let gesture: { id: number; x: number; y: number; lastX: number; time: number; velocity: number; dragging: boolean } | null = null;
+    const scrollTravel = () => smoothstep((reduced ? 0 : target) / 0.48) * Math.max(0, slides.length - 1);
+    const limitManual = (value: number) => clamp(value, -scrollTravel(), slides.length - 1 - scrollTravel());
+    const jarTarget = (event: Event) => (event.target as Element | null)?.closest?.("[data-hero-product]");
+    const cancelGesture = () => {
+      const previous = gesture;
+      gesture = null;
+      if (previous && section.hasPointerCapture(previous.id)) section.releasePointerCapture(previous.id);
+      section.dataset.dragging = "false";
+    };
+
+    const draw = (time: number, settle = false) => {
+      frame = 0;
+      if (disposed || (!settle && (document.hidden || !active))) return;
+      const delta = Math.min(48, lastTime ? Math.max(0, time - lastTime) : 16.7);
+      lastTime = settle ? 0 : time;
+      // Time-based damping gives the same gentle scrub on 60 Hz and 120 Hz screens.
+      const ease = 1 - Math.exp(-delta / 140);
+      const pointerEase = 1 - Math.exp(-delta / 180);
+      current = settle ? target : current + (target - current) * ease;
+      const previousManual = manualCurrent;
+      manualCurrent = reduced || settle ? manualTarget : manualCurrent + (manualTarget - manualCurrent) * ease;
+      if (Math.abs(manualTarget - manualCurrent) < 0.0001) manualCurrent = manualTarget;
+      const travel = smoothstep(current / 0.48) * Math.max(0, slides.length - 1);
+      const speed = (travel - previousTravel + manualCurrent - previousManual) / Math.max(1, delta);
+      travelSpeed = reduced || settle ? 0 : travelSpeed + (speed - travelSpeed) * ease;
+      if (Math.abs(travelSpeed) < 0.00001) travelSpeed = 0;
+      previousTravel = travel;
+      // An offscreen reset has no animation timestamp. Never interpolate it
+      // against a previous frame's clock or allow 0 * Infinity into positions.
+      pointerX = settle ? aimX : pointerX + (aimX - pointerX) * pointerEase;
+      pointerY = settle ? aimY : pointerY + (aimY - pointerY) * pointerEase;
+      if (Math.abs(aimX - pointerX) < 0.001) pointerX = aimX;
+      if (Math.abs(aimY - pointerY) < 0.001) pointerY = aimY;
+      if (Math.abs(target - current) < 0.0001) current = target;
+      const state = getHeroFrame(reduced ? 0 : current, slides.length, width < 680, manualCurrent, travelSpeed, layout);
+      const reveal = incoming && !reduced ? state.reveal : 0;
+      if (header) {
+        header.dataset.heroMotion = String(!reduced);
+        if (reduced) {
+          header.style.removeProperty("--hero-header-progress");
+          header.style.removeProperty("--hero-header-surface");
+        } else {
+          // Use the same damped frame as the hero, including when scrolling back.
+          header.style.setProperty("--hero-header-progress", String(reveal));
+          // Keep dark navigation legible before the green cover reaches the top.
+          header.style.setProperty("--hero-header-surface", String(smoothstep((state.expansion - 0.1) / 0.35)));
+        }
+      }
+      surface.style.opacity = String(1 - reveal);
+      surface.style.pointerEvents = reveal > 0.02 ? "none" : "auto";
+      surface.inert = reveal > 0.02;
+      const revealing = String(reveal > 0.02);
+      if (section.dataset.revealing !== revealing) section.dataset.revealing = revealing;
+      if (incoming) incoming.inert = !reduced && reveal <= 0.02;
+      section.dataset.covered = String(state.expansion > 0.4);
+      const maxScale = getCoverScale(width, height, diameter, centerY);
+      const coverTransform = `translate3d(-50%,0,0) scale(${1 + state.expansion * (maxScale - 1)}) rotate(${state.progress * 12}deg)`;
+      if (seal.current) seal.current.style.transform = coverTransform;
+      if (arc.current) {
+        arc.current.style.opacity = String(state.textOpacity);
+        arc.current.style.transform = coverTransform;
+      }
+      if (cue.current) {
+        cue.current.style.opacity = String(1 - clamp(current / 0.12));
+        cue.current.style.pointerEvents = current > 0.12 ? "none" : "auto";
+        cue.current.tabIndex = current > 0.12 ? -1 : 0;
+      }
+      if (counter.current) counter.current.textContent = `${String(state.focus + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+      if (progressBar.current) progressBar.current.style.transform = `scaleX(${state.progress})`;
+      state.poses.forEach((pose, i) => {
+        const hover = reduced ? 0 : (1 - state.exit) * clamp(motionSettings.intensity, 0, 1.5);
+        const depth = clamp(pose.height / layout.centerHeight, 0.55, 1);
+        const adjusted = {
+          ...pose,
+          x: pose.x + pointerX * Math.min(32, width * 0.024) / width * hover * depth,
+          y: pose.y + pointerY * Math.min(22, height * 0.023) / height * hover * depth,
+          roll: pose.roll + pointerX * 0.025 * hover * depth,
+        };
+        const link = productLinks.current[i];
+        if (link) {
+          const reach = adjusted.height * height * (0.74 * Math.abs(Math.cos(adjusted.roll)) + Math.abs(Math.sin(adjusted.roll))) / (2 * width);
+          const visible = adjusted.x + reach > 0 && adjusted.x - reach < 1 && adjusted.opacity > 0.2 && adjusted.y > -0.4;
+          link.style.left = `${adjusted.x * 100}%`;
+          link.style.top = `${adjusted.y * 100}%`;
+          link.style.height = `${adjusted.height * 100}%`;
+          link.style.width = `${adjusted.height * height * 0.74}px`;
+          link.style.transform = `translate(-50%,-50%) rotate(${-adjusted.roll}rad)`;
+          link.style.opacity = String(adjusted.opacity);
+          link.style.setProperty("--jar-brightness", String(reduced ? 1 : pose.brightness));
+          link.style.setProperty("--jar-blur", `${reduced ? 0 : pose.depthBlur}px`);
+          link.style.zIndex = String(Math.round(pose.height * 100));
+          link.style.visibility = visible ? "visible" : "hidden";
+          link.tabIndex = visible ? 0 : -1;
+          if (visible && pendingFocus === i) {
+            link.focus({ preventScroll: true });
+            pendingFocus = null;
+          }
+        }
       });
-      return () => cancelAnimationFrame(frame);
+      if (!settle && (Math.abs(target - current) > 0.0001 || Math.abs(manualTarget - manualCurrent) > 0.0001 || travelSpeed !== 0 || Math.abs(aimX - pointerX) > 0.001 || Math.abs(aimY - pointerY) > 0.001)) requestDraw();
+    };
+    function requestDraw() {
+      if (!frame && active && !document.hidden && !disposed) frame = requestAnimationFrame(draw);
     }
-    const observer = new IntersectionObserver(([entry]) => {
-      setInView(entry.isIntersecting);
-      if (entry.isIntersecting) setVisited(true);
-    }, { threshold: 0.15 });
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, [hasProduct]);
-
-  const goTo = useCallback((next: number) => {
-    if (!Number.isInteger(next)) return;
-    const target = nextHeroIndex(next, slides.length, 0);
-    setRequested(target === index ? null : target);
-  }, [index, slides.length]);
-
-  // Keep the displayed slide intact until both images for the requested slide
-  // have decoded. Only one upcoming slide is fetched, never the entire carousel.
-  const upcomingIndex = requested ?? nextHeroIndex(index, slides.length);
-  const upcoming = slides[upcomingIndex];
-  useEffect(() => {
-    if (requested === null || !upcoming || !readyImages.includes(upcoming.heroPoster.url) || !readyImages.includes(upcoming.heroBackground.url)) return;
-    const frame = requestAnimationFrame(() => {
-      setSelected(upcomingIndex);
-      setRequested(null);
-      setRevision((rev) => rev + 1);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [requested, upcoming, upcomingIndex, readyImages]);
-
-  const handlePosterClick = () => {
-    if (slides.length > 1) {
-      goTo(nextHeroIndex(index, slides.length));
-    }
-  };
-
-  useEffect(() => {
-    if (!playing) {
-      if (startTimeRef.current > 0) {
-        const elapsed = Date.now() - startTimeRef.current;
-        remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
-        startTimeRef.current = 0;
+    const cancelDraw = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    };
+    const readScroll = () => {
+      if (disposed) return;
+      const bounds = section.getBoundingClientRect();
+      start = bounds.top + window.scrollY;
+      const wasActive = active;
+      // Intersection notifications can arrive after a fast return to the top.
+      // Current geometry must be able to restart the paused story on its own.
+      active = bounds.bottom > 0 && bounds.top < window.innerHeight;
+      if (active !== wasActive) lastTime = 0;
+      const nextTarget = reduced ? 0 : getHeroScrollProgress(window.scrollY - start, height, slides.length);
+      if (nextTarget !== target) manualTarget = 0;
+      target = nextTarget;
+      if (!active) {
+        cancelDraw();
+        if (wasActive) {
+          cancelGesture();
+          aimX = aimY = pointerX = pointerY = 0;
+          draw(0, true);
+          // A jump may leave before the final scrub frame runs.
+          header?.style.removeProperty("--hero-header-progress");
+          header?.style.removeProperty("--hero-header-surface");
+        }
+        return;
       }
-      if (timerRef.current !== null) {
-        window.clearTimeout(timerRef.current);
-        timerRef.current = null;
+      requestDraw();
+    };
+    const measure = () => {
+      const bounds = section.getBoundingClientRect();
+      width = section.clientWidth;
+      height = surface.clientHeight;
+      layout = getHeroLayout(width, height);
+      section.style.setProperty("--stage-height", `${height}px`);
+      start = bounds.top + window.scrollY;
+      const metrics = getHeroScrollMetrics(height, slides.length);
+      section.style.setProperty("--story-extra", `${metrics.distance - height * 1.35}px`);
+      if (incoming) {
+        const handoff = getHeroHandoffMetrics(height, slides.length);
+        section.style.setProperty("--handoff-overlap", `${handoff.overlap}px`);
+        incoming.dataset.arrival = String(!reduced);
+        incoming.style.setProperty("--arrival-runway", `${handoff.runway}px`);
+        incoming.style.setProperty("--arrival-lead", `${handoff.lead}px`);
       }
-      return;
-    }
-
-    const remaining = remainingTimeRef.current > 0 ? remainingTimeRef.current : duration * 1000;
-    remainingTimeRef.current = remaining;
-    startTimeRef.current = Date.now();
-
-    timerRef.current = window.setTimeout(() => {
-      timerRef.current = null;
-      startTimeRef.current = 0;
-      remainingTimeRef.current = 0;
-      goTo(nextHeroIndex(index, slides.length));
-    }, remaining) as unknown as number;
-
-    return () => {
-      if (startTimeRef.current > 0) {
-        const elapsed = Date.now() - startTimeRef.current;
-        remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
-        startTimeRef.current = 0;
-      }
-      if (timerRef.current !== null) {
-        window.clearTimeout(timerRef.current);
-        timerRef.current = null;
+      const backdrop = getHeroBackdrop(width, height);
+      diameter = backdrop.diameter;
+      centerY = backdrop.top + diameter / 2;
+      section.style.setProperty("--seal-size", `${diameter}px`);
+      section.style.setProperty("--seal-top", `${backdrop.top}px`);
+      section.style.setProperty("--arc-size", `${backdrop.arcSize}px`);
+      section.style.setProperty("--arc-top", `${backdrop.arcTop}px`);
+      readScroll();
+    };
+    const preferencesChanged = () => {
+      reduced = media.matches || !motionSettings.enabled;
+      section.dataset.reducedMotion = String(reduced);
+      aimX = aimY = pointerX = pointerY = 0;
+      manualTarget = manualCurrent = travelSpeed = previousTravel = 0;
+      cancelGesture();
+      current = target = 0;
+      measure();
+    };
+    const pointerMove = (event: PointerEvent) => {
+      if (gesture?.id === event.pointerId) {
+        const dx = event.clientX - gesture.x;
+        const dy = event.clientY - gesture.y;
+        if (!gesture.dragging && Math.hypot(dx, dy) > 8) {
+          // A vertical gesture belongs to the page, including when it starts on a jar.
+          if (Math.abs(dy) >= Math.abs(dx)) { gesture = null; return; }
+          gesture.dragging = true;
+          section.dataset.dragging = "true";
+          section.setPointerCapture(event.pointerId);
+        }
+        if (gesture.dragging) {
+          event.preventDefault();
+          const spacing = width * layout.spacing;
+          const change = (gesture.lastX - event.clientX) / spacing;
+          gesture.velocity = change / Math.max(8, event.timeStamp - gesture.time);
+          manualTarget = limitManual(manualTarget + change);
+          gesture.lastX = event.clientX;
+          gesture.time = event.timeStamp;
+          aimX = aimY = 0;
+          requestDraw();
+          return;
+        }
       }
     };
-  }, [playing, duration, slides.length, index, revision, goTo]);
+    // Track the whole viewport so empty space and the fixed header share the
+    // same gentle follow. Dragging remains local to the product links.
+    const trackPointer = (event: PointerEvent) => {
+      if (!active || document.hidden || current >= 0.86 || gesture || event.buttons || reduced || !settings.cursorMotion || !motionSettings.cursor || !finePointer.matches || event.pointerType !== "mouse") return;
+      if (!Number.isFinite(event.clientX) || !Number.isFinite(event.clientY)) return;
+      const bounds = surface.getBoundingClientRect();
+      aimX = clamp((event.clientX - bounds.left) / width * 2 - 1, -1, 1);
+      aimY = clamp((event.clientY - bounds.top) / height * 2 - 1, -1, 1);
+      requestDraw();
+    };
+    const resetPointer = () => { aimX = aimY = 0; requestDraw(); };
+    const viewportLeave = (event: PointerEvent) => { if (!event.relatedTarget) resetPointer(); };
+    const windowBlur = () => { cancelGesture(); resetPointer(); };
+    const pointerDown = (event: PointerEvent) => {
+      if (slides.length < 2 || event.button !== 0 || !event.isPrimary || !jarTarget(event) || current > 0.5) return;
+      suppressClickUntil = 0;
+      gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, time: event.timeStamp, velocity: 0, dragging: false };
+    };
+    const pointerUp = (event: PointerEvent) => {
+      if (!gesture || gesture.id !== event.pointerId) return;
+      if (gesture.dragging) {
+        const velocity = !reduced && event.type !== "pointercancel" && event.timeStamp - gesture.time < 100 ? clamp(gesture.velocity, -0.012, 0.012) : 0;
+        const destination = Math.round(scrollTravel() + manualTarget + velocity * 140);
+        manualTarget = limitManual(destination - scrollTravel());
+        suppressClickUntil = event.timeStamp + 450;
+        requestDraw();
+      }
+      cancelGesture();
+    };
+    const preventDragClick = (event: MouseEvent) => {
+      if (event.detail > 0 && event.timeStamp < suppressClickUntil && jarTarget(event)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+    const horizontalWheel = (event: WheelEvent) => {
+      if (slides.length < 2 || event.ctrlKey || !jarTarget(event) || Math.abs(event.deltaX) <= Math.abs(event.deltaY) || current > 0.5) return;
+      const pixels = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? width : 1);
+      const destination = limitManual(manualTarget + pixels / (width * layout.spacing));
+      if (destination === manualTarget) return;
+      event.preventDefault();
+      manualTarget = destination;
+      requestDraw();
+    };
+    const keyboardBrowse = (event: KeyboardEvent) => {
+      const link = jarTarget(event);
+      if (!link || slides.length < 2 || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key) || current > 0.5) return;
+      event.preventDefault();
+      const index = Number(link.getAttribute("data-hero-product"));
+      const destination = event.key === "Home" ? 0 : event.key === "End" ? slides.length - 1 : clamp(index + (event.key === "ArrowRight" ? 1 : -1), 0, slides.length - 1);
+      manualTarget = limitManual(destination - scrollTravel());
+      pendingFocus = destination;
+      requestDraw();
+    };
+    const pointerLeave = () => {
+      if (!gesture?.dragging) cancelGesture();
+    };
+    const resume = () => {
+      cancelDraw();
+      lastTime = 0;
+      cancelGesture();
+      aimX = aimY = pointerX = pointerY = 0;
+      measure();
+    };
+    const visibilityChanged = () => {
+      lastTime = 0;
+      if (document.hidden) { cancelGesture(); aimX = aimY = pointerX = pointerY = 0; cancelDraw(); }
+      else resume();
+    };
+    section.dataset.reducedMotion = String(reduced);
+    measure();
+    current = target;
+    const observer = new IntersectionObserver(readScroll);
+    observer.observe(section);
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(surface);
+    window.addEventListener("scroll", readScroll, { passive: true });
+    window.addEventListener("resize", measure, { passive: true });
+    window.addEventListener("pageshow", resume);
+    window.addEventListener("blur", windowBlur);
+    window.addEventListener("pointermove", trackPointer, { passive: true });
+    window.addEventListener("pointerout", viewportLeave, { passive: true });
+    section.addEventListener("pointerdown", pointerDown);
+    section.addEventListener("pointermove", pointerMove, { passive: false });
+    section.addEventListener("pointerup", pointerUp);
+    section.addEventListener("pointercancel", pointerUp);
+    section.addEventListener("lostpointercapture", cancelGesture);
+    section.addEventListener("click", preventDragClick, true);
+    section.addEventListener("wheel", horizontalWheel, { passive: false });
+    section.addEventListener("keydown", keyboardBrowse);
+    section.addEventListener("pointerleave", pointerLeave);
+    document.addEventListener("visibilitychange", visibilityChanged);
+    media.addEventListener("change", preferencesChanged);
+    return () => {
+      disposed = true;
+      cancelGesture();
+      cancelDraw();
+      observer.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", readScroll);
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("pageshow", resume);
+      window.removeEventListener("blur", windowBlur);
+      window.removeEventListener("pointermove", trackPointer);
+      window.removeEventListener("pointerout", viewportLeave);
+      section.removeEventListener("pointermove", pointerMove);
+      section.removeEventListener("pointerdown", pointerDown);
+      section.removeEventListener("pointerup", pointerUp);
+      section.removeEventListener("pointercancel", pointerUp);
+      section.removeEventListener("lostpointercapture", cancelGesture);
+      section.removeEventListener("click", preventDragClick, true);
+      section.removeEventListener("wheel", horizontalWheel);
+      section.removeEventListener("keydown", keyboardBrowse);
+      section.removeEventListener("pointerleave", pointerLeave);
+      document.removeEventListener("visibilitychange", visibilityChanged);
+      media.removeEventListener("change", preferencesChanged);
+      if (incoming) {
+        incoming.inert = false;
+        delete incoming.dataset.arrival;
+        incoming.style.removeProperty("--arrival-runway");
+        incoming.style.removeProperty("--arrival-lead");
+      }
+      section.style.removeProperty("--handoff-overlap");
+      surface.inert = false;
+      surface.style.opacity = "1";
+      surface.style.pointerEvents = "auto";
+      delete section.dataset.handoff;
+      delete section.dataset.revealing;
+      if (header) {
+        delete header.dataset.heroMotion;
+        header.style.removeProperty("--hero-header-progress");
+        header.style.removeProperty("--hero-header-surface");
+      }
+    };
+  }, [slides, settings.cursorMotion, motionSettings.enabled, motionSettings.cursor, motionSettings.intensity]);
 
-  if (!product) return null;
-
-  const { theme, firstLine, productLine, tagline, description } = getHeroPresentation(product);
-  const animation = !mediaReady || reducedMotion || !motionSettings.enabled ? "none" : settings.transition;
-  const heroTransitionDuration = 1400 * motionSettings.duration;
-
+  if (!slides.length) return null;
+  const initial = getHeroFrame(0, slides.length, false, 0, 0, getHeroLayout(1440, 900));
   return (
-    <section ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
-      onPointerEnter={(event) => { if (event.pointerType === "mouse") setHovered(true); }}
-      onPointerLeave={() => setHovered(false)}
-      onFocusCapture={(event) => {
-        setFocused(!compactViewport || event.target.matches(":focus-visible") || Boolean(event.target.closest("details")));
-      }}
-      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
-      data-theme={theme.key}
-      data-media-ready={mediaReady}
-      data-transition={animation}
-      data-hovered={hovered ? "true" : undefined}
-      style={{
-        "--hero-heading": theme.heading,
-        "--hero-body": theme.body,
-        "--hero-accent": theme.accent,
-        "--hero-button-bg": theme.buttonBackground,
-        "--hero-button-text": theme.buttonText,
-        "--hero-surface": theme.surface,
-        "--hero-soft": product.accentSoft,
-      } as CSSProperties}>
-      <div className={styles.background} data-transition={animation} aria-hidden="true">
-        <Image ref={backgroundImage} key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} onLoad={() => markReady(product.heroBackground.url)} />
-        <canvas ref={mobileBackground} key={`background-${product.heroBackground.url}`} className={styles.mobileBackground} />
-        {visited && mediaReady && effectsReady && !compactViewport && finePointer && slides.length > 1 && transitioning && webgl && (
-          <SheryBackground
-            images={heroBackgrounds}
-            config={defaultSheryBackgroundConfig}
-            selected={index}
-            active={inView && pageVisible}
-            duration={heroTransitionDuration}
-            fit={compactViewport ? "edges" : "cover"}
-            className={styles.heroSheryBackground}
-          />
-        )}
-      </div>
-      <div className={styles.layout} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}: ${product.name}`}>
-        <div className={styles.copy} key={`copy-${product.heroEntryId}`} data-transition={animation}>
-          <p className={styles.introEyebrow}>{product.hero?.eyebrow || "NATUREMIST · BOTANICAL HAIR CARE"}</p>
-          <h1 id="hero-title">
-            <span className={styles.headlineLine}><span className={styles.headlineText}>{firstLine}</span></span>
-            <span className={`${styles.headlineLine} ${styles.productHeadline}`} data-long-name={productLine.length > 8}>
-              <span className={styles.headlineText}>{productLine}</span>
-            </span>
-          </h1>
-          <p className={styles.tagline}><em className={styles.headlineText}>{tagline}</em></p>
-          {description && <p className={styles.description}>{description}</p>}
+    <section ref={root} className={styles.hero} style={{ "--story-extra": slides.length > 1 ? `calc(max(380px, calc(var(--stage-height) * 0.62)) * ${slides.length - 1} - var(--stage-height) * 0.648)` : "0px" } as CSSProperties} data-ritual-hero data-reduced-motion={!motionSettings.enabled ? "true" : undefined} aria-label="NatureMist botanical rituals">
+      <div ref={stage} className={styles.stage}>
+        <div className={styles.botanicalBackdrop} aria-hidden="true" />
+        <h1 className="sr-only">Rooted in nature. Made for your ritual.</h1>
+        {slides.length > 1 && <p id="jar-browse-instructions" className="sr-only">Drag or swipe horizontally to browse the jars. Use the left and right arrow keys when a jar is focused. Scroll vertically to continue.</p>}
+        <div ref={seal} className={styles.seal} aria-hidden="true">
+          <svg viewBox="0 0 1000 1000">
+            <defs>
+              {/* A soft, upper-left light gives the botanical surface natural depth. */}
+              <radialGradient id="naturemist-seal-tone" cx="32%" cy="8%" r="96%">
+                <stop offset="0%" stopColor="#66765a" />
+                <stop offset="34%" stopColor="#455e43" />
+                <stop offset="70%" stopColor="#304b37" />
+                <stop offset="100%" stopColor="#213c2e" />
+              </radialGradient>
+            </defs>
+            <path d={heroSealPath} fill="url(#naturemist-seal-tone)" />
+          </svg>
         </div>
-        <div className={styles.scene} data-transition={animation}>
-          <div className={styles.orbit} aria-hidden="true" />
-          <div
-            className={styles.poster}
-            role={slides.length > 1 ? "button" : undefined}
-            tabIndex={slides.length > 1 ? 0 : undefined}
-            aria-label={slides.length > 1 ? `Next botanical ritual: ${slides[nextHeroIndex(index, slides.length)].name}` : undefined}
-            onClick={handlePosterClick}
-            onKeyDown={(event) => {
-              if (slides.length > 1 && (event.key === "Enter" || event.key === " ")) {
-                event.preventDefault();
-                handlePosterClick();
-              }
-            }}
-          >
-            <div className={styles.posterMotion}>
-              <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
-                sizes="(max-width: 900px) 46vw, (max-width: 1100px) 34vw, 38vw"
-                preload={index === 0 && revision === 0}
-                loading={index === 0 && revision === 0 ? undefined : "eager"}
-                fetchPriority={index === 0 && revision === 0 ? undefined : "high"} className={styles.posterImage}
-                fallbackSrc={product.featuredImage?.url} onLoad={() => markReady(product.heroPoster.url)} />
-              {visited && mediaReady && effectsReady && !compactViewport && slides.length > 1 && transitioning && posterCursor && webgl && (
-                <SheryPoster
-                  key={heroPosters.map((image) => image.url).join("|")}
-                  images={heroPosters}
-                  config={heroPosterGooeyConfig}
-                  selected={index}
-                  active={inView && pageVisible}
-                  cursor={posterCursor}
-                  duration={heroTransitionDuration}
-                  className={styles.heroPosterEffect}
-                  onSelect={goTo}
-                />
-              )}
-            </div>
-
-            {slides.length > 1 && (
-              <span className={styles.posterBadge} aria-hidden="true">
-                <span>Next ritual</span>
-                <span className={styles.posterBadgeArrow}>→</span>
-              </span>
-            )}
-          </div>
-          <div className={styles.sceneFooter}>
-            <Link
-              key={`caption-${product.heroEntryId}`}
-              href={`/shop/${product.slug}`}
-              className={styles.caption}
-              data-transition={animation}
-            >
-              <span className={styles.captionCopy}>
-                <strong>{product.hero?.badgeText || product.name}</strong>
-                <span>{product.hero?.badgeSubtitle || product.subtitle}</span>
-              </span>
-              <span className={styles.captionArrow} aria-hidden="true">↗</span>
-            </Link>
-            <a className={styles.scrollLink} href="#featured-ritual" aria-label={`Explore ${product.name}`}><span aria-hidden="true">↓</span></a>
-          </div>
-        </div>
-        <div className={styles.purchase} key={`purchase-${product.heroEntryId}`} data-transition={animation}>
-          <HeroPurchase slug={product.slug} name={product.name} pricePaise={product.pricePaise}
-            compareAtPricePaise={product.compareAtPricePaise}
-            size={product.size} currencyCode={product.currencyCode} cursorMotion={posterCursor && moving} />
-        </div>
-        <aside className={styles.featured} id="featured-ritual" aria-labelledby="featured-ritual-heading">
-          <div className={styles.featuredHeader} aria-label="Hero slideshow controls">
-            <button type="button" className={styles.arrow} disabled={slides.length < 2} onClick={() => goTo(nextHeroIndex(index, slides.length, -1))} aria-label="Previous featured product">←</button>
-            <p id="featured-ritual-heading">Featured botanical ritual</p>
-            <button type="button" className={styles.arrow} disabled={slides.length < 2} onClick={() => goTo(nextHeroIndex(index, slides.length))} aria-label="Next featured product">→</button>
-          </div>
-          <div
-            ref={modelContainerRef}
-            className={styles.model}
-            key={compactViewport ? product.heroEntryId : undefined}
-            data-transition={animation}
-            onPointerDown={start3DInteraction}
-            onMouseDown={start3DInteraction}
-            onTouchStart={start3DInteraction}
-          >
-            <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={{ ...settings, rotationSpeed: settings.rotationSpeed * .8 }} paused={paused || !inView} cameraDistancePercent={95} eager enabled={mediaReady}
-              poster={product.featuredImage || product.heroPoster}
-              onLoadingChange={handleModelLoading} />
-          </div>
-          <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>
-            <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical hair care"}</p>
-            <h2 className={styles.productName}><Link href={`/shop/${product.slug}`}>{product.name}</Link></h2>
-            {(product.subtitle || product.size) && <p className={styles.subtitle}>{[product.subtitle, product.size].filter(Boolean).join(" · ")}</p>}
-            <div className={styles.disclosures}>
-              {(description || product.benefits.length > 0) && <details name="hero-product-details">
-                <summary>Why you’ll love it <span className={styles.accordionIcon} aria-hidden="true" /></summary>
-                <div className={styles.disclosureBody}>
-                  {description && <p>{description}</p>}
-                  {product.benefits.length > 0 && <ul>{product.benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>}
-                </div>
-              </details>}
-              {product.howTo.length > 0 && <details name="hero-product-details">
-                <summary>How to prepare <span className={styles.accordionIcon} aria-hidden="true" /></summary>
-                <div className={styles.disclosureBody}>
-                  <ol>{product.howTo.map((step) => <li key={step}>{step}</li>)}</ol>
-                </div>
-              </details>}
-              {(product.ingredient || product.formulation) && <details name="hero-product-details" open={!compactViewport}>
-                <summary>Ingredient clarity <span className={styles.accordionIcon} aria-hidden="true" /></summary>
-                <div className={styles.disclosureBody}>
-                  {product.ingredient && <p>{product.ingredient}</p>}
-                  {product.formulation && <p className={styles.formulation}><span>Formulation: </span>{product.formulation}</p>}
-                </div>
-              </details>}
-            </div>
-          </div>
-          {slides.length > 1 && (
-            <div className={styles.navigation} aria-label="Choose or pause a featured product">
-              <div className={styles.dots} role="group" aria-label="Choose a featured product">
-                {slides.map((slide, slideIndex) => (
-                  <button key={slide.heroEntryId} type="button" aria-label={`Show ${slide.name}`} aria-pressed={index === slideIndex} onClick={() => goTo(slideIndex)}>
-                    <span className={styles.dot} />
-                  </button>
-                ))}
+        <svg ref={arc} className={styles.arc} viewBox="0 0 1000 1000" aria-hidden="true">
+          <defs><path id="naturemist-hero-arc" d={heroSealTitlePath} /></defs>
+          <text><textPath href="#naturemist-hero-arc" startOffset="50%" textAnchor="middle" textLength={heroSealTitleLength} lengthAdjust="spacingAndGlyphs">ROOTED IN NATURE · MADE FOR YOUR RITUAL</textPath></text>
+        </svg>
+        <div className={styles.products}>
+          {slides.map((product, i) => {
+            const initialScale = slides.length > 1 ? 0.59 + (1 - smoothstep(i / 1.8)) * 0.41 : 1;
+            // CSS serializes angles to six decimals; keep hydration identical.
+            const initialRoll = Number((-initial.poses[i].roll).toFixed(6));
+            const openingStyle: CSSProperties = {
+              left: `calc(50% + var(--initial-jar-gap) * ${i})`,
+              top: `calc(var(--initial-jar-y) + var(--initial-wave) * ${Math.sin(i * 1.35)})`,
+              height: `calc(var(--initial-jar-height) * ${initialScale})`,
+              width: `calc(var(--initial-jar-height) * ${initialScale * 0.74})`,
+            };
+            return <Link key={product.heroEntryId} ref={(element) => { productLinks.current[i] = element; }} href={`/shop/${product.slug}`} className={styles.product} data-hero-product={i} aria-label={`Discover ${product.name}`} aria-describedby={slides.length > 1 ? "jar-browse-instructions" : undefined} draggable={false} tabIndex={initial.poses[i].x > -0.12 && initial.poses[i].x < 1.12 ? 0 : -1} style={{ ...openingStyle, transform: `translate(-50%, -50%) rotate(${initialRoll}rad)` }}>
+              <div className={styles.artwork} style={{ animationDelay: `${i * 70}ms` }}>
+                <MediaImage src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62svh" preload draggable={false} className={styles.jarImage} />
               </div>
-              {settings.autoplay && moving && <button className={styles.pause} type="button" onClick={() => setPaused((value) => !value)} aria-pressed={paused} aria-label={paused ? "Resume slideshow" : "Pause slideshow"}>{paused ? "Play" : "Pause"}</button>}
-              <span className={styles.count}>{String(index + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}</span>
-            </div>
-          )}
-        </aside>
-      </div>
-      {upcoming && upcomingIndex !== index && (requested !== null || (posterReady && inView && pageVisible)) && (
-        <div className={styles.preload} aria-hidden="true">
-          <Image src={upcoming.heroPoster.url} fallbackSrc={upcoming.featuredImage?.url} alt="" fill
-            sizes="(max-width: 900px) 46vw, (max-width: 1100px) 34vw, 38vw" loading="eager" fetchPriority="low"
-            onLoad={() => markReady(upcoming.heroPoster.url)} />
-          <Image src={upcoming.heroBackground.url} alt="" fill sizes="100vw" loading="eager" fetchPriority="low"
-            onLoad={() => markReady(upcoming.heroBackground.url)} />
-          {upcoming.featuredImage?.url && upcoming.featuredImage.url !== upcoming.heroPoster.url && (
-            <Image src={upcoming.featuredImage.url} alt="" fill sizes="(max-width: 900px) 40vw, 28vw" loading="eager" fetchPriority="low" />
-          )}
+            </Link>;
+          })}
         </div>
-      )}
-      {showProgress && (
-        <div
-          key={`progress-${product.slug}-${revision}`}
-          className={styles.progress}
-          style={{
-            animationDuration: `${duration}s`,
-            animationPlayState: playing ? "running" : "paused",
-          }}
-          aria-hidden="true"
-        />
-      )}
-      <span className="sr-only" aria-live={playing ? "off" : "polite"} aria-atomic="true">{product.name}, featured product {index + 1} of {slides.length}</span>
+        <HeroDiscoverHint animated={motionSettings.enabled && motionSettings.cursor && settings.cursorMotion} />
+        <a ref={cue} className={styles.scrollCue} href="#previous-hero" onClick={(event) => {
+          const section = root.current;
+          if (!section) return;
+          event.preventDefault();
+          const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches || !motionSettings.enabled;
+          const top = section.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: reduced ? top + section.offsetHeight : top + Math.min(window.innerHeight * 0.8, section.offsetHeight - window.innerHeight), behavior: reduced ? "instant" : "smooth" });
+        }}>
+          <span>Scroll to discover</span><svg width="26" height="16" viewBox="0 0 26 16" fill="none" aria-hidden="true"><path d="m2 3 11 10L24 3" stroke="currentColor" strokeWidth="1.3" /></svg>
+        </a>
+        <div className={styles.caption}><span ref={counter}>01 / {String(slides.length).padStart(2, "0")}</span><span>Botanical care</span></div>
+        <a href="#botanical-collection" className={styles.skip}>Explore the collection <span aria-hidden="true">↗</span></a>
+        <div className={styles.progress} aria-hidden="true"><span ref={progressBar} /></div>
+      </div>
     </section>
   );
 }

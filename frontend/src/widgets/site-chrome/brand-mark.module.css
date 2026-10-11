@@ -1,0 +1,67 @@
+.mark {
+  --brand-size: 25px;
+  --brand-leaf-height: 23px;
+  --brand-tagline-size: 8px;
+  display: inline-grid;
+  justify-items: center;
+  gap: 3px;
+  width: max-content;
+  max-width: 100%;
+  color: var(--forest);
+  line-height: 1;
+  user-select: none;
+}
+.leaf {
+  display: block;
+  width: calc(var(--brand-leaf-height) * 1.21);
+  height: var(--brand-leaf-height);
+  background: currentColor;
+  mask: url("/brand/naturemist-leaf-tight.svg") center / contain no-repeat;
+  transition: transform 350ms var(--ease);
+}
+.wordmark {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: var(--brand-size);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tagline {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: var(--brand-tagline-size);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: .82;
+}
+.mark[data-compact="true"] { --brand-size: 22px; --brand-leaf-height: 18px; }
+.mark[data-variant="footer"] {
+  --brand-size: clamp(28px, 3vw, 38px);
+  --brand-leaf-height: 34px;
+  --brand-tagline-size: 10px;
+  color: var(--paper);
+  gap: 5px;
+}
+.mark[data-variant="hero"] {
+  --brand-size: calc(var(--wordmark-start-size) + (var(--wordmark-end-size) - var(--wordmark-start-size)) * var(--header-progress));
+  --brand-leaf-height: calc(var(--leaf-start-height) + (var(--leaf-end-height) - var(--leaf-start-height)) * var(--header-progress));
+  --brand-tagline-size: 8px;
+  color: inherit;
+}
+a:hover > .mark .leaf { transform: translateY(-2px); }
+@media (max-width: 900px) {
+  .mark { --brand-size: 22px; --brand-leaf-height: 20px; --brand-tagline-size: 7px; }
+  .mark[data-compact="true"] { --brand-size: 21px; }
+  .mark[data-variant="hero"] { --brand-tagline-size: 7px; }
+}
+@media (max-width: 360px) {
+  .mark:not([data-variant="footer"]):not([data-variant="hero"]) { --brand-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .leaf { transition: none; }
+  a:hover > .mark .leaf { transform: none; }
+}

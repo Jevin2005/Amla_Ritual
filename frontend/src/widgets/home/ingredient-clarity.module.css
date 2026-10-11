@@ -8,7 +8,7 @@
   isolation: isolate;
   overflow: clip;
   scroll-margin-top: calc(var(--header-height) + 24px);
-  color: var(--clarity-ink);
+  color: var(--forest);
   background: var(--clarity-paper);
 }
 
@@ -131,3 +131,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) { .cta { transition: none; } }
+
+/* Shared brand colors only; retain the section's original typography and layout. */
+.eyebrow, .number { color: var(--botanical); }
+.number, .preparation .caption, .plant .caption::before { border-color: var(--line-strong); }
+.caption p { color: var(--muted); }
+.cta { background: var(--forest); color: var(--paper); }
+.cta:hover { background: var(--forest-dark); }
+.cta:focus-visible { outline-color: var(--forest); }
+@media (max-width: 760px) {
+  .honesty { color: var(--paper); }
+  .lifestyle .number { color: var(--amla); border-color: var(--amla); }
+  .lifestyle .caption p { color: rgb(255 252 245 / .78); }
+  .cta { background: var(--paper); color: var(--forest); border-color: var(--botanical); outline-color: var(--paper); }
+  .cta:hover { background: var(--ivory-deep); }
+  .cta:focus-visible { outline-color: var(--amla); }
+}
