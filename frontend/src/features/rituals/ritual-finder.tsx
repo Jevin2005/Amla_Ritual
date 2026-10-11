@@ -1,250 +1,181 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { flushSync } from "react-dom";
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { useStore } from "@/features/store/store-provider";
-import { rankRitualProducts, ritualQuestions, type QuizAnswers } from "./guided-quiz";
+import { useReducedMotion } from "@/shared/hooks/use-motion-preferences";
+import { MediaImage } from "@/shared/ui/media-image";
+import { getQuizFlow, resolveQuizResult, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
+import { createQuizNavigation, type QuizNavigation } from "./ritual-navigation";
 import styles from "./ritual-finder.module.css";
 
-type QuizState = { step: number; answers: QuizAnswers };
+type QuizState = { answers: QuizAnswers; cursor: number; showResult: boolean };
+type RitualFinderProps = {
+  onProgress?: (progress: { questionNumber: number; complete: boolean }) => void;
+};
 
-export function RitualFinder() {
-  const [state, setState] = useState<QuizState>({ step: 1, answers: {} });
-  const [hasNavigated, setHasNavigated] = useState(false);
-  const { products, track, content } = useStore();
-  const cardRef = useRef<HTMLDivElement>(null);
-  const previousStep = useRef(state.step);
+export function RitualFinder({ onProgress }: RitualFinderProps) {
+  const [state, setState] = useState<QuizState>({ answers: {}, cursor: 0, showResult: false });
+  const [busy, setBusy] = useState(false);
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
+  const { products, source, content, track } = useStore();
+  const reducedMotion = useReducedMotion();
+  const motionActive = content.motionSettings.enabled && content.motionSettings.intensity > 0 && !reducedMotion;
+  const stageRef = useRef<HTMLDivElement>(null);
+  const navigatorRef = useRef<QuizNavigation | null>(null);
+  const motionRef = useRef(motionActive);
   const quizId = useId();
-  const { enabled: motionEnabled, cursor: cursorEnabled, intensity } = content.motionSettings;
-  const motionActive = motionEnabled && intensity > 0;
-  const { step, answers } = state;
-  const question = ritualQuestions[step - 1];
-  const complete = step > ritualQuestions.length;
+  const flow = useMemo(() => getQuizFlow(state.answers), [state.answers]);
+  const question = flow.questions[state.cursor];
+  const complete = state.showResult && flow.complete && Boolean(flow.outcome);
+  const result = useMemo(() => flow.outcome ? resolveQuizResult(flow.outcome, products, source) : null, [flow.outcome, products, source]);
+  const selection = question ? state.answers[question.id] || [] : [];
+  const validSelection = selection.length > 0 && selection.every((value) => question?.options.some((option) => option.value === value));
 
-  const ranked = useMemo(() => rankRitualProducts(products, answers), [products, answers]);
-  const result = ranked[0];
-  const resultImage = result
-    ? result.product.featuredImage?.url || result.product.images?.[0]?.url
-    : undefined;
-  const alternatives = ranked.slice(1).map(({ product }) => product);
-
-  // Keep intentional step changes in reach without stealing focus on hydration.
   useEffect(() => {
-    if (previousStep.current === step) return;
-    previousStep.current = step;
-    const question = cardRef.current?.querySelector<HTMLElement>("[data-ritual-question]");
-    if (!question) return;
-    question.focus({ preventScroll: true });
-    const bounds = question.getBoundingClientRect();
-    if (bounds.top < 96 || bounds.bottom > window.innerHeight - 32) {
-      question.scrollIntoView({ block: "center", behavior: "instant" });
-    }
-  }, [step]);
+    motionRef.current = motionActive;
+    if (!motionActive) navigatorRef.current?.finishMotion();
+  }, [motionActive]);
 
-  // Native listeners keep pointer updates out of React's render cycle.
   useEffect(() => {
-    const card = cardRef.current;
-    if (!card || !motionActive) return;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const cleanups: Array<() => void> = [];
-
-    card.querySelectorAll<HTMLElement>("[data-ritual-option]").forEach((option) => {
-      const surface = option.querySelector<HTMLElement>("[data-option-surface]");
-      if (!surface) return;
-      let bounds: DOMRect | null = null;
-      let frame = 0;
-      let nextX = 0;
-      let nextY = 0;
-      const ripples = new Set<HTMLElement>();
-      const reset = () => {
-        cancelAnimationFrame(frame);
-        frame = 0;
-        bounds = null;
-        option.style.removeProperty("--option-rx");
-        option.style.removeProperty("--option-ry");
-      };
-      const enter = () => { bounds = option.getBoundingClientRect(); };
-      const move = (event: MouseEvent) => {
-        if (reducedMotion.matches || !finePointer.matches || !cursorEnabled || event.buttons || document.hidden) {
-          reset();
-          return;
+    const navigator = createQuizNavigation({
+      getStage: () => stageRef.current,
+      motionEnabled: () => motionRef.current && !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      onBusyChange: setBusy,
+      afterCommit: () => {
+        const heading = stageRef.current?.querySelector<HTMLElement>("[data-quiz-focus]");
+        if (!heading) return;
+        heading.focus({ preventScroll: true });
+        const bounds = heading.getBoundingClientRect();
+        const headerHeight = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 88;
+        if (bounds.top < headerHeight + 16 || bounds.bottom > window.innerHeight - 48) {
+          heading.scrollIntoView({ block: "start", behavior: "instant" });
         }
-        bounds ??= option.getBoundingClientRect();
-        nextX = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width - 0.5) * 2));
-        nextY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - 0.5) * 2));
-        if (frame) return;
-        frame = requestAnimationFrame(() => {
-          option.style.setProperty("--option-rx", `${(-nextY * 6 * Math.min(1, intensity)).toFixed(2)}deg`);
-          option.style.setProperty("--option-ry", `${(nextX * 8 * Math.min(1, intensity)).toFixed(2)}deg`);
-          frame = 0;
-        });
-      };
-      const ripple = (event: MouseEvent) => {
-        // A label forwards a second click to its radio; animate the original only.
-        if (reducedMotion.matches || event.detail === 0 || event.target instanceof HTMLInputElement) return;
-        const rect = option.getBoundingClientRect();
-        const ink = document.createElement("span");
-        const size = Math.max(rect.width, rect.height);
-        ink.className = styles.ripple;
-        ink.setAttribute("aria-hidden", "true");
-        ink.style.width = `${size}px`;
-        ink.style.height = `${size}px`;
-        ink.style.left = `${event.clientX - rect.left}px`;
-        ink.style.top = `${event.clientY - rect.top}px`;
-        surface.appendChild(ink);
-        ripples.add(ink);
-        ink.addEventListener("animationend", () => { ripples.delete(ink); ink.remove(); }, { once: true });
-      };
-      const mediaChange = () => {
-        reset();
-        ripples.forEach((ink) => ink.remove());
-        ripples.clear();
-      };
-      option.addEventListener("mouseenter", enter);
-      option.addEventListener("mousemove", move);
-      option.addEventListener("mouseleave", reset);
-      option.addEventListener("click", ripple);
-      reducedMotion.addEventListener("change", mediaChange);
-      finePointer.addEventListener("change", mediaChange);
-      window.addEventListener("scroll", mediaChange, { passive: true, capture: true });
-      window.addEventListener("resize", mediaChange, { passive: true });
-      window.addEventListener("blur", mediaChange);
-      document.addEventListener("visibilitychange", mediaChange);
-      cleanups.push(() => {
-        mediaChange();
-        option.removeEventListener("mouseenter", enter);
-        option.removeEventListener("mousemove", move);
-        option.removeEventListener("mouseleave", reset);
-        option.removeEventListener("click", ripple);
-        reducedMotion.removeEventListener("change", mediaChange);
-        finePointer.removeEventListener("change", mediaChange);
-        window.removeEventListener("scroll", mediaChange, true);
-        window.removeEventListener("resize", mediaChange);
-        window.removeEventListener("blur", mediaChange);
-        document.removeEventListener("visibilitychange", mediaChange);
+      },
+    });
+    navigatorRef.current = navigator;
+    return () => { navigator.dispose(); navigatorRef.current = null; };
+  }, []);
+
+  function navigate(next: QuizState, nextDirection: "forward" | "back") {
+    if (!navigatorRef.current || navigatorRef.current.busy) return;
+    setDirection(nextDirection);
+    void navigatorRef.current.navigate(() => {
+      // Collapse the mobile introduction in the same layout commit, before
+      // measuring the new heading for focus and scroll positioning.
+      flushSync(() => {
+        setState(next);
+        onProgress?.({ questionNumber: next.cursor + 1, complete: next.showResult });
       });
+      if (next.showResult) track("quiz_completed", { placement: "build_your_ritual" });
+    }, nextDirection, next.showResult);
+  }
+
+  function choose(currentQuestion: QuizQuestion, value: string) {
+    if (navigatorRef.current?.busy) return;
+    setState((current) => {
+      const selected = current.answers[currentQuestion.id] || [];
+      const option = currentQuestion.options.find((item) => item.value === value);
+      const values = !currentQuestion.multiple || option?.exclusive
+        ? selected.includes(value) && currentQuestion.multiple ? [] : [value]
+        : selected.includes(value)
+          ? selected.filter((item) => item !== value)
+          : [...selected.filter((item) => !currentQuestion.options.find((entry) => entry.value === item)?.exclusive), value];
+      return { ...current, answers: setQuizAnswer(current.answers, currentQuestion.id, values), showResult: false };
     });
-    return () => cleanups.forEach((cleanup) => cleanup());
-  }, [step, motionActive, cursorEnabled, intensity]);
+  }
 
-  const goToStep = (nextStep: number) => {
-    setHasNavigated(true);
-    setState((current) => ({ ...current, step: nextStep }));
-  };
-
-  const handleFinish = () => {
-    if (!ritualQuestions.every((item) => answers[item.id])) return;
-    setHasNavigated(true);
-    setState((current) => ({ ...current, step: ritualQuestions.length + 1 }));
-    track("quiz_completed", {
-      recommendation: result?.product.slug,
-      requires_colour_review: result?.requiresColourReview ?? false,
-    });
-  };
-
-  const reset = () => {
-    setHasNavigated(true);
-    setState({ step: 1, answers: {} });
-  };
-
-  const optionCards: ReactNode[] = [];
-  const addOption = (value: string, description: string, selected: boolean, select: () => void, index: number) => {
-    optionCards.push(
-      <label className={styles.option} key={value} data-ritual-option style={{ "--option-index": index } as CSSProperties}>
-        <input
-          className={styles.radioInput}
-          type="radio"
-          name={`${quizId}-${question?.id}`}
-          value={value}
-          checked={selected}
-          onChange={select}
-          aria-labelledby={`${quizId}-option-title-${index}`}
-          aria-describedby={`${quizId}-option-description-${index}`}
-        />
-        <span className={styles.optionSurface} data-option-surface>
-          <span className={styles.radioCircle} aria-hidden="true"><span /></span>
-          <span className={styles.optionCopy}>
-            <span className={styles.optionTitle} id={`${quizId}-option-title-${index}`}>{value}</span>
-            <span className={styles.optionDescription} id={`${quizId}-option-description-${index}`}>{description}</span>
-          </span>
-        </span>
-      </label>,
-    );
-  };
-  question?.options.forEach((option, index) => addOption(
-    option.value, option.copy, answers[question.id] === option.value,
-    () => setState((current) => ({ ...current, answers: { ...current.answers, [question.id]: option.value } })), index,
-  ));
+  function continueQuiz(event: FormEvent) {
+    event.preventDefault();
+    if (!validSelection || busy || navigatorRef.current?.busy) return;
+    if (state.cursor + 1 < flow.questions.length) {
+      navigate({ ...state, cursor: state.cursor + 1 }, "forward");
+    } else if (flow.complete) {
+      navigate({ ...state, showResult: true }, "forward");
+    }
+  }
 
   return (
-    <div className={styles.card} ref={cardRef} data-motion={motionActive ? "on" : "off"}>
+    <div className={styles.finder} data-motion={motionActive ? "on" : "off"} data-busy={busy}>
       <div className={styles.header}>
-        <div className={styles.stepLabel}>
-          <span>{complete ? "Your ritual" : `Step ${step} / ${ritualQuestions.length}`}</span>
-          <span className={styles.headerDot} aria-hidden="true">·</span>
-          <span className={styles.stepName}>{question?.label || "Chosen with care"}</span>
-        </div>
-        <div className={styles.progress} role="img" aria-label={complete ? "All questions complete" : `Step ${step} of ${ritualQuestions.length}`}>
-          {ritualQuestions.map((item, index) => <span key={item.id} className={styles.progressPill}><span data-filled={step > index} /></span>)}
-        </div>
+        <p className={styles.stepLabel}>{complete ? "Your ritual" : `Question ${state.cursor + 1}`}</p>
+        <p className={styles.stage}>{complete ? "A considered next step" : question?.label}</p>
       </div>
-
-      <div className={styles.step} key={step} data-enter={hasNavigated}>
-        {!complete ? (
-          <>
-            <fieldset className={styles.fieldset}>
-              <legend className={styles.question} tabIndex={-1} data-ritual-question>
-                {question.question}
-              </legend>
-              <div className={styles.options}>{optionCards}</div>
+      <div ref={stageRef} className={styles.stageFrame} data-direction={direction} aria-busy={busy}>
+        {!complete && question ? (
+          <form key={question.id} className={styles.questionPanel} onSubmit={continueQuiz}>
+            <h3 className={styles.questionHeading} id={`${quizId}-question`} tabIndex={-1} data-quiz-focus>{question.question}</h3>
+            <p className={styles.questionHelper} id={`${quizId}-helper`}>{question.helper}</p>
+            <fieldset className={styles.fieldset} disabled={busy} aria-describedby={`${quizId}-helper`}>
+              <legend className={styles.srOnly}>{question.question}</legend>
+              <div className={styles.options}>
+                {question.options.map((option, index) => (
+                  <label className={styles.option} key={option.value}>
+                    <input className={styles.control} type={question.multiple ? "checkbox" : "radio"}
+                      name={`${quizId}-${question.id}`} value={option.value} checked={selection.includes(option.value)}
+                      onChange={() => choose(question, option.value)}
+                      aria-labelledby={`${quizId}-${question.id}-option-${index}`}
+                      aria-describedby={option.description ? `${quizId}-${question.id}-description-${index}` : undefined} />
+                    <span className={styles.indicator} aria-hidden="true" />
+                    <span className={styles.optionCopy}>
+                      <span className={styles.optionLabel} id={`${quizId}-${question.id}-option-${index}`}>{option.label}</span>
+                      {option.description && <span className={styles.optionDescription} id={`${quizId}-${question.id}-description-${index}`}>{option.description}</span>}
+                    </span>
+                  </label>
+                ))}
+              </div>
             </fieldset>
             <div className={styles.footer}>
-              {step > 1 && <button type="button" className={styles.textButton} onClick={() => goToStep(step - 1)}><span aria-hidden="true">←</span> Back</button>}
-              <button
-                type="button"
-                className={styles.primaryButton}
-                disabled={!answers[question.id]}
-                onClick={step < ritualQuestions.length ? () => goToStep(step + 1) : handleFinish}
-              >
-                {step < ritualQuestions.length ? "Continue" : "Find my ritual"} <span aria-hidden="true">→</span>
-              </button>
+              {state.cursor > 0 ? (
+                <button type="button" className={styles.backButton} disabled={busy} onClick={() => navigate({ ...state, cursor: state.cursor - 1 }, "back")}><span aria-hidden="true">←</span> Back</button>
+              ) : <span className={styles.navigationHint}>Choose an answer to continue</span>}
+              <button type="submit" className={styles.primaryButton} disabled={busy || !validSelection}>Continue <span aria-hidden="true">→</span></button>
             </div>
-          </>
-        ) : (
-          <div className={styles.result}>
-            <p className={styles.resultLabel}>A simple place to begin</p>
-            {result ? (
-              <div className={styles.resultDetails}>
-                <div className={styles.productImage}>
-                  {resultImage ? <Image src={resultImage} alt={result.product.featuredImage?.altText || result.product.name} fill sizes="150px" className={styles.image} /> : <span className={styles.imagePlaceholder}>Botanical<br />ritual</span>}
-                </div>
-                <div className={styles.resultCopy}>
-                  <h3 className={styles.resultTitle} tabIndex={-1} data-ritual-question>{result.product.name}</h3>
-                  <p className={styles.resultDescription}>{result.guidance || result.product.shortDescription}</p>
-                  <ul className={styles.matchReasons}>{result.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul>
-                </div>
+          </form>
+        ) : complete && result ? (
+          <div className={styles.result} data-result-kind={result.kind} data-result-reveal={motionActive}>
+            <p className={styles.resultEyebrow}>{result.kind === "candidate" ? "Chosen around your answers" : "Before your next step"}</p>
+            <h3 className={styles.resultTitle} style={{ "--reveal-order": 1 } as CSSProperties} tabIndex={-1} data-quiz-focus>{result.title}</h3>
+            <p className={styles.resultDescription} style={{ "--reveal-order": 2 } as CSSProperties}>{result.description}</p>
+            {result.items.length > 0 && <section className={styles.suggestions} aria-labelledby={`${quizId}-suggestions`}>
+              <div className={styles.suggestionsHeader}>
+                <h4 className={styles.suggestionsTitle} id={`${quizId}-suggestions`}>Suggested products</h4>
+                <span className={styles.matchCount}>{result.items.length} {result.items.length === 1 ? "product" : "products"}</span>
               </div>
-            ) : (
-              <div className={styles.emptyResult}>
-                <h3 className={styles.resultTitle} tabIndex={-1} data-ritual-question>Your ritual starts here.</h3>
-                <p className={styles.resultDescription}>We couldn&apos;t find a product match just now. Explore our ritual guide for a thoughtful place to begin, or try your answers again.</p>
-              </div>
-            )}
-            <ul className={styles.tags} aria-label="Your ritual choices">
-              {ritualQuestions.map((item) => <li key={item.id}>{answers[item.id]}</li>)}
-            </ul>
-            {alternatives.length > 0 && <details className={styles.alternatives}>
-              <summary>Other matching botanicals ({alternatives.length})</summary>
-              <ul>{alternatives.map((product) => <li key={product.id}><Link href={`/shop/${product.slug}`}>{product.name}</Link></li>)}</ul>
-            </details>}
-            <div className={styles.resultFooter}>
-              <button type="button" className={styles.textButton} onClick={reset}><span aria-hidden="true">↺</span> Start over</button>
-              <Link className={styles.primaryButton} href={result ? `/shop/${result.product.slug}` : "/shop"}>View ritual <span aria-hidden="true">→</span></Link>
+              <ol className={styles.resultProducts} role="list">
+              {result.items.map(({ product, role, reason }, index) => {
+                const image = product.featuredImage || product.images?.[0];
+                return (
+                  <li className={styles.resultProduct} key={product.id || product.slug}>
+                    <div className={styles.productImage}>
+                      {image ? <MediaImage src={image.url} alt={image.altText || product.name} fill sizes="(max-width: 767px) 300px, (max-width: 1023px) 280px, 300px" className={styles.image} /> : <span className={styles.imagePlaceholder}>NatureMist<br />{role}</span>}
+                    </div>
+                    <div className={styles.resultCopy}>
+                      <p className={styles.productRole}>{result.items.length > 1 ? `Step ${index + 1} · ` : ""}{role === "Condition" ? "Conditioning mask" : role === "Cleanse" ? "Botanical wash" : "Indigo colour stage"}</p>
+                      <h5 className={styles.productName} style={{ "--reveal-order": 1 } as CSSProperties}><Link href={`/shop/${product.slug}${result.kind === "conditional" ? "#product-directions" : ""}`} className={styles.productNameLink}>{product.name}</Link></h5>
+                      <div className={styles.matchReasons} style={{ "--reveal-order": 2 } as CSSProperties}>
+                        <p className={styles.reasonLabel}>Why this fits your answers</p>
+                        <p>{reason}</p>
+                      </div>
+                      <div className={styles.productLinks}>
+                        {result.kind === "candidate" && <Link href={`/shop/${product.slug}`} className={styles.productLink} aria-label={`View ${product.name}`}>View product <span aria-hidden="true">↗</span></Link>}
+                        <Link href={`/shop/${product.slug}#product-directions`} className={styles.directionsLink} aria-label={`View ${product.name} directions`}>Read directions <span aria-hidden="true">↗</span></Link>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+              </ol>
+            </section>}
+            {result.items.length > 0 && <p className={styles.resultNote}>{result.items.length > 1 ? "Use these as separate care steps, with the mask before the wash. " : ""}Follow each product’s current pack directions, including its patch and strand checks.</p>}
+            {source === "preview" && result.items.length > 0 && <p className={styles.resultNote}>Preview suggestions. Confirm the current product and its directions before deciding.</p>}
+            <div className={styles.resultActions}>
+              <button type="button" className={styles.primaryButton} disabled={busy} onClick={() => navigate({ ...state, cursor: 0, showResult: false }, "back")}><span aria-hidden="true">←</span> Edit my answers</button>
+              <button type="button" className={styles.textButton} disabled={busy} onClick={() => navigate({ answers: {}, cursor: 0, showResult: false }, "back")}>Start over</button>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -352,7 +352,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
           {/* Preparation & Storage Accordions */}
           <div className="space-y-2">
-            {product.howTo.length > 0 && <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl" open>
+            {product.howTo.length > 0 && <details id="product-directions" className="group scroll-mt-[calc(var(--header-height)+24px)] rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl" open>
               <summary className="flex cursor-pointer list-none items-center justify-between [font-family:var(--font-display)] text-[1.12rem] font-normal text-[var(--forest)] [&::-webkit-details-marker]:hidden max-[680px]:text-[1rem]">
                 <span>How to prepare & apply</span>
                 <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>

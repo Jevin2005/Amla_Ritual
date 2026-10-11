@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RitualFinder } from "@/features/rituals/ritual-finder";
 import { useStore } from "@/features/store/store-provider";
 import { installRitualSectionMotion } from "./build-your-ritual-motion";
@@ -8,42 +8,42 @@ import styles from "./build-your-ritual.module.css";
 
 export function BuildYourRitual() {
   const panelRef = useRef<HTMLDivElement>(null);
+  const [started, setStarted] = useState(false);
   const { content: { motionSettings } } = useStore();
 
   useEffect(() => {
-    if (panelRef.current) return installRitualSectionMotion(panelRef.current, { ...motionSettings, duration: motionSettings.duration * 1.25 });
+    if (panelRef.current) return installRitualSectionMotion(panelRef.current, motionSettings);
   }, [motionSettings]);
 
+  const handleProgress = useCallback((progress: { questionNumber: number; complete: boolean }) => {
+    setStarted(progress.questionNumber > 1 || progress.complete);
+  }, []);
+
   return (
-    <section className={styles.section} aria-labelledby="builder-title" data-reveal-ignore>
-      <div ref={panelRef} className={styles.panel}>
-        <div className={styles.spotlight} data-ritual-spotlight aria-hidden="true" />
-        <div className={styles.ambient} aria-hidden="true">
-          <span className={styles.ringOne} />
-          <span className={styles.ringTwo} />
-          <span className={styles.disc} />
-        </div>
+    <section id="build-your-ritual" className={styles.section} aria-labelledby="builder-title" data-reveal-ignore>
+      <div ref={panelRef} className={styles.panel} data-started={started}>
+        <div className={styles.botanicalShadow} aria-hidden="true" />
         <div className={styles.grid}>
           <div className={styles.intro}>
-            <p className={styles.eyebrow} data-ritual-reveal>
-              <span aria-hidden="true" /> Build your ritual
+            <p className={styles.eyebrow}>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M19.5 4.5c-7-1-14 2-14 8.5 0 3 2 5 5 5 6.5 0 9-6.5 9-13.5Z" />
+                <path d="m4.5 20 10-10M9 15v-4m0 4h4" />
+              </svg>
+              Build your ritual
             </p>
             <h2 className={styles.heading} id="builder-title">
-              <span className={styles.desktopHeading} data-ritual-reveal>A botanical starting</span>
-              <span className={styles.desktopHeading} data-ritual-reveal>point, <em>chosen with care.</em></span>
-              <span className={styles.mobileHeading} data-ritual-reveal>Your ritual, <em>made simple.</em></span>
+              <span className={styles.expandedHeading}>A little about you.<br /> <em>A ritual of your own.</em></span>
+              <span className={styles.compactHeading}>Find your <em>ritual.</em></span>
             </h2>
-            <p className={styles.mobileSummary}>Five quick questions. One thoughtful match.</p>
-            <p className={styles.body} data-ritual-reveal>
-              Tell us your ritual goal and how your hair feels today. We&apos;ll suggest a simple place to begin—never a diagnosis or a promise.
+            <p className={styles.body}>
+              Tell us what you want from your hair-care routine. We&apos;ll help you find a thoughtful botanical place to begin.
             </p>
-            <dl className={styles.stats} data-ritual-reveal>
-              <div><dt>Questions</dt><dd>5</dd></div>
-              <div><dt>To finish</dt><dd>1m</dd></div>
-            </dl>
+            <p className={styles.note}>A few questions, shaped by your answers.</p>
+            <div className={styles.introRule} aria-hidden="true" />
           </div>
-          <div className={styles.quiz} data-ritual-reveal>
-            <RitualFinder />
+          <div className={styles.quiz}>
+            <RitualFinder onProgress={handleProgress} />
           </div>
         </div>
       </div>

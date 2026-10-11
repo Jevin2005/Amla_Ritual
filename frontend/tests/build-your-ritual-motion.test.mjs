@@ -29,37 +29,7 @@ class EventTarget {
   }
 }
 
-function fixture(tops = [900, 950, 1000, 1050, 1100, 1150], preferences = {}) {
-  class Node extends EventTarget {
-    children = [];
-    contains(node) { return node === this || this.children.some((child) => child.contains(node)); }
-  }
-  class RevealTarget extends Node {
-    animations = [];
-    revealStates = [];
-    constructor(top) {
-      super();
-      this.top = top;
-      this.dataset = new Proxy({ ritualReveal: "" }, {
-        set: (data, property, value) => {
-          if (property === "ritualReveal") this.revealStates.push(value);
-          data[property] = value;
-          return true;
-        },
-      });
-    }
-    getBoundingClientRect() { return { top: this.top }; }
-    animate(keyframes, options) {
-      const animation = {
-        keyframes, options, cancelled: false,
-        cancel() { this.cancelled = true; this.oncancel?.(); },
-        finish() { this.onfinish?.(); },
-      };
-      this.animations.push(animation);
-      return animation;
-    }
-  }
-
+function fixture(preferences = {}) {
   const observers = [];
   class IntersectionObserver {
     observed = new Set();
@@ -70,251 +40,193 @@ function fixture(tops = [900, 950, 1000, 1050, 1100, 1150], preferences = {}) {
       observers.push(this);
     }
     observe(target) { this.observed.add(target); }
-    unobserve(target) { this.observed.delete(target); }
     disconnect() { this.disconnected = true; this.observed.clear(); }
-    emit(entries) { this.callback(entries); }
+    emit(inView) { this.callback([{ isIntersecting: inView }]); }
   }
-
-  const writes = [];
-  const frames = new Map();
-  let nextFrame = 0;
-  let panelMeasurements = 0;
-  const spotlight = {
-    style: new Proxy({}, {
-      set(style, property, value) { writes.push({ property, value }); style[property] = value; return true; },
-    }),
-  };
-  const targets = tops.map((top) => new RevealTarget(top));
-  const panel = Object.assign(new Node(), {
+  const mutations = [];
+  class MutationObserver {
+    disconnected = false;
+    constructor(callback) { this.callback = callback; mutations.push(this); }
+    observe(target, options) { this.target = target; this.options = options; }
+    disconnect() { this.disconnected = true; }
+    emit() { this.callback([]); }
+  }
+  const focusTarget = {};
+  const panel = Object.assign(new EventTarget(), {
     dataset: {},
-    children: targets,
-    querySelectorAll: () => targets.filter((target) => Object.hasOwn(target.dataset, "ritualReveal")),
-    querySelector: () => spotlight,
-    getBoundingClientRect: () => {
-      panelMeasurements++;
-      return { left: 48, top: 120, width: 1200, height: 540 };
+    animations: [],
+    contains: (target) => target === focusTarget,
+    getBoundingClientRect: () => ({ top: preferences.top ?? 1200 }),
+    animate(keyframes, options) {
+      const animation = {
+        keyframes, options, cancelled: false,
+        cancel() { this.cancelled = true; this.oncancel?.(); },
+        finish() { this.onfinish?.(); },
+      };
+      this.animations.push(animation);
+      return animation;
     },
   });
   const reduced = Object.assign(new EventTarget(), { matches: preferences.reducedMotion ?? false });
-  const fine = Object.assign(new EventTarget(), { matches: preferences.finePointer ?? true });
-  const document = Object.assign(new EventTarget(), { hidden: preferences.hidden ?? false, activeElement: null });
-  const window = Object.assign(new EventTarget(), {
+  const desktop = Object.assign(new EventTarget(), { matches: preferences.desktop ?? true });
+  const document = Object.assign(new EventTarget(), {
+    hidden: preferences.hidden ?? false,
+    activeElement: preferences.focused ? focusTarget : null,
+    documentElement: { dataset: { siteMotion: preferences.siteMotion ?? "on" } },
+  });
+  const window = {
     innerHeight: 800,
-    matchMedia: (query) => query.includes("prefers-reduced-motion") ? reduced : fine,
+    matchMedia: (query) => query.includes("prefers-reduced-motion") ? reduced : desktop,
+    MutationObserver,
     ...(preferences.intersectionObserver === false ? {} : { IntersectionObserver }),
-  });
-  const context = vm.createContext({
-    window, document, Node, IntersectionObserver,
-    requestAnimationFrame(callback) { frames.set(++nextFrame, callback); return nextFrame; },
-    cancelAnimationFrame(id) { frames.delete(id); },
-  });
+  };
+  const context = vm.createContext({ window, document, IntersectionObserver, MutationObserver });
   vm.runInContext(bundle, context);
   const setup = () => context.ritualMotion.installRitualSectionMotion(panel, {
     enabled: true, cursor: true, duration: 1, intensity: 1, ...preferences.settings,
   });
-  const tick = () => {
-    const queued = [...frames.values()];
-    frames.clear();
-    queued.forEach((callback) => callback());
-  };
-  const mouse = (clientX = 400, clientY = 320) => ({ clientX, clientY, buttons: 0 });
-  const entranceObserver = () => observers.findLast((observer) => observer.options?.rootMargin);
-  const visibilityObserver = () => observers.findLast((observer) => !observer.options);
-  return { Node, targets, panel, spotlight, writes, frames, reduced, fine, document, window, observers,
-    setup, tick, mouse, entranceObserver, visibilityObserver, panelMeasurements: () => panelMeasurements };
+  return { panel, reduced, desktop, document, observers, mutations, setup, observer: () => observers.at(-1) };
 }
 
-test("fresh hydration keeps already painted content visible without replaying its entrance", () => {
-  const { targets, entranceObserver, setup } = fixture([-120, 0, 300, 799, 900]);
+test("section enters once, rising 16px over 520ms with the requested easing", () => {
+  const { panel, observer, setup } = fixture({ settings: { duration: 1.5 } });
   const cleanup = setup();
-  for (const target of targets.slice(0, 4)) {
-    assert.equal(target.dataset.ritualReveal, "done");
-    assert.ok(!target.revealStates.includes("pending"), "content must never disappear after hydration");
-    assert.equal(target.animations.length, 0);
-    assert.ok(!entranceObserver().observed.has(target));
+  assert.equal(panel.dataset.ritualReveal, "pending");
+  observer().emit(false);
+  assert.equal(panel.animations.length, 0);
+  observer().emit(true);
+  assert.equal(panel.dataset.ritualReveal, "done");
+  assert.equal(panel.animations.length, 1);
+  const { keyframes, options } = panel.animations[0];
+  assert.equal(keyframes[0].opacity, 0);
+  assert.equal(keyframes[0].transform, "translate3d(0, 16px, 0)");
+  assert.equal(keyframes[1].opacity, 1);
+  assert.equal(keyframes[1].transform, "none");
+  assert.equal(options.duration, 520);
+  assert.equal(options.easing, "cubic-bezier(0.22, 1, 0.36, 1)");
+  assert.equal(options.fill, "backwards");
+  observer().emit(false);
+  observer().emit(true);
+  assert.equal(panel.animations.length, 1);
+  cleanup();
+});
+
+test("painted content, focused content and missing observers never start hidden", () => {
+  for (const preferences of [
+    { top: 0 }, { top: -300 }, { top: 799 }, { focused: true }, { intersectionObserver: false },
+  ]) {
+    const { panel, setup } = fixture(preferences);
+    const cleanup = setup();
+    assert.equal(panel.dataset.ritualReveal, "done");
+    assert.equal(panel.animations.length, 0);
+    cleanup();
   }
-  assert.equal(targets[4].dataset.ritualReveal, "pending");
-  cleanup();
 });
 
-test("offscreen content rises 28px in ordered 120ms staggers exactly once", () => {
-  const { targets, entranceObserver, setup } = fixture(undefined, { settings: { duration: 1.25 } });
-  const cleanup = setup();
-  const observer = entranceObserver();
-  observer.emit(targets.map((target) => ({ target, isIntersecting: false })));
-  assert.ok(targets.every((target) => target.animations.length === 0));
-  observer.emit(targets.map((target) => ({ target, isIntersecting: true })));
-  targets.forEach((target, index) => {
-    assert.equal(target.dataset.ritualReveal, "done");
-    assert.equal(target.animations.length, 1);
-    const { keyframes, options } = target.animations[0];
-    assert.equal(keyframes[0].opacity, 0);
-    assert.equal(keyframes[0].transform, "translate3d(0, 28px, 0)");
-    assert.equal(keyframes[1].opacity, 1);
-    assert.equal(keyframes[1].transform, "none");
-    assert.equal(options.duration, 950);
-    assert.equal(options.delay, index * 120);
-    assert.equal(options.easing, "cubic-bezier(.2,.8,.2,1)");
-    assert.equal(options.fill, "backwards");
-    assert.ok(!observer.observed.has(target));
-    target.animations[0].finish();
-  });
-  observer.emit(targets.map((target) => ({ target, isIntersecting: true })));
-  assert.ok(targets.every((target) => target.animations.length === 1));
-  cleanup();
-});
-
-test("StrictMode cleanup preserves reveal markers and does not replay completed entrances", () => {
-  const { targets: [completed, pending], observers, entranceObserver, setup } = fixture([900, 1200]);
-  const cleanupFirst = setup();
-  entranceObserver().emit([{ target: completed, isIntersecting: true }]);
+test("StrictMode cleanup preserves completed entrances and re-arms pending ones", () => {
+  const complete = fixture();
+  const cleanupFirst = complete.setup();
+  complete.observer().emit(true);
   cleanupFirst();
-  assert.equal(completed.animations[0].cancelled, true);
-  assert.ok(observers.every((observer) => observer.disconnected));
-  assert.equal(completed.dataset.ritualReveal, "done");
-  assert.notEqual(pending.dataset.ritualReveal, "pending");
-  assert.ok(Object.hasOwn(pending.dataset, "ritualReveal"));
-
-  const cleanupSecond = setup();
-  assert.equal(completed.animations.length, 1);
-  assert.ok(!entranceObserver().observed.has(completed));
-  assert.equal(pending.dataset.ritualReveal, "pending");
-  assert.ok(entranceObserver().observed.has(pending));
+  assert.equal(complete.panel.animations[0].cancelled, true);
+  const cleanupSecond = complete.setup();
+  complete.observer().emit(true);
+  assert.equal(complete.panel.animations.length, 1);
+  assert.equal(complete.panel.dataset.ritualReveal, "done");
   cleanupSecond();
+
+  const pending = fixture();
+  pending.setup()();
+  assert.notEqual(pending.panel.dataset.ritualReveal, "pending");
+  const cleanupPending = pending.setup();
+  assert.equal(pending.panel.dataset.ritualReveal, "pending");
+  pending.observer().emit(true);
+  assert.equal(pending.panel.animations.length, 1);
+  cleanupPending();
 });
 
-test("spotlight coalesces pointer events into one transform-only write centered on its 380px glow", () => {
-  const { panel, writes, frames, tick, mouse, panelMeasurements, setup } = fixture();
-  const cleanup = setup();
-  panel.dispatch("mouseenter", mouse());
-  const initialMeasurements = panelMeasurements();
-  panel.dispatch("mousemove", mouse(410, 310));
-  panel.dispatch("mousemove", mouse(470, 350));
-  panel.dispatch("mousemove", mouse(538, 410));
-  assert.equal(frames.size, 1);
-  assert.equal(writes.length, 0);
-  tick();
-  assert.deepEqual(writes, [{ property: "transform", value: "translate3d(300px, 100px, 0)" }]);
-  assert.equal(panel.dataset.spotlight, "true");
-  assert.equal(panelMeasurements(), initialMeasurements, "moves reuse the measured panel bounds");
-  assert.equal(frames.size, 0, "stationary pointers do not consume animation frames");
-  cleanup();
-});
-
-test("pointer leave, scroll, resize and blur cancel the spotlight without a delayed flash", () => {
-  const { panel, window, frames, writes, tick, mouse, setup } = fixture();
-  const cleanup = setup();
-  for (const [target, event] of [[panel, "mouseleave"], [window, "scroll"], [window, "resize"], [window, "blur"]]) {
-    panel.dispatch("mouseenter", mouse());
-    panel.dispatch("mousemove", mouse());
-    tick();
-    assert.equal(panel.dataset.spotlight, "true");
-    panel.dispatch("mousemove", mouse(500));
-    assert.equal(frames.size, 1);
-    const previousWrites = writes.length;
-    target.dispatch(event);
-    assert.equal(frames.size, 0);
-    assert.notEqual(panel.dataset.spotlight, "true");
-    tick();
-    assert.equal(writes.length, previousWrites);
+test("keyboard focus exposes pending content and cancels an active entrance immediately", () => {
+  for (const entering of [false, true]) {
+    const { panel, setup, observer } = fixture();
+    const cleanup = setup();
+    if (entering) observer().emit(true);
+    panel.dispatch("focusin");
+    assert.equal(panel.dataset.ritualReveal, "done");
+    if (entering) assert.equal(panel.animations[0].cancelled, true);
+    observer().emit(true);
+    assert.equal(panel.animations.length, entering ? 1 : 0);
+    cleanup();
   }
-  cleanup();
 });
 
-test("reduced motion immediately cancels entrances and spotlight, exposing pending content", () => {
-  const { panel, targets: [entering, pending], reduced, frames, writes, tick, mouse, entranceObserver, setup } = fixture([900, 1200]);
+test("ambient decoration runs only on desktop while visible in the active tab", () => {
+  const { panel, document, desktop, observer, setup } = fixture();
   const cleanup = setup();
-  entranceObserver().emit([{ target: entering, isIntersecting: true }]);
-  panel.dispatch("mousemove", mouse());
-  reduced.matches = true;
-  reduced.dispatch("change");
-  assert.equal(entering.animations[0].cancelled, true);
-  assert.equal(pending.dataset.ritualReveal, "done");
-  assert.equal(pending.animations.length, 0);
-  assert.equal(entranceObserver().observed.size, 0);
   assert.equal(panel.dataset.ambient, "false");
-  assert.notEqual(panel.dataset.spotlight, "true");
-  assert.equal(frames.size, 0);
-  panel.dispatch("mousemove", mouse());
-  tick();
-  assert.equal(writes.length, 0);
-  cleanup();
-});
-
-test("ambient motion pauses outside the viewport and in hidden tabs", () => {
-  const { panel, document, reduced, visibilityObserver, setup } = fixture();
-  const cleanup = setup();
-  const observer = visibilityObserver();
-  assert.equal(panel.dataset.ambient, "false");
-  observer.emit([{ target: panel, isIntersecting: true }]);
+  observer().emit(true);
   assert.equal(panel.dataset.ambient, "true");
+  observer().emit(false);
+  assert.equal(panel.dataset.ambient, "false");
+  observer().emit(true);
   document.hidden = true;
   document.dispatch("visibilitychange");
   assert.equal(panel.dataset.ambient, "false");
   document.hidden = false;
   document.dispatch("visibilitychange");
   assert.equal(panel.dataset.ambient, "true");
-  observer.emit([{ target: panel, isIntersecting: false }]);
+  desktop.matches = false;
+  desktop.dispatch("change");
   assert.equal(panel.dataset.ambient, "false");
-  reduced.matches = true;
-  reduced.dispatch("change");
-  observer.emit([{ target: panel, isIntersecting: true }]);
-  assert.equal(panel.dataset.ambient, "false");
+  desktop.matches = true;
+  desktop.dispatch("change");
+  assert.equal(panel.dataset.ambient, "true");
   cleanup();
 });
 
-test("keyboard focus reveals a pending quiz immediately and cancels a running entrance", () => {
-  const { Node, panel, targets: [quiz, entering], entranceObserver, setup } = fixture([900, 1200]);
-  const option = new Node();
-  quiz.children.push(option);
-  const cleanup = setup();
-  panel.dispatch("focusin", { target: option });
-  assert.equal(quiz.dataset.ritualReveal, "done");
-  assert.equal(quiz.animations.length, 0);
-  assert.ok(!entranceObserver().observed.has(quiz));
-  entranceObserver().emit([{ target: entering, isIntersecting: true }]);
-  panel.dispatch("focusin", { target: entering });
-  assert.equal(entering.animations[0].cancelled, true);
-  cleanup();
-});
-
-test("initial motion restrictions and missing observer support never hide section content", () => {
-  for (const preferences of [{ reducedMotion: true }, { hidden: true }, { settings: { enabled: false } }, { intersectionObserver: false }]) {
-    const { panel, targets, writes, frames, mouse, setup } = fixture([900, 1200], preferences);
+test("reduced motion and a changed global motion switch cancel animation immediately", () => {
+  for (const preference of ["reduced", "global"]) {
+    const { panel, document, reduced, mutations, observer, setup } = fixture();
     const cleanup = setup();
-    for (const target of targets) {
-      assert.equal(target.dataset.ritualReveal, "done");
-      assert.ok(!target.revealStates.includes("pending"));
-      assert.equal(target.animations.length, 0);
+    observer().emit(true);
+    assert.equal(panel.animations.length, 1);
+    if (preference === "reduced") {
+      reduced.matches = true;
+      reduced.dispatch("change");
+    } else {
+      document.documentElement.dataset.siteMotion = "off";
+      mutations[0].emit();
     }
-    if (preferences.intersectionObserver !== false) {
-      panel.dispatch("mousemove", mouse());
-      assert.equal(frames.size, 0);
-      assert.equal(writes.length, 0);
-    }
+    assert.equal(panel.animations[0].cancelled, true);
+    assert.equal(panel.dataset.ritualReveal, "done");
+    assert.equal(panel.dataset.ambient, "false");
     cleanup();
   }
 });
 
-test("fine-pointer and cursor settings restrict spotlight; disposal releases every resource", () => {
-  for (const preferences of [{ finePointer: false }, { settings: { cursor: false } }, { settings: { intensity: 0 } }]) {
-    const { panel, frames, mouse, setup } = fixture([], preferences);
+test("initial motion restrictions keep all content visible and decoration static", () => {
+  for (const preferences of [
+    { reducedMotion: true }, { hidden: true }, { settings: { enabled: false } },
+    { settings: { intensity: 0 } }, { siteMotion: "off" },
+  ]) {
+    const { panel, observer, setup } = fixture(preferences);
     const cleanup = setup();
-    panel.dispatch("mousemove", mouse());
-    assert.equal(frames.size, 0);
-    assert.notEqual(panel.dataset.spotlight, "true");
+    assert.equal(panel.dataset.ritualReveal, "done");
+    observer().emit(true);
+    assert.equal(panel.animations.length, 0);
+    assert.equal(panel.dataset.ambient, "false");
     cleanup();
   }
-  const { panel, targets, observers, entranceObserver, window, document, reduced, fine, frames, mouse, setup } = fixture();
+});
+
+test("cleanup releases observers, animation and every listener", () => {
+  const { panel, document, desktop, reduced, observers, mutations, observer, setup } = fixture();
   const cleanup = setup();
-  entranceObserver().emit([{ target: targets[0], isIntersecting: true }]);
-  panel.dispatch("mousemove", mouse());
+  observer().emit(true);
   cleanup();
-  assert.equal(frames.size, 0);
-  assert.equal(targets[0].animations[0].cancelled, true);
-  assert.ok(observers.every((observer) => observer.disconnected && observer.observed.size === 0));
-  assert.ok(targets.every((target) => target.dataset.ritualReveal !== "pending"));
-  for (const target of [panel, window, document, reduced, fine]) assert.equal(target.listenerCount(), 0);
+  assert.equal(panel.animations[0].cancelled, true);
+  assert.ok(observers.every((item) => item.disconnected && item.observed.size === 0));
+  assert.ok(mutations.every((item) => item.disconnected));
+  for (const target of [panel, document, desktop, reduced]) assert.equal(target.listenerCount(), 0);
   assert.equal(panel.dataset.ambient, undefined);
-  assert.equal(panel.dataset.spotlight, undefined);
+  assert.equal(panel.dataset.ritualReveal, "done");
 });
