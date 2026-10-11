@@ -145,6 +145,21 @@ test("srcdoc controller uses parent origin, survives paused loading, and keeps a
   context.window = context;
   vm.createContext(context); vm.runInContext(runtime, context);
   await new Promise((resolve) => setImmediate(resolve));
+  let forwardedWheel;
+  context.WheelEvent = class {
+    constructor(type, init) { this.type = type; Object.assign(this, init); }
+    preventDefault() { this.defaultPrevented = true; }
+  };
+  context.frameElement = { dispatchEvent(event) { forwardedWheel = event; event.preventDefault(); } };
+  const wheel = { deltaY: 120, deltaX: 0, deltaMode: 0, cancelable: true, preventDefault() { this.defaultPrevented = true; } };
+  events.get("wheel")(wheel);
+  assert.equal(forwardedWheel.deltaY, 120, "poster wheel input reaches the shared document scroller");
+  assert.equal(forwardedWheel.bubbles, true);
+  assert.equal(wheel.defaultPrevented, true, "handled wheel input must not scroll twice");
+  context.frameElement.dispatchEvent = () => {};
+  const nativeWheel = { ...wheel, defaultPrevented: false };
+  events.get("wheel")(nativeWheel);
+  assert.equal(nativeWheel.defaultPrevented, false, "disabled smoothing preserves native scrolling over the poster");
   assert.equal(images[0].src, "https://naturemist.test/a.png");
   assert.equal(options.gooey, true); assert.equal(options.debug, false);
   assert.equal(options.config.infiniteGooey.value, true);

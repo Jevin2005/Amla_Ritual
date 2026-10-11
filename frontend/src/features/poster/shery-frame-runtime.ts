@@ -164,6 +164,19 @@ window.addEventListener("pagehide", () => {
 });
 document.addEventListener("keydown", (event) => { if (event.key === "Escape") send("close"); });
 
+// Wheel events inside this same-origin srcDoc do not bubble to the storefront.
+// Let its document scroller handle them, preserving native input when disabled.
+window.addEventListener("wheel", (event) => {
+  if (data.debug || event.defaultPrevented || !event.cancelable || !window.frameElement) return;
+  const forwarded = new WheelEvent("wheel", {
+    bubbles: true, cancelable: true, composed: true,
+    deltaX: event.deltaX, deltaY: event.deltaY, deltaZ: event.deltaZ, deltaMode: event.deltaMode,
+    ctrlKey: event.ctrlKey, metaKey: event.metaKey, shiftKey: event.shiftKey, altKey: event.altKey,
+  });
+  window.frameElement.dispatchEvent(forwarded);
+  if (forwarded.defaultPrevented) event.preventDefault();
+}, { passive: false });
+
 // Prevent Shery's uncoordinated native mousedown listener from starting an unsynced GSAP loop
 if (poster && typeof poster.addEventListener === "function") {
   poster.addEventListener(
