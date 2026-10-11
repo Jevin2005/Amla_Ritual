@@ -38,6 +38,8 @@
 .headingRow h2 > span { display: inline-block; max-width: 100%; }
 .headingRow h2, .featured h3, .rowCopy h3, .ingredients, .captionText { overflow-wrap: anywhere; }
 .description { border-left: 1px solid var(--combo-line); margin: 4px 0 0; padding: 10px 0 10px 30px; font-size: clamp(20px, 1.65vw, 26px); font-weight: 500; line-height: 1.08; }
+.catalogLink { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 12px; min-height: 44px; margin-top: 14px; color: var(--combo-ink); font-family: var(--font-manrope); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-decoration: underline; text-underline-offset: 5px; }
+.catalogLink:focus-visible { outline: 2px solid var(--combo-wine); outline-offset: 5px; }
 .botanical { position: absolute; pointer-events: none; user-select: none; }
 .botanical img { object-fit: contain; filter: grayscale(.75) sepia(.15); }
 .headerBotanical { top: -35px; right: -24px; width: 170px; height: 180px; opacity: .62; transform: rotate(-75deg); }
@@ -102,6 +104,7 @@
 @keyframes inkSettle { from { opacity: .2; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (hover: hover) {
+  .catalogLink:hover .arrow { translate: 4px 0; }
   .comboButton:hover { background: var(--combo-ink); color: var(--combo-paper); }
   .primaryButton:hover { background: var(--forest-dark); box-shadow: 0 5px 15px rgb(21 59 45 / .11); }
   .comboButton:hover .arrow { translate: 4px 0; }

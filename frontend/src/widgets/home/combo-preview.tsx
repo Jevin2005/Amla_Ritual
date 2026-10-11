@@ -4,7 +4,8 @@ import { MediaImage as Image } from "@/shared/ui/media-image";
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal, flushSync } from "react-dom";
-import { formatCurrency, getDefaultVariant, type Product } from "@/domain/catalog/products";
+import { formatCurrency, type Product } from "@/domain/catalog/products";
+import { getComboPurchaseSummary } from "@/domain/combo-catalog";
 import { useStore } from "@/features/store/store-provider";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
 import styles from "./combo-preview.module.css";
@@ -49,35 +50,7 @@ export function ComboPreview({
   // so its initial focus and scroll lock cannot be undone by this dialog.
   useModalFocus(mounted && !isCartOpen && !isSubmitting, dialogRef, close);
 
-  const items = products.map((product) => {
-    const variant = getDefaultVariant(product);
-    return {
-      product,
-      variant,
-      price: variant?.pricePaise ?? product.pricePaise,
-      currency: variant?.currencyCode || product.currencyCode || "INR",
-      available:
-        (variant?.availableForSale ?? product.availableForSale ?? true) &&
-        (variant?.quantityAvailable == null || variant.quantityAvailable > 0),
-      purchasable: source !== "shopify" || /^gid:\/\/shopify\/ProductVariant\/\d+$/.test(variant?.id || ""),
-    };
-  });
-  const complete =
-    expectedProductCount > 0 &&
-    items.length === expectedProductCount &&
-    new Set(products.map((product) => product.slug)).size === expectedProductCount;
-  const mixedCurrencies = new Set(items.map((item) => item.currency)).size > 1;
-  const invalidPrice = items.some((item) => !Number.isFinite(item.price) || item.price < 0);
-  const unavailable = items.some((item) => !item.available || !item.purchasable);
-  const notice = !complete
-    ? "This complete pairing is not available right now. You can explore the individual jars below."
-    : mixedCurrencies || invalidPrice
-      ? "This pairing cannot be added together right now. Please view the individual jars for current pricing."
-      : unavailable
-        ? "One or more jars are currently unavailable. Explore each jar for availability."
-        : "";
-  const total = items.reduce((sum, item) => sum + item.price, 0);
-  const canShowTotal = complete && !mixedCurrencies && !invalidPrice;
+  const { items, notice, total, canShowTotal, currencyCode } = getComboPurchaseSummary(products, expectedProductCount, source);
   const busy = isSubmitting || isCartBusy || !isHydrated;
 
   async function addCombo() {
@@ -166,7 +139,7 @@ export function ComboPreview({
           {canShowTotal && (
             <div className={styles.total}>
               <span>Combined total</span>
-              <strong>{formatCurrency(total, items[0].currency)}</strong>
+              <strong>{formatCurrency(total, currencyCode)}</strong>
             </div>
           )}
           <div id={noticeId} className={styles.notice} aria-live="polite" aria-atomic="true">

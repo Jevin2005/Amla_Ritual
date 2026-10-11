@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { MediaImage as Image } from "@/shared/ui/media-image";
 import { useCallback, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { COMBOS_PER_PAGE, comboProductCount, getBotanicalComboPage, resolveComboProducts, type BotanicalCombo, type BotanicalCombosContent } from "@/domain/botanical-combos";
@@ -189,6 +190,7 @@ function ComboBook({ content }: { content: BotanicalCombosContent }) {
             <h2 id="combos-title">{content.heading} <span>{content.headingEnding}</span></h2>
             <p className={styles.description}>{content.description}</p>
           </div>
+          <Link href="/combos" className={styles.catalogLink}>Explore all combos <Arrow /></Link>
           <Botanical className={styles.headerBotanical} />
         </header>
 

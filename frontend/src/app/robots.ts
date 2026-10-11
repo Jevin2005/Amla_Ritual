@@ -28,6 +28,7 @@ export default function robots(): MetadataRoute.Robots {
           "/",
           "/shop",
           "/shop/*",
+          "/combos",
           "/our-story",
           "/faqs",
           "/reviews",
