@@ -4,6 +4,9 @@ import { useState, type FormEvent } from "react";
 import Script from "next/script";
 import { useStore } from "@/features/store/store-provider";
 import { SUPPORT_MESSAGE } from "@/shared/config/support";
+import { scrollPageTo } from "@/shared/ui/page-scroll";
+import { calculateCartBilling, formatBillingCurrency } from "@/domain/cart/billing";
+import { hasCheckoutCartChanged } from "./checkout-cart";
 
 export type CheckoutFormData = {
   email: string;
@@ -34,6 +37,9 @@ export type OrderConfirmationData = {
   shippingAddress: string;
   shippingMethod: string;
   paymentMethod: string;
+  subtotalPaise: number;
+  discountPaise: number;
+  shippingFeePaise: number;
   totalPaise: number;
   currencyCode: string;
   items: Array<{
@@ -98,7 +104,9 @@ export function CheckoutForm({
   const {
     source,
     cart,
+    subtotalPaise,
     totalPaise,
+    discountAmountPaise,
     currencyCode,
     updateBuyerIdentity,
     clearCart,
@@ -128,8 +136,9 @@ export function CheckoutForm({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const finalTotalPaise = Math.max(100, totalPaise + shippingFeePaise);
-  const finalPayableRupees = (finalTotalPaise / 100).toFixed(2);
+  const billing = calculateCartBilling({ items: cart, totalPaise, discountAmountPaise, shippingFeePaise });
+  const finalTotalPaise = billing.totalPaise;
+  const finalPayableAmount = formatBillingCurrency(finalTotalPaise, currencyCode);
 
   const handleInputChange = (
     field: keyof CheckoutFormData,
@@ -152,6 +161,7 @@ export function CheckoutForm({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (isSubmitting || isCartBusy || !cart.length) return;
     setErrorMessage("");
 
     const errors: Record<string, string> = {};
@@ -220,41 +230,53 @@ export function CheckoutForm({
       if (targetId) {
         const el = document.getElementById(targetId);
         if (el) {
-          el.focus();
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.focus({ preventScroll: true });
+          scrollPageTo(el, { block: "center" });
         }
       }
       return;
     }
 
     setIsSubmitting(true);
+    let paymentOpened = false;
 
     try {
-      // 1. Non-blocking sync of buyer identity to Shopify Cart
+      // Refresh the cart before payment, since the delivery address can affect billing.
       if (source === "shopify") {
-        try {
-          await updateBuyerIdentity({
-            email: formData.email.trim(),
-            phone: `+91${digitsOnlyPhone.slice(-10)}`,
-            countryCode: "IN",
-            deliveryAddress: {
-              firstName: formData.firstName.trim(),
-              lastName: formData.lastName.trim(),
-              address1: formData.address1.trim(),
-              address2: formData.address2.trim(),
-              city: formData.city.trim(),
-              province: formData.province.trim(),
-              zip: formData.zip.trim(),
-              country: "IN",
-            },
-          });
-        } catch (syncErr) {
-          console.warn("Buyer identity non-blocking sync:", syncErr);
+        const refreshedCart = await updateBuyerIdentity({
+          email: formData.email.trim(),
+          phone: `+91${digitsOnlyPhone.slice(-10)}`,
+          countryCode: "IN",
+          deliveryAddress: {
+            firstName: formData.firstName.trim(),
+            lastName: formData.lastName.trim(),
+            address1: formData.address1.trim(),
+            address2: formData.address2.trim(),
+            city: formData.city.trim(),
+            province: formData.province.trim(),
+            zip: formData.zip.trim(),
+            country: "IN",
+          },
+        });
+        if (!refreshedCart) {
+          throw new Error("We could not confirm your latest bag total. Please try again before paying.");
+        }
+        if (hasCheckoutCartChanged(
+          { items: cart, subtotalPaise, totalPaise, discountAmountPaise, currencyCode },
+          refreshedCart,
+        )) {
+          throw new Error("Your bag or total changed after confirming your delivery details. Please review the updated order summary, then place your order again.");
         }
       }
 
       // ── IN-APP DIRECT PAYMENT (RAZORPAY MODAL: UPI, QR, CARDS, NET BANKING & WALLETS) ──
       const isCodPayment = isCodEnabled && formData.paymentMethod === "cod";
+      if (!Number.isSafeInteger(finalTotalPaise) || finalTotalPaise < 0) {
+        throw new Error("Your bag total could not be confirmed. Please refresh your bag and try again.");
+      }
+      if (!isCodPayment && finalTotalPaise < 100) {
+        throw new Error(`Online payment requires a minimum total of ${formatBillingCurrency(100, currencyCode)}. Please update your bag${isCodEnabled ? " or choose Cash on Delivery" : ""} to continue.`);
+      }
       if (!isCodPayment) {
         // Function to load Razorpay Checkout.js dynamically if not already available
         const loadScript = (): Promise<boolean> => {
@@ -271,7 +293,6 @@ export function CheckoutForm({
         };
 
         try {
-          const finalTotalPaise = Math.max(100, totalPaise + shippingFeePaise);
           const cleanPhone = digitsOnlyPhone.length >= 10 ? digitsOnlyPhone.slice(-10) : digitsOnlyPhone;
 
           // 1. Server-Side Secure Order Initialization (Locks price & creates authentic order_id)
@@ -295,6 +316,9 @@ export function CheckoutForm({
             throw new Error(
               createOrderData?.error || "Failed to initialize secure payment order. Please try again.",
             );
+          }
+          if (createOrderData.amountPaise !== finalTotalPaise || createOrderData.currency !== (currencyCode || "INR")) {
+            throw new Error("The payment amount does not match your order summary. Please refresh your bag and try again.");
           }
 
           const isLoaded = await loadScript();
@@ -456,13 +480,16 @@ export function CheckoutForm({
                       ? "Express Priority Air Delivery (1-2 Days)"
                       : "Standard Ayurvedic Delivery (3-5 Days · Free)",
                   paymentMethod: `Paid Online via Razorpay (Ref: ${response.razorpay_payment_id || "Verified"})`,
+                  subtotalPaise: billing.merchandiseSubtotalPaise,
+                  discountPaise: billing.discountPaise,
+                  shippingFeePaise: billing.shippingFeePaise,
                   totalPaise: finalTotalPaise,
                   currencyCode,
                   items: cart.map((item) => ({
                     name: item.productName,
                     variant: item.variantTitle,
                     quantity: item.quantity,
-                    pricePaise: item.lineTotalPaise,
+                    pricePaise: item.lineSubtotalPaise,
                     slug: item.slug,
                   })),
                 };
@@ -490,6 +517,7 @@ export function CheckoutForm({
             setIsSubmitting(false);
           });
 
+          paymentOpened = true;
           rzp.open();
           return;
         } catch (rzpErr: unknown) {
@@ -552,7 +580,7 @@ export function CheckoutForm({
             upiId: formData.upiId?.trim() || undefined,
             shippingMethod: formData.shippingMethod,
             shippingFeePaise,
-            totalPaise: totalPaise + shippingFeePaise,
+            totalPaise: finalTotalPaise,
             currencyCode,
             newsletter: formData.newsletter,
           }),
@@ -579,7 +607,7 @@ export function CheckoutForm({
 
       // Track purchase event
       track("purchase", {
-        value: (totalPaise + shippingFeePaise) / 100,
+        value: finalTotalPaise / 100,
         currency: currencyCode,
         payment_type: formData.paymentMethod,
         items_count: cart.reduce((t, i) => t + i.quantity, 0),
@@ -604,13 +632,16 @@ export function CheckoutForm({
             ? "Express Priority Air Delivery (1-2 Days)"
             : "Standard Ayurvedic Delivery (3-5 Days · Free)",
         paymentMethod: paymentLabel,
-        totalPaise: totalPaise + shippingFeePaise,
+        subtotalPaise: billing.merchandiseSubtotalPaise,
+        discountPaise: billing.discountPaise,
+        shippingFeePaise: billing.shippingFeePaise,
+        totalPaise: finalTotalPaise,
         currencyCode,
         items: cart.map((item) => ({
           name: item.productName,
           variant: item.variantTitle,
           quantity: item.quantity,
-          pricePaise: item.lineTotalPaise,
+          pricePaise: item.lineSubtotalPaise,
           slug: item.slug,
         })),
       };
@@ -627,7 +658,7 @@ export function CheckoutForm({
           : "Unable to process checkout. Please verify your details and try again.",
       );
     } finally {
-      setIsSubmitting(false);
+      if (!paymentOpened) setIsSubmitting(false);
     }
   };
 
@@ -636,6 +667,7 @@ export function CheckoutForm({
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       {/* ── Main Form ── */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-7" noValidate>
+        <fieldset disabled={isSubmitting} className="flex min-w-0 flex-col gap-7">
         {/* Error Alert */}
         {errorMessage && (
           <div
@@ -1064,7 +1096,7 @@ export function CheckoutForm({
                     Pay Online (UPI, QR, Cards, Net Banking & Wallets)
                   </span>
                   <span className="text-[0.74rem] font-semibold text-[var(--forest)]">
-                    ₹{finalPayableRupees}
+                    {finalPayableAmount}
                   </span>
                 </div>
                 <p className="mt-1 text-[0.7rem] leading-relaxed text-[var(--muted)]">
@@ -1132,7 +1164,7 @@ export function CheckoutForm({
             ) : formData.paymentMethod === "cod" && isCodEnabled ? (
               <span className="whitespace-nowrap">Place Order (Cash on Delivery) ➔</span>
             ) : (
-              <span className="whitespace-nowrap">Pay Online via Razorpay (₹{finalPayableRupees}) ➔</span>
+              <span>Pay Online via Razorpay ({finalPayableAmount}) ➔</span>
             )}
           </button>
 
@@ -1140,6 +1172,7 @@ export function CheckoutForm({
             By placing your order, you agree to NatureMist’s Terms of Service and Privacy Policy. All botanicals are freshly packaged in certified food-grade UV protected jars.
           </p>
         </div>
+        </fieldset>
       </form>
     </div>
   );

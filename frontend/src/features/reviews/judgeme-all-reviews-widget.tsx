@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ReviewPagination } from "./review-pagination";
 import { useStore } from "@/features/store/store-provider";
 import type { JudgemeAllReviewsPage, JudgemeReviewType } from "@/lib/judgeme/all-reviews";
+import { scrollPageTo } from "@/shared/ui/page-scroll";
 
 type VendorCollection = {
   add: (element: HTMLElement) => VendorCollection;
@@ -136,10 +137,7 @@ export function JudgemeAllReviewsWidget({
       setCurrent(nextPage);
       requestAnimationFrame(() => {
         containerRef.current?.focus({ preventScroll: true });
-        containerRef.current?.scrollIntoView({
-          block: "start",
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-        });
+        scrollPageTo(containerRef.current);
       });
     } catch {
       if (!controller.signal.aborted) setError("Reviews could not be loaded. Please try again.");

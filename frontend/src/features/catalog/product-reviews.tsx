@@ -14,6 +14,7 @@ import { ProductReviewOverview } from "@/features/reviews/product-review-overvie
 import { VideoStoryCard } from "@/features/reviews/video-story-card";
 import { readWidgetReviewOverview } from "@/lib/judgeme/widget-summary";
 import { isJudgemeConfigured } from "@/lib/judgeme/config";
+import { scrollPageTo } from "@/shared/ui/page-scroll";
 
 type RatingFilter = "all" | 1 | 2 | 3 | 4 | 5;
 type MediaFilter = "all" | "photos" | "videos";
@@ -22,10 +23,7 @@ const VIDEO_PAGE_SIZE = 4;
 
 function focusReviewList(element: HTMLElement | null) {
   element?.focus({ preventScroll: true });
-  element?.scrollIntoView({
-    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-    block: "start",
-  });
+  scrollPageTo(element);
 }
 
 export function ProductReviewsSection({
@@ -68,7 +66,7 @@ export function ProductReviewsSection({
       setRatingFilter("all");
       setMediaFilter("all");
       setIsWriteModalOpen(shouldWriteReview);
-      if (shouldWriteReview) document.getElementById("customer-reviews")?.scrollIntoView({ block: "start" });
+      if (shouldWriteReview) scrollPageTo(document.getElementById("customer-reviews"));
     });
   }, [product.slug]);
 

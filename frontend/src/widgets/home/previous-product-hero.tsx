@@ -3,7 +3,7 @@
 import { MediaImage as Image } from "@/shared/ui/media-image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { getHomepageHeroProducts, type Product } from "@/domain/catalog/products";
+import { getHomepageHeroProducts, type HomepageHeroProduct, type Product } from "@/domain/catalog/products";
 import { nextHeroIndex, type HeroSettings } from "@/domain/catalog/hero";
 import { getHeroPresentation } from "./hero-presentation";
 import { ProductModel } from "@/features/catalog/product-model";
@@ -27,6 +27,7 @@ export function PreviousProductHero({ products, settings }: { products: Product[
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [inView, setInView] = useState(false);
+  const [nearHero, setNearHero] = useState(false);
   const [visited, setVisited] = useState(false);
   const [revision, setRevision] = useState(0);
   const [modelInteracting, setModelInteracting] = useState(false);
@@ -34,9 +35,13 @@ export function PreviousProductHero({ products, settings }: { products: Product[
   const [readyImages, setReadyImages] = useState<string[]>([]);
   const [requested, setRequested] = useState<number | null>(null);
   const [loadingModels, setLoadingModels] = useState<string[]>([]);
+  const [mediaTransition, setMediaTransition] = useState<{
+    outgoing: HomepageHeroProduct; incomingId: string; token: number; posterReady: boolean; backgroundReady: boolean;
+  } | null>(null);
   const root = useRef<HTMLElement>(null);
-  const backgroundImage = useRef<HTMLImageElement>(null);
-  const mobileBackground = useRef<HTMLCanvasElement>(null);
+  const backgroundImages = useRef(new Map<string, HTMLImageElement>());
+  const posterImages = useRef(new Map<string, HTMLImageElement>());
+  const mobileBackgrounds = useRef(new Map<string, HTMLCanvasElement>());
   const modelContainerRef = useRef<HTMLDivElement>(null);
   const interactingRef = useRef(false);
   const finePointer = useFinePointer();
@@ -57,7 +62,14 @@ export function PreviousProductHero({ products, settings }: { products: Product[
   const duration = (product?.heroDurationSeconds ?? settings.intervalSeconds) * 1.2;
   const moving = motionSettings.enabled && !reducedMotion;
   const transitioning = moving && settings.transition !== "none";
-  const playing = mediaReady && !modelLoading && requested === null && slides.length > 1 && settings.autoplay && !paused && !focused && !modelInteracting && !modelHovered && moving && pageVisible && inView;
+  const animateMedia = compactViewport && transitioning && inView && pageVisible;
+  const activeTransition = animateMedia && mediaTransition?.incomingId === product?.heroEntryId ? mediaTransition : null;
+  const transitionReady = Boolean(activeTransition?.posterReady && activeTransition.backgroundReady);
+  const mediaDuration = Math.max(240, Math.min(1200, 650 * motionSettings.duration));
+  const mediaLayers = activeTransition && product ? [activeTransition.outgoing, product] : product ? [product] : [];
+  const departingProduct = mediaTransition?.outgoing;
+  const mediaToken = mediaTransition?.token;
+  const playing = mediaReady && !modelLoading && !activeTransition && requested === null && slides.length > 1 && settings.autoplay && !paused && !focused && !modelInteracting && !modelHovered && moving && pageVisible && inView;
   const showProgress = mediaReady && slides.length > 1 && settings.autoplay && moving && pageVisible && inView;
   const heroBackgrounds = useMemo(() => slides.map((slide) => ({ ...slide.heroBackground, url: shopifyImageLoader({ src: slide.heroBackground.url, width: 1600 }) })), [slides]);
   const heroPosters = useMemo(() => slides.map((slide) => ({ ...slide.heroPoster, url: shopifyImageLoader({ src: slide.heroPoster.url, width: 960 }) })), [slides]);
@@ -68,6 +80,10 @@ export function PreviousProductHero({ products, settings }: { products: Product[
     setLoadingModels((current) => loading
       ? current.includes(url) ? current : [...current, url]
       : current.includes(url) ? current.filter((pending) => pending !== url) : current);
+  }, []);
+  const markLayerReady = useCallback((id: string, token: number, part: "posterReady" | "backgroundReady") => {
+    setMediaTransition((current) => current?.incomingId === id && current.token === token && !current[part]
+      ? { ...current, [part]: true } : current);
   }, []);
   const remainingTimeRef = useRef<number>(duration * 1000);
   const startTimeRef = useRef<number>(0);
@@ -133,39 +149,72 @@ export function PreviousProductHero({ products, settings }: { products: Product[
 
   useEffect(() => {
     if (!compactViewport) return;
-    const image = backgroundImage.current;
-    const canvas = mobileBackground.current;
-    if (!image || !canvas) return;
+    const layers = [departingProduct, product].filter((slide): slide is HomepageHeroProduct => Boolean(slide));
     let frame = 0;
+    let disposed = false;
     const draw = () => {
-      if (!image.complete || !image.naturalWidth || !image.naturalHeight) return;
-      const bounds = canvas.getBoundingClientRect();
-      if (!bounds.width || !bounds.height) return;
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-      const size = backgroundTextureSize(bounds.width * pixelRatio, bounds.height * pixelRatio);
-      const context = canvas.getContext("2d");
-      if (!context) return;
-      canvas.width = size.width;
-      canvas.height = size.height;
-      paintBackground(context, image, size.width, size.height, "edges");
-      canvas.dataset.ready = "true";
+      if (disposed) return;
+      for (const slide of layers) {
+        const image = backgroundImages.current.get(slide.heroEntryId);
+        const canvas = mobileBackgrounds.current.get(slide.heroEntryId);
+        if (!image?.complete || !image.naturalWidth || !image.naturalHeight || !canvas) continue;
+        const bounds = canvas.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) continue;
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        const size = backgroundTextureSize(bounds.width * pixelRatio, bounds.height * pixelRatio);
+        const context = canvas.getContext("2d");
+        if (context) {
+          canvas.width = size.width;
+          canvas.height = size.height;
+          paintBackground(context, image, size.width, size.height, "edges");
+          canvas.dataset.ready = "true";
+        }
+        // If canvas is unavailable, the decoded image remains a complete fallback.
+        if (mediaToken !== undefined) markLayerReady(slide.heroEntryId, mediaToken, "backgroundReady");
+      }
     };
     const schedule = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(draw);
     };
     const observer = typeof ResizeObserver === "function" ? new ResizeObserver(schedule) : null;
-    observer?.observe(canvas);
-    image.addEventListener("load", schedule);
+    const images = layers.flatMap((slide) => {
+      const image = backgroundImages.current.get(slide.heroEntryId);
+      const canvas = mobileBackgrounds.current.get(slide.heroEntryId);
+      if (canvas) observer?.observe(canvas);
+      if (image) image.addEventListener("load", schedule);
+      return image ? [image] : [];
+    });
     window.addEventListener("resize", schedule, { passive: true });
     schedule();
     return () => {
+      disposed = true;
       cancelAnimationFrame(frame);
       observer?.disconnect();
-      image.removeEventListener("load", schedule);
+      images.forEach((image) => image.removeEventListener("load", schedule));
       window.removeEventListener("resize", schedule);
     };
-  }, [compactViewport, product?.heroBackground.url]);
+  }, [compactViewport, product, departingProduct, mediaToken, markLayerReady]);
+
+  useEffect(() => {
+    if (!mediaTransition || (animateMedia && !transitionReady)) return;
+    const token = mediaTransition.token;
+    const timeout = window.setTimeout(() => {
+      setMediaTransition((current) => current?.token === token ? null : current);
+    }, animateMedia ? mediaDuration + 80 : 0);
+    return () => window.clearTimeout(timeout);
+  }, [mediaTransition, animateMedia, transitionReady, mediaDuration]);
+
+  useEffect(() => {
+    const section = root.current;
+    if (!section) return;
+    const observer = "IntersectionObserver" in window
+      ? new IntersectionObserver(([entry]) => setNearHero(entry.isIntersecting), { rootMargin: "100% 0px", threshold: 0 })
+      : null;
+    observer?.observe(section);
+    const frame = observer ? 0 : requestAnimationFrame(() => setNearHero(true));
+    return () => { observer?.disconnect(); cancelAnimationFrame(frame); };
+  }, [hasProduct]);
 
   useEffect(() => {
     const section = root.current;
@@ -211,12 +260,19 @@ export function PreviousProductHero({ products, settings }: { products: Product[
   useEffect(() => {
     if (requested === null || !upcoming || !readyImages.includes(upcoming.heroPoster.url) || !readyImages.includes(upcoming.heroBackground.url)) return;
     const frame = requestAnimationFrame(() => {
+      const retainedPoster = posterImages.current.get(upcoming.heroEntryId);
+      setMediaTransition(animateMedia && product ? {
+        outgoing: product, incomingId: upcoming.heroEntryId, token: revision + 1,
+        // A quick return may reuse the still-mounted outgoing decoded image,
+        // which will not dispatch another load event.
+        posterReady: Boolean(retainedPoster?.complete && retainedPoster.naturalWidth), backgroundReady: false,
+      } : null);
       setSelected(upcomingIndex);
       setRequested(null);
       setRevision((rev) => rev + 1);
     });
     return () => cancelAnimationFrame(frame);
-  }, [requested, upcoming, upcomingIndex, readyImages]);
+  }, [requested, upcoming, upcomingIndex, readyImages, animateMedia, product, revision]);
 
   const handlePosterClick = () => {
     if (slides.length > 1) {
@@ -278,6 +334,7 @@ export function PreviousProductHero({ products, settings }: { products: Product[
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
       data-theme={theme.key}
       data-media-ready={mediaReady}
+      data-media-transition={activeTransition ? transitionReady ? "running" : "preparing" : "idle"}
       data-transition={animation}
       data-hovered={hovered ? "true" : undefined}
       style={{
@@ -288,11 +345,17 @@ export function PreviousProductHero({ products, settings }: { products: Product[
         "--hero-button-text": theme.buttonText,
         "--hero-surface": theme.surface,
         "--hero-soft": product.accentSoft,
+        "--hero-media-duration": `${mediaDuration}ms`,
       } as CSSProperties}>
       <div className={styles.landing} data-hero-landing>
       <div className={styles.background} data-transition={animation} aria-hidden="true">
-        <Image ref={backgroundImage} key={product.heroBackground.url} src={product.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} onLoad={() => markReady(product.heroBackground.url)} />
-        <canvas ref={mobileBackground} key={`background-${product.heroBackground.url}`} className={styles.mobileBackground} />
+        {mediaLayers.map((slide) => <div key={slide.heroEntryId} className={styles.mediaLayer} style={{ backgroundColor: getHeroPresentation(slide).theme.surface }}
+          data-layer={activeTransition ? slide.heroEntryId === product.heroEntryId ? "incoming" : "outgoing" : "current"}
+          data-active={transitionReady} data-transition={animation}>
+          <Image ref={(node) => { if (node) backgroundImages.current.set(slide.heroEntryId, node); else backgroundImages.current.delete(slide.heroEntryId); }}
+            src={slide.heroBackground.url} alt="" fill sizes="100vw" loading="eager" className={styles.backgroundImage} onLoad={() => markReady(slide.heroBackground.url)} />
+          <canvas ref={(node) => { if (node) mobileBackgrounds.current.set(slide.heroEntryId, node); else mobileBackgrounds.current.delete(slide.heroEntryId); }} className={styles.mobileBackground} />
+        </div>)}
         {visited && mediaReady && effectsReady && !compactViewport && finePointer && slides.length > 1 && transitioning && webgl && (
           <SheryBackground
             images={heroBackgrounds}
@@ -333,12 +396,20 @@ export function PreviousProductHero({ products, settings }: { products: Product[
             }}
           >
             <div className={styles.posterMotion}>
-              <Image key={product.heroPoster.url} src={product.heroPoster.url} alt={product.heroPoster.altText || `${product.name} botanical ritual`} fill
+              {mediaLayers.map((slide) => <div key={slide.heroEntryId} className={styles.mediaLayer}
+                data-layer={activeTransition ? slide.heroEntryId === product.heroEntryId ? "incoming" : "outgoing" : "current"}
+                data-active={transitionReady} data-transition={animation} aria-hidden={slide.heroEntryId !== product.heroEntryId ? true : undefined}>
+              <Image ref={(node) => { if (node) posterImages.current.set(slide.heroEntryId, node); else posterImages.current.delete(slide.heroEntryId); }}
+                src={slide.heroPoster.url} alt={slide.heroEntryId === product.heroEntryId ? slide.heroPoster.altText || `${slide.name} botanical ritual` : ""} fill
                 sizes="(max-width: 900px) 46vw, (max-width: 1100px) 34vw, 38vw"
                 preload={index === 0 && revision === 0}
                 loading={index === 0 && revision === 0 ? undefined : "eager"}
                 fetchPriority={index === 0 && revision === 0 ? undefined : "high"} className={styles.posterImage}
-                fallbackSrc={product.featuredImage?.url} onLoad={() => markReady(product.heroPoster.url)} />
+                fallbackSrc={slide.featuredImage?.url} onLoad={() => {
+                  markReady(slide.heroPoster.url);
+                  if (activeTransition) markLayerReady(slide.heroEntryId, activeTransition.token, "posterReady");
+                }} />
+              </div>)}
               {visited && mediaReady && effectsReady && !compactViewport && slides.length > 1 && transitioning && posterCursor && webgl && (
                 <SheryPoster
                   key={heroPosters.map((image) => image.url).join("|")}
@@ -391,7 +462,6 @@ export function PreviousProductHero({ products, settings }: { products: Product[
           <div
             ref={modelContainerRef}
             className={styles.model}
-            key={compactViewport ? product.heroEntryId : undefined}
             data-transition={animation}
             onPointerEnter={(event) => { if (event.pointerType === "mouse") setModelHovered(true); }}
             onPointerLeave={() => setModelHovered(false)}
@@ -400,7 +470,7 @@ export function PreviousProductHero({ products, settings }: { products: Product[
             onTouchStart={start3DInteraction}
           >
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={settings} presentation="showcase" paused={paused || !inView} cameraDistancePercent={95} eager enabled={mediaReady}
+              settings={settings} presentation="showcase" paused={paused || !inView} cameraDistancePercent={95} eager enabled preload={nearHero && pageVisible}
               poster={product.featuredImage || product.heroPoster}
               onLoadingChange={handleModelLoading} />
           </div>

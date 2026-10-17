@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
-import { formatCurrency, calculateDiscountPercent } from "@/domain/catalog/products";
+import { calculateCartBilling, calculateLineBilling, formatBillingCurrency } from "@/domain/cart/billing";
 import { useStore } from "@/features/store/store-provider";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
 import { CartProductImage } from "./cart-product-image";
+import { CartBillSummary } from "./cart-bill-summary";
 import styles from "./cart-drawer.module.css";
 
 export function CartDrawer() {
   const {
-    products, source, cart, cartCount, subtotalPaise, totalPaise,
+    products, source, cart, cartCount, totalPaise,
     discountAmountPaise, currencyCode, totalsEstimated, discountCodes,
     cartError, cartWarnings, isCartBusy, isHydrated, isCartOpen, closeCart,
     updateQuantity, removeFromCart, applyDiscountCode, removeDiscountCode,
@@ -26,17 +27,7 @@ export function CartDrawer() {
   const overStock = cart.some((item) => item.quantity > Math.min(12, item.quantityAvailable ?? 12));
   const checkoutBlocked = loading || unavailable || overStock;
   const discountApplied = appliedCode && discountCodes.some((code) => code.code.toLowerCase() === appliedCode.toLowerCase() && code.applicable);
-
-
-  const totalMrpPaise = cart.reduce((sum, line) => {
-    const prod = products.find((entry) => line.productId && entry.id === line.productId) || products.find((entry) => entry.slug === line.slug);
-    const comp = line.compareAtPricePaise && line.compareAtPricePaise > line.pricePaise
-      ? line.compareAtPricePaise
-      : (prod?.compareAtPricePaise && prod.compareAtPricePaise > line.pricePaise ? prod.compareAtPricePaise : line.pricePaise);
-    return sum + comp * line.quantity;
-  }, 0);
-  const totalSavingsOnMrp = Math.max(0, totalMrpPaise - subtotalPaise);
-  const totalSavingsAll = totalSavingsOnMrp + discountAmountPaise;
+  const billing = calculateCartBilling({ items: cart, totalPaise, discountAmountPaise });
 
   async function applyDiscount(event: FormEvent) {
     event.preventDefault();
@@ -91,6 +82,7 @@ export function CartDrawer() {
                   const maxQuantity = Math.min(12, item.quantityAvailable ?? 12);
                   const variantLabel = item.selectedOptions.map((option) => option.value).filter((value) => value !== "Default Title").join(" · ");
                   const subtitle = variantLabel || (item.variantTitle !== "Default Title" ? item.variantTitle : "") || product?.subtitle;
+                  const lineBilling = calculateLineBilling(item);
                   return (
                     <article className={styles.item} key={item.lineId} aria-label={item.productName}>
                       <Link className={styles.image} href={productPath} onClick={closeCart} aria-label={`View ${item.productName}`}>
@@ -99,35 +91,12 @@ export function CartDrawer() {
                       <div className={styles.details}>
                         <Link className={styles.name} href={productPath} onClick={closeCart}>{item.productName}</Link>
                         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-                        {(() => {
-                          const compareAtPaise = item.compareAtPricePaise && item.compareAtPricePaise > item.pricePaise
-                            ? item.compareAtPricePaise
-                            : (product?.compareAtPricePaise && product.compareAtPricePaise > item.pricePaise ? product.compareAtPricePaise : null);
-                          const itemDiscountPercent = calculateDiscountPercent(item.pricePaise, compareAtPaise);
-                          const itemSavingsPaise = compareAtPaise ? (compareAtPaise - item.pricePaise) * item.quantity : 0;
-                          return (
-                            <>
-                              <div className={styles.price}>
-                                <strong>{formatCurrency(item.lineTotalPaise, item.currencyCode)}</strong>
-                                {compareAtPaise ? (
-                                  <>
-                                    <del>{formatCurrency(compareAtPaise * item.quantity, item.currencyCode)}</del>
-                                    <span className="inline-flex items-center rounded bg-[#2d6a2f]/10 px-1.5 py-0.5 text-[0.66rem] font-bold text-[#235825]">
-                                      {itemDiscountPercent}% OFF
-                                    </span>
-                                  </>
-                                ) : item.discountAmountPaise > 0 ? (
-                                  <del>{formatCurrency(item.lineSubtotalPaise, item.currencyCode)}</del>
-                                ) : null}
-                              </div>
-                              {itemSavingsPaise > 0 && (
-                                <p className="mt-0.5 m-0 text-[0.66rem] font-semibold text-[#2d6a2f]">
-                                  Save {formatCurrency(itemSavingsPaise, item.currencyCode)}
-                                </p>
-                              )}
-                            </>
-                          );
-                        })()}
+                        <p className={styles.unitPrice}>{item.quantity} × {formatBillingCurrency(item.pricePaise, item.currencyCode)} each</p>
+                        <div className={styles.price}>
+                          <strong>{formatBillingCurrency(lineBilling.totalPaise, item.currencyCode)}</strong>
+                          {lineBilling.savingsPaise > 0 && <del>{formatBillingCurrency(lineBilling.mrpPaise, item.currencyCode)}</del>}
+                        </div>
+                        {lineBilling.savingsPaise > 0 && <p className={styles.itemSavings}>Save {formatBillingCurrency(lineBilling.savingsPaise, item.currencyCode)}</p>}
                         {(!item.availableForSale || maxQuantity === 0) ? <p className={styles.stock}>Currently unavailable</p> : item.quantity > maxQuantity ? <p className={styles.stock}>Reduce quantity to {maxQuantity} or fewer.</p> : null}
                         <div className={styles.actions}>
                           <div className={styles.quantity} role="group" aria-label={`Quantity for ${item.productName}`}>
@@ -154,39 +123,15 @@ export function CartDrawer() {
                 {discountCodes.length > 0 && <div className={styles.codes} aria-label="Discount codes">{discountCodes.map((code) => <span key={code.code} data-applicable={code.applicable}>{code.code}{!code.applicable && " · Not applicable"}<button type="button" onClick={() => void removeDiscountCode(code.code)} disabled={loading} aria-label={`Remove discount code ${code.code}`}>×</button></span>)}</div>}
                 {notices}
               </div>
+              <div className={styles.bill}>
+                <CartBillSummary billing={billing} currencyCode={currencyCode} estimated={totalsEstimated} shippingPending busy={loading} />
+                <p className={styles.note}>{source === "shopify" ? "All taxes are included in product prices. Delivery is confirmed at checkout." : "Preview bag. No order or payment will be created."}</p>
+              </div>
             </div>
             <footer className={styles.footer}>
-              {totalSavingsAll > 0 && (
-                <div className="mb-3 flex items-center justify-between rounded-xl bg-[#2d6a2f]/10 px-3.5 py-2 text-[0.74rem] font-bold text-[#235825] ring-1 ring-[#2d6a2f]/20">
-                  <span className="flex items-center gap-1.5">
-                    <span aria-hidden="true">🎉</span>
-                    <span>Total Savings on this order:</span>
-                  </span>
-                  <span>{formatCurrency(totalSavingsAll, currencyCode)}</span>
-                </div>
-              )}
-              <dl className={styles.totals}>
-                {totalMrpPaise > subtotalPaise && (
-                  <div>
-                    <dt>Total MRP</dt>
-                    <dd className="line-through text-[var(--muted)]">{formatCurrency(totalMrpPaise, currencyCode)}</dd>
-                  </div>
-                )}
-                {totalSavingsAll > 0 && (
-                  <div className={styles.savings}>
-                    <dt>Discount Savings</dt>
-                    <dd>−{formatCurrency(totalSavingsAll, currencyCode)}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt>Subtotal</dt>
-                  <dd>{formatCurrency(subtotalPaise, currencyCode)}</dd>
-                </div>
-                <div className={styles.total}><dt>{totalsEstimated ? "Estimated total" : "Total Payable"}</dt><dd>{formatCurrency(totalPaise, currencyCode)}</dd></div>
-              </dl>
-              <p className={styles.note}>{source === "shopify" ? "Shipping and taxes calculated at checkout." : "Preview bag. No order or payment will be created."}</p>
+              <div className={styles.payable} aria-live="polite" aria-atomic="true"><span>{loading ? "Updating bag…" : "Estimated total"}</span><strong>{formatBillingCurrency(billing.totalPaise, currencyCode)}</strong></div>
               {(unavailable || overStock) && <p className={styles.stock} role="status">Remove unavailable items or adjust quantities to continue.</p>}
-              {checkoutBlocked ? <button className={styles.primary} type="button" disabled>{loading ? "Updating bag…" : "Review bag items"}</button> : <Link className={styles.primary} href="/checkout" onClick={() => { track("begin_checkout", { value: totalPaise / 100, currency: currencyCode, mode: "in_app_checkout" }); closeCart(); }}>Continue to checkout <span aria-hidden="true">→</span></Link>}
+              {checkoutBlocked ? <button className={styles.primary} type="button" disabled>{loading ? "Updating bag…" : "Review bag items"}</button> : <Link className={styles.primary} href="/checkout" onClick={() => { track("begin_checkout", { value: billing.totalPaise / 100, currency: currencyCode, mode: "in_app_checkout" }); closeCart(); }}>Continue to checkout <span aria-hidden="true">→</span></Link>}
               <button className={styles.continue} type="button" onClick={closeCart}>Continue shopping</button>
             </footer>
           </>

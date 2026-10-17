@@ -156,3 +156,22 @@ test("normal adds keep the single-request path", async (t) => {
   assert.deepEqual((await response.json()).userErrors, []);
   assert.equal(requests.length, 1);
 });
+
+test("cart uses the selected variant MRP when the cart cost omits it", async (t) => {
+  const cart = graphCart();
+  cart.lines.nodes[0].merchandise.compareAtPrice = money("149.50");
+  const requests = harness(t, [{ cartLinesAdd: { cart, userErrors: [] } }]);
+  const body = await (await POST(addRequest())).json();
+  assert.equal(body.cart.items[0].compareAtPricePaise, 14950);
+  assert.match(requests[0].query, /compareAtPrice\s*\{/);
+  assert.equal(body.cart.totalPaise, 9000);
+});
+
+test("cart cost MRP takes priority over selected variant MRP", async (t) => {
+  const cart = graphCart();
+  cart.lines.nodes[0].merchandise.compareAtPrice = money("149.50");
+  cart.lines.nodes[0].cost.compareAtAmountPerQuantity = money("125");
+  harness(t, [{ cartLinesAdd: { cart, userErrors: [] } }]);
+  const body = await (await POST(addRequest())).json();
+  assert.equal(body.cart.items[0].compareAtPricePaise, 12500);
+});

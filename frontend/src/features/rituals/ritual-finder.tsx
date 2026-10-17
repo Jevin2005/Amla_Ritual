@@ -6,6 +6,7 @@ import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type F
 import { useStore } from "@/features/store/store-provider";
 import { useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { MediaImage } from "@/shared/ui/media-image";
+import { scrollPageTo } from "@/shared/ui/page-scroll";
 import { getQuizFlow, resolveQuizResult, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
 import { createQuizNavigation, type QuizNavigation } from "./ritual-navigation";
 import styles from "./ritual-finder.module.css";
@@ -50,7 +51,7 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
         const bounds = heading.getBoundingClientRect();
         const headerHeight = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 88;
         if (bounds.top < headerHeight + 16 || bounds.bottom > window.innerHeight - 48) {
-          heading.scrollIntoView({ block: "start", behavior: "instant" });
+          scrollPageTo(heading, { immediate: true });
         }
       },
     });

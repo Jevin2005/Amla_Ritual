@@ -33,12 +33,12 @@ const bundleOptions = {
     build.onLoad({ filter: /.*/, namespace: "mock" }, ({ path }) => {
       if (path === "react") return { contents: hooks };
       if (path.endsWith("hero-scene")) return { contents: 'export function createHeroScene() { throw new Error("Image hero must not create a WebGL scene"); }' };
-      if (path.includes("use-deferred-media")) return { contents: 'export const useDeferredMedia = () => globalThis.harness.deferredReady !== false;' };
+      if (path.includes("use-deferred-media")) return { contents: 'export const useDeferredMedia = (enabled, delay) => { globalThis.harness.deferredCalls.push({ enabled, delay }); return enabled && globalThis.harness.deferredReady !== false; };' };
       if (path.includes("media-image")) return { contents: 'export const MediaImage = (props) => ({ type: "img", props });' };
       if (path === "react/jsx-runtime") return { contents: 'export function jsx(type, props) { return typeof type === "function" ? type(props) : {type, props}; } export const jsxs = jsx; export const Fragment = "Fragment";' };
       if (path.includes("store-provider")) return { contents: 'export const useStore = () => globalThis.harness.store;' };
-      if (path.includes("use-motion-preferences")) return { contents: 'export const useReducedMotion = () => globalThis.harness.reduced; export const usePageVisible = () => true; export const useFinePointer = () => !globalThis.harness.compact; export const useCompactViewport = () => Boolean(globalThis.harness.compact);' };
-      if (path.includes("use-webgl")) return { contents: 'export const useWebGL = () => true; export const isWebGLAvailable = () => true; export const markWebGLUnavailable = () => {};' };
+      if (path.includes("use-motion-preferences")) return { contents: 'export const useReducedMotion = () => globalThis.harness.reduced; export const usePageVisible = () => globalThis.harness.pageVisible !== false; export const useFinePointer = () => !globalThis.harness.compact; export const useCompactViewport = () => Boolean(globalThis.harness.compact);' };
+      if (path.includes("use-webgl")) return { contents: 'export const useWebGL = () => true; export const isWebGLAvailable = () => true; export const markWebGLUnavailable = () => { globalThis.harness.contextLost = true; };' };
       if (path.startsWith("@google/model-viewer")) return { contents: "export const ModelViewerElement = globalThis.harness.modelViewerConstructor;" };
       const name = path === "ModelPlaceholder" ? "ProductModel" : path === "PurchasePlaceholder" ? "HeroPurchase" : path.includes("magnetic-link") ? "MagneticLink" : path.includes("shery-background") ? "SheryBackground" : path.includes("shery-poster") ? "SheryPoster" : null;
       return { contents: name ? `export const ${name} = (props) => ({ type: '${name}', props });` : `export default (props) => ({type: '${path === "next/image" ? "img" : "a"}', props});` };
@@ -69,9 +69,10 @@ const sixProducts = ["Amla", "Reetha", "Indigo", "Bhringraj", "Hibiscus", "Shika
 function environment(kind, motion = {}, reduced = false) {
   const frames = new Map(); let next = 0, time = 0;
   const timers = new Map();
+  const timerDeadlines = new Map();
   const intersections = new Set();
   const resizes = new Set();
-  const harness = { kind, reduced, modelViewerConstructor: { modelCacheSize: 5 }, stateIndex: 0, refIndex: 0, refs: [], values: new Map(), effects: [], store: {
+  const harness = { kind, reduced, modelViewerConstructor: { modelCacheSize: 5 }, deferredCalls: [], stateIndex: 0, refIndex: 0, refs: [], values: new Map(), effects: [], store: {
     content: { motionSettings: { ...motionDefaults, ...motion } }, products: [reetha],
     isWishlisted: () => false, toggleWishlist() {}, isCartBusy: false, addToCart: async () => null,
   } };
@@ -94,8 +95,8 @@ function environment(kind, motion = {}, reduced = false) {
       observe(target) { this.target = target; resizes.add(this); }
       disconnect() { resizes.delete(this); }
     },
-    setTimeout: (callback) => { timers.set(++next, callback); return next; },
-    clearTimeout: (id) => timers.delete(id),
+    setTimeout: (callback, delay = 0) => { timers.set(++next, callback); timerDeadlines.set(next, time + delay); return next; },
+    clearTimeout: (id) => { timers.delete(id); timerDeadlines.delete(id); },
   });
   context.window = context;
   vm.createContext(context); vm.runInContext(result.outputFiles[0].text, context);
@@ -111,7 +112,16 @@ function environment(kind, motion = {}, reduced = false) {
     }),
     advanceTime: (milliseconds) => { time += milliseconds; },
     flush: () => { time += 16.7; const pending = [...frames.values()]; frames.clear(); pending.forEach((callback) => callback(time)); },
-    flushTimers: () => { const pending = [...timers.values()]; timers.clear(); pending.forEach((callback) => callback()); },
+    flushTimers: () => { const pending = [...timers.values()]; timers.clear(); timerDeadlines.clear(); pending.forEach((callback) => callback()); },
+    tickTimers: (milliseconds) => {
+      time += milliseconds;
+      for (const [id, deadline] of [...timerDeadlines].sort((a, b) => a[1] - b[1])) {
+        if (deadline > time || !timers.has(id)) continue;
+        const callback = timers.get(id);
+        timers.delete(id); timerDeadlines.delete(id);
+        callback();
+      }
+    },
   };
 }
 
@@ -910,6 +920,29 @@ test("the header morph follows the same damped reveal frame on desktop and mobil
   }
 });
 
+test("Lenis-managed hero progress follows the current page position without a second easing delay", async () => {
+  for (const compact of [false, true]) {
+    const env = await mountHero({ compact });
+    env.context.document.documentElement = { classList: { contains: (name) => name === "lenis" } };
+    for (const phase of [0.85, 0.3]) {
+      env.setScrollPhase(phase);
+      env.context.emit("scroll");
+      env.flush();
+      assert.ok(Math.abs(Number(env.progress.style.transform.slice(7, -1)) - phase) < 1e-12,
+        "hero must track the Lenis position in its next animation frame, including reverse scroll");
+      assert.ok(Math.abs(Number(env.header.properties.get("--hero-header-progress")) - (1 - Number(env.surface.style.opacity))) < 1e-12);
+    }
+    env.dispose();
+    const native = await mountHero({ compact });
+    native.setScrollPhase(0.85);
+    native.context.emit("scroll");
+    native.flush();
+    const firstFrame = Number(native.progress.style.transform.slice(7, -1));
+    assert.ok(firstFrame > 0 && firstFrame < 0.85, "the unmanaged fallback keeps its existing damping");
+    native.dispose();
+  }
+});
+
 test("the header backdrop appears during the green expansion before the next hero starts revealing", async () => {
   const env = await mountHero();
   assert.equal(env.header.properties.get("--hero-header-surface"), "0");
@@ -1132,24 +1165,61 @@ test("a standalone hero never fades into a missing following hero", async () => 
   env.dispose();
 });
 
-test("the discover cue advances the story or skips directly to the following hero for reduced motion", async () => {
-  for (const options of [{}, { reduced: true }, { motion: { enabled: false } }]) {
+test("the discover cue stays usable while browsing and leaves with the outgoing hero", async () => {
+  const env = await mountHero({ products: sixProducts, compact: true, height: 844 });
+  for (const phase of [0, 0.12, 0.3, 0.48, 0.66]) {
+    env.scrollTo(phase);
+    assert.equal(env.cue.style.opacity, "1", `guidance remains visible at phase ${phase}`);
+    assert.equal(env.cue.style.visibility, "visible");
+    assert.equal(env.cue.style.pointerEvents, "auto");
+    assert.equal(env.cue.tabIndex, 0);
+  }
+  env.scrollTo(0.7);
+  assert.ok(Number(env.cue.style.opacity) > 0 && Number(env.cue.style.opacity) < 1, "guidance fades during the final handoff");
+  env.scrollTo(0.8);
+  assert.equal(env.cue.style.opacity, "0");
+  assert.equal(env.cue.style.visibility, "hidden");
+  assert.equal(env.cue.style.pointerEvents, "none");
+  assert.equal(env.cue.tabIndex, -1, "the outgoing cue must not remain in keyboard navigation");
+  env.scrollTo(0.3);
+  assert.equal(env.cue.style.opacity, "1", "returning to the story restores guidance");
+  assert.equal(env.cue.tabIndex, 0);
+  env.dispose();
+});
+
+test("the discover cue lands on the fully revealed following hero with native motion preferences", async () => {
+  for (const options of [{}, { products: sixProducts, compact: true, height: 844 }, { reduced: true }, { motion: { enabled: false } }]) {
     const env = await mountHero(options);
+    env.section.documentTop = 120;
+    env.context.scrollY = 300;
     let prevented = false;
     const cue = all(env.tree).find((node) => node.props?.className === "scrollCue");
     cue.props.onClick({ preventDefault() { prevented = true; } });
     const reduced = options.reduced || options.motion?.enabled === false;
+    const distance = env.components.getHeroScrollMetrics(env.surface.clientHeight, env.links.length).distance;
     assert.equal(prevented, true);
     assert.equal(env.harness.scrollRequest.behavior, reduced ? "instant" : "smooth");
-    assert.equal(env.harness.scrollRequest.top, reduced ? env.section.offsetHeight : 720);
+    assert.equal(env.harness.scrollRequest.top, env.section.documentTop + (reduced ? env.section.offsetHeight : distance));
+    if (!reduced) {
+      const handoff = env.components.getHeroHandoffMetrics(env.surface.clientHeight, env.links.length);
+      assert.ok(distance >= handoff.revealEnd && distance < handoff.end, "landing completes the reveal while retaining arrival room");
+      env.context.scrollY = env.harness.scrollRequest.top;
+      env.context.emit("scroll");
+      env.settle();
+      assert.equal(env.surface.style.opacity, "0");
+      assert.equal(env.incoming.inert, false);
+    }
     env.dispose();
   }
 });
 
-function mountModel(motion = {}, reduced = false, props = {}) {
+function mountModel(motion = {}, reduced = false, props = {}, initial = {}) {
   const env = environment("model", motion, reduced);
+  if (initial.status) env.harness.values.set(0, { url: "/jar.glb", status: initial.status });
+  if (initial.visible !== undefined) env.harness.values.set(1, initial.visible);
+  if (initial.pageVisible !== undefined) env.harness.pageVisible = initial.pageVisible;
   const attributes = new Map(), stageAttributes = new Map(), styles = new Map();
-  const viewer = { loaded: true, toggleAttribute: (key, value) => attributes.set(key, value), setAttribute: (key, value) => attributes.set(key, value), addEventListener() {}, removeEventListener() {} };
+  const viewer = eventTarget({ loaded: true, toggleAttribute: (key, value) => attributes.set(key, value), setAttribute: (key, value) => attributes.set(key, value) });
   const stage = {
     style: { setProperty: (key, value) => styles.set(key, value) },
     setAttribute: (key, value) => stageAttributes.set(key, value),
@@ -1157,11 +1227,15 @@ function mountModel(motion = {}, reduced = false, props = {}) {
     getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
   };
   env.harness.refs = [viewer, stage];
-  const tree = env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, settings: defaults, ...props });
+  const render = () => {
+    env.harness.stateIndex = 0; env.harness.refIndex = 0; env.harness.effects = [];
+    return env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, settings: defaults, ...props });
+  };
+  const tree = render();
   const cleanups = env.harness.effects.map((effect) => effect());
   env.flush();
   return {
-    ...env, tree, viewer, stage, attributes, stageAttributes, styles,
+    ...env, tree, viewer, stage, attributes, stageAttributes, styles, render,
     move: (event = {}) => tree.props.onPointerMove({ pointerType: "mouse", buttons: 0, clientX: 100, clientY: 100, currentTarget: stage, ...event }),
     dispose: () => cleanups.forEach((cleanup) => cleanup?.()),
   };
@@ -1192,7 +1266,7 @@ test("actual model honors global enabled, cursor, intensity and reduced-motion c
   assert.equal(subtle.attributes.get("camera-orbit"), "12.5deg 96deg 105%");
 });
 
-test("showcase keeps the product facing forward and uses damped hover without an automatic rotation control", () => {
+test("showcase keeps the product facing forward and exposes a floating pause control", () => {
   const env = mountModel({}, false, { presentation: "showcase", cameraDistancePercent: 90 });
   const viewer = all(env.tree).find((node) => node.type === "model-viewer");
   assert.equal(env.attributes.get("auto-rotate"), false);
@@ -1200,7 +1274,14 @@ test("showcase keeps the product facing forward and uses damped hover without an
   assert.ok(Number(viewer.props["interpolation-decay"]) > 50, "showcase should damp camera changes more softly than the vendor default");
   assert.ok(Number(viewer.props["interpolation-decay"]) <= 200, "the camera must remain responsive");
   assert.ok(Object.hasOwn(viewer.props, "camera-controls"), "manual inspection remains available");
-  assert.ok(!all(env.tree).some((node) => node.type === "button"), "a static showcase does not need a separate rotation toggle");
+  const floating = all(env.tree).find((node) => node.props?.["data-floating"] === true);
+  assert.equal(floating.props["data-floating-running"], true);
+  const pause = all(env.tree).find((node) => node.type === "button");
+  assert.equal(pause.props["aria-label"], "Pause product floating");
+  pause.props.onClick();
+  const paused = env.render();
+  assert.equal(all(paused).find((node) => node.props?.["data-floating"] === true).props["data-floating-running"], false);
+  assert.equal(all(paused).find((node) => node.type === "button").props["aria-label"], "Resume product floating");
   assert.equal(env.frames.size, 0, "idle showcase must not schedule an animation loop");
   env.dispose();
 });
@@ -1222,6 +1303,177 @@ test("showcase hover clamps extreme pointer positions, lifts the model and stops
     assert.equal(env.frames.size, 0, "vendor interpolation handles settling without an application frame loop");
   }
   env.dispose();
+});
+
+test("the selected near-viewport model starts eagerly without waiting for its poster", () => {
+  const env = mountModel({}, false, { presentation: "showcase", poster: image, preload: true, eager: true }, { status: "loading", visible: false });
+  assert.equal(env.harness.deferredCalls.at(-1).enabled, true);
+  assert.equal(env.harness.deferredCalls.at(-1).delay, 0);
+  assert.equal(all(env.tree).filter((node) => node.type === "model-viewer").length, 1);
+  assert.equal(all(env.tree).find((node) => node.type === "model-viewer").props.loading, "eager");
+  assert.ok(all(env.tree).some((node) => node.type === "img" && node.props.src === image.url));
+  assert.equal(all(env.tree).find((node) => node.props?.["data-floating"] !== undefined).props["data-floating-running"], false);
+  env.dispose();
+  for (const [props, initial] of [
+    [{}, { visible: false }],
+    [{ preload: true, enabled: false }, { visible: false }],
+    [{ preload: true }, { visible: false, pageVisible: false }],
+  ]) {
+    const inactive = mountModel({}, false, { poster: image, ...props }, { status: "loading", ...initial });
+    assert.ok(!all(inactive.tree).some((node) => node.type === "model-viewer"));
+    assert.ok(!text(inactive.tree).includes("Loading 3D"));
+    inactive.dispose();
+  }
+});
+
+test("model loading keeps the poster until a rendered frame is ready and reports real progress", () => {
+  const env = mountModel({}, false, { poster: image }, { status: "loading" });
+  assert.equal(env.viewer.loaded, true, "the vendor can mark loaded before it renders");
+  assert.equal(env.render().props["data-status"], "loading", "loaded property alone must not reveal an unrendered model");
+  for (const totalProgress of [0.42, 0.2, NaN, Infinity]) env.viewer.emit("progress", { detail: { totalProgress } });
+  let tree = env.render();
+  assert.ok(all(tree).some((node) => node.props?.style?.transform === "scaleX(0.42)"), "progress is finite and never runs backwards");
+  env.viewer.emit("progress", { detail: { totalProgress: 1 } });
+  tree = env.render();
+  assert.ok(text(tree).includes("Preparing 3D view"));
+  assert.equal(tree.props["data-status"], "loading", "100% network/processing progress does not substitute for load");
+  const viewerBefore = all(tree).find((node) => node.type === "model-viewer");
+  assert.equal(viewerBefore.props.style.opacity, 0);
+  assert.equal(viewerBefore.props.inert, true);
+  env.viewer.emit("load");
+  tree = env.render();
+  assert.equal(tree.props["data-status"], "ready");
+  const poster = all(tree).find((node) => node.props?.className === "posterLayer");
+  assert.ok(poster, "poster stays mounted for the crossfade");
+  assert.equal(poster.props["aria-hidden"], true);
+  assert.equal(all(tree).find((node) => node.type === "model-viewer").props.style.opacity, 1);
+  assert.equal(env.timers.size, 0, "successful load releases the failure timeout");
+  env.dispose();
+  assert.equal(env.viewer.listeners.size, 0);
+});
+
+test("model failure retains the photo and a late load cannot revive a failed attempt", () => {
+  const env = mountModel({}, false, { poster: image }, { status: "loading" });
+  env.viewer.emit("progress", { detail: { totalProgress: 0.8 } });
+  env.viewer.emit("error", { detail: { type: "loadfailure" } });
+  env.viewer.emit("load");
+  let tree = env.render();
+  assert.equal(tree.props["data-status"], "error");
+  assert.ok(all(tree).some((node) => node.type === "img"));
+  assert.ok(!all(tree).some((node) => node.type === "model-viewer"));
+  all(tree).find((node) => node.type === "button" && text(node) === "Retry 3D view").props.onClick();
+  tree = env.render();
+  assert.equal(tree.props["data-status"], "loading");
+  assert.ok(all(tree).some((node) => node.props?.style?.transform === "scaleX(0)"));
+  assert.equal(env.harness.values.get(5), 1);
+  env.dispose();
+});
+
+test("a real renderer context-loss error after load restores the product photograph", () => {
+  const env = mountModel({}, false, { poster: image }, { status: "loading" });
+  env.viewer.emit("load");
+  env.viewer.emit("error", { detail: { type: "webglcontextlost" } });
+  const tree = env.render();
+  assert.equal(env.harness.contextLost, true);
+  assert.equal(tree.props["data-status"], "error");
+  assert.equal(all(tree).find((node) => node.props?.className === "posterLayer").props["aria-hidden"], false);
+  assert.ok(!all(tree).some((node) => node.type === "model-viewer"));
+  env.dispose();
+});
+
+test("floating respects motion settings, loading and visibility, and pauses for model interaction", () => {
+  for (const options of [
+    { motion: { enabled: false } }, { motion: { intensity: 0 } }, { reduced: true },
+    { props: { paused: true } }, { initial: { visible: false }, props: { preload: true } },
+    { initial: { pageVisible: false } }, { initial: { status: "loading" } },
+  ]) {
+    const env = mountModel(options.motion, options.reduced, { presentation: "showcase", ...options.props }, options.initial);
+    assert.ok(!all(env.tree).some((node) => node.props?.["data-floating-running"] === true));
+    env.dispose();
+  }
+  const env = mountModel({ cursor: false }, false, { presentation: "showcase" });
+  assert.equal(all(env.tree).find((node) => node.props?.["data-floating"] === true).props["data-floating-running"], true,
+    "floating remains independent from cursor decoration on touch screens");
+  env.tree.props.onPointerDown();
+  assert.equal(env.stageAttributes.get("data-interacting"), "true");
+  env.tree.props.onPointerUp();
+  assert.equal(env.stageAttributes.has("data-interacting"), false);
+  env.tree.props.onPointerDown();
+  env.tree.props.onPointerCancel();
+  assert.equal(env.stageAttributes.has("data-interacting"), false);
+  env.dispose();
+});
+
+test("unmount cancels pending model startup and ignores events from the old viewer", () => {
+  const env = mountModel({}, false, { poster: image }, { status: "loading" });
+  const pendingLoad = env.viewer.listeners.get("load");
+  const pendingTimeout = [...env.timers.values()][0];
+  env.dispose();
+  pendingLoad();
+  pendingTimeout();
+  assert.equal(env.harness.values.get(0).status, "loading");
+  assert.equal(env.viewer.listeners.size, 0);
+  assert.equal(env.timers.size, 0);
+  assert.equal(env.frames.size, 0);
+});
+
+test("advancing model download progress extends the stall deadline even within one displayed percent", () => {
+  const env = mountModel({}, false, { poster: image }, { status: "loading" });
+  env.tickTimers(19000);
+  env.viewer.emit("progress", { detail: { totalProgress: 0.4 } });
+  env.tickTimers(19000);
+  assert.equal(env.render().props["data-status"], "loading", "active slow downloads can exceed the original 20-second deadline");
+  env.viewer.emit("progress", { detail: { totalProgress: 0.40001 } });
+  env.tickTimers(19000);
+  assert.equal(env.render().props["data-status"], "loading", "small raw progress advances count even when the displayed percent stays the same");
+  env.tickTimers(2000);
+  assert.equal(env.render().props["data-status"], "error", "20 seconds without a further advance still triggers the photo fallback");
+  assert.equal(env.timers.size, 0);
+  env.dispose();
+});
+
+test("repeated, regressive and invalid model progress cannot keep a stalled request alive", () => {
+  for (const totalProgress of [0.4, 0.2, NaN, Infinity]) {
+    const env = mountModel({}, false, { poster: image }, { status: "loading" });
+    env.tickTimers(15000);
+    env.viewer.emit("progress", { detail: { totalProgress: 0.4 } });
+    env.tickTimers(19000);
+    env.viewer.emit("progress", { detail: { totalProgress } });
+    env.tickTimers(2000);
+    assert.equal(env.render().props["data-status"], "error");
+    assert.equal(env.timers.size, 0);
+    env.dispose();
+  }
+});
+
+test("a continuously progressing model still reaches the two-minute loading limit", () => {
+  const env = mountModel({}, false, { poster: image }, { status: "loading" });
+  for (let step = 1; step <= 6; step += 1) {
+    env.tickTimers(19000);
+    assert.equal(env.render().props["data-status"], "loading");
+    env.viewer.emit("progress", { detail: { totalProgress: step / 10 } });
+  }
+  env.tickTimers(6000);
+  const tree = env.render();
+  assert.equal(tree.props["data-status"], "error");
+  assert.ok(all(tree).some((node) => node.type === "img"));
+  assert.equal(env.timers.size, 0);
+  env.dispose();
+});
+
+test("model success, failure and unmount release both loading deadlines", () => {
+  for (const outcome of ["load", "error", "unmount"]) {
+    const env = mountModel({}, false, { poster: image }, { status: "loading" });
+    assert.equal(env.timers.size, 2);
+    env.viewer.emit("progress", { detail: { totalProgress: 0.5 } });
+    assert.equal(env.timers.size, 2, "advancing progress replaces the stall timer instead of accumulating timers");
+    if (outcome === "unmount") env.dispose();
+    else env.viewer.emit(outcome, outcome === "error" ? { detail: { type: "loadfailure" } } : {});
+    assert.equal(env.timers.size, 0);
+    env.tickTimers(120000);
+    assert.equal(env.render().props["data-status"], outcome === "load" ? "ready" : outcome === "error" ? "error" : "loading");
+    if (outcome !== "unmount") env.dispose();
+  }
 });
 
 test("showcase pointer leave and cancellation clear decoration and cancel stale hover updates", () => {
@@ -1328,7 +1580,7 @@ test("an offscreen model has a photo but no model-viewer element or loading labe
 test("a stalled model times out to its photograph and can be retried", () => {
   const env = environment("model");
   env.harness.values.set(0, { url: "/jar.glb", status: "loading" });
-  env.harness.refs = [{ loaded: false, toggleAttribute() {}, addEventListener() {}, removeEventListener() {} }, {}];
+  env.harness.refs = [{ loaded: false, toggleAttribute() {}, addEventListener() {}, removeEventListener() {} }, { removeAttribute() {} }];
   const render = () => {
     env.harness.stateIndex = 0; env.harness.refIndex = 0; env.harness.effects = [];
     return env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, poster: image });

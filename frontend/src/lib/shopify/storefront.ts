@@ -921,17 +921,15 @@ function mapProduct(product: GraphProduct, index: number): Product {
   const canonicalSlug = getCanonicalProductSlug(product.title, product.handle);
 
   const pricePaise = defaultVariant?.pricePaise ?? toPaise(product.priceRange.minVariantPrice.amount);
-  const rawComparePaise =
-    defaultVariant?.compareAtPricePaise ??
-    (product.compareAtPriceRange?.minVariantPrice?.amount
+  const rawComparePaise = defaultVariant
+    ? defaultVariant.compareAtPricePaise
+    : (product.compareAtPriceRange?.minVariantPrice?.amount
       ? toPaise(product.compareAtPriceRange.minVariantPrice.amount)
       : null);
-  const compareAtPricePaise = resolveCompareAtPricePaise(rawComparePaise, pricePaise, canonicalSlug);
-
-  const enrichedVariants = variants.map((v) => ({
-    ...v,
-    compareAtPricePaise: resolveCompareAtPricePaise(v.compareAtPricePaise, v.pricePaise, canonicalSlug),
-  }));
+  const compareAtPricePaise = typeof rawComparePaise === "number" &&
+    Number.isFinite(rawComparePaise) && rawComparePaise > pricePaise
+    ? rawComparePaise
+    : null;
 
   return {
     id: product.id,
@@ -1016,7 +1014,7 @@ function mapProduct(product: GraphProduct, index: number): Product {
       if (media.__typename !== "Model3d" || !media.id || !url) return [];
       return [{ id: media.id, url, altText: media.alt || `${product.title} in 3D`, previewImage: toImage(media.previewImage) }];
     }),
-    variants: enrichedVariants,
+    variants,
     collections: product.collections.nodes,
     tags: product.tags,
   };

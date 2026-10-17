@@ -44,7 +44,7 @@ const bundle = await build({
     build.onLoad({ filter: /.*/, namespace: "css" }, () => ({ contents: 'export default new Proxy({}, { get: (_, key) => String(key) });' }));
     build.onLoad({ filter: /.*/, namespace: "mock" }, ({ path }) => {
       if (path === "react") return { contents: hooks };
-      if (path === "react/jsx-runtime") return { contents: 'export function jsx(type, props) { return typeof type === "function" ? type(props) : { type, props }; } export const jsxs = jsx; export const Fragment = "Fragment";' };
+      if (path === "react/jsx-runtime") return { contents: 'export function jsx(type, props, key) { return typeof type === "function" ? type(props) : { type, props, key }; } export const jsxs = jsx; export const Fragment = "Fragment";' };
       if (path === "next/link") return { contents: 'export default (props) => ({ type: "a", props });' };
       if (path.includes("store-provider")) return { contents: 'export const useStore = () => globalThis.harness.store;' };
       if (path.includes("use-motion-preferences")) return { contents: 'export const useReducedMotion = () => globalThis.harness.reduced; export const usePageVisible = () => globalThis.harness.visible; export const useFinePointer = () => !globalThis.harness.compact; export const useCompactViewport = () => globalThis.harness.compact;' };
@@ -90,6 +90,13 @@ function eventTarget(properties = {}) {
 
 function environment(options = {}) {
   const frames = new Map(), timers = new Map(), observers = new Set(), mutations = new Set();
+  const mediaNodes = new Map();
+  const makeCanvas = () => {
+    const canvas = eventTarget({ dataset: {}, paints: 0, getBoundingClientRect: () => ({ width: 390, height: 800 }) });
+    canvas.ownerDocument = { createElement: makeCanvas };
+    canvas.getContext = () => ({ canvas, drawImage() { canvas.paints++; }, fillRect() {}, createLinearGradient: () => ({ addColorStop() {} }) });
+    return canvas;
+  };
   const outgoing = options.outgoing ? {
     dataset: { ...options.outgoing },
     hasAttribute: (name) => name === "data-ritual-hero",
@@ -108,7 +115,7 @@ function environment(options = {}) {
     setTimeout: (callback, delay) => { timers.set(++next, { callback, delay, due: harness.now + delay }); return next; },
     clearTimeout: (id) => timers.delete(id),
     IntersectionObserver: class {
-      constructor(callback) { this.callback = callback; }
+      constructor(callback, options) { this.callback = callback; this.options = options; }
       observe() { observers.add(this); }
       disconnect() { observers.delete(this); }
     },
@@ -127,22 +134,39 @@ function environment(options = {}) {
     render() {
       harness.cursor = 0; harness.pending = [];
       this.tree = context.module.exports.PreviousProductHero({ products: options.products ?? products, settings: { ...settings, ...options.settings } });
-      all(this.tree).forEach((node) => {
+      const attach = (node, layerKey = "") => {
+        if (!node || typeof node !== "object") return;
+        if (node.key !== undefined) layerKey = node.key;
         if (node.props?.ref && typeof node.props.ref === "object") {
           node.props.ref.current ??= eventTarget({ complete: false, previousElementSibling: node.props.id === "previous-hero" ? outgoing : null });
+        } else if (typeof node.props?.ref === "function") {
+          const key = `${node.type}:${node.props.src ?? layerKey}`;
+          if (!mediaNodes.has(key)) mediaNodes.set(key, node.type === "canvas" ? makeCanvas() : eventTarget({ complete: false, naturalWidth: 0, naturalHeight: 0 }));
+          node.props.ref(mediaNodes.get(key));
         }
-      });
+        [node.props?.children].flat(Infinity).forEach((child) => attach(child, layerKey));
+      };
+      attach(this.tree);
       harness.pending.forEach((effect) => effect());
       return this.tree;
     },
     load(url) {
       const image = all(this.tree).find((node) => node.type === "img" && node.props.src === url && node.props.onLoad);
       assert.ok(image, `expected a loading image for ${url}`);
+      const element = mediaNodes.get(`img:${url}`);
+      if (element) {
+        element.complete = true; element.naturalWidth = 1600; element.naturalHeight = 1000;
+        element.dispatch("load");
+      }
       image.props.onLoad();
       this.render();
     },
     intersect(isIntersecting) {
-      observers.forEach((observer) => observer.callback([{ isIntersecting }]));
+      observers.forEach((observer) => { if (!observer.options?.rootMargin) observer.callback([{ isIntersecting }]); });
+      this.render();
+    },
+    near(isIntersecting) {
+      observers.forEach((observer) => { if (observer.options?.rootMargin === "100% 0px") observer.callback([{ isIntersecting }]); });
       this.render();
     },
     updateOutgoing(dataset) {
@@ -180,6 +204,7 @@ function environment(options = {}) {
     dispatch(type, event) { context.dispatch(type, event); this.render(); },
     windowListeners: context.listeners,
     mutations,
+    mediaNodes,
     dispose() { harness.slots.forEach((slot) => slot?.cleanup?.()); },
   };
   env.render();
@@ -396,17 +421,23 @@ test("the restored 3D viewer occupies the original featured-product slot and fol
   customized.dispose();
 });
 
-test("3D loading waits for slide images and defers image effects without accepting stale completion events", () => {
-  const env = environment();
+test("the current 3D model warms near the covered hero independently of slide-image readiness", () => {
+  const env = environment({ outgoing: { handoff: "true", reducedMotion: "false", revealing: "false" } });
   const viewer = () => all(env.tree).find((node) => node.type === "ProductModel");
   const effectCount = () => all(env.tree).filter((node) => ["SheryPoster", "SheryBackground"].includes(node.type)).length;
-  assert.equal(viewer().props.enabled, false);
+  assert.equal(viewer().props.enabled, true);
+  assert.equal(viewer().props.preload, false);
   assert.equal(viewer().props.paused, true);
+  env.near(true);
+  assert.equal(viewer().props.preload, true, "the selected model can warm before the first hero reveals it");
+  assert.equal(viewer().props.paused, true, "preloading must not animate a covered viewer");
+  assert.equal(all(env.tree).filter((node) => node.type === "ProductModel").length, 1, "no catalog-wide model prefetch");
   env.load(products[0].heroPoster.url);
-  assert.equal(viewer().props.enabled, false);
+  assert.equal(viewer().props.enabled, true);
   env.load(products[0].heroBackground.url);
   assert.equal(viewer().props.enabled, true);
   env.intersect(true);
+  env.updateOutgoing({ revealing: "true" });
   assert.equal(effectCount(), 2);
   viewer().props.onLoadingChange(products[0].heroModel.url, true); env.render();
   assert.equal(effectCount(), 0, "shader initialization yields while the active model is loading");
@@ -415,6 +446,86 @@ test("3D loading waits for slide images and defers image effects without accepti
   viewer().props.onLoadingChange(products[0].heroModel.url, false); env.render();
   assert.equal(effectCount(), 2);
   assert.equal(env.tree.props["data-transition"], "fade");
+  env.harness.visible = false; env.render();
+  assert.equal(viewer().props.preload, false);
+  env.dispose();
+});
+
+test("mobile changes retain outgoing images until the incoming poster and edge canvas are ready", () => {
+  const env = ready({ compact: true });
+  env.flushFrames();
+  const oldCanvas = env.mediaNodes.get("canvas:p0");
+  assert.ok(oldCanvas.paints > 0, "the mobile backdrop keeps the edge-composite renderer");
+  env.click("Next featured product");
+  env.load(products[1].heroPoster.url);
+  env.load(products[1].heroBackground.url);
+  env.flushFrames();
+  assert.equal(env.tree.props["data-media-transition"], "preparing");
+  const layers = () => all(env.tree).filter((node) => node.props?.className === "mediaLayer");
+  assert.equal(layers().filter((node) => node.props["data-layer"] === "outgoing").length, 2);
+  assert.equal(layers().filter((node) => node.props["data-layer"] === "incoming").length, 2);
+  assert.equal(env.mediaNodes.get("canvas:p0"), oldCanvas, "outgoing canvas is retained while the incoming source prepares");
+  env.load(products[1].heroPoster.url);
+  assert.equal(env.tree.props["data-media-transition"], "preparing");
+  env.load(products[1].heroBackground.url);
+  assert.equal(env.tree.props["data-media-transition"], "preparing", "decode must precede the canvas paint");
+  env.flushFrames();
+  assert.equal(env.tree.props["data-media-transition"], "running");
+  assert.ok(env.mediaNodes.get("canvas:p1").paints > 0);
+  assert.ok(!all(env.tree).some((node) => ["SheryPoster", "SheryBackground"].includes(node.type)), "phones do not gain extra WebGL contexts");
+  assert.equal(all(env.tree).filter((node) => node.type === "ProductModel").length, 1);
+  env.advanceTime(731);
+  assert.equal(env.tree.props["data-media-transition"], "idle");
+  assert.equal(layers().length, 2, "completion releases the old background and poster");
+  env.dispose();
+  assert.equal(env.timers.size, 0);
+  assert.equal(env.frames.size, 0);
+});
+
+test("mobile transition cancellation handles fast selection, visibility and motion preferences", () => {
+  for (const stop of ["hidden", "offscreen", "reduced", "disabled"]) {
+    const env = ready({ compact: true });
+    env.flushFrames();
+    env.click("Next featured product");
+    env.load(products[1].heroPoster.url); env.load(products[1].heroBackground.url); env.flushFrames();
+    const stalePoster = all(env.tree).find((node) => node.type === "img" && node.props.src === products[1].heroPoster.url);
+    env.click(`Show ${products[2].name}`);
+    env.load(products[2].heroPoster.url); env.load(products[2].heroBackground.url); env.flushFrames();
+    assert.equal(all(env.tree).filter((node) => node.props?.className === "mediaLayer").length, 4, "fast changes keep at most two media pairs");
+    stalePoster.props.onLoad(); env.render();
+    assert.equal(env.tree.props["data-media-transition"], "preparing", "stale readiness cannot release the newer transition");
+    if (stop === "hidden") env.harness.visible = false;
+    else if (stop === "offscreen") env.intersect(false);
+    else if (stop === "reduced") env.harness.reduced = true;
+    else env.harness.store.content.motionSettings.enabled = false;
+    env.render(); env.advanceTime(0);
+    assert.equal(env.tree.props["data-media-transition"], "idle");
+    assert.equal(all(env.tree).filter((node) => node.props?.className === "mediaLayer").length, 2);
+    env.dispose();
+    assert.equal(env.frames.size, 0);
+    assert.equal(env.timers.size, 0);
+  }
+  const staticHero = ready({ compact: true, settings: { transition: "none" } });
+  staticHero.click("Next featured product");
+  staticHero.load(products[1].heroPoster.url); staticHero.load(products[1].heroBackground.url); staticHero.flushFrames();
+  assert.equal(staticHero.tree.props["data-media-transition"], "idle");
+  assert.equal(all(staticHero.tree).filter((node) => node.props?.className === "mediaLayer").length, 2);
+  staticHero.dispose();
+});
+
+test("returning to a retained mobile poster does not require a second load event", () => {
+  const env = ready({ compact: true });
+  env.flushFrames();
+  env.click("Next featured product");
+  env.load(products[1].heroPoster.url); env.load(products[1].heroBackground.url); env.flushFrames();
+  env.load(products[1].heroPoster.url); env.load(products[1].heroBackground.url); env.flushFrames();
+  assert.equal(env.tree.props["data-media-transition"], "running");
+  env.click(`Show ${products[0].name}`);
+  env.flushFrames(); env.flushFrames();
+  assert.equal(env.tree.props["data-media-transition"], "running", "the already-decoded retained poster can transition immediately after canvas preparation");
+  assert.equal(all(env.tree).find((node) => node.type === "ProductModel").props.model.url, products[0].heroModel.url);
+  env.advanceTime(731);
+  assert.equal(env.tree.props["data-media-transition"], "idle");
   env.dispose();
 });
 

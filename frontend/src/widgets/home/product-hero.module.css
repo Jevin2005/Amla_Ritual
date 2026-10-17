@@ -70,6 +70,8 @@
 .products { z-index: 4; pointer-events: none; }
 .product { position: absolute; display: block; width: 40.7svh; pointer-events: auto; border-radius: 15%; -webkit-tap-highlight-color: transparent; will-change: transform; touch-action: pan-y pinch-zoom; user-select: none; }
 .product:focus-visible { outline: 1px solid var(--forest); outline-offset: 14px; }
+.float { position: absolute; inset: 0; pointer-events: none; }
+.swipeHint { display: none; }
 /* Frame the transparent source at the jar bounds without changing its artwork. */
 .artwork { position: absolute; left: -33.2%; top: -13%; width: 166.4%; height: 123%; pointer-events: none; animation: jarEntrance 700ms var(--ease) both; }
 @keyframes jarEntrance { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
@@ -124,6 +126,8 @@
 }
 .scrollCue svg { transition: transform 300ms var(--ease); }
 .scrollCue:hover svg { transform: translateY(5px); }
+.scrollCue:focus-visible { outline: 2px solid currentColor; outline-offset: 7px; border-radius: 6px; }
+.mobileScrollLabel, .scrollDetail { display: none; }
 .caption, .skip { position: absolute; z-index: 5; bottom: 22px; color: var(--forest); background: var(--hero-cream); border: 1px solid #344e3018; border-radius: 24px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; }
 .caption { left: 28px; display: flex; gap: 18px; padding: 10px 14px; }
 .skip { right: 28px; padding: 10px 14px; }
@@ -136,7 +140,32 @@
   .caption { left: 16px; bottom: max(8px, env(safe-area-inset-bottom)); font-size: 8px; padding: 9px 12px; }
   .caption > span + span { display: none; }
   .skip { right: 16px; bottom: max(8px, env(safe-area-inset-bottom)); font-size: 8px; letter-spacing: 0.1em; padding: 9px 12px; }
-  .scrollCue { bottom: 7.5%; font-size: 12px; letter-spacing: 0.13em; }
+  /* Two introductory breaths suggest movement without a permanent animation. */
+  .hero[data-idle="true"][data-reduced-motion="false"] .float { animation: jarFloat 2.4s ease-in-out 2; }
+  .swipeHint {
+    position: absolute; z-index: 5; left: 50%; top: calc(var(--initial-jar-y) + var(--initial-jar-height) * .6 + 18px);
+    display: flex; align-items: center; gap: 9px; margin: 0; transform: translateX(-50%);
+    color: var(--hero-green); font-family: var(--font-manrope); font-size: 11px; font-weight: 500;
+    letter-spacing: .025em; white-space: nowrap; pointer-events: none; transition: opacity 220ms ease, visibility 220ms;
+  }
+  .hero:is([data-browsed="true"], [data-dragging="true"], [data-revealing="true"]) .swipeHint { opacity: 0; visibility: hidden; }
+  .scrollCue { bottom: max(54px, calc(env(safe-area-inset-bottom) + 44px)); min-width: 200px; padding: 7px 12px; gap: 6px; font-size: 13px; letter-spacing: .1em; text-align: center; }
+  .scrollLabel { display: none; }
+  .mobileScrollLabel, .scrollDetail { display: block; }
+  .scrollDetail { font-family: var(--font-manrope); font-size: 10px; font-weight: 400; letter-spacing: .02em; text-transform: none; }
+  .hero[data-idle="true"][data-reduced-motion="false"] .scrollCue svg { animation: scrollNudge 2.4s ease-in-out 2; }
+}
+@keyframes jarFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+  50% { transform: translate3d(3px, -8px, 0) rotate(.8deg); }
+}
+@keyframes scrollNudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+/* Short phones and larger jars leave less room above the curved motto. */
+@media (max-width: 680px) and (max-height: 740px), (min-width: 480px) and (max-width: 680px) {
+  .swipeHint { top: max(104px, calc(var(--initial-jar-y) - var(--initial-jar-height) * .6 - 34px)); }
 }
 /* Match the reference's smaller phone jars and prominent tablet foreground.
    These first-paint values mirror the measured layout before hydration. */
@@ -187,6 +216,7 @@
   .stage { min-height: 0; }
   .caption, .skip { bottom: 14px; }
   .scrollCue { bottom: 3%; font-size: 12px; gap: 5px; }
+  .swipeHint, .scrollDetail { display: none; }
 }
 .hero[data-reduced-motion="true"] { height: var(--stage-height); }
 .hero[data-reduced-motion="true"] .stage { position: relative; }
@@ -197,5 +227,6 @@
   .hero, .hero[data-handoff="true"][data-reduced-motion="false"] { height: var(--stage-height); margin-bottom: 0; }
   .stage { position: relative; }
   .discover, .discover *, .discover *::before, .scrollCue svg, .skip::after { transition: none !important; }
-  .artwork { animation: none; }
+  .artwork, .hero .float, .hero .scrollCue svg { animation: none !important; }
+  .swipeHint { transition: none; }
 }

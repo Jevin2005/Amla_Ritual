@@ -317,6 +317,66 @@ test("zero-priced selected variants remain zero and fractional prices remain exa
   assert.equal(formatCurrency(1250, "USD"), "$12.50");
 });
 
+test("live catalog, search and detail never borrow another variant's comparison price", async () => {
+  const selected = { ...variant, price: money("100.00"), compareAtPrice: null };
+  const other = { ...variant, id: "gid://shopify/ProductVariant/2", price: money("500.00"), compareAtPrice: money("700.00") };
+  const product = rawProduct({
+    selectedOrFirstAvailableVariant: selected,
+    variants: connection([selected, other]),
+    compareAtPriceRange: { minVariantPrice: money("700.00") },
+  });
+  await withShopify({ products: [product], product }, async () => {
+    const mappedProducts = [
+      (await getStorefront()).products[0],
+      (await getSearchCatalog())[0],
+      await getStorefrontProduct("amla-powder"),
+    ];
+    for (const mapped of mappedProducts) {
+      assert.equal(mapped.pricePaise, 10000);
+      assert.equal(mapped.compareAtPricePaise, null);
+      assert.deepEqual(mapped.variants.map((entry) => entry.compareAtPricePaise), [null, 70000]);
+    }
+  });
+});
+
+test("live prices have no generated MRP when Shopify omits, matches or lowers the comparison price", async () => {
+  const products = [null, "100.00", "99.99"].map((amount, index) => {
+    const selected = { ...variant, price: money("100.00"), compareAtPrice: amount === null ? null : money(amount) };
+    return rawProduct({
+      id: `comparison-${index}`,
+      selectedOrFirstAvailableVariant: selected,
+      variants: connection([selected]),
+    });
+  });
+  const unknownVariant = { ...variant, compareAtPrice: null };
+  products.push(rawProduct({
+    id: "new-product", handle: "new-product", title: "New Product",
+    selectedOrFirstAvailableVariant: unknownVariant,
+    variants: connection([unknownVariant]),
+  }));
+  await withShopify({ products }, async () => {
+    const mapped = (await getStorefront()).products;
+    assert.ok(mapped.every((product) => product.compareAtPricePaise === null));
+    assert.deepEqual(mapped.map((product) => product.variants[0].compareAtPricePaise), [null, 10000, 9999, null]);
+  });
+});
+
+test("live range comparison prices are used only when no default variant exists", async () => {
+  const selected = { ...variant, price: money("250.25"), compareAtPrice: money("300.50") };
+  await withShopify({ products: [
+    rawProduct({ id: "selected", selectedOrFirstAvailableVariant: selected, variants: connection([selected]) }),
+    rawProduct({ id: "range-only", selectedOrFirstAvailableVariant: null, variants: connection() }),
+    rawProduct({ id: "no-comparison", selectedOrFirstAvailableVariant: null, variants: connection(), compareAtPriceRange: { minVariantPrice: money("0") } }),
+    rawProduct({ id: "default-from-list", selectedOrFirstAvailableVariant: null, variants: connection([{ ...variant, compareAtPrice: null }]) }),
+  ] }, async () => {
+    const mapped = (await getStorefront()).products;
+    assert.deepEqual(mapped.map((product) => product.compareAtPricePaise), [30050, 49999, null, null]);
+    assert.equal(mapped[0].pricePaise, 25025);
+    assert.equal(mapped[0].variants[0].compareAtPricePaise, 30050);
+    assert.equal(mapped[1].pricePaise, 44950);
+  });
+});
+
 test("legacy authored fields still map without inventing new values", async () => {
   await withShopify({ products: [rawProduct({
     botanical: field("Legacy botanical"), size: field("100 g"),

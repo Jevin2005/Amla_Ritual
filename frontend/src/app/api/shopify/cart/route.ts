@@ -58,6 +58,7 @@ const CART_LINE_FIELDS = `
       title
       availableForSale
       quantityAvailable
+      compareAtPrice { ${MONEY_FIELDS} }
       selectedOptions { name value }
       image { url altText width height }
       product {
@@ -203,6 +204,7 @@ type GraphCartLine = {
     title?: string;
     availableForSale?: boolean;
     quantityAvailable?: number | null;
+    compareAtPrice?: Money | null;
     selectedOptions?: Array<{ name: string; value: string }>;
     image?: GraphImage | null;
     product?: {
@@ -312,6 +314,7 @@ function normalizeCart(cart: GraphCart) {
     const variant = line.merchandise;
     const product = variant.product;
     if (!variant.id || !product?.handle) return [];
+    const compareAtPrice = line.cost.compareAtAmountPerQuantity ?? variant.compareAtPrice;
 
     const discountAmountPaise = line.discountAllocations.reduce(
       (total, allocation) => total + toPaise(allocation.discountedAmount),
@@ -331,8 +334,8 @@ function normalizeCart(cart: GraphCart) {
         availableForSale: Boolean(variant.availableForSale),
         quantityAvailable: variant.quantityAvailable ?? null,
         pricePaise: toPaise(line.cost.amountPerQuantity),
-        compareAtPricePaise: line.cost.compareAtAmountPerQuantity
-          ? toPaise(line.cost.compareAtAmountPerQuantity)
+        compareAtPricePaise: compareAtPrice
+          ? toPaise(compareAtPrice)
           : null,
         lineSubtotalPaise: toPaise(line.cost.subtotalAmount),
         lineTotalPaise: toPaise(line.cost.totalAmount),

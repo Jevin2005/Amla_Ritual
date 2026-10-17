@@ -296,6 +296,109 @@ test("preview cart mutations remain local without Shopify variants", async (t) =
   assert.deepEqual(harness.requests, []);
 });
 
+function assertPreviewAmounts(store, subtotalPaise, discountAmountPaise) {
+  assert.equal(store.subtotalPaise, subtotalPaise);
+  assert.equal(store.discountAmountPaise, discountAmountPaise);
+  assert.equal(store.totalPaise, subtotalPaise - discountAmountPaise);
+  assert.equal(store.cart.reduce((sum, line) => sum + line.lineSubtotalPaise, 0), subtotalPaise);
+  assert.equal(store.cart.reduce((sum, line) => sum + line.discountAmountPaise, 0), discountAmountPaise);
+  assert.equal(store.cart.reduce((sum, line) => sum + line.lineTotalPaise, 0), store.totalPaise);
+  for (const line of store.cart) {
+    assert.ok(Number.isInteger(line.discountAmountPaise));
+    assert.ok(Number.isInteger(line.lineTotalPaise));
+    assert.ok(line.discountAmountPaise >= 0 && line.discountAmountPaise <= line.lineSubtotalPaise);
+    assert.equal(line.lineTotalPaise, line.lineSubtotalPaise - line.discountAmountPaise);
+  }
+}
+
+test("preview coupons recalculate after item, bundle, quantity and removal changes", async (t) => {
+  const second = { ...product, slug: "second-ritual", pricePaise: 7501, variants: [] };
+  const harness = setup(t, { source: "preview", products: [{ ...product, variants: [] }, second] });
+  await harness.render().addToCart(product.slug);
+  assert.equal(await harness.render().applyDiscountCode(" welcome10 "), true);
+  assertPreviewAmounts(harness.render(), 10000, 1000);
+
+  await harness.render().addToCart(product.slug);
+  assertPreviewAmounts(harness.render(), 20000, 2000);
+  await harness.render().addManyToCart([second.slug]);
+  assertPreviewAmounts(harness.render(), 27501, 2750);
+  await harness.render().updateQuantity(product.slug, 3);
+  assertPreviewAmounts(harness.render(), 37501, 3750);
+  await harness.render().removeFromCart(second.slug);
+  assertPreviewAmounts(harness.render(), 30000, 3000);
+  assert.deepEqual(harness.render().discountCodes, [{ code: "WELCOME10", applicable: true }]);
+
+  await harness.render().removeDiscountCode("welcome10");
+  assertPreviewAmounts(harness.render(), 30000, 0);
+  assert.deepEqual(harness.render().discountCodes, []);
+  assert.deepEqual(harness.requests, []);
+});
+
+test("preview percentage allocations preserve fractional paise across multiple lines", async (t) => {
+  const products = [1, 1, 1, 0].map((pricePaise, index) => ({
+    ...product, slug: `small-ritual-${index}`, pricePaise, variants: [],
+  }));
+  const harness = setup(t, { source: "preview", products });
+  await harness.render().addManyToCart(products.map(({ slug }) => slug));
+  assert.equal(await harness.render().applyDiscountCode("RITUAL20"), true);
+  assertPreviewAmounts(harness.render(), 3, 1);
+  await harness.render().updateQuantity(products[0].slug, 4);
+  assertPreviewAmounts(harness.render(), 6, 1);
+
+  const previous = displayedCart(harness.render());
+  assert.equal(await harness.render().applyDiscountCode("INVALID"), false);
+  assert.deepEqual(displayedCart(harness.render()), previous);
+  assert.equal(await harness.render().applyDiscountCode("RITUAL15"), true);
+  assertPreviewAmounts(harness.render(), 6, 1);
+  assert.deepEqual(harness.render().discountCodes, [{ code: "RITUAL15", applicable: true }]);
+});
+
+test("preview fixed coupons cap at the subtotal and clear with the last item", async (t) => {
+  const products = [3333, 3334].map((pricePaise, index) => ({
+    ...product, slug: `fixed-ritual-${index}`, pricePaise, variants: [],
+  }));
+  const harness = setup(t, { source: "preview", products });
+  await harness.render().addManyToCart(products.map(({ slug }) => slug));
+  assert.equal(await harness.render().applyDiscountCode("BOTANICAL100"), true);
+  assertPreviewAmounts(harness.render(), 6667, 6667);
+  await harness.render().updateQuantity(products[1].slug, 3);
+  assertPreviewAmounts(harness.render(), 13335, 10000);
+  await harness.render().removeFromCart(products[0].slug);
+  assertPreviewAmounts(harness.render(), 10002, 10000);
+  await harness.render().updateQuantity(products[1].slug, 0);
+  assertPreviewAmounts(harness.render(), 0, 0);
+  assert.deepEqual(harness.render().discountCodes, []);
+  await harness.render().addToCart(products[0].slug);
+  assertPreviewAmounts(harness.render(), 3333, 0);
+});
+
+test("preview coupons keep zero-price lines and zero-subtotal amounts finite", async (t) => {
+  const freeProduct = { ...product, pricePaise: 0, variants: [] };
+  const harness = setup(t, { source: "preview", products: [freeProduct] });
+  await harness.render().addToCart(product.slug, 2);
+  for (const code of ["WELCOME10", "BOTANICAL100"]) {
+    assert.equal(await harness.render().applyDiscountCode(code), true);
+    assertPreviewAmounts(harness.render(), 0, 0);
+    assert.deepEqual(harness.render().discountCodes, [{ code, applicable: true }]);
+    await harness.render().removeDiscountCode(code);
+    assertPreviewAmounts(harness.render(), 0, 0);
+    assert.deepEqual(harness.render().discountCodes, []);
+  }
+});
+
+test("preview selected variant preserves its absent MRP instead of borrowing another option's MRP", async (t) => {
+  const selectedVariant = { ...detailVariant, compareAtPricePaise: null };
+  const variantsProduct = {
+    ...product,
+    compareAtPricePaise: 50000,
+    variants: [product.variants[0], selectedVariant],
+  };
+  const harness = setup(t, { source: "preview", products: [variantsProduct] });
+  await harness.render().addToCart(product.slug, 1, false, selectedVariant.id);
+  assert.equal(harness.render().cart[0].compareAtPricePaise, null);
+  assert.equal(harness.render().cart[0].pricePaise, selectedVariant.pricePaise);
+});
+
 test("initial Shopify hydration restores the server cart when no action supersedes it", async (t) => {
   const harness = setup(t);
   harness.responses.push({ body: { cart: remoteCart } });

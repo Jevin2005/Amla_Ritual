@@ -16,6 +16,7 @@ import { VideoStoryCard } from "@/features/reviews/video-story-card";
 import { useStore } from "@/features/store/store-provider";
 import { isJudgemeConfigured } from "@/lib/judgeme/config";
 import type { JudgemeAllReviewsPage } from "@/lib/judgeme/all-reviews";
+import { scrollPageTo } from "@/shared/ui/page-scroll";
 
 const REVIEW_PAGE_SIZE = 6;
 const VIDEO_PAGE_SIZE = 8;
@@ -35,12 +36,7 @@ type ReviewsPageProps = {
 function focusReviewSection(section: HTMLElement | null) {
   if (!section) return;
   section.focus({ preventScroll: true });
-  section.scrollIntoView({
-    block: "start",
-    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "instant"
-      : "smooth",
-  });
+  scrollPageTo(section);
 }
 
 export function ReviewsPage({ initialReviews = [], initialJudgemeReviews = null }: ReviewsPageProps) {

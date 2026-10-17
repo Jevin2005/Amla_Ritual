@@ -1,6 +1,16 @@
 .stage { position: relative; width: 100%; height: 100%; min-height: 0; isolation: isolate; background: transparent; display: flex; align-items: center; justify-content: center; overflow: visible; }
 .poster { object-fit: contain; object-position: center; }
-.viewer { display: block; position: absolute; inset: 0; width: 100%; height: 100%; background: transparent; --poster-color: transparent; transform: translate(var(--model-x, 0px), var(--model-y, 0px)); transition: transform .35s ease-out; outline: none; }
+.posterLayer, .floatLayer { position: absolute; inset: 0; }
+.posterLayer { opacity: 1; transition: opacity .35s ease; pointer-events: none; }
+.stage[data-status="ready"] .posterLayer { opacity: 0; }
+.floatLayer[data-floating="true"] { animation: model-float 5.6s ease-in-out infinite; animation-play-state: paused; }
+.floatLayer[data-floating-running="true"] { animation-play-state: running; }
+.stage[data-interacting="true"] .floatLayer { animation-play-state: paused; }
+@keyframes model-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, var(--model-float-lift, -7px), 0) rotate(var(--model-float-tilt, .6deg)); }
+}
+.viewer { display: block; position: absolute; inset: 0; width: 100%; height: 100%; background: transparent; --poster-color: transparent; transform: translate(var(--model-x, 0px), var(--model-y, 0px)); transition: transform .35s ease-out, opacity .35s ease; outline: none; }
 .stage[data-presentation="showcase"]::before,
 .stage[data-presentation="showcase"]::after { position: absolute; z-index: -1; pointer-events: none; content: ""; opacity: 0; transition: opacity .6s ease, transform .65s cubic-bezier(.2,.75,.25,1); }
 .stage[data-presentation="showcase"]::before { inset: 4% -8%; border-radius: 50%; background: radial-gradient(ellipse at var(--model-glow-x, 50%) var(--model-glow-y, 50%), color-mix(in srgb, var(--hero-accent, #b7c58e) 18%, transparent), transparent 64%); transform: scale(.9); }
@@ -8,15 +18,20 @@
 .stage[data-presentation="showcase"] .viewer { transform: translate3d(var(--model-x, 0px), var(--model-y, 0px), 0) rotate(var(--model-roll, 0deg)) scale(var(--model-scale, 1)); transition: transform .65s cubic-bezier(.2,.75,.25,1), opacity .3s ease; }
 .stage[data-presentation="showcase"][data-motion="true"][data-hovered="true"]::before { opacity: 1; transform: scale(1.04); }
 .stage[data-presentation="showcase"][data-motion="true"][data-hovered="true"]::after { opacity: .65; transform: translateX(calc(var(--model-x, 0px) * -.5)) scale(1.08); }
-.stage[data-presentation="showcase"][data-motion="false"] .viewer { transform: none; transition: none; }
+.stage[data-presentation="showcase"][data-motion="false"] .viewer { transform: none; }
+.stage[data-transition="false"] .posterLayer { transition: none; }
 .hint, .pause { position: absolute; bottom: 10px; z-index: 2; border-radius: 100px; color: var(--forest); background: rgba(255,255,255,.92); }
 .hint { left: 10px; max-width: calc(100% - 20px); padding: 8px 10px; font-size: .75rem; line-height: 1.4; pointer-events: none; }
+.progress { display: block; height: 2px; margin-top: 5px; border-radius: 2px; overflow: hidden; background: rgb(32 60 40 / .12); }
+.progress > span { display: block; height: 100%; background: currentColor; transform-origin: left; transition: transform .2s linear; }
 .pause { display: grid; place-items: center; right: 10px; width: 44px; height: 44px; border: 1px solid var(--line); cursor: pointer; }
 .pause:hover { background: var(--forest); color: var(--paper); }
 .pause:focus-visible { outline: 2px solid var(--forest); outline-offset: -4px; }
 .retry { position: absolute; bottom: 10px; z-index: 2; min-height: 44px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 100px; color: var(--forest); background: var(--paper); cursor: pointer; }
 .retry:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
+  .floatLayer[data-floating="true"] { animation: none; }
+  .posterLayer, .progress > span { transition: none; }
   .viewer, .stage[data-presentation="showcase"] .viewer { transition: none; transform: none; }
   .stage[data-presentation="showcase"]::before, .stage[data-presentation="showcase"]::after { display: none; }
 }

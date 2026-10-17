@@ -216,7 +216,7 @@ function previewLine(
     quantityAvailable: variant?.quantityAvailable ?? null,
     pricePaise,
     compareAtPricePaise:
-      variant?.compareAtPricePaise ?? product.compareAtPricePaise ?? null,
+      variant ? variant.compareAtPricePaise ?? null : product.compareAtPricePaise ?? null,
     lineSubtotalPaise: pricePaise * quantity,
     lineTotalPaise: pricePaise * quantity,
     discountAmountPaise: 0,
@@ -240,27 +240,72 @@ function emptyCart(currencyCode = "INR"): StoreCart {
   };
 }
 
-function previewCart(items: CartItem[], fallbackCurrency = "INR"): StoreCart {
+function previewDiscount(code: string) {
+  switch (code.toUpperCase()) {
+    case "WELCOME10":
+    case "NATURE10":
+      return { percent: 10, fixedPaise: 0 };
+    case "RITUAL15":
+    case "AMLA15":
+      return { percent: 15, fixedPaise: 0 };
+    case "AYURVEDA":
+    case "RITUAL20":
+      return { percent: 20, fixedPaise: 0 };
+    case "BOTANICAL100":
+      return { percent: 0, fixedPaise: 10000 };
+    default:
+      return null;
+  }
+}
+
+function previewCart(
+  items: CartItem[],
+  fallbackCurrency = "INR",
+  discountCodes: CartDiscountCode[] = [],
+): StoreCart {
   const subtotalPaise = items.reduce(
     (total, item) => total + item.pricePaise * item.quantity,
     0,
   );
+  const code = items.length
+    ? discountCodes.find((entry) => entry.applicable && previewDiscount(entry.code))
+    : undefined;
+  const discount = code ? previewDiscount(code.code) : null;
+  const discountAmountPaise = discount
+    ? Math.min(subtotalPaise, discount.percent
+      ? Math.round(subtotalPaise * discount.percent / 100)
+      : discount.fixedPaise)
+    : 0;
+  let allocatedDiscountPaise = 0;
+  let runningSubtotalPaise = 0;
+  const discountedItems = items.map((item) => {
+    const lineSubtotalPaise = item.pricePaise * item.quantity;
+    runningSubtotalPaise += lineSubtotalPaise;
+    // Allocate against cumulative totals so fractional paise never leave a
+    // difference between the line items and the cart's rounded discount.
+    const cumulativeDiscountPaise = subtotalPaise > 0
+      ? Math.round(discountAmountPaise * runningSubtotalPaise / subtotalPaise)
+      : 0;
+    const lineDiscountPaise = cumulativeDiscountPaise - allocatedDiscountPaise;
+    allocatedDiscountPaise = cumulativeDiscountPaise;
+    return {
+      ...item,
+      lineSubtotalPaise,
+      lineTotalPaise: lineSubtotalPaise - lineDiscountPaise,
+      discountAmountPaise: lineDiscountPaise,
+    };
+  });
   return {
     checkoutUrl: null,
-    items: items.map((item) => ({
-      ...item,
-      lineSubtotalPaise: item.pricePaise * item.quantity,
-      lineTotalPaise: item.pricePaise * item.quantity,
-      discountAmountPaise: 0,
-    })),
+    items: discountedItems,
     totalQuantity: items.reduce((total, item) => total + item.quantity, 0),
     subtotalPaise,
-    totalPaise: subtotalPaise,
-    discountAmountPaise: 0,
+    totalPaise: subtotalPaise - discountAmountPaise,
+    discountAmountPaise,
     currencyCode: items[0]?.currencyCode || fallbackCurrency,
     subtotalEstimated: false,
     totalEstimated: false,
-    discountCodes: [],
+    discountCodes: code ? [{ code: code.code.toUpperCase(), applicable: true }] : [],
   };
 }
 
@@ -638,7 +683,7 @@ export function StoreProvider({
                   : item,
               )
             : [...cartRef.current.items, newLine];
-          nextCart = previewCart(items, fallbackCurrency);
+          nextCart = previewCart(items, fallbackCurrency, cartRef.current.discountCodes);
           commitCart(nextCart);
           setAnnouncement(`${product.name} added to your bag.`);
         }
@@ -715,7 +760,7 @@ export function StoreProvider({
                 )
               : [...items, line];
           }
-          nextCart = previewCart(items, fallbackCurrency);
+          nextCart = previewCart(items, fallbackCurrency, cartRef.current.discountCodes);
           commitCart(nextCart);
           setAnnouncement(`${selections.length} ritual jars added to your bag.`);
         } else {
@@ -787,6 +832,7 @@ export function StoreProvider({
           const nextCart = previewCart(
             cartRef.current.items.filter((entry) => entry.lineId !== item.lineId),
             fallbackCurrency,
+            cartRef.current.discountCodes,
           );
           commitCart(nextCart);
           setAnnouncement(`${item.productName} removed from your bag.`);
@@ -849,6 +895,7 @@ export function StoreProvider({
                 : entry,
             ),
             fallbackCurrency,
+            cartRef.current.discountCodes,
           );
           commitCart(nextCart);
           setAnnouncement(`${item.productName} quantity updated.`);
@@ -945,30 +992,19 @@ export function StoreProvider({
 
         // Demo discounts are only available in the local preview catalogue.
         const upperCode = code.toUpperCase();
-        let discountPercent = 0;
-        let fixedDiscountPaise = 0;
-        if (upperCode === "WELCOME10" || upperCode === "NATURE10") discountPercent = 10;
-        else if (upperCode === "RITUAL15" || upperCode === "AMLA15") discountPercent = 15;
-        else if (upperCode === "AYURVEDA" || upperCode === "RITUAL20") discountPercent = 20;
-        else if (upperCode === "BOTANICAL100") fixedDiscountPaise = 10000;
-        else {
+        const discount = previewDiscount(upperCode);
+        if (!discount) {
           setCartError(`Discount code "${code}" is invalid or expired.`);
           return false;
         }
 
-        const subtotal = cartRef.current.subtotalPaise;
-        const calcSavings = discountPercent > 0
-          ? Math.round((subtotal * discountPercent) / 100)
-          : Math.min(subtotal, fixedDiscountPaise);
-
-        const updatedCart: StoreCart = {
-          ...cartRef.current,
-          discountAmountPaise: calcSavings,
-          totalPaise: Math.max(0, subtotal - calcSavings),
-          discountCodes: [{ code: upperCode, applicable: true }],
-        };
+        const updatedCart = previewCart(
+          cartRef.current.items,
+          cartRef.current.currencyCode,
+          [{ code: upperCode, applicable: true }],
+        );
         commitCart(updatedCart);
-        setAnnouncement(`Promo code "${upperCode}" applied! Saved ${discountPercent ? `${discountPercent}%` : "₹100"}.`);
+        setAnnouncement(`Promo code "${upperCode}" applied to your bag.`);
         track("apply_discount", { code: upperCode });
         return true;
       } catch (error) {
@@ -991,8 +1027,16 @@ export function StoreProvider({
 
   const removeDiscountCode = useCallback(
     async (code: string) => {
-      if (source !== "shopify" || !beginOperation()) return;
+      if (!beginOperation()) return;
       try {
+        if (source === "preview") {
+          const discountCodes = cartRef.current.discountCodes.filter(
+            (discount) => discount.code.toLocaleLowerCase() !== code.toLocaleLowerCase(),
+          );
+          commitCart(previewCart(cartRef.current.items, cartRef.current.currencyCode, discountCodes));
+          setAnnouncement(`${code} removed from your bag.`);
+          return;
+        }
         const codes = cartRef.current.discountCodes
           .filter(
             (discount) =>
@@ -1009,6 +1053,7 @@ export function StoreProvider({
     },
     [
       beginOperation,
+      commitCart,
       finishOperation,
       handleApiPayload,
       handleOperationError,

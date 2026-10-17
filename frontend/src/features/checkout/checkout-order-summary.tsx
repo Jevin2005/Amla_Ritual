@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { formatCurrency, calculateDiscountPercent } from "@/domain/catalog/products";
+import { calculateCartBilling, calculateLineBilling, formatBillingCurrency } from "@/domain/cart/billing";
 import { CartProductImage } from "@/features/cart/cart-product-image";
+import { CartBillSummary } from "@/features/cart/cart-bill-summary";
 import { useStore } from "@/features/store/store-provider";
 
 type CheckoutOrderSummaryProps = {
@@ -16,7 +17,6 @@ export function CheckoutOrderSummary({
   const {
     products,
     cart,
-    subtotalPaise,
     totalPaise,
     discountAmountPaise,
     currencyCode,
@@ -35,7 +35,7 @@ export function CheckoutOrderSummary({
 
   const handleDiscountSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!discountInput.trim()) return;
+    if (!discountInput.trim() || isCartBusy) return;
     setDiscountStatus("");
     const success = await applyDiscountCode(discountInput.trim());
     if (success) {
@@ -44,20 +44,11 @@ export function CheckoutOrderSummary({
     }
   };
 
-  const finalTotalPaise = totalPaise + shippingFeePaise;
-
-  const totalMrpPaise = cart.reduce((sum, item) => {
-    const comp = item.compareAtPricePaise && item.compareAtPricePaise > item.pricePaise ? item.compareAtPricePaise : item.pricePaise;
-    return sum + comp * item.quantity;
-  }, 0);
-  const totalMrpSavingsPaise = Math.max(0, totalMrpPaise - subtotalPaise);
-  const combinedTotalSavings = totalMrpSavingsPaise + discountAmountPaise;
-
-
+  const billing = calculateCartBilling({ items: cart, totalPaise, discountAmountPaise, shippingFeePaise });
 
   return (
     <aside
-      className="flex flex-col gap-6 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-7 shadow-[0_16px_40px_rgba(21,59,45,0.06)] min-[901px]:sticky min-[901px]:top-[calc(var(--header-height)+24px)] max-[680px]:p-5"
+      className="flex min-w-0 flex-col gap-6 rounded-3xl border border-[var(--line)] bg-[var(--paper)] p-7 shadow-[0_16px_40px_rgba(21,59,45,0.06)] min-[901px]:sticky min-[901px]:top-[calc(var(--header-height)+24px)] max-[680px]:p-5"
       aria-label="Order summary"
     >
       {/* Header */}
@@ -75,6 +66,7 @@ export function CheckoutOrderSummary({
         {cart.map((item) => {
           const product = products.find((p) => item.productId && p.id === item.productId) || products.find((p) => p.slug === item.slug);
           const maxQuantity = Math.min(12, item.quantityAvailable ?? 12);
+          const lineBilling = calculateLineBilling(item);
           const variantLabel = item.selectedOptions
             .map((opt) => opt.value)
             .filter((val) => val !== "Default Title")
@@ -83,7 +75,7 @@ export function CheckoutOrderSummary({
           return (
             <article
               key={item.lineId}
-              className="grid grid-cols-[68px_1fr_auto] items-center gap-3.5 py-4 first:pt-0 last:pb-0"
+              className="grid grid-cols-[68px_minmax(0,1fr)] items-start gap-x-3.5 gap-y-2 py-4 first:pt-0 last:pb-0"
             >
               {/* Product Visual */}
               <div
@@ -113,9 +105,9 @@ export function CheckoutOrderSummary({
                     <button
                       type="button"
                       onClick={() => void updateQuantity(item.lineId, item.quantity - 1)}
-                      disabled={isCartBusy}
+                      disabled={isCartBusy || item.quantity <= 1}
                       className="size-5 text-xs font-bold text-[var(--forest)] disabled:opacity-30 cursor-pointer flex items-center justify-center hover:bg-[var(--ivory)] rounded-full transition-colors"
-                      aria-label="Decrease quantity"
+                      aria-label={`Decrease ${item.productName} quantity`}
                     >
                       −
                     </button>
@@ -127,7 +119,7 @@ export function CheckoutOrderSummary({
                       onClick={() => void updateQuantity(item.lineId, item.quantity + 1)}
                       disabled={isCartBusy || !item.availableForSale || item.quantity >= maxQuantity}
                       className="size-5 text-xs font-bold text-[var(--forest)] disabled:opacity-30 cursor-pointer flex items-center justify-center hover:bg-[var(--ivory)] rounded-full transition-colors"
-                      aria-label="Increase quantity"
+                      aria-label={`Increase ${item.productName} quantity`}
                     >
                       +
                     </button>
@@ -145,33 +137,13 @@ export function CheckoutOrderSummary({
               </div>
 
               {/* Price */}
-              <div className="text-right shrink-0">
-                {(() => {
-                  const compareAt = item.compareAtPricePaise && item.compareAtPricePaise > item.pricePaise ? item.compareAtPricePaise : null;
-                  const discPercent = calculateDiscountPercent(item.pricePaise, compareAt);
-                  const savings = compareAt ? (compareAt - item.pricePaise) * item.quantity : 0;
-                  return (
-                    <div className="flex flex-col items-end">
-                      <span className="font-serif text-[1.1rem] font-medium text-[var(--forest)]">
-                        {formatCurrency(item.lineTotalPaise, item.currencyCode)}
-                      </span>
-                      {compareAt && (
-                        <del className="text-[0.74rem] text-[var(--muted)]">
-                          {formatCurrency(compareAt * item.quantity, item.currencyCode)}
-                        </del>
-                      )}
-                      {item.discountAmountPaise > 0 ? (
-                        <span className="block text-[0.68rem] font-bold text-[#529d38]">
-                          Save {formatCurrency(item.discountAmountPaise, item.currencyCode)}
-                        </span>
-                      ) : savings > 0 ? (
-                        <span className="block text-[0.68rem] font-bold text-[#529d38]">
-                          Save {formatCurrency(savings, item.currencyCode)} ({discPercent}% OFF)
-                        </span>
-                      ) : null}
-                    </div>
-                  );
-                })()}
+              <div className="col-start-2 flex min-w-0 flex-col gap-1 tabular-nums">
+                <span className="text-[0.7rem] text-[var(--muted)]">{item.quantity} × {formatBillingCurrency(item.pricePaise, item.currencyCode)} each</span>
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <strong className="whitespace-nowrap text-[1.05rem] text-[var(--forest)]">{formatBillingCurrency(lineBilling.totalPaise, item.currencyCode)}</strong>
+                  {lineBilling.savingsPaise > 0 && <del className="whitespace-nowrap text-[0.74rem] text-[var(--muted)]">{formatBillingCurrency(lineBilling.mrpPaise, item.currencyCode)}</del>}
+                </div>
+                {lineBilling.savingsPaise > 0 && <span className="text-[0.7rem] font-semibold text-[#2d6a2f]">Save {formatBillingCurrency(lineBilling.savingsPaise, item.currencyCode)}</span>}
               </div>
             </article>
           );
@@ -189,8 +161,9 @@ export function CheckoutOrderSummary({
               setDiscountStatus("");
               clearCartError();
             }}
-            placeholder="Discount code / Gift card"
-            className="h-10 flex-1 rounded-xl border border-[var(--line)] bg-[var(--paper)] px-3 text-[0.8rem] uppercase tracking-wider text-[var(--forest)] placeholder:normal-case placeholder:tracking-normal placeholder:text-[var(--muted)] outline-none focus:border-[var(--botanical)]"
+            placeholder="Discount code"
+            aria-label="Discount code"
+            className="h-10 min-w-0 flex-1 rounded-xl border border-[var(--line)] bg-[var(--paper)] px-3 text-[0.8rem] uppercase tracking-wider text-[var(--forest)] placeholder:normal-case placeholder:tracking-normal placeholder:text-[var(--muted)] outline-none focus:border-[var(--botanical)]"
             disabled={isCartBusy}
           />
           <button
@@ -221,10 +194,11 @@ export function CheckoutOrderSummary({
                 key={d.code}
                 className="inline-flex items-center gap-1.5 rounded-full bg-[#edf3dd] px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wider text-[var(--forest)] border border-[#529d38]/30"
               >
-                <span>🏷️ {d.code}</span>
+                <span>{d.code}{!d.applicable && " · Not applicable"}</span>
                 <button
                   type="button"
                   onClick={() => void removeDiscountCode(d.code)}
+                  disabled={isCartBusy}
                   className="size-3.5 rounded-full hover:bg-black/10 flex items-center justify-center cursor-pointer"
                   aria-label={`Remove discount ${d.code}`}
                 >
@@ -238,66 +212,8 @@ export function CheckoutOrderSummary({
 
       {/* ── Financial Breakdown ── */}
       <div className="border-t border-[var(--line)] pt-4">
-        {combinedTotalSavings > 0 && (
-          <div className="mb-3 flex items-center justify-between rounded-xl bg-[#529d38]/10 px-3.5 py-2 text-[0.76rem] font-bold text-[#235825] ring-1 ring-[#529d38]/20">
-            <span className="flex items-center gap-1.5">
-              <span>🎉</span>
-              <span>Total Savings on this order:</span>
-            </span>
-            <span>{formatCurrency(combinedTotalSavings, currencyCode)}</span>
-          </div>
-        )}
+        <CartBillSummary billing={billing} currencyCode={currencyCode} busy={isCartBusy} />
       </div>
-
-      <dl className="flex flex-col gap-2.5 text-[0.84rem] text-[var(--muted)]">
-        {totalMrpPaise > subtotalPaise && (
-          <div className="flex items-center justify-between">
-            <dt>Total MRP</dt>
-            <dd className="line-through">
-              {formatCurrency(totalMrpPaise, currencyCode)}
-            </dd>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between">
-          <dt>Subtotal</dt>
-          <dd className="font-semibold text-[var(--forest)]">
-            {formatCurrency(subtotalPaise, currencyCode)}
-          </dd>
-        </div>
-
-        {combinedTotalSavings > 0 && (
-          <div className="flex items-center justify-between text-[#529d38]">
-            <dt>Total Discount Savings</dt>
-            <dd className="font-semibold">
-              −{formatCurrency(combinedTotalSavings, currencyCode)}
-            </dd>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between">
-          <dt>Shipping</dt>
-          <dd className="font-semibold text-[var(--forest)]">
-            {shippingFeePaise === 0 ? (
-              <span className="text-[#529d38]">FREE</span>
-            ) : (
-              formatCurrency(shippingFeePaise, currencyCode)
-            )}
-          </dd>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <dt>Estimated Taxes (GST)</dt>
-          <dd className="font-medium text-[var(--muted)]">Included</dd>
-        </div>
-
-        <div className="mt-2 flex items-baseline justify-between border-t border-[var(--line)] pt-3.5 text-[var(--forest)]">
-          <dt className="text-[0.96rem] font-bold">Total Payable</dt>
-          <dd className="[font-family:var(--font-display)] text-[1.75rem] font-bold">
-            {formatCurrency(finalTotalPaise, currencyCode)}
-          </dd>
-        </div>
-      </dl>
     </aside>
   );
 }

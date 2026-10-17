@@ -7,6 +7,7 @@ import { getImageHeroProducts } from "@/domain/catalog/image-hero";
 import type { HeroSettings } from "@/domain/catalog/hero";
 import { useStore } from "@/features/store/store-provider";
 import { MediaImage } from "@/shared/ui/media-image";
+import { scrollPageTo } from "@/shared/ui/page-scroll";
 import { clamp, getCoverScale, getHeroBackdrop, getHeroFrame, getHeroHandoffMetrics, getHeroLayout, getHeroScrollMetrics, getHeroScrollProgress, smoothstep } from "./hero-motion";
 import { heroSealPath, heroSealTitleLength, heroSealTitlePath } from "./hero-seal";
 import { HeroDiscoverHint } from "./hero-discover-hint";
@@ -56,6 +57,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     let previousTravel = 0;
     let travelSpeed = 0;
     let suppressClickUntil = 0;
+    let browsed = false;
     let pendingFocus: number | null = null;
     let gesture: { id: number; x: number; y: number; lastX: number; time: number; velocity: number; dragging: boolean } | null = null;
     const scrollTravel = () => smoothstep((reduced ? 0 : target) / 0.48) * Math.max(0, slides.length - 1);
@@ -76,7 +78,10 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       // Time-based damping gives the same gentle scrub on 60 Hz and 120 Hz screens.
       const ease = 1 - Math.exp(-delta / 140);
       const pointerEase = 1 - Math.exp(-delta / 180);
-      current = settle ? target : current + (target - current) * ease;
+      // Lenis already smooths wheel/navigation input; follow its real position
+      // directly so a second easing layer cannot make the scene trail behind.
+      const managedScroll = document.documentElement?.classList.contains("lenis");
+      current = settle || managedScroll ? target : current + (target - current) * ease;
       const previousManual = manualCurrent;
       manualCurrent = reduced || settle ? manualTarget : manualCurrent + (manualTarget - manualCurrent) * ease;
       if (Math.abs(manualTarget - manualCurrent) < 0.0001) manualCurrent = manualTarget;
@@ -93,6 +98,8 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (Math.abs(aimY - pointerY) < 0.001) pointerY = aimY;
       if (Math.abs(target - current) < 0.0001) current = target;
       const state = getHeroFrame(reduced ? 0 : current, slides.length, width < 680, manualCurrent, travelSpeed, layout);
+      section.dataset.idle = String(active && !document.hidden && !gesture && target === 0 && current < 0.001 && !browsed);
+      section.dataset.browsed = String(browsed || target > 0.01);
       const reveal = incoming && !reduced ? state.reveal : 0;
       if (header) {
         header.dataset.heroMotion = String(!reduced);
@@ -121,9 +128,12 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         arc.current.style.transform = coverTransform;
       }
       if (cue.current) {
-        cue.current.style.opacity = String(1 - clamp(current / 0.12));
-        cue.current.style.pointerEvents = current > 0.12 ? "none" : "auto";
-        cue.current.tabIndex = current > 0.12 ? -1 : 0;
+        // Keep the way forward visible throughout the product story.
+        const cueOpacity = 1 - smoothstep((current - 0.66) / 0.08);
+        cue.current.style.opacity = String(cueOpacity);
+        cue.current.style.visibility = cueOpacity === 0 ? "hidden" : "visible";
+        cue.current.style.pointerEvents = cueOpacity < 0.1 ? "none" : "auto";
+        cue.current.tabIndex = cueOpacity < 0.1 ? -1 : 0;
       }
       if (counter.current) counter.current.textContent = `${String(state.focus + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
       if (progressBar.current) progressBar.current.style.transform = `scaleX(${state.progress})`;
@@ -179,6 +189,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (nextTarget !== target) manualTarget = 0;
       target = nextTarget;
       if (!active) {
+        section.dataset.idle = "false";
         cancelDraw();
         if (wasActive) {
           cancelGesture();
@@ -234,6 +245,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           // A vertical gesture belongs to the page, including when it starts on a jar.
           if (Math.abs(dy) >= Math.abs(dx)) { gesture = null; return; }
           gesture.dragging = true;
+          browsed = true;
           section.dataset.dragging = "true";
           section.setPointerCapture(event.pointerId);
         }
@@ -268,6 +280,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (slides.length < 2 || event.button !== 0 || !event.isPrimary || !jarTarget(event) || current > 0.5) return;
       suppressClickUntil = 0;
       gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, time: event.timeStamp, velocity: 0, dragging: false };
+      section.dataset.idle = "false";
     };
     const pointerUp = (event: PointerEvent) => {
       if (!gesture || gesture.id !== event.pointerId) return;
@@ -279,6 +292,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         requestDraw();
       }
       cancelGesture();
+      requestDraw();
     };
     const preventDragClick = (event: MouseEvent) => {
       if (event.detail > 0 && event.timeStamp < suppressClickUntil && jarTarget(event)) {
@@ -293,6 +307,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (destination === manualTarget) return;
       event.preventDefault();
       manualTarget = destination;
+      browsed = true;
       requestDraw();
     };
     const keyboardBrowse = (event: KeyboardEvent) => {
@@ -302,6 +317,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       const index = Number(link.getAttribute("data-hero-product"));
       const destination = event.key === "Home" ? 0 : event.key === "End" ? slides.length - 1 : clamp(index + (event.key === "ArrowRight" ? 1 : -1), 0, slides.length - 1);
       manualTarget = limitManual(destination - scrollTravel());
+      browsed = true;
       pendingFocus = destination;
       requestDraw();
     };
@@ -317,7 +333,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     };
     const visibilityChanged = () => {
       lastTime = 0;
-      if (document.hidden) { cancelGesture(); aimX = aimY = pointerX = pointerY = 0; cancelDraw(); }
+      if (document.hidden) { section.dataset.idle = "false"; cancelGesture(); aimX = aimY = pointerX = pointerY = 0; cancelDraw(); }
       else resume();
     };
     section.dataset.reducedMotion = String(reduced);
@@ -379,6 +395,8 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       surface.style.pointerEvents = "auto";
       delete section.dataset.handoff;
       delete section.dataset.revealing;
+      delete section.dataset.idle;
+      delete section.dataset.browsed;
       if (header) {
         delete header.dataset.heroMotion;
         header.style.removeProperty("--hero-header-progress");
@@ -425,12 +443,18 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
               width: `calc(var(--initial-jar-height) * ${initialScale * 0.74})`,
             };
             return <Link key={product.heroEntryId} ref={(element) => { productLinks.current[i] = element; }} href={`/shop/${product.slug}`} className={styles.product} data-hero-product={i} aria-label={`Discover ${product.name}`} aria-describedby={slides.length > 1 ? "jar-browse-instructions" : undefined} draggable={false} tabIndex={initial.poses[i].x > -0.12 && initial.poses[i].x < 1.12 ? 0 : -1} style={{ ...openingStyle, transform: `translate(-50%, -50%) rotate(${initialRoll}rad)` }}>
-              <div className={styles.artwork} style={{ animationDelay: `${i * 70}ms` }}>
-                <MediaImage src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62svh" preload draggable={false} className={styles.jarImage} />
+              <div className={styles.float}>
+                <div className={styles.artwork} style={{ animationDelay: `${i * 70}ms` }}>
+                  <MediaImage src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62svh" preload draggable={false} className={styles.jarImage} />
+                </div>
               </div>
             </Link>;
           })}
         </div>
+        {slides.length > 1 && <p className={styles.swipeHint} aria-hidden="true">
+          <svg width="36" height="16" viewBox="0 0 36 16" fill="none"><path d="m6 4-4 4 4 4m24-8 4 4-4 4M2 8h32" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <span>Swipe the jars to explore</span>
+        </p>}
         <HeroDiscoverHint animated={motionSettings.enabled && motionSettings.cursor && settings.cursorMotion} />
         <a ref={cue} className={styles.scrollCue} href="#previous-hero" onClick={(event) => {
           const section = root.current;
@@ -438,9 +462,15 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           event.preventDefault();
           const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches || !motionSettings.enabled;
           const top = section.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo({ top: reduced ? top + section.offsetHeight : top + Math.min(window.innerHeight * 0.8, section.offsetHeight - window.innerHeight), behavior: reduced ? "instant" : "smooth" });
+          const height = stage.current?.clientHeight || window.innerHeight;
+          // The second hero overlaps the first. Its DOM top is the start of
+          // the crossfade; the story's end is the fully revealed landing.
+          scrollPageTo(top + (reduced ? section.offsetHeight : getHeroScrollMetrics(height, slides.length).distance), { immediate: reduced });
         }}>
-          <span>Scroll to discover</span><svg width="26" height="16" viewBox="0 0 26 16" fill="none" aria-hidden="true"><path d="m2 3 11 10L24 3" stroke="currentColor" strokeWidth="1.3" /></svg>
+          <span className={styles.scrollLabel}>Scroll to discover</span>
+          <span className={styles.mobileScrollLabel}>Scroll to your ritual</span>
+          <span className={styles.scrollDetail}>Swipe up or tap to continue</span>
+          <svg width="26" height="16" viewBox="0 0 26 16" fill="none" aria-hidden="true"><path d="m2 3 11 10L24 3" stroke="currentColor" strokeWidth="1.3" /></svg>
         </a>
         <div className={styles.caption}><span ref={counter}>01 / {String(slides.length).padStart(2, "0")}</span><span>Botanical care</span></div>
         <a href="#botanical-collection" className={styles.skip}>Explore the collection <span aria-hidden="true">↗</span></a>

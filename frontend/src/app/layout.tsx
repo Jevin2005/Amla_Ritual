@@ -137,8 +137,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-IN"
-      className="scroll-smooth scroll-pt-[calc(var(--header-height)+20px)] bg-[var(--ivory)] [--header-height:88px] max-[1180px]:[--header-height:76px] max-[680px]:[--header-height:60px] motion-reduce:scroll-auto"
-      data-scroll-behavior="smooth"
+      className="scroll-pt-[calc(var(--header-height)+20px)] bg-[var(--ivory)] [--header-height:88px] max-[1180px]:[--header-height:76px] max-[680px]:[--header-height:60px]"
       data-site-motion={storefront.content.motionSettings.enabled ? "on" : "off"}
       style={{ "--motion-duration": storefront.content.motionSettings.duration, "--motion-intensity": storefront.content.motionSettings.intensity } as CSSProperties}
     >

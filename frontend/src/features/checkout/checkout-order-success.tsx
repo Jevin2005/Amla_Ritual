@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { formatCurrency } from "@/domain/catalog/products";
+import { formatBillingCurrency } from "@/domain/cart/billing";
 import type { OrderConfirmationData } from "./checkout-form";
 import { SupportContactLinks } from "@/shared/ui/support-contact-links";
 
@@ -12,6 +12,12 @@ type CheckoutOrderSuccessProps = {
 
 export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
   const [copied, setCopied] = useState(false);
+  const amountRows = [
+    { label: "Subtotal", amount: formatBillingCurrency(order.subtotalPaise, order.currencyCode) },
+    ...(order.discountPaise > 0 ? [{ label: "Discount", amount: formatBillingCurrency(-order.discountPaise, order.currencyCode) }] : []),
+    { label: "Taxes", amount: "Included in price" },
+    { label: "Shipping", amount: order.shippingFeePaise === 0 ? "Free" : formatBillingCurrency(order.shippingFeePaise, order.currencyCode) },
+  ];
 
   const handlePrint = () => {
     window.print();
@@ -32,6 +38,7 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
       <h1 className="font-serif text-3xl text-[var(--forest)]">Payment received. Order needs confirmation.</h1>
       <p className="mt-4">Your payment was verified, but we couldn’t save the order to our store. Please do not pay again.</p>
       <p className="mt-4">Payment reference: <strong className="break-all">{order.paymentReference}</strong></p>
+      <p className="mt-2">Amount paid: <strong>{formatBillingCurrency(order.totalPaise, order.currencyCode)}</strong></p>
       <p className="mt-2">Contact <SupportContactLinks /> with this reference so we can confirm your order.</p>
       <Link href="/contact" className="mt-5 inline-flex min-h-11 items-center underline">Contact support</Link>
     </section>;
@@ -202,18 +209,26 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
                     </span>
                   </div>
                   <span className="font-serif text-[0.95rem] text-[var(--forest)]">
-                    {formatCurrency(item.pricePaise, order.currencyCode)}
+                    {formatBillingCurrency(item.pricePaise, order.currencyCode)}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="flex items-baseline justify-between border-t border-[var(--line)] pt-4 mt-3">
+            <dl className="mt-3 space-y-2 border-t border-[var(--line)] pt-4 text-[0.76rem] text-[var(--muted)]">
+              {amountRows.map((row) => (
+                <div key={row.label} className="flex justify-between gap-4">
+                  <dt>{row.label}</dt>
+                  <dd className="shrink-0 tabular-nums">{row.amount}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="flex items-baseline justify-between gap-4 border-t border-[var(--line)] pt-4 mt-3">
               <span className="text-[0.84rem] font-bold text-[var(--forest)]">
                 Total Amount
               </span>
-              <span className="[font-family:var(--font-display)] text-[1.45rem] font-bold text-[var(--forest)]">
-                {formatCurrency(order.totalPaise, order.currencyCode)}
+              <span className="shrink-0 tabular-nums [font-family:var(--font-display)] text-[1.45rem] font-bold text-[var(--forest)]">
+                {formatBillingCurrency(order.totalPaise, order.currencyCode)}
               </span>
             </div>
           </div>
@@ -368,10 +383,10 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
                   <td className="py-2 px-2.5 text-neutral-600">{item.variant}</td>
                   <td className="py-2 px-2.5 text-center font-bold">{item.quantity}</td>
                   <td className="py-2 px-2.5 text-right text-neutral-700">
-                    {formatCurrency(Math.round(item.pricePaise / item.quantity), order.currencyCode)}
+                    {formatBillingCurrency(Math.round(item.pricePaise / item.quantity), order.currencyCode)}
                   </td>
                   <td className="py-2 px-2.5 text-right font-bold text-neutral-900">
-                    {formatCurrency(item.pricePaise, order.currencyCode)}
+                    {formatBillingCurrency(item.pricePaise, order.currencyCode)}
                   </td>
                 </tr>
               ))}
@@ -381,21 +396,15 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
           {/* Financial Totals Calculation Box */}
           <div className="mt-4 flex justify-end">
             <div className="w-56 border-t-2 border-neutral-800 pt-2 text-[9pt]">
-              <div className="flex justify-between py-0.5 text-neutral-600">
-                <span>Subtotal:</span>
-                <span>{formatCurrency(order.totalPaise, order.currencyCode)}</span>
-              </div>
-              <div className="flex justify-between py-0.5 text-neutral-600">
-                <span>Shipping & Handling:</span>
-                <span>{order.shippingMethod.includes("Express") ? "₹149.00" : "FREE"}</span>
-              </div>
-              <div className="flex justify-between py-0.5 text-neutral-600">
-                <span>GST (Tax):</span>
-                <span>Included</span>
-              </div>
+              {amountRows.map((row) => (
+                <div key={row.label} className="flex justify-between gap-3 py-0.5 text-neutral-600">
+                  <span>{row.label}:</span>
+                  <span className="shrink-0 tabular-nums">{row.amount}</span>
+                </div>
+              ))}
               <div className="mt-1 flex justify-between border-t border-neutral-800 pt-1 text-[10pt] font-bold text-neutral-900">
                 <span>Grand Total:</span>
-                <span>{formatCurrency(order.totalPaise, order.currencyCode)}</span>
+                <span>{formatBillingCurrency(order.totalPaise, order.currencyCode)}</span>
               </div>
             </div>
           </div>
