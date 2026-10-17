@@ -1,0 +1,13 @@
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.filters button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 46px; padding: 9px 18px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--forest); font: inherit; font-size: 14px; line-height: 1.35; cursor: pointer; transition: background-color 180ms ease, border-color 180ms ease; }
+.filters button[aria-pressed="true"] { border-color: var(--forest); background: var(--forest); color: var(--paper); }
+.count { display: grid; min-width: 24px; min-height: 24px; place-items: center; border-radius: 50%; background: rgb(21 59 45 / .07); font-size: 11px; font-variant-numeric: tabular-nums; }
+.filters button[aria-pressed="true"] .count { background: rgb(255 255 255 / .13); }
+.filters button:focus-visible { outline: 3px solid var(--botanical); outline-offset: 3px; }
+@media (hover: hover) { .filters button:not([aria-pressed="true"]):hover { border-color: var(--forest); background: var(--beige); } }
+@media (max-width: 680px) {
+  .filters { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 5px; margin-bottom: 18px; }
+  .filters button { gap: 5px; min-width: 0; padding: 8px 7px; font-size: 12px; border-radius: 14px; }
+  .count { flex-shrink: 0; min-width: 20px; min-height: 20px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .filters button { transition: none; } }

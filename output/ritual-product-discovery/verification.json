@@ -1,0 +1,757 @@
+{
+  "capturedAt": "2026-10-17T08:25:25.828Z",
+  "target": "http://localhost:3000/#build-your-ritual",
+  "environment": "Actual live app in headless Chrome, phone viewport/touch emulation; no request interception.",
+  "cases": [
+    {
+      "name": "reaction-unknown",
+      "width": 390,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Explore products\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 390,
+      "documentWidth": 390,
+      "kind": "review",
+      "browsingOnly": "true",
+      "title": "Discover the botanical collection",
+      "text": "EXPLORE THE COLLECTION\n\nDiscover the botanical collection\n\nExplore the ingredients and care benefits below. After a previous reaction, ask a dermatologist before trying a new botanical.\n\nBotanicals to explore\n2 products\n\nFor browsing: ingredients, care benefits and product details.\n\nCONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗\nBrowse the full collection\n↗\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Amla Powder",
+          "nameHref": "/shop/amla-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Amla Powder",
+              "href": "/shop/amla-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Amla Powder\n↗",
+              "href": "/shop/amla-powder",
+              "ariaLabel": "Explore NatureMist Amla Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/amla-powder#product-directions",
+              "ariaLabel": "View NatureMist Amla Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        },
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Explore NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        }
+      ],
+      "catalogLink": [
+        "Browse the full collection\n↗"
+      ],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/reaction-unknown-390.png"
+    },
+    {
+      "name": "reaction-amla",
+      "width": 390,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Explore products\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 390,
+      "documentWidth": 390,
+      "kind": "review",
+      "browsingOnly": "true",
+      "title": "Discover the botanical collection",
+      "text": "EXPLORE THE COLLECTION\n\nDiscover the botanical collection\n\nAvoid Amla Powder, which you linked to a reaction. After a previous reaction, ask a dermatologist before trying a new botanical.\n\nBotanicals to explore\n2 products\n\nFor browsing: ingredients, care benefits and product details.\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗\n\nCONDITIONING MASK\n\nNatureMist Bhringraj Powder\n\nAbout this botanical\n\nA botanical for a general hair-and-scalp conditioning ritual.\n\nExplore NatureMist Bhringraj Powder\n↗\nRead directions\n↗\nBrowse the full collection\n↗\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Explore NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        },
+        {
+          "title": "NatureMist Bhringraj Powder",
+          "nameHref": "/shop/bhringraj-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Bhringraj Powder\n\nAbout this botanical\n\nA botanical for a general hair-and-scalp conditioning ritual.\n\nExplore NatureMist Bhringraj Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Bhringraj Powder",
+              "href": "/shop/bhringraj-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Bhringraj Powder\n↗",
+              "href": "/shop/bhringraj-powder",
+              "ariaLabel": "Explore NatureMist Bhringraj Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/bhringraj-powder#product-directions",
+              "ariaLabel": "View NatureMist Bhringraj Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        }
+      ],
+      "catalogLink": [
+        "Browse the full collection\n↗"
+      ],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/reaction-amla-390.png"
+    },
+    {
+      "name": "reaction-unknown",
+      "width": 320,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Explore products\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 320,
+      "documentWidth": 320,
+      "kind": "review",
+      "browsingOnly": "true",
+      "title": "Discover the botanical collection",
+      "text": "EXPLORE THE COLLECTION\n\nDiscover the botanical collection\n\nExplore the ingredients and care benefits below. After a previous reaction, ask a dermatologist before trying a new botanical.\n\nBotanicals to explore\n2 products\n\nFor browsing: ingredients, care benefits and product details.\n\nCONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗\nBrowse the full collection\n↗\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Amla Powder",
+          "nameHref": "/shop/amla-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Amla Powder",
+              "href": "/shop/amla-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Amla Powder\n↗",
+              "href": "/shop/amla-powder",
+              "ariaLabel": "Explore NatureMist Amla Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/amla-powder#product-directions",
+              "ariaLabel": "View NatureMist Amla Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        },
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Explore NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        }
+      ],
+      "catalogLink": [
+        "Browse the full collection\n↗"
+      ],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/reaction-unknown-320.png"
+    },
+    {
+      "name": "reaction-amla",
+      "width": 320,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Explore products\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 320,
+      "documentWidth": 320,
+      "kind": "review",
+      "browsingOnly": "true",
+      "title": "Discover the botanical collection",
+      "text": "EXPLORE THE COLLECTION\n\nDiscover the botanical collection\n\nAvoid Amla Powder, which you linked to a reaction. After a previous reaction, ask a dermatologist before trying a new botanical.\n\nBotanicals to explore\n2 products\n\nFor browsing: ingredients, care benefits and product details.\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗\n\nCONDITIONING MASK\n\nNatureMist Bhringraj Powder\n\nAbout this botanical\n\nA botanical for a general hair-and-scalp conditioning ritual.\n\nExplore NatureMist Bhringraj Powder\n↗\nRead directions\n↗\nBrowse the full collection\n↗\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Explore NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        },
+        {
+          "title": "NatureMist Bhringraj Powder",
+          "nameHref": "/shop/bhringraj-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Bhringraj Powder\n\nAbout this botanical\n\nA botanical for a general hair-and-scalp conditioning ritual.\n\nExplore NatureMist Bhringraj Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Bhringraj Powder",
+              "href": "/shop/bhringraj-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Bhringraj Powder\n↗",
+              "href": "/shop/bhringraj-powder",
+              "ariaLabel": "Explore NatureMist Bhringraj Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/bhringraj-powder#product-directions",
+              "ariaLabel": "View NatureMist Bhringraj Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        }
+      ],
+      "catalogLink": [
+        "Browse the full collection\n↗"
+      ],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/reaction-amla-320.png"
+    },
+    {
+      "name": "reaction-unknown",
+      "width": 1440,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Explore products\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "kind": "review",
+      "browsingOnly": "true",
+      "title": "Discover the botanical collection",
+      "text": "EXPLORE THE COLLECTION\n\nDiscover the botanical collection\n\nExplore the ingredients and care benefits below. After a previous reaction, ask a dermatologist before trying a new botanical.\n\nBotanicals to explore\n2 products\n\nFor browsing: ingredients, care benefits and product details.\n\nCONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗\nBrowse the full collection\n↗\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Amla Powder",
+          "nameHref": "/shop/amla-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Amla Powder",
+              "href": "/shop/amla-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Amla Powder\n↗",
+              "href": "/shop/amla-powder",
+              "ariaLabel": "Explore NatureMist Amla Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/amla-powder#product-directions",
+              "ariaLabel": "View NatureMist Amla Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=384&q=75",
+              "naturalWidth": 300
+            }
+          ]
+        },
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Explore NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 300
+            }
+          ]
+        }
+      ],
+      "catalogLink": [
+        "Browse the full collection\n↗"
+      ],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/reaction-unknown-1440.png"
+    },
+    {
+      "name": "reaction-amla",
+      "width": 1440,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Explore products\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "kind": "review",
+      "browsingOnly": "true",
+      "title": "Discover the botanical collection",
+      "text": "EXPLORE THE COLLECTION\n\nDiscover the botanical collection\n\nAvoid Amla Powder, which you linked to a reaction. After a previous reaction, ask a dermatologist before trying a new botanical.\n\nBotanicals to explore\n2 products\n\nFor browsing: ingredients, care benefits and product details.\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗\n\nCONDITIONING MASK\n\nNatureMist Bhringraj Powder\n\nAbout this botanical\n\nA botanical for a general hair-and-scalp conditioning ritual.\n\nExplore NatureMist Bhringraj Powder\n↗\nRead directions\n↗\nBrowse the full collection\n↗\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Explore NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 300
+            }
+          ]
+        },
+        {
+          "title": "NatureMist Bhringraj Powder",
+          "nameHref": "/shop/bhringraj-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Bhringraj Powder\n\nAbout this botanical\n\nA botanical for a general hair-and-scalp conditioning ritual.\n\nExplore NatureMist Bhringraj Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Bhringraj Powder",
+              "href": "/shop/bhringraj-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Bhringraj Powder\n↗",
+              "href": "/shop/bhringraj-powder",
+              "ariaLabel": "Explore NatureMist Bhringraj Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/bhringraj-powder#product-directions",
+              "ariaLabel": "View NatureMist Bhringraj Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=384&q=75",
+              "naturalWidth": 300
+            }
+          ]
+        }
+      ],
+      "catalogLink": [
+        "Browse the full collection\n↗"
+      ],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/reaction-amla-1440.png"
+    },
+    {
+      "name": "colour-lighter",
+      "width": 390,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Explore products\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 390,
+      "documentWidth": 390,
+      "kind": "no-match",
+      "browsingOnly": "true",
+      "title": "Explore care alongside colour",
+      "text": "EXPLORE THE COLLECTION\n\nExplore care alongside colour\n\nThis collection does not create lighter or blonde tones. Discover conditioning botanicals below for a separate hair-care step.\n\nBotanicals to explore\n2 products\n\nGeneral conditioning products for browsing; these do not provide your requested colour result.\n\nCONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗\nBrowse the full collection\n↗\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Amla Powder",
+          "nameHref": "/shop/amla-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Amla Powder\n\nAbout this botanical\n\nA pre-wash conditioning botanical for softer-feeling hair and natural-looking shine.\n\nExplore NatureMist Amla Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Amla Powder",
+              "href": "/shop/amla-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Amla Powder\n↗",
+              "href": "/shop/amla-powder",
+              "ariaLabel": "Explore NatureMist Amla Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/amla-powder#product-directions",
+              "ariaLabel": "View NatureMist Amla Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        },
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nAbout this botanical\n\nA conditioning mask botanical for dry-feeling lengths and more manageable hair.\n\nExplore NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Explore NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Explore NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        }
+      ],
+      "catalogLink": [
+        "Browse the full collection\n↗"
+      ],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/colour-lighter-390.png"
+    },
+    {
+      "name": "ordinary-hibiscus",
+      "width": 390,
+      "buttons": [
+        "Continue\n→",
+        "Continue\n→",
+        "Continue\n→",
+        "Continue\n→",
+        "See my ritual\n→"
+      ],
+      "checks": {
+        "productsMatchExpected": true,
+        "browsingModeCorrect": true,
+        "actionLabelsCorrect": true,
+        "finalButtonCorrect": true,
+        "catalogLinkPresent": true,
+        "noPersonalFitCopy": true,
+        "noStepUsageCopy": true,
+        "knownReactionExcluded": true,
+        "colourDoesNotOfferIndigo": true,
+        "colourHasContext": true,
+        "noOverflow": true,
+        "imagesLoaded": true,
+        "noRuntimeErrors": true,
+        "resultFocus": true
+      },
+      "passed": true,
+      "viewport": 390,
+      "documentWidth": 390,
+      "kind": "candidate",
+      "browsingOnly": "false",
+      "title": "Your suggested starting ritual",
+      "text": "CHOSEN AROUND YOUR ANSWERS\n\nYour suggested starting ritual\n\nA starting suggestion based on your care priority. Follow the current product directions and patch-test guidance before use.\n\nSuggested products\n1 product\n\nCONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nWhy this fits your answers\n\nYou want a conditioning mask for dry or rough-feeling hair.\n\nShop NatureMist Hibiscus Powder\n↗\nRead directions\n↗\n\nFollow each product’s current pack directions, including its patch and strand checks.\n\n←\nEdit my answers\nStart over",
+      "focusedHeading": true,
+      "products": [
+        {
+          "title": "NatureMist Hibiscus Powder",
+          "nameHref": "/shop/hibiscus-powder",
+          "text": "CONDITIONING MASK\n\nNatureMist Hibiscus Powder\n\nWhy this fits your answers\n\nYou want a conditioning mask for dry or rough-feeling hair.\n\nShop NatureMist Hibiscus Powder\n↗\nRead directions\n↗",
+          "links": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": null
+            },
+            {
+              "text": "Shop NatureMist Hibiscus Powder\n↗",
+              "href": "/shop/hibiscus-powder",
+              "ariaLabel": "Shop NatureMist Hibiscus Powder"
+            },
+            {
+              "text": "Read directions\n↗",
+              "href": "/shop/hibiscus-powder#product-directions",
+              "ariaLabel": "View NatureMist Hibiscus Powder directions"
+            }
+          ],
+          "image": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+              "naturalWidth": 260
+            }
+          ]
+        }
+      ],
+      "catalogLink": [],
+      "overflow": [],
+      "errors": [],
+      "screenshot": "output/ritual-product-discovery/ordinary-hibiscus-390.png"
+    }
+  ],
+  "passed": true,
+  "completedAt": "2026-10-17T08:26:32.843Z"
+}

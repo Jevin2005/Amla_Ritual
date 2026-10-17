@@ -14,6 +14,7 @@ type ComboPreviewProps = {
   title: string;
   ingredientLabel: string;
   image: string;
+  imageFallback?: string;
   products: Product[];
   expectedProductCount: number;
   onClose: () => void;
@@ -27,6 +28,7 @@ export function ComboPreview({
   title,
   ingredientLabel,
   image,
+  imageFallback,
   products,
   expectedProductCount,
   onClose,
@@ -106,6 +108,7 @@ export function ComboPreview({
         <div className={styles.photo}>
           <Image
             src={image}
+            fallbackSrc={imageFallback}
             alt={`${ingredientLabel} botanical powder pairing`}
             fill
             sizes="(max-width: 640px) 92vw, 400px"

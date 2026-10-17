@@ -1,0 +1,16 @@
+Locally hosted Latin webfont subsets for the Specimen Collection section.
+Prepared on 2026-10-17 from Google Fonts and its Fontsource distribution.
+
+Manrope, regular 400:
+Google Fonts family version v20, obtained from @fontsource/manrope:
+https://www.npmjs.com/package/@fontsource/manrope
+Source file: files/manrope-latin-400-normal.woff2
+License and upstream family:
+https://github.com/google/fonts/tree/main/ofl/manrope
+See Manrope-OFL.txt.
+
+The bundled OFL license text is supplied by the @fontsource/manrope package.
+Manrope is already named by the website; the Specimen Sans alias scopes its
+local font loading to this section. Georgia (an existing site fallback) supplies
+the wider classic serif and italic shapes closest to the visual reference.
+Georgia uses the system installation and is not redistributed here.

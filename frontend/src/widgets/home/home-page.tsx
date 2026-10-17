@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, type CSSProperties } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { getImageHeroProducts } from "@/domain/catalog/image-hero";
-import { ProductCard } from "@/features/catalog/product-card";
+import { buildCollectionCatalog, type CollectionKind } from "@/domain/collection-catalog";
+import { CollectionGrid } from "@/features/catalog/collection-grid";
+import { CollectionTypeFilter } from "@/features/catalog/collection-type-filter";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
 import { IngredientClarity } from "./ingredient-clarity";
-import { BotanicalCombos } from "./botanical-combos";
 import { ProductHero } from "./product-hero";
 import { PreviousProductHero } from "./previous-product-hero";
 import { ProductBenefits } from "./product-benefits";
@@ -29,7 +30,11 @@ const revealClass =
   "[transition:opacity_650ms_var(--ease),transform_650ms_var(--ease)]";
 
 export function HomePage() {
-  const { products, content } = useStore();
+  const { products, content, source, track } = useStore();
+  const [collectionKind, setCollectionKind] = useState<CollectionKind>("all");
+  const collectionEntries = useMemo(() => buildCollectionCatalog(products, content.botanicalCombos.enabled ? content.botanicalCombos.combos : [], source), [products, content.botanicalCombos, source]);
+  const displayedEntries = collectionEntries.filter((entry) => collectionKind === "all" || (collectionKind === "combos" ? entry.kind === "combo" : entry.kind === "product"));
+  const individualCount = collectionEntries.filter((entry) => entry.kind === "product").length;
   const homeMotion = useMemo(() => ({ ...content.motionSettings, duration: content.motionSettings.duration * 1.25 }), [content.motionSettings]);
 
   if (!products.length) {
@@ -74,34 +79,24 @@ export function HomePage() {
           </div>
           <div className="flex flex-col justify-end gap-3 max-[680px]:gap-2">
             <p className="m-0 text-[0.84rem] leading-[1.65] text-[var(--muted)] max-[680px]:hidden">
-              Single origin botanicals. Distinct ritual paths. One calm,
-              considered way to begin.
+              Your favourite botanicals, individually or thoughtfully paired.
+              Find a single jar or a combo for your everyday ritual.
             </p>
             <MagneticLink
               className={`${textLinkClass} max-[680px]:text-[0.6rem] max-[680px]:min-h-[34px]`}
               href="/shop"
             >
-              View all botanicals <span aria-hidden="true">↗</span>
+              Explore the full collection <span aria-hidden="true">↗</span>
             </MagneticLink>
           </div>
         </div>
 
-        {/* ── Product grid ── */}
-        <div
-          className="grid grid-cols-3 gap-[clamp(16px,1.8vw,26px)] max-[860px]:grid-cols-2 max-[680px]:grid-cols-2 max-[680px]:gap-2.5 max-[420px]:gap-2"
-          aria-label="NatureMist botanical collection"
-        >
-          {products.map((product, index) => (
-            <ProductCard
-              product={product}
-              key={product.slug}
-              eagerImage={!hasHero && index < 3}
-            />
-          ))}
-        </div>
+        <CollectionTypeFilter value={collectionKind} onChange={(next) => { setCollectionKind(next); track("filter_applied", { filter: "type", value: next, placement: "home_collection" }); }} counts={{ all: collectionEntries.length, individual: individualCount, combos: collectionEntries.length - individualCount }} />
+        <p className="sr-only" role="status" aria-live="polite">{displayedEntries.length} items in the collection</p>
+        {displayedEntries.length ? <CollectionGrid entries={displayedEntries} eagerImages={!hasHero} /> : <p className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] px-6 py-10 text-center text-[var(--muted)]">New combos are on their way. Explore the individual powders in the meantime.</p>}
       </section>
 
-      <ProductBenefits products={products} motionSettings={homeMotion} />
+      <ProductBenefits motionSettings={content.motionSettings} />
 
       <BuildYourRitual />
 
@@ -229,7 +224,6 @@ export function HomePage() {
 
       <IngredientClarity />
 
-      <BotanicalCombos />
 
       <VideoReviewsSection />
 

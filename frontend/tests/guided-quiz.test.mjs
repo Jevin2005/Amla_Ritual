@@ -4,7 +4,7 @@ import { build } from "esbuild";
 import { fileURLToPath } from "node:url";
 
 const bundle = await build({ entryPoints: [fileURLToPath(new URL("../src/features/rituals/guided-quiz.ts", import.meta.url))], bundle: true, platform: "node", format: "esm", write: false });
-const { getQuizFlow, setQuizAnswer, resolveQuizResult, ritualQuestions } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { getQuizFlow, setQuizAnswer, resolveQuizResult, resolveQuizBrowseItems, ritualQuestions } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 const answer = (entries) => Object.fromEntries(Object.entries(entries).map(([id, value]) => [id, Array.isArray(value) ? value : [value]]));
 const care = (overrides = {}) => answer({ goal: "cleanse", check: "none", washNeed: "oil", hairHistory: "natural", routine: "one", ...overrides });
 const colour = (overrides = {}) => answer({ goal: "colour", check: "none", colourTarget: "deeper", colourBase: "dark", colourHistory: "none", henna: "ready", colourChecks: "passed", ...overrides });
@@ -263,7 +263,7 @@ test("partial availability is explicit and does not replace a requested care ste
   assert.match(conditional.description, /hidden strand/);
 });
 
-test("preview identity is separate; stock still applies and non-candidate outcomes never show products", () => {
+test("preview identity is separate; stock still applies and terminal outcomes never resolve personalized recommendations", () => {
   const result = outcome(care());
   const preview = product("reetha-powder", { id: undefined, ingredient: "Preview details", availableForSale: undefined, variants: [] });
   assert.equal(resolveQuizResult(result, [preview], "preview").items.length, 1);
@@ -272,6 +272,170 @@ test("preview identity is separate; stock still applies and non-candidate outcom
   for (const kind of ["review", "pause", "guidance", "no-match"]) {
     assert.deepEqual(resolveQuizResult({ ...result, kind }, [product("reetha-powder")], "shopify").items, []);
   }
+});
+
+test("unknown reactions offer separate browsing without creating a personalized recommendation", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  for (const reactionIngredient of ["other", "unsure"]) {
+    const answers = care({ check: "reaction", reactionIngredient });
+    const result = outcome(answers);
+    const items = resolveQuizBrowseItems(answers, products, "shopify");
+    assert.equal(result.kind, "review");
+    assert.deepEqual(result.candidates, []);
+    assert.deepEqual(resolveQuizResult(result, products, "shopify").items, []);
+    assert.equal(items.length, 2);
+    assert.equal(new Set(items.map((item) => item.product.slug)).size, 2);
+    assert.ok(items.every((item) => item.role !== "Colour" && item.reason.trim().length > 0));
+  }
+});
+
+test("known reaction ingredients stay excluded from browsing for every goal", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  for (const goal of ["cleanse", "softness", "scalp", "colour"]) {
+    for (const ingredient of Object.keys(liveIds).map((slug) => slug.replace("-powder", ""))) {
+      const answers = care({ goal, check: "reaction", reactionIngredient: ingredient });
+      const items = resolveQuizBrowseItems(answers, products, "shopify");
+      assert.ok(items.length > 0 && items.length <= 2, `${goal}: ${ingredient}`);
+      assert.ok(items.every((item) => item.product.slug !== `${ingredient}-powder`), `${goal}: ${ingredient}`);
+      assert.ok(items.every((item) => item.role !== "Colour"));
+      assert.deepEqual(outcome(answers).candidates, []);
+    }
+  }
+});
+
+test("browsing never refills excluded products when all six ingredients were reported", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  const ingredients = Object.keys(liveIds).map((slug) => slug.replace("-powder", ""));
+  for (const goal of ["cleanse", "softness", "scalp", "colour"]) {
+    const answers = care({ goal, check: "reaction", reactionIngredient: ingredients });
+    assert.equal(outcome(answers).kind, "review");
+    assert.deepEqual(resolveQuizBrowseItems(answers, products, "shopify"), []);
+  }
+});
+
+test("browsing excludes reported ingredients in a different product's ingredient text", () => {
+  const answers = care({ check: "reaction", reactionIngredient: "amla" });
+  const cleanser = product("shikakai-powder");
+  assert.equal(resolveQuizBrowseItems(answers, [cleanser], "shopify").length, 1);
+  const blend = { ...cleanser, ingredient: "Shikakai powder with AMLA fruit powder" };
+  assert.deepEqual(resolveQuizBrowseItems(answers, [blend], "shopify"), []);
+  assert.deepEqual(resolveQuizBrowseItems(answers, [product("amla-powder"), blend], "shopify"), []);
+  const preview = product("amla-powder", { id: undefined, name: "Botanical fruit powder", ingredient: "Preview ingredient details", variants: [] });
+  assert.equal(resolveQuizBrowseItems(care({ check: "reaction", reactionIngredient: "unsure" }), [preview], "preview").length, 1);
+  assert.deepEqual(resolveQuizBrowseItems(answers, [preview], "preview"), [], "canonical identity excludes a reported ingredient even when the text does not name it");
+});
+
+test("browsing validates live identity, product information and current availability", () => {
+  const answers = care({ check: "reaction", reactionIngredient: "unsure" });
+  assert.equal(resolveQuizBrowseItems(answers, [product("reetha-powder")], "shopify").length, 1);
+  for (const overrides of [
+    { availableForSale: false }, { availableForSale: undefined }, { id: "gid://shopify/Product/999" },
+    { id: "gid://shopify/Product/8531585368250" }, { slug: "different-powder", shopifyHandle: "different-powder", name: "Different Powder" },
+    { ingredient: "" }, { ingredient: "Amla Powder" }, { ingredient: "Reetha powder, details pending" }, { howTo: [] },
+    { variants: [] }, { variants: [{ id: "preview:reetha-powder", availableForSale: true }] },
+    { variants: [{ id: "gid://shopify/ProductVariant/100", availableForSale: false }] },
+    { variants: [{ id: "gid://shopify/ProductVariant/100", availableForSale: true, quantityAvailable: 0 }] },
+  ]) {
+    assert.deepEqual(resolveQuizBrowseItems(answers, [product("reetha-powder", overrides)], "shopify"), [], JSON.stringify(overrides));
+  }
+  const available = product("shikakai-powder");
+  const items = resolveQuizBrowseItems(answers, [product("reetha-powder", { availableForSale: false }), available], "shopify");
+  assert.deepEqual(items.map((item) => item.product.slug), [available.slug]);
+});
+
+test("browsing waits for valid completion and does not supplement available candidate or conditional results", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  for (const answers of [
+    {}, answer({ goal: "cleanse" }), care({ check: ["none", "reaction"] }),
+    care({ check: "reaction" }), care({ check: "reaction", reactionIngredient: ["amla", "unsure"] }),
+    care(), care({ hairHistory: "light", strand: "notyet" }), colour(), colour({ colourChecks: "notyet" }),
+  ]) {
+    assert.deepEqual(resolveQuizBrowseItems(answers, products, "shopify"), [], JSON.stringify(answers));
+  }
+});
+
+test("an unavailable selected product allows separate browsing of available care products", () => {
+  for (const answers of [care(), care({ hairHistory: "light", strand: "notyet" })]) {
+    const products = [product("reetha-powder", { availableForSale: false }), product("shikakai-powder"), product("amla-powder")];
+    const original = outcome(answers);
+    assert.ok(["candidate", "conditional"].includes(original.kind));
+    assert.deepEqual(slugs(original), ["reetha-powder"]);
+    const result = resolveQuizResult(original, products, "shopify");
+    assert.equal(result.kind, "no-match");
+    assert.deepEqual(result.items, []);
+    const browseItems = resolveQuizBrowseItems(answers, products, "shopify");
+    assert.equal(browseItems.length, 2);
+    assert.ok(browseItems.every((item) => item.product.availableForSale && item.product.slug !== "reetha-powder"));
+    assert.deepEqual(slugs(outcome(answers)), ["reetha-powder"], "generic browsing must not replace the original selected product");
+    assert.deepEqual(resolveQuizBrowseItems(answers, products.map((entry) => ({ ...entry, availableForSale: false })), "shopify"), []);
+  }
+});
+
+test("a partially available ritual keeps its recommendation without additional browsing products", () => {
+  for (const answers of [
+    care({ routine: "two", conditionAddon: "dry" }),
+    care({ routine: "two", conditionAddon: "dry", hairHistory: "light", strand: "notyet" }),
+  ]) {
+    const products = [product("reetha-powder"), product("hibiscus-powder", { availableForSale: false }), product("amla-powder"), product("shikakai-powder")];
+    const result = resolveQuizResult(outcome(answers), products, "shopify");
+    assert.equal(result.unavailable, true);
+    assert.deepEqual(result.items.map((item) => item.product.slug), ["reetha-powder"]);
+    assert.deepEqual(resolveQuizBrowseItems(answers, products, "shopify"), []);
+  }
+});
+
+test("changed strand results exclude the original one- or two-product ritual from browsing", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  for (const answers of [
+    care({ hairHistory: "light", strand: "changed" }),
+    care({ hairHistory: "light", routine: "two", conditionAddon: "dry", strand: "changed" }),
+  ]) {
+    assert.ok(ids(answers).includes("strand"));
+    assert.equal(outcome(answers).kind, "review");
+    const originalSlugs = slugs(outcome({ ...answers, strand: ["passed"] }));
+    assert.equal(originalSlugs.length, answers.routine[0] === "two" ? 2 : 1);
+    const items = resolveQuizBrowseItems(answers, products, "shopify");
+    assert.ok(items.length > 0 && items.length <= 2);
+    assert.ok(items.every((item) => !originalSlugs.includes(item.product.slug)), originalSlugs.join(", "));
+    assert.deepEqual(resolveQuizBrowseItems(answers, products.filter((entry) => originalSlugs.includes(entry.slug)), "shopify"), []);
+  }
+  const terminal = care({ check: "unsure" });
+  assert.ok(!ids(terminal).includes("strand"));
+  assert.deepEqual(
+    resolveQuizBrowseItems({ ...terminal, strand: ["changed"] }, products, "shopify"),
+    resolveQuizBrowseItems(terminal, products, "shopify"),
+    "an unreachable strand answer must not exclude unrelated browsing products",
+  );
+});
+
+test("terminal colour routes browse general conditioning only, never an unsupported colour match", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  for (const answers of [
+    colour({ colourTarget: "lighter" }), colour({ colourTarget: "copper" }),
+    colour({ colourTarget: "unsure" }), colour({ colourBase: "unsure" }),
+    colour({ colourHistory: "bleach" }), colour({ henna: "no" }),
+    colour({ colourChecks: "reaction" }), colour({ colourChecks: "shade" }),
+  ]) {
+    const result = outcome(answers);
+    assert.deepEqual(result.candidates, []);
+    const items = resolveQuizBrowseItems(answers, products, "shopify");
+    assert.ok(items.length > 0 && items.length <= 2);
+    assert.ok(items.every((item) => item.role === "Condition" && item.product.slug !== "indigo-powder"));
+  }
+});
+
+test("browsing ignores unreachable reaction answers and respects cleared earlier branches", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  const terminal = care({ check: "unsure" });
+  const excluded = Object.keys(liveIds).map((slug) => slug.replace("-powder", ""));
+  assert.deepEqual(
+    resolveQuizBrowseItems({ ...terminal, reactionIngredient: excluded }, products, "shopify"),
+    resolveQuizBrowseItems(terminal, products, "shopify"),
+  );
+  const reaction = care({ check: "reaction", reactionIngredient: "reetha" });
+  const changed = setQuizAnswer(reaction, "check", ["none"]);
+  assert.equal(changed.reactionIngredient, undefined);
+  assert.deepEqual(resolveQuizBrowseItems(changed, products, "shopify"), []);
 });
 
 function choices(question) {
@@ -284,6 +448,7 @@ function choices(question) {
 
 test("exhaustively traverses every reachable completed path and verifies routing invariants", () => {
   let paths = 0;
+  const products = Object.keys(liveIds).map((slug) => product(slug));
   const seenQuestions = new Set();
   const seenKinds = new Set();
   const seenProducts = new Set();
@@ -302,11 +467,21 @@ test("exhaustively traverses every reachable completed path and verifies routing
     }
     paths += 1;
     const result = flow.outcome;
+    const browseItems = resolveQuizBrowseItems(answers, products, "shopify");
+    assert.ok(browseItems.length <= 2);
+    assert.equal(new Set(browseItems.map((item) => item.product.slug)).size, browseItems.length);
+    assert.ok(browseItems.every((item) => item.product.slug !== "indigo-powder" && item.role !== "Colour"));
+    if (questionIds.includes("reactionIngredient")) {
+      for (const ingredient of answers.reactionIngredient) {
+        assert.ok(browseItems.every((item) => item.product.slug !== `${ingredient}-powder`), `${ingredient} leaked into browsing`);
+      }
+    }
     seenKinds.add(result.kind);
     assert.ok(result.title && result.description);
     assert.ok(result.candidates.length <= 2);
     if (!["candidate", "conditional"].includes(result.kind)) assert.deepEqual(result.candidates, []);
     else {
+      assert.deepEqual(browseItems, []);
       assert.ok(result.candidates.length >= 1);
       assert.deepEqual(answers.check, ["none"]);
       assert.equal(result.title, result.kind === "conditional" ? "Check before starting" : "Your suggested starting ritual");

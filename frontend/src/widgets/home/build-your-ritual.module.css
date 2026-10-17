@@ -1,54 +1,82 @@
+@font-face {
+  font-family: "Ritual Sans";
+  src: url("/fonts/specimen-collection/manrope-regular-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 .section {
+  --ritual-sans: "Ritual Sans", "Manrope", sans-serif;
+  --ritual-serif: Georgia, "Times New Roman", serif;
+  --ritual-ink: #153d31;
   position: relative;
   z-index: 81;
   width: 100%;
-  padding: 72px clamp(24px, 4vw, 56px);
+  padding: 80px clamp(24px, 4vw, 64px);
+  background: #f3f0e7;
   scroll-margin-top: calc(var(--header-height, 88px) + 20px);
 }
 
 .panel {
   position: relative;
   isolation: isolate;
-  max-width: 1240px;
+  overflow: hidden;
+  max-width: 1280px;
   margin-inline: auto;
-  border: 1px solid #dedfd3;
-  border-radius: 24px;
-  padding: 56px 48px;
-  background: #f7f4ec;
-  color: #263d2e;
-  font-family: var(--font-manrope), sans-serif;
+  border: 1px solid #d8ddcb;
+  border-radius: 28px;
+  background: #fcfaf3;
+  color: var(--ritual-ink);
+  box-shadow: 0 18px 54px #203e2910;
+  font-family: var(--ritual-sans);
 }
 
 .grid {
-  position: relative;
-  z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
-  align-items: start;
-  gap: 48px;
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+  align-items: stretch;
 }
 
-.intro,
-.quiz { min-width: 0; }
+.intro, .quiz { min-width: 0; }
 
-.intro { padding-top: 12px; }
+.intro {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 44px 40px 30px;
+  background: radial-gradient(ellipse at 8% 95%, #365940, transparent 66%), #153d31;
+  color: #fcf8e9;
+}
+
+.intro::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: url("/images/specimen-collection/paper-texture.webp") center / 640px auto repeat;
+  opacity: .045;
+  pointer-events: none;
+  content: "";
+}
 
 .eyebrow {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 26px;
-  color: #4f6249;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .17em;
+  gap: 9px;
+  margin: 0 0 28px;
+  color: #d8e4bd;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .13em;
   line-height: 1.5;
   text-transform: uppercase;
 }
 
 .eyebrow svg {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   flex: 0 0 auto;
   stroke: currentColor;
   stroke-width: 1.25;
@@ -58,108 +86,133 @@
 
 .heading {
   margin: 0;
-  font-family: var(--font-cormorant), Georgia, serif;
-  font-size: clamp(39px, 3.7vw, 52px);
-  font-weight: 500;
-  line-height: 1.08;
-  letter-spacing: -.035em;
-  text-wrap: balance;
-  overflow-wrap: break-word;
+  font-family: var(--ritual-serif);
+  font-size: clamp(52px, 5.3vw, 76px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.045em;
 }
 
-.heading em { color: #617252; font-weight: 400; }
-.compactHeading { display: none; }
+.heading em { display: block; color: #d4e2ad; font-weight: 400; }
 
 .body {
-  max-width: 310px;
-  margin: 24px 0 0;
-  color: #596554;
-  font-size: 15px;
-  line-height: 1.8;
+  max-width: 32ch;
+  margin: 22px 0 0;
+  color: #e1e7d6;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.introSteps {
+  display: grid;
+  gap: 12px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.introSteps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #edf0df;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.introSteps span {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #d5e2b540;
+  border-radius: 50%;
+  color: #d4e2ad;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.botanicalArt {
+  width: min(100%, 230px);
+  height: 145px;
+  margin: 22px auto 0;
+  background: url("/images/specimen-collection/amla.webp") center / contain no-repeat;
+  pointer-events: none;
 }
 
 .note {
-  max-width: 260px;
-  margin: 22px 0 0;
-  color: #627060;
-  font-size: 12px;
-  line-height: 1.75;
+  margin: 12px 0 0;
+  color: #d1ddc6;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
 }
 
-.introRule {
-  width: 52px;
-  height: 1px;
-  margin-top: 28px;
-  background: #bcc7b2;
-}
+.quiz { padding: 40px; align-self: center; }
 
 .botanicalShadow {
   position: absolute;
-  z-index: 0;
-  left: 0;
-  bottom: 0;
-  width: 150px;
-  height: 130px;
-  border-bottom-left-radius: inherit;
+  z-index: -1;
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
 }
 
 .botanicalShadow::before {
   position: absolute;
-  inset: 12px 12px -12px -12px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 150'%3E%3Cg fill='%23546b44'%3E%3Cpath d='M0 143Q74 106 122 30Q95 104 2 150Z'/%3E%3Cellipse cx='37' cy='119' rx='30' ry='9' transform='rotate(-55 37 119)'/%3E%3Cellipse cx='66' cy='92' rx='28' ry='10' transform='rotate(-66 66 92)'/%3E%3Cellipse cx='92' cy='60' rx='24' ry='9' transform='rotate(-72 92 60)'/%3E%3Cellipse cx='72' cy='126' rx='32' ry='10' transform='rotate(-15 72 126)'/%3E%3Cellipse cx='109' cy='98' rx='30' ry='9' transform='rotate(-24 109 98)'/%3E%3Cellipse cx='134' cy='64' rx='25' ry='8' transform='rotate(-37 134 64)'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
-  filter: blur(4px);
-  opacity: .07;
+  inset: -10px;
+  background: url("/images/specimen-collection/leaf-shadows.webp") center / cover no-repeat;
+  opacity: .06;
   content: "";
 }
-
-.panel[data-ritual-reveal="pending"] { opacity: 0; }
-.panel[data-ritual-reveal="pending"]:focus-within { opacity: 1; }
 
 @media (min-width: 1024px) {
   .botanicalShadow::before { animation: botanicalDrift 22s ease-in-out infinite alternate paused; }
   .panel[data-ambient="true"] .botanicalShadow::before { animation-play-state: running; }
 }
 
-@keyframes botanicalDrift {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(8px, 0, 0); }
+@keyframes botanicalDrift { to { transform: translate3d(8px, 0, 0); } }
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .section { padding: 64px 32px; }
+  .intro { padding: 36px 28px 28px; }
+  .quiz { padding: 32px 28px; }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .section { padding: 52px 32px; }
-  .panel { padding: 32px; }
-  .grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .intro { padding-top: 0; }
-  .eyebrow { margin-bottom: 12px; }
-  .heading { font-size: 40px; }
-  .expandedHeading br { display: none; }
-  .body { max-width: 570px; margin-top: 12px; }
-  .note { max-width: none; margin-top: 8px; }
-  .introRule { display: none; }
-  .botanicalShadow { width: 110px; height: 28px; }
+  .section { padding: 56px 24px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .intro { padding: 32px; }
+  .eyebrow { margin-bottom: 14px; }
+  .heading { font-size: 48px; }
+  .heading em { display: inline; }
+  .body { max-width: 48ch; margin-top: 14px; }
+  .introSteps { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 20px; }
+  .botanicalArt, .note { display: none; }
+  .quiz { padding: 32px; }
 }
 
 @media (max-width: 767px) {
-  .section { padding: 32px 0; }
-  .panel { padding: 28px 16px 24px; border-inline: 0; border-radius: 0; }
-  .grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
-  .intro { padding-top: 0; }
-  .eyebrow { margin-bottom: 14px; font-size: 10px; }
-  .heading { max-width: 360px; font-size: clamp(36px, 8.5vw, 46px); }
-  .body { max-width: 440px; margin-top: 14px; font-size: 14px; line-height: 1.7; }
-  .note { max-width: none; margin-top: 10px; font-size: 12px; }
-  .introRule { display: none; }
-  .botanicalShadow { width: 75px; height: 18px; left: 16px; bottom: 3px; }
-  .panel[data-started="true"] { padding-top: 20px; }
-  .panel[data-started="true"] .grid { gap: 18px; }
+  .section { padding: 36px 12px; }
+  .panel { border-radius: 22px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .intro { padding: 26px 20px 24px; }
+  .eyebrow { gap: 7px; margin-bottom: 14px; font-size: 10px; letter-spacing: .1em; }
+  .eyebrow svg { width: 16px; height: 16px; }
+  .heading { font-size: clamp(32px, 9vw, 42px); line-height: 1.1; letter-spacing: -.04em; }
+  .heading em { display: inline; }
+  .body { max-width: 38ch; margin-top: 12px; font-size: 15px; line-height: 1.6; }
+  .introSteps, .botanicalArt, .note { display: none; }
+  .quiz { padding: 24px 20px; }
+  .panel[data-started="true"] .intro { padding-block: 18px; }
   .panel[data-started="true"] .eyebrow,
-  .panel[data-started="true"] .expandedHeading,
-  .panel[data-started="true"] .body,
-  .panel[data-started="true"] .note { display: none; }
-  .panel[data-started="true"] .compactHeading { display: inline; }
+  .panel[data-started="true"] .body { display: none; }
   .panel[data-started="true"] .heading { font-size: 28px; line-height: 1.15; }
+}
+
+@media (max-width: 359px) {
+  .section { padding-inline: 10px; }
+  .intro, .quiz { padding-inline: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

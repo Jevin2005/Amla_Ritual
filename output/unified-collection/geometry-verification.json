@@ -1,0 +1,91 @@
+{
+  "capturedAt": "2026-10-17T08:51:17.827Z",
+  "desktop": [
+    {
+      "width": 1440,
+      "height": 900,
+      "before": {
+        "top": 110.078125,
+        "bottom": 882.078125,
+        "height": 772,
+        "clientHeight": 770,
+        "scrollHeight": 870,
+        "overflowY": "auto",
+        "headerBottom": 75.734375,
+        "lastTop": 930.171875,
+        "lastBottom": 948.171875,
+        "lastInitiallyWithinViewport": false
+      },
+      "after": {
+        "top": 830.125,
+        "bottom": 848.125,
+        "headerBottom": 75.6875,
+        "reachable": true
+      },
+      "nativeScroll": {
+        "scrollTop": 100,
+        "pageScrollY": 578,
+        "marker": true,
+        "pageMoved": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "before": {
+        "top": 109.6875,
+        "bottom": 765.6875,
+        "height": 656,
+        "clientHeight": 654,
+        "scrollHeight": 870,
+        "overflowY": "auto",
+        "headerBottom": 75.6875,
+        "lastTop": 929.78125,
+        "lastBottom": 947.78125,
+        "lastInitiallyWithinViewport": false
+      },
+      "after": {
+        "top": 713.78125,
+        "bottom": 731.78125,
+        "headerBottom": 75.6875,
+        "reachable": true
+      },
+      "nativeScroll": {
+        "scrollTop": 216,
+        "pageScrollY": 566,
+        "marker": true,
+        "pageMoved": false
+      },
+      "passed": true
+    }
+  ],
+  "mobile": [
+    {
+      "width": 390,
+      "position": "static",
+      "resultsBelow": true,
+      "documentWidth": 390,
+      "viewport": 390,
+      "visibleDialogs": 0,
+      "headerBottom": 84,
+      "headerOnTop": true,
+      "panelTop": 669.4375,
+      "focusReturned": true,
+      "passed": true
+    },
+    {
+      "width": 320,
+      "position": "static",
+      "resultsBelow": true,
+      "documentWidth": 320,
+      "viewport": 320,
+      "visibleDialogs": 0,
+      "headerBottom": 83.0625,
+      "headerOnTop": true,
+      "panelTop": 658.78125,
+      "focusReturned": true,
+      "passed": true
+    }
+  ]
+}

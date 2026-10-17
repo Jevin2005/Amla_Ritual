@@ -1,0 +1,400 @@
+{
+  "capturedAt": "2026-10-17T08:16:31.747Z",
+  "images": [
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fhero%2Fnaturemist-amla-200g.png&w=640&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fhero%2Fnaturemist-reetha-200g.png&w=640&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fhero%2Fnaturemist-indigo-200g.png&w=640&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fhero%2Fnaturemist-bhringraj-200g.png&w=640&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fhero%2Fnaturemist-hibiscus-200g.png&w=640&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fhero%2Fnaturemist-shikakai-200g.png&w=640&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fingredient-botanical-v1.png&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129&width=256",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/hero-background-botanical-topography.png?v=1788847864&width=640",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/15fb0a85-9262-46d3-9584-be3834d9014a.png?v=1789578916&width=256",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/09c37ba6-6af2-4fbe-b730-f4eba0ea8b9c.png?v=1787594097",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://localhost:3000/brand/naturemist-leaf-tight.svg",
+      "status": 200
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/09c37ba6-6af2-4fbe-b730-f4eba0ea8b9c.png?v=1787594097",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/hero-background-botanical-topography.png?v=1788847864&width=640",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/15fb0a85-9262-46d3-9584-be3834d9014a.png?v=1789578916&width=256",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129&width=256",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://localhost:3000/images/hero/naturemist-botanical-shadows.png",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/images/specimen-collection/paper-texture.webp",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/images/specimen-collection/leaf-shadows.webp",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/images/specimen-collection/botanical-engraving.webp",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/images/ingredient-paper-v1.png",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/images/specimen-collection/card-mask.svg",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/15fb0a85-9262-46d3-9584-be3834d9014a.png?v=1789578916",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/hero-background-botanical-topography.png?v=1788847864",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129&width=256",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://localhost:3000/images/product-placeholder.svg",
+      "status": 200
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-ingredient-plant-v1.png?v=1791459631&width=384",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=256&q=90",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Freetha.webp&w=256&q=90",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=256&q=90",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=256&q=90",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fshikakai.webp&w=256&q=90",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Findigo.webp&w=256&q=90",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2Fnaturemist-ingredient-paper-v1.png%3Fv%3D1791460684&w=640&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2Fnaturemist-ingredient-botanical-v1.png%3Fv%3D1791459692&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-ingredient-plant-v1.png?v=1791459631",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fingredient-plant-v1.png&w=384&q=75",
+      "status": 200
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-ingredient-ritual.png?v=1788951654&width=256",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-ingredient-lifestyle-v1.png?v=1791459647&width=384",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-ingredient-ritual.png?v=1788951654",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-ingredient-lifestyle-v1.png?v=1791459647",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fnaturemist-ritual.png&w=256&q=75",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fingredient-lifestyle-v1.png&w=384&q=75",
+      "status": 200
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062&width=384",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    }
+  ],
+  "reducedMotionBefore": [],
+  "reducedMotionAfterQ2": [
+    {
+      "constructor": "CSSTransition",
+      "target": "build-your-ritual-module__f_nWHW__intro",
+      "tag": "DIV",
+      "timing": {
+        "delay": 0,
+        "direction": "normal",
+        "duration": 0.01,
+        "easing": "ease",
+        "endDelay": 0,
+        "fill": "backwards",
+        "iterationStart": 0,
+        "iterations": 1
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "paddingBottom": "24px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "paddingBottom": "18px",
+          "computedOffset": 1
+        }
+      ]
+    },
+    {
+      "constructor": "CSSTransition",
+      "target": "build-your-ritual-module__f_nWHW__intro",
+      "tag": "DIV",
+      "timing": {
+        "delay": 0,
+        "direction": "normal",
+        "duration": 0.01,
+        "easing": "ease",
+        "endDelay": 0,
+        "fill": "backwards",
+        "iterationStart": 0,
+        "iterations": 1
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "paddingTop": "26px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "paddingTop": "18px",
+          "computedOffset": 1
+        }
+      ]
+    },
+    {
+      "constructor": "CSSTransition",
+      "target": "build-your-ritual-module__f_nWHW__heading",
+      "tag": "H2",
+      "timing": {
+        "delay": 0,
+        "direction": "normal",
+        "duration": 0.01,
+        "easing": "ease",
+        "endDelay": 0,
+        "fill": "backwards",
+        "iterationStart": 0,
+        "iterations": 1
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "fontSize": "0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "fontSize": "0px",
+          "computedOffset": 1
+        }
+      ]
+    },
+    {
+      "constructor": "CSSTransition",
+      "target": "build-your-ritual-module__f_nWHW__heading",
+      "tag": "H2",
+      "timing": {
+        "delay": 0,
+        "direction": "normal",
+        "duration": 0.01,
+        "easing": "ease",
+        "endDelay": 0,
+        "fill": "backwards",
+        "iterationStart": 0,
+        "iterations": 1
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "letterSpacing": "-1.28px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "letterSpacing": "-1.12px",
+          "computedOffset": 1
+        }
+      ]
+    },
+    {
+      "constructor": "CSSTransition",
+      "target": "build-your-ritual-module__f_nWHW__heading",
+      "tag": "H2",
+      "timing": {
+        "delay": 0,
+        "direction": "normal",
+        "duration": 0.01,
+        "easing": "ease",
+        "endDelay": 0,
+        "fill": "backwards",
+        "iterationStart": 0,
+        "iterations": 1
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "lineHeight": "1.1",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "lineHeight": "1.15",
+          "computedOffset": 1
+        }
+      ]
+    }
+  ],
+  "reducedMotionAfterSettled": [],
+  "resultImages": [
+    {
+      "src": "http://localhost:3000/images/product-placeholder.svg",
+      "currentSrc": "http://localhost:3000/images/product-placeholder.svg",
+      "complete": true,
+      "naturalWidth": 800
+    }
+  ],
+  "resultHeader": {
+    "text": "YOUR RITUAL\n\nA considered next step",
+    "left": 83,
+    "right": 230.984375,
+    "parentLeft": 27,
+    "parentRight": 293,
+    "overflow": false
+  }
+}

@@ -190,7 +190,7 @@ function ComboBook({ content }: { content: BotanicalCombosContent }) {
             <h2 id="combos-title">{content.heading} <span>{content.headingEnding}</span></h2>
             <p className={styles.description}>{content.description}</p>
           </div>
-          <Link href="/combos" className={styles.catalogLink}>Explore all combos <Arrow /></Link>
+          <Link href="/shop?type=combos" className={styles.catalogLink}>Explore all combos <Arrow /></Link>
           <Botanical className={styles.headerBotanical} />
         </header>
 

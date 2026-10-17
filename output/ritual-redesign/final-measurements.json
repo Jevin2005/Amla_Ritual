@@ -1,0 +1,200 @@
+{
+  "capturedAt": "2026-10-17T08:17:36.283Z",
+  "widths": [
+    {
+      "viewport": 1440,
+      "sectionHeight": 920.640625,
+      "documentWidth": 1425,
+      "controlBorder": "rgb(119, 133, 107)",
+      "headings": [
+        {
+          "text": "Find your\nritual.",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "76px"
+        },
+        {
+          "text": "What would you like to focus on?",
+          "font": "Georgia, \"Times New Roman\", serif, serif",
+          "size": "38px"
+        }
+      ],
+      "inputs": [
+        {
+          "type": "radio",
+          "value": "cleanse"
+        },
+        {
+          "type": "radio",
+          "value": "softness"
+        },
+        {
+          "type": "radio",
+          "value": "scalp"
+        },
+        {
+          "type": "radio",
+          "value": "colour"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/final-1440.png",
+      "errors": []
+    },
+    {
+      "viewport": 1024,
+      "sectionHeight": 863.28125,
+      "documentWidth": 1009,
+      "controlBorder": "rgb(119, 133, 107)",
+      "headings": [
+        {
+          "text": "Find your\nritual.",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "54.272px"
+        },
+        {
+          "text": "What would you like to focus on?",
+          "font": "Georgia, \"Times New Roman\", serif, serif",
+          "size": "30px"
+        }
+      ],
+      "inputs": [
+        {
+          "type": "radio",
+          "value": "cleanse"
+        },
+        {
+          "type": "radio",
+          "value": "softness"
+        },
+        {
+          "type": "radio",
+          "value": "scalp"
+        },
+        {
+          "type": "radio",
+          "value": "colour"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/final-1024.png",
+      "errors": []
+    },
+    {
+      "viewport": 768,
+      "sectionHeight": 1106.609375,
+      "documentWidth": 753,
+      "controlBorder": "rgb(119, 133, 107)",
+      "headings": [
+        {
+          "text": "Find your ritual.",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "48px"
+        },
+        {
+          "text": "What would you like to focus on?",
+          "font": "Georgia, \"Times New Roman\", serif, serif",
+          "size": "30px"
+        }
+      ],
+      "inputs": [
+        {
+          "type": "radio",
+          "value": "cleanse"
+        },
+        {
+          "type": "radio",
+          "value": "softness"
+        },
+        {
+          "type": "radio",
+          "value": "scalp"
+        },
+        {
+          "type": "radio",
+          "value": "colour"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/final-768.png",
+      "errors": []
+    },
+    {
+      "viewport": 390,
+      "sectionHeight": 1123.390625,
+      "documentWidth": 390,
+      "controlBorder": "rgb(119, 133, 107)",
+      "headings": [
+        {
+          "text": "Find your ritual.",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "35.1px"
+        },
+        {
+          "text": "What would you like to focus on?",
+          "font": "Georgia, \"Times New Roman\", serif, serif",
+          "size": "27.3px"
+        }
+      ],
+      "inputs": [
+        {
+          "type": "radio",
+          "value": "cleanse"
+        },
+        {
+          "type": "radio",
+          "value": "softness"
+        },
+        {
+          "type": "radio",
+          "value": "scalp"
+        },
+        {
+          "type": "radio",
+          "value": "colour"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/final-390.png",
+      "errors": []
+    },
+    {
+      "viewport": 320,
+      "sectionHeight": 1134.453125,
+      "documentWidth": 320,
+      "controlBorder": "rgb(119, 133, 107)",
+      "headings": [
+        {
+          "text": "Find your ritual.",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "32px"
+        },
+        {
+          "text": "What would you like to focus on?",
+          "font": "Georgia, \"Times New Roman\", serif, serif",
+          "size": "26px"
+        }
+      ],
+      "inputs": [
+        {
+          "type": "radio",
+          "value": "cleanse"
+        },
+        {
+          "type": "radio",
+          "value": "softness"
+        },
+        {
+          "type": "radio",
+          "value": "scalp"
+        },
+        {
+          "type": "radio",
+          "value": "colour"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/final-320.png",
+      "errors": []
+    }
+  ]
+}

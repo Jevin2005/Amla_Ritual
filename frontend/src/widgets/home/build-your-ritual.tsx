@@ -22,25 +22,29 @@ export function BuildYourRitual() {
   return (
     <section id="build-your-ritual" className={styles.section} aria-labelledby="builder-title" data-reveal-ignore>
       <div ref={panelRef} className={styles.panel} data-started={started}>
-        <div className={styles.botanicalShadow} aria-hidden="true" />
         <div className={styles.grid}>
           <div className={styles.intro}>
+            <div className={styles.botanicalShadow} aria-hidden="true" />
             <p className={styles.eyebrow}>
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M19.5 4.5c-7-1-14 2-14 8.5 0 3 2 5 5 5 6.5 0 9-6.5 9-13.5Z" />
                 <path d="m4.5 20 10-10M9 15v-4m0 4h4" />
               </svg>
-              Build your ritual
+              A ritual, made for you
             </p>
             <h2 className={styles.heading} id="builder-title">
-              <span className={styles.expandedHeading}>A little about you.<br /> <em>A ritual of your own.</em></span>
-              <span className={styles.compactHeading}>Find your <em>ritual.</em></span>
+              Find your <em>ritual.</em>
             </h2>
             <p className={styles.body}>
-              Tell us what you want from your hair-care routine. We&apos;ll help you find a thoughtful botanical place to begin.
+              A little about your hair. A little about your routine. Discover the botanicals that fit your care goals.
             </p>
-            <p className={styles.note}>A few questions, shaped by your answers.</p>
-            <div className={styles.introRule} aria-hidden="true" />
+            <ol className={styles.introSteps} aria-label="How the ritual finder works" role="list">
+              <li><span aria-hidden="true">01</span> Share your goal</li>
+              <li><span aria-hidden="true">02</span> Shape your routine</li>
+              <li><span aria-hidden="true">03</span> Discover your match</li>
+            </ol>
+            <div className={styles.botanicalArt} aria-hidden="true" />
+            <p className={styles.note}>A few questions. Your own way to care.</p>
           </div>
           <div className={styles.quiz}>
             <RitualFinder onProgress={handleProgress} />

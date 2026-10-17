@@ -25,112 +25,148 @@ export type QuizResult = Omit<QuizOutcome, "candidates"> & {
 };
 
 export const ritualQuestions: QuizQuestion[] = [
-  { id: "goal", label: "Your goal", question: "What would you like to focus on?", helper: "Choose one main goal.", multiple: false, options: [
-    { value: "cleanse", label: "Cleanse", description: "A botanical wash-day routine." },
-    { value: "softness", label: "Softness + shine", description: "Condition and care for your lengths." },
-    { value: "scalp", label: "Scalp care", description: "Choose between cleansing and conditioning." },
-    { value: "colour", label: "Botanical colour", description: "Explore a suitable colour method." },
-  ] },
-  { id: "check", label: "Quick check", question: "Anything we should consider first?", helper: "Select all that apply.", multiple: true, options: [
-    { value: "irritated", label: "My scalp is irritated or the skin is broken" },
-    { value: "reaction", label: "I have reacted to a hair product or botanical" },
-    { value: "none", label: "Neither applies", exclusive: true },
-    { value: "unsure", label: "I am not sure", exclusive: true },
-  ] },
-  { id: "reactionIngredient", label: "Ingredient review", question: "Do you know what you reacted to?", helper: "Select known ingredients, or choose Not sure.", multiple: true, options: [
-    { value: "reetha", label: "Reetha Powder" }, { value: "shikakai", label: "Shikakai Powder" },
-    { value: "amla", label: "Amla Powder" }, { value: "hibiscus", label: "Hibiscus Powder" },
-    { value: "bhringraj", label: "Bhringraj Powder" }, { value: "indigo", label: "Indigo Powder" },
-    { value: "other", label: "Another ingredient", exclusive: true },
-    { value: "unsure", label: "I do not know the ingredient", exclusive: true },
-  ] },
-  { id: "washNeed", label: "Your wash", question: "What matters most in your wash?", helper: "Choose the closest match.", multiple: false, options: [
-    { value: "oil", label: "Removing oil and everyday buildup" },
-    { value: "manage", label: "Cleansing and easier-to-manage lengths" },
-    { value: "beginner", label: "Trying my first botanical wash" },
-    { value: "unsure", label: "I am not sure" },
-  ] },
-  { id: "conditionNeed", label: "Your lengths", question: "What would you like from a hair mask?", helper: "Choose your main priority.", multiple: false, options: [
-    { value: "dry", label: "Care for dry or rough-feeling hair" },
-    { value: "manage", label: "More manageable-feeling lengths" },
-    { value: "shine", label: "More natural-looking shine" },
-    { value: "general", label: "A simple conditioning routine" },
-    { value: "unsure", label: "I am not sure" },
-  ] },
-  { id: "scalpNeed", label: "Your scalp", question: "What brings you to scalp care?", helper: "Choose the closest match.", multiple: false, options: [
-    { value: "oil", label: "Oil and everyday buildup" },
-    { value: "condition", label: "A general hair-and-scalp conditioning ritual" },
-    { value: "irritation", label: "Persistent itching, flaking or discomfort" },
-    { value: "loss", label: "Sudden or patchy hair loss" },
-    { value: "unsure", label: "I am not sure" },
-  ] },
-  { id: "scalpType", label: "Your scalp", question: "Which kind of step are you looking for?", helper: "A wash cleanses. A mask adds a conditioning step.", multiple: false, options: [
-    { value: "wash", label: "A wash for my scalp and hair" },
-    { value: "mask", label: "A conditioning mask" },
-    { value: "unsure", label: "I need help choosing" },
-  ] },
-  { id: "hairHistory", label: "Your hair", question: "Which best describes your hair now?", helper: "If your hair is treated, choose the treated option.", multiple: false, options: [
-    { value: "natural", label: "Untreated brown or black hair" },
-    { value: "light", label: "Naturally light, grey or white hair" },
-    { value: "treated", label: "Coloured, bleached or chemically treated hair" },
-    { value: "unsure", label: "I am not sure" },
-  ] },
-  { id: "treatmentType", label: "Hair history", question: "Which treatments are on your hair?", helper: "Select all that apply.", multiple: true, options: [
-    { value: "colour", label: "Hair dye" }, { value: "bleach", label: "Bleach or highlights" },
-    { value: "chemical", label: "Perming, relaxing or chemical straightening" },
-    { value: "unsure", label: "I am not sure", exclusive: true },
-  ] },
-  { id: "routine", label: "Your routine", question: "How simple would you like your routine?", helper: "Choose the number of steps you actually want.", multiple: false, options: [
-    { value: "one", label: "One product to start" },
-    { value: "two", label: "Two complementary steps" },
-    { value: "unsure", label: "I am not sure — keep it simple" },
-  ] },
-  { id: "conditionAddon", label: "Your second step", question: "What should your conditioning step focus on?", helper: "This would be a separate mask step.", multiple: false, options: [
-    { value: "dry", label: "Dry-feeling or hard-to-manage lengths" },
-    { value: "shine", label: "General conditioning and shine" },
-    { value: "scalp", label: "Hair-and-scalp conditioning" },
-    { value: "skip", label: "Keep just the cleanser" },
-  ] },
-  { id: "cleanseAddon", label: "Your second step", question: "What should your cleansing step focus on?", helper: "This would be a separate wash step.", multiple: false, options: [
-    { value: "oil", label: "Oil and everyday buildup" },
-    { value: "manage", label: "Cleansing and manageability" },
-    { value: "skip", label: "Keep just the mask" },
-  ] },
-  { id: "strand", label: "Check before starting", question: "Have you checked these botanicals on a hidden strand?", helper: "Yes means every suggested product was checked. A strand check does not replace a skin patch test.", multiple: false, options: [
-    { value: "passed", label: "Yes — I checked each one and am happy with the results" },
-    { value: "notyet", label: "Not yet" },
-    { value: "changed", label: "The colour or feel changed unexpectedly" },
-    { value: "unsure", label: "I am not sure" },
-  ] },
-  { id: "colourTarget", label: "Your colour goal", question: "What colour result are you hoping for?", helper: "Choose a direction, rather than an exact promised shade.", multiple: false, options: [
-    { value: "deeper", label: "Deeper brown-to-dark tones" },
-    { value: "grey", label: "A darker result on greys" },
-    { value: "lighter", label: "A lighter or blonde result" },
-    { value: "copper", label: "Red or copper tones" },
-    { value: "unsure", label: "I am not sure yet" },
-  ] },
-  { id: "colourBase", label: "Your starting colour", question: "What colour are you starting with?", helper: "Choose the closest match.", multiple: false, options: [
-    { value: "dark", label: "Dark brown or black" }, { value: "brown", label: "Light or medium brown" },
-    { value: "light", label: "Blonde or lightened hair" }, { value: "grey", label: "Mostly grey or white" },
-    { value: "mixed", label: "Dark hair with some greys" }, { value: "unsure", label: "I am not sure" },
-  ] },
-  { id: "colourHistory", label: "Your colour history", question: "Which colour treatments are on your hair?", helper: "Select all that apply.", multiple: true, options: [
-    { value: "henna", label: "Henna" }, { value: "dye", label: "Other hair dye" },
-    { value: "bleach", label: "Bleach or highlights" }, { value: "chemical", label: "Perming, relaxing or chemical straightening" },
-    { value: "none", label: "No previous colour or chemical treatment", exclusive: true },
-    { value: "unsure", label: "I am not sure", exclusive: true },
-  ] },
-  { id: "henna", label: "Your colour method", question: "Does your colour plan include a suitable henna-first step?", helper: "Indigo is only one stage of this colour method.", multiple: false, options: [
-    { value: "ready", label: "Yes — I have the henna step and product directions" },
-    { value: "no", label: "No, I only have or want Indigo" },
-    { value: "unsure", label: "I need help with the method" },
-  ] },
-  { id: "colourChecks", label: "Before full colour", question: "Have you completed the product patch and strand checks?", helper: "Check the complete henna-and-indigo method using its product instructions. A clear test cannot guarantee that a reaction will never happen.", multiple: false, options: [
-    { value: "passed", label: "Yes — no reaction and an acceptable strand result" },
-    { value: "notyet", label: "Not yet" },
-    { value: "reaction", label: "I noticed irritation or a reaction" },
-    { value: "shade", label: "The strand colour was not what I wanted" },
-  ] },
+  {
+    id: "goal", label: "Your goal", question: "What would you like to focus on?", helper: "Choose one main goal.", multiple: false, options: [
+      { value: "cleanse", label: "Cleanse", description: "A botanical wash-day routine." },
+      { value: "softness", label: "Softness + shine", description: "Condition and care for your lengths." },
+      { value: "scalp", label: "Scalp care", description: "Choose between cleansing and conditioning." },
+      { value: "colour", label: "Botanical colour", description: "Explore a suitable colour method." },
+    ]
+  },
+  {
+    id: "check", label: "Quick check", question: "Anything we should consider first?", helper: "Select all that apply.", multiple: true, options: [
+      { value: "irritated", label: "My scalp is irritated or the skin is broken" },
+      { value: "reaction", label: "I have reacted to a hair product or botanical" },
+      { value: "none", label: "Neither applies", exclusive: true },
+      { value: "unsure", label: "I am not sure", exclusive: true },
+    ]
+  },
+  {
+    id: "reactionIngredient", label: "Ingredient review", question: "Do you know what you reacted to?", helper: "Select known ingredients, or choose Not sure.", multiple: true, options: [
+      { value: "reetha", label: "Reetha Powder" }, { value: "shikakai", label: "Shikakai Powder" },
+      { value: "amla", label: "Amla Powder" }, { value: "hibiscus", label: "Hibiscus Powder" },
+      { value: "bhringraj", label: "Bhringraj Powder" }, { value: "indigo", label: "Indigo Powder" },
+      { value: "other", label: "Another ingredient", exclusive: true },
+      { value: "unsure", label: "I do not know the ingredient", exclusive: true },
+    ]
+  },
+  {
+    id: "washNeed", label: "Your wash", question: "What matters most in your wash?", helper: "Choose the closest match.", multiple: false, options: [
+      { value: "oil", label: "Removing oil and everyday buildup" },
+      { value: "manage", label: "Cleansing and easier-to-manage lengths" },
+      { value: "beginner", label: "Trying my first botanical wash" },
+      { value: "unsure", label: "I am not sure" },
+    ]
+  },
+  {
+    id: "conditionNeed", label: "Your lengths", question: "What would you like from a hair mask?", helper: "Choose your main priority.", multiple: false, options: [
+      { value: "dry", label: "Care for dry or rough-feeling hair" },
+      { value: "manage", label: "More manageable-feeling lengths" },
+      { value: "shine", label: "More natural-looking shine" },
+      { value: "general", label: "A simple conditioning routine" },
+      { value: "unsure", label: "I am not sure" },
+    ]
+  },
+  {
+    id: "scalpNeed", label: "Your scalp", question: "What brings you to scalp care?", helper: "Choose the closest match.", multiple: false, options: [
+      { value: "oil", label: "Oil and everyday buildup" },
+      { value: "condition", label: "A general hair-and-scalp conditioning ritual" },
+      { value: "irritation", label: "Persistent itching, flaking or discomfort" },
+      { value: "loss", label: "Sudden or patchy hair loss" },
+      { value: "unsure", label: "I am not sure" },
+    ]
+  },
+  {
+    id: "scalpType", label: "Your scalp", question: "Which kind of step are you looking for?", helper: "A wash cleanses. A mask adds a conditioning step.", multiple: false, options: [
+      { value: "wash", label: "A wash for my scalp and hair" },
+      { value: "mask", label: "A conditioning mask" },
+      { value: "unsure", label: "I need help choosing" },
+    ]
+  },
+  {
+    id: "hairHistory", label: "Your hair", question: "Which best describes your hair now?", helper: "If your hair is treated, choose the treated option.", multiple: false, options: [
+      { value: "natural", label: "Untreated brown or black hair" },
+      { value: "light", label: "Naturally light, grey or white hair" },
+      { value: "treated", label: "Coloured, bleached or chemically treated hair" },
+      { value: "unsure", label: "I am not sure" },
+    ]
+  },
+  {
+    id: "treatmentType", label: "Hair history", question: "Which treatments are on your hair?", helper: "Select all that apply.", multiple: true, options: [
+      { value: "colour", label: "Hair dye" }, { value: "bleach", label: "Bleach or highlights" },
+      { value: "chemical", label: "Perming, relaxing or chemical straightening" },
+      { value: "unsure", label: "I am not sure", exclusive: true },
+    ]
+  },
+  {
+    id: "routine", label: "Your routine", question: "How simple would you like your routine?", helper: "Choose the number of steps you actually want.", multiple: false, options: [
+      { value: "one", label: "One product to start" },
+      { value: "two", label: "Two complementary steps" },
+      { value: "unsure", label: "I am not sure — keep it simple" },
+    ]
+  },
+  {
+    id: "conditionAddon", label: "Your second step", question: "What should your conditioning step focus on?", helper: "This would be a separate mask step.", multiple: false, options: [
+      { value: "dry", label: "Dry-feeling or hard-to-manage lengths" },
+      { value: "shine", label: "General conditioning and shine" },
+      { value: "scalp", label: "Hair-and-scalp conditioning" },
+      { value: "skip", label: "Keep just the cleanser" },
+    ]
+  },
+  {
+    id: "cleanseAddon", label: "Your second step", question: "What should your cleansing step focus on?", helper: "This would be a separate wash step.", multiple: false, options: [
+      { value: "oil", label: "Oil and everyday buildup" },
+      { value: "manage", label: "Cleansing and manageability" },
+      { value: "skip", label: "Keep just the mask" },
+    ]
+  },
+  {
+    id: "strand", label: "Check before starting", question: "Have you checked these botanicals on a hidden strand?", helper: "Yes means every suggested product was checked. A strand check does not replace a skin patch test.", multiple: false, options: [
+      { value: "passed", label: "Yes — I checked each one and am happy with the results" },
+      { value: "notyet", label: "Not yet" },
+      { value: "changed", label: "The colour or feel changed unexpectedly" },
+      { value: "unsure", label: "I am not sure" },
+    ]
+  },
+  {
+    id: "colourTarget", label: "Your colour goal", question: "What colour result are you hoping for?", helper: "Choose a direction, rather than an exact promised shade.", multiple: false, options: [
+      { value: "deeper", label: "Deeper brown-to-dark tones" },
+      { value: "grey", label: "A darker result on greys" },
+      { value: "lighter", label: "A lighter or blonde result" },
+      { value: "copper", label: "Red or copper tones" },
+      { value: "unsure", label: "I am not sure yet" },
+    ]
+  },
+  {
+    id: "colourBase", label: "Your starting colour", question: "What colour are you starting with?", helper: "Choose the closest match.", multiple: false, options: [
+      { value: "dark", label: "Dark brown or black" }, { value: "brown", label: "Light or medium brown" },
+      { value: "light", label: "Blonde or lightened hair" }, { value: "grey", label: "Mostly grey or white" },
+      { value: "mixed", label: "Dark hair with some greys" }, { value: "unsure", label: "I am not sure" },
+    ]
+  },
+  {
+    id: "colourHistory", label: "Your colour history", question: "Which colour treatments are on your hair?", helper: "Select all that apply.", multiple: true, options: [
+      { value: "henna", label: "Henna" }, { value: "dye", label: "Other hair dye" },
+      { value: "bleach", label: "Bleach or highlights" }, { value: "chemical", label: "Perming, relaxing or chemical straightening" },
+      { value: "none", label: "No previous colour or chemical treatment", exclusive: true },
+      { value: "unsure", label: "I am not sure", exclusive: true },
+    ]
+  },
+  {
+    id: "henna", label: "Your colour method", question: "Does your colour plan include a suitable henna-first step?", helper: "Indigo is only one stage of this colour method.", multiple: false, options: [
+      { value: "ready", label: "Yes — I have the henna step and product directions" },
+      { value: "no", label: "No, I only have or want Indigo" },
+      { value: "unsure", label: "I need help with the method" },
+    ]
+  },
+  {
+    id: "colourChecks", label: "Before full colour", question: "Have you completed the product patch and strand checks?", helper: "Check the complete henna-and-indigo method using its product instructions. A clear test cannot guarantee that a reaction will never happen.", multiple: false, options: [
+      { value: "passed", label: "Yes — no reaction and an acceptable strand result" },
+      { value: "notyet", label: "Not yet" },
+      { value: "reaction", label: "I noticed irritation or a reaction" },
+      { value: "shade", label: "The strand colour was not what I wanted" },
+    ]
+  },
 ];
 
 const questionsById = Object.fromEntries(ritualQuestions.map((question) => [question.id, question])) as Record<QuizQuestionId, QuizQuestion>;
@@ -160,19 +196,19 @@ export function getQuizFlow(answers: QuizAnswers): QuizFlow {
   if (!goal) return pending();
   const check = ask("check");
   if (!check) return pending();
-  if (check.includes("irritated")) return finish("pause", "Pause your botanical ritual", "You mentioned irritation or broken skin. Pause botanical use and seek professional advice before choosing a product.");
+  if (check.includes("irritated")) return finish("pause", "Discover the botanical collection", "Explore product details while you plan your care. Avoid applying botanicals to irritated or broken skin, and seek professional advice before use.");
   if (check.includes("reaction")) {
     const ingredients = ask("reactionIngredient");
     if (!ingredients) return pending();
     const known = ingredients.filter((value) => value !== "other" && value !== "unsure").map((value) => names[`${value}-powder`]);
-    return finish("review", "Review the ingredients first", `${known.length ? `You reported a reaction involving ${known.join(" and ")}.` : "The ingredient behind your previous reaction needs to be clarified."} Review the complete ingredient lists with a qualified professional before choosing a botanical. We have not substituted another powder as allergy-safe.`);
+    return finish("review", "Discover the botanical collection", `${known.length ? `Avoid ${known.join(" and ")}, which you linked to a reaction.` : "Explore the ingredients and care benefits below."} After a previous reaction, ask a dermatologist before trying a new botanical.`);
   }
-  if (check.includes("unsure")) return finish("review", "A little clarity before choosing", "You are unsure about irritation or a previous reaction. Review this with a qualified professional before choosing a botanical.");
+  if (check.includes("unsure")) return finish("review", "Get to know your botanicals", "Explore the ingredients and care benefits below. If you may have reacted before or your scalp is irritated, get professional advice before use.");
 
   if (goal === "colour") {
     const target = ask("colourTarget")?.[0];
     if (!target) return pending();
-    if (target === "lighter" || target === "copper") return finish("no-match", "No match for this colour goal", `There is no verified ${target === "lighter" ? "lighter or blonde" : "red or copper"} colour match in this six-powder collection. Indigo is not a suitable substitute for your chosen goal.`);
+    if (target === "lighter" || target === "copper") return finish("no-match", "Explore care alongside colour", `This collection does not create ${target === "lighter" ? "lighter or blonde" : "red or copper"} tones. Discover conditioning botanicals below for a separate hair-care step.`);
     if (target === "unsure") return finish("guidance", "Choose your colour direction first", "Clarify the colour result you want before selecting a botanical colour method. Results depend on your starting colour and the complete method.");
     const base = ask("colourBase")?.[0];
     if (!base) return pending();
@@ -185,8 +221,8 @@ export function getQuizFlow(answers: QuizAnswers): QuizFlow {
     if (henna !== "ready") return finish("guidance", "Plan the complete colour method", "A suitable henna-first step and its product directions are needed before considering Indigo. Indigo alone cannot promise black results on grey or blonde hair. Henna is not included in this collection.");
     const checks = ask("colourChecks")?.[0];
     if (!checks) return pending();
-    if (checks === "reaction") return finish("pause", "Pause your colour ritual", "You noticed irritation or a reaction during your checks. Stop using the products and seek professional advice before trying a colour method.");
-    if (checks === "shade") return finish("review", "Review your colour method", "Your strand colour was not what you wanted. Review the complete colour method before a full application; we have not selected a substitute.");
+    if (checks === "reaction") return finish("pause", "Explore care beyond colour", "Stop using the colour products that caused a reaction and seek professional advice before trying another botanical. You can browse general care products below.");
+    if (checks === "shade") return finish("review", "Explore care alongside colour", "Your strand result was different from your goal. Adjust the colour method before a full application; the products below are for general conditioning.");
     const candidate: QuizCandidate = { slug: "indigo-powder", role: "Colour", reason: target === "grey" ? "The Indigo stage of your confirmed henna-first method fits your aim of a darker result on greys; the final shade is not guaranteed." : "The Indigo stage of your confirmed henna-first method fits your aim of deeper brown-to-dark tones; the final shade is not guaranteed." };
     return finish(checks === "notyet" ? "conditional" : "candidate", checks === "notyet" ? "Check before starting" : "Your suggested starting ritual", checks === "notyet" ? "Complete the patch and strand checks for the whole henna-and-indigo method using its product directions before deciding on a full application." : "Indigo is one colour stage, alongside your separate suitable henna-first step. Follow the complete method's current directions. An acceptable check does not guarantee a shade or rule out a future reaction.", [candidate]);
   }
@@ -300,6 +336,43 @@ function isVerifiedCandidate(product: Product, slug: string, source: "shopify" |
   return product.howTo.some((line) => Boolean(line.trim()));
 }
 
+const collectionCare: QuizCandidate[] = [
+  { slug: "amla-powder", role: "Condition", reason: "A pre-wash conditioning botanical for softer-feeling hair and natural-looking shine." },
+  { slug: "hibiscus-powder", role: "Condition", reason: "A conditioning mask botanical for dry-feeling lengths and more manageable hair." },
+  { slug: "bhringraj-powder", role: "Condition", reason: "A botanical for a general hair-and-scalp conditioning ritual." },
+  { slug: "shikakai-powder", role: "Cleanse", reason: "A wash-day botanical for cleansing and easier-to-manage lengths." },
+  { slug: "reetha-powder", role: "Cleanse", reason: "A cleansing botanical for removing everyday oil and buildup." },
+];
+
+/** General product discovery for completed routes without a personal recommendation. */
+export function resolveQuizBrowseItems(answers: QuizAnswers, products: readonly Product[], source: "shopify" | "preview"): QuizResult["items"] {
+  const flow = getQuizFlow(answers);
+  if (!flow.complete || !flow.outcome || resolveQuizResult(flow.outcome, products, source).items.length > 0) return [];
+  const goal = answers.goal?.[0];
+  const excluded = flow.questions.some((question) => question.id === "reactionIngredient")
+    ? (answers.reactionIngredient ?? []).filter((ingredient) => Boolean(names[`${ingredient}-powder`]))
+    : [];
+  const changedStrandSlugs = flow.questions.some((question) => question.id === "strand") && answers.strand?.[0] === "changed"
+    ? getQuizFlow({ ...answers, strand: ["passed"] }).outcome?.candidates.map((candidate) => candidate.slug) ?? []
+    : [];
+  const preferred = goal === "cleanse" ? ["shikakai-powder", "reetha-powder"]
+    : goal === "scalp" ? ["bhringraj-powder", "reetha-powder"]
+      : ["amla-powder", "hibiscus-powder"];
+  const collection = [...collectionCare].sort((a, b) => {
+    const priority = (slug: string) => preferred.includes(slug) ? preferred.indexOf(slug) : preferred.length;
+    return priority(a.slug) - priority(b.slug);
+  });
+  return collection.flatMap(({ slug, role, reason }) => {
+    // Colour dead ends show general conditioning, never an incompatible colour substitute.
+    if (goal === "colour" && role !== "Condition") return [];
+    if (changedStrandSlugs.includes(slug)) return [];
+    if (excluded.some((ingredient) => slug === `${ingredient}-powder`)) return [];
+    const product = products.find((entry) => isVerifiedCandidate(entry, slug, source)
+      && !excluded.some((ingredient) => new RegExp(`\\b${ingredient}\\b`, "i").test(`${entry.name} ${entry.ingredient}`)));
+    return product ? [{ product, role, reason }] : [];
+  }).slice(0, 2);
+}
+
 /** Resolve exact candidates against current records; never fill a gap with another role. */
 export function resolveQuizResult(outcome: QuizOutcome, products: readonly Product[], source: "shopify" | "preview"): QuizResult {
   const { kind, title, description } = outcome;
@@ -309,7 +382,7 @@ export function resolveQuizResult(outcome: QuizOutcome, products: readonly Produ
     return product ? [{ product, reason, role }] : [];
   });
   const unavailable = items.length !== outcome.candidates.length;
-  if (!items.length) return { kind: "no-match", title: "No available match right now", description: "We could not confirm an available product with the required ingredient and care information for your answers. No replacement has been selected. You can edit your answers or check the collection again later.", items, unavailable: true };
+  if (!items.length) return { kind: "no-match", title: "Discover more botanicals", description: "Your selected ritual is not available right now. Explore the collection below or edit your answers to plan a different care routine.", items, unavailable: true };
   const partialDescription = `Only part of your requested ritual is available with confirmed product information. The remaining suggested step is unavailable; no substitute has been added. ${kind === "conditional" ? "Before deciding to begin, check the available product on a hidden strand and follow its current patch-test guidance." : "Follow the available product's current pack instructions and testing guidance."}`;
   return { kind, title, description: unavailable ? partialDescription : description, items, unavailable };
 }

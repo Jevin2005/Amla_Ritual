@@ -1,0 +1,114 @@
+{
+  "capturedAt": "2026-10-17T08:52:44.418Z",
+  "previews": [
+    {
+      "width": 1440,
+      "index": 1,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+      "naturalWidth": 400,
+      "imageWidth": 431.4654235839844,
+      "imageHeight": 576.08837890625,
+      "title": "Botanical Duo",
+      "total": "₹634",
+      "addBackground": "rgb(136, 8, 16)"
+    },
+    {
+      "width": 1440,
+      "index": 2,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+      "naturalWidth": 400,
+      "imageWidth": 431.4676818847656,
+      "imageHeight": 576.09130859375,
+      "title": "Floral Duo",
+      "total": "₹684",
+      "addBackground": "rgb(136, 8, 16)"
+    },
+    {
+      "width": 390,
+      "index": 1,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+      "naturalWidth": 358,
+      "imageWidth": 353.2445373535156,
+      "imageHeight": 214.080078125,
+      "title": "Botanical Duo",
+      "total": "₹634",
+      "addBackground": "rgb(136, 8, 16)"
+    },
+    {
+      "width": 390,
+      "index": 2,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+      "naturalWidth": 358,
+      "imageWidth": 353.242431640625,
+      "imageHeight": 214.07879638671875,
+      "title": "Floral Duo",
+      "total": "₹684",
+      "addBackground": "rgb(136, 8, 16)"
+    },
+    {
+      "width": 320,
+      "index": 1,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+      "naturalWidth": 294,
+      "imageWidth": 283.78759765625,
+      "imageHeight": 171.9873046875,
+      "title": "Botanical Duo",
+      "total": "₹634",
+      "addBackground": "rgb(21, 59, 45)"
+    },
+    {
+      "width": 320,
+      "index": 2,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+      "naturalWidth": 294,
+      "imageWidth": 283.7875671386719,
+      "imageHeight": 171.98728942871094,
+      "title": "Floral Duo",
+      "total": "₹684",
+      "addBackground": "rgb(21, 59, 45)"
+    },
+    {
+      "width": 1440,
+      "index": 0,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=640&q=75",
+      "naturalWidth": 400,
+      "imageWidth": 433.3033447265625,
+      "imageHeight": 659.24267578125,
+      "title": "Classic Trio",
+      "total": "₹959",
+      "addBackground": "rgb(21, 59, 45)"
+    },
+    {
+      "width": 390,
+      "index": 0,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=640&q=75",
+      "naturalWidth": 358,
+      "imageWidth": 353.24237060546875,
+      "imageHeight": 214.07876586914062,
+      "title": "Classic Trio",
+      "total": "₹959",
+      "addBackground": "rgb(16, 50, 38)"
+    },
+    {
+      "width": 320,
+      "index": 0,
+      "loaded": true,
+      "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=640&q=75",
+      "naturalWidth": 294,
+      "imageWidth": 283.7877502441406,
+      "imageHeight": 171.98741149902344,
+      "title": "Classic Trio",
+      "total": "₹959",
+      "addBackground": "rgb(21, 59, 45)"
+    }
+  ],
+  "passed": true
+}

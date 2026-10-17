@@ -1,0 +1,210 @@
+{
+  "capturedAt": "2026-10-17T08:36:42.898Z",
+  "cases": [
+    {
+      "route": "shop",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "height": 1837.15625,
+      "headings": [
+        "One ingredient.\nYour ritual.",
+        "RITUAL GOAL",
+        "RITUAL STEP",
+        "6 Botanicals"
+      ],
+      "buttons": [
+        "All",
+        "Cleanse",
+        "Softness + Shine",
+        "Resilient-Feeling Hair",
+        "Scalp Ritual",
+        "Botanical Colour",
+        "All",
+        "Cleanse",
+        "Condition",
+        "Colour",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋"
+      ],
+      "inputs": [
+        {
+          "type": "search",
+          "placeholder": "Botanical name, goal, or benefit...",
+          "label": null
+        },
+        {
+          "type": "select-one",
+          "label": null
+        }
+      ],
+      "shopLinks": [
+        "/shop/amla-powder",
+        "/shop/amla-powder#customer-reviews",
+        "/shop/reetha-powder",
+        "/shop/reetha-powder#customer-reviews",
+        "/shop/indigo-powder",
+        "/shop/indigo-powder#customer-reviews",
+        "/shop/bhringraj-powder",
+        "/shop/bhringraj-powder#customer-reviews",
+        "/shop/hibiscus-powder",
+        "/shop/hibiscus-powder#customer-reviews",
+        "/shop/shikakai-powder",
+        "/shop/shikakai-powder#customer-reviews"
+      ],
+      "comboSectionPresent": false,
+      "errors": [],
+      "screenshot": "output/unified-collection/baseline-shop-1440.png"
+    },
+    {
+      "route": "home",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "height": 1541.90625,
+      "headings": [
+        "Shop the herbal collection."
+      ],
+      "buttons": [
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋"
+      ],
+      "inputs": [],
+      "shopLinks": [
+        "/shop/amla-powder",
+        "/shop/amla-powder#customer-reviews",
+        "/shop/reetha-powder",
+        "/shop/reetha-powder#customer-reviews",
+        "/shop/indigo-powder",
+        "/shop/indigo-powder#customer-reviews",
+        "/shop/bhringraj-powder",
+        "/shop/bhringraj-powder#customer-reviews",
+        "/shop/hibiscus-powder",
+        "/shop/hibiscus-powder#customer-reviews",
+        "/shop/shikakai-powder",
+        "/shop/shikakai-powder#customer-reviews"
+      ],
+      "comboSectionPresent": true,
+      "errors": [],
+      "screenshot": "output/unified-collection/baseline-home-1440.png"
+    },
+    {
+      "route": "shop",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "height": 1597.90625,
+      "headings": [
+        "One ingredient.\nYour ritual.",
+        "6 Botanicals"
+      ],
+      "buttons": [
+        "⚙️ Filters",
+        "All",
+        "Cleanse",
+        "Softness + Shine",
+        "Resilient-Feeling Hair",
+        "Scalp Ritual",
+        "Botanical Colour",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋"
+      ],
+      "inputs": [
+        {
+          "type": "search",
+          "placeholder": "Search botanicals...",
+          "label": null
+        }
+      ],
+      "shopLinks": [
+        "/shop/amla-powder",
+        "/shop/amla-powder#customer-reviews",
+        "/shop/reetha-powder",
+        "/shop/reetha-powder#customer-reviews",
+        "/shop/indigo-powder",
+        "/shop/indigo-powder#customer-reviews",
+        "/shop/bhringraj-powder",
+        "/shop/bhringraj-powder#customer-reviews",
+        "/shop/hibiscus-powder",
+        "/shop/hibiscus-powder#customer-reviews",
+        "/shop/shikakai-powder",
+        "/shop/shikakai-powder#customer-reviews"
+      ],
+      "comboSectionPresent": false,
+      "errors": [],
+      "screenshot": "output/unified-collection/baseline-shop-390.png"
+    },
+    {
+      "route": "home",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "height": 1140.59375,
+      "headings": [
+        "Shop the herbal collection."
+      ],
+      "buttons": [
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋",
+        "♡",
+        "＋"
+      ],
+      "inputs": [],
+      "shopLinks": [
+        "/shop/amla-powder",
+        "/shop/amla-powder#customer-reviews",
+        "/shop/reetha-powder",
+        "/shop/reetha-powder#customer-reviews",
+        "/shop/indigo-powder",
+        "/shop/indigo-powder#customer-reviews",
+        "/shop/bhringraj-powder",
+        "/shop/bhringraj-powder#customer-reviews",
+        "/shop/hibiscus-powder",
+        "/shop/hibiscus-powder#customer-reviews",
+        "/shop/shikakai-powder",
+        "/shop/shikakai-powder#customer-reviews"
+      ],
+      "comboSectionPresent": true,
+      "errors": [],
+      "screenshot": "output/unified-collection/baseline-home-390.png"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "capturedAt": "2026-10-17T08:53:32.714Z",
+  "states": [
+    {
+      "label": "Individual powders",
+      "cards": 6,
+      "combos": 0,
+      "status": "6 items in the collection",
+      "pressed": "true",
+      "passed": true
+    },
+    {
+      "label": "All products",
+      "cards": 9,
+      "combos": 3,
+      "status": "9 items in the collection",
+      "pressed": "true",
+      "passed": true
+    },
+    {
+      "label": "Combos",
+      "cards": 3,
+      "combos": 3,
+      "status": "3 items in the collection",
+      "pressed": "true",
+      "passed": true
+    }
+  ],
+  "separateComboBook": 0,
+  "passed": true
+}

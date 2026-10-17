@@ -21,15 +21,16 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  color: #162518;
-  background: #f5f0e3;
-  border: 1px solid rgb(90 92 56 / 35%);
-  box-shadow: 0 24px 100px rgb(0 0 0 / 25%), inset 0 0 40px rgb(138 108 61 / 7%);
+  color: var(--forest);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 24px 100px rgb(0 0 0 / 25%);
   animation: page-in 360ms cubic-bezier(.2, .7, .2, 1) both;
 }
 
 .dialog :is(button, a):focus-visible {
-  outline: 2px solid #880810;
+  outline: 2px solid var(--botanical);
   outline-offset: 4px;
 }
 
@@ -44,8 +45,8 @@
   height: 44px;
   border: 1px solid rgb(90 92 56 / 30%);
   border-radius: 50%;
-  color: #162518;
-  background: #f5f0e3;
+  color: var(--forest);
+  background: var(--paper);
   cursor: pointer;
   transition: background 180ms ease;
 }
@@ -153,20 +154,19 @@
   width: 100%;
   min-height: 50px;
   padding: 13px 20px;
-  border: 1px solid #880810;
+  border: 1px solid var(--forest);
   border-radius: 999px;
-  background: #880810;
-  color: #fffaf1;
-  font-size: .71rem;
-  font-weight: 500;
-  letter-spacing: .13em;
-  text-transform: uppercase;
+  background: var(--forest);
+  color: var(--paper);
+  font-size: .875rem;
+  font-weight: 600;
+  letter-spacing: .01em;
   cursor: pointer;
   transition: background 180ms ease;
 }
 
 .add > span:last-child { font-size: 1.4rem; line-height: 1; transition: transform 180ms ease; }
-.add:hover:not(:disabled) { background: #69080d; }
+.add:hover:not(:disabled) { background: var(--forest-dark); }
 .add:hover:not(:disabled) > span:last-child { transform: translateX(4px); }
 .add:disabled { opacity: .55; cursor: not-allowed; }
 .footnote { margin: 14px 0 0; color: #60644f; font-size: .65rem; line-height: 1.7; text-align: center; }

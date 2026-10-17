@@ -5,7 +5,7 @@ import { getStorefront } from "@/lib/shopify/storefront";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const storefront = await getStorefront();
   const base = getPublicSiteUrl();
-  const routes = ["", "/shop", "/combos", "/our-story", "/shipping-returns", "/privacy", "/terms"];
+  const routes = ["", "/shop", "/our-story", "/shipping-returns", "/privacy", "/terms"];
 
   return [
     ...routes.map((route) => ({ url: `${base}${route}`, changeFrequency: "monthly" as const, priority: route === "" ? 1 : 0.7 })),

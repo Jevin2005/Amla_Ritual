@@ -1,0 +1,483 @@
+{
+  "capturedAt": "2026-10-17T08:19:14.632Z",
+  "target": "http://localhost:3000/#build-your-ritual",
+  "environment": "Headless desktop Chrome; phone viewport and touch emulation. Actual live Next development app, no fixture or request interception.",
+  "summary": {
+    "responsiveWidths": [
+      1440,
+      1024,
+      768,
+      390,
+      320
+    ],
+    "visuallyInspected": true,
+    "horizontalOverflow": false,
+    "clippedText": false,
+    "headingConsistentAcrossStates": true,
+    "selectionAndNavigation": "Passed at 1440,390,320: disabled Continue, selected goal, Continue, Back preserving selection, multi-select, exclusive choice, ordinary Hibiscus result, Edit preserving answers, Start over clearing answers.",
+    "keyboard": "Passed native radio arrows, checkbox Space, Tab/Enter, visible focus, and focused question after navigation.",
+    "reducedMotion": "Finder reports motion off; existing wrapper transitions are 0.01ms and no animation remains after settling.",
+    "fallback": "Network restriction blocks primary Shopify CDN image. Correct local Hibiscus illustration now loads, with no placeholder, at 1440,390,320.",
+    "runtimeErrors": []
+  },
+  "responsive": {
+    "capturedAt": "2026-10-17T08:17:36.283Z",
+    "widths": [
+      {
+        "viewport": 1440,
+        "sectionHeight": 920.640625,
+        "documentWidth": 1425,
+        "controlBorder": "rgb(119, 133, 107)",
+        "headings": [
+          {
+            "text": "Find your\nritual.",
+            "font": "Georgia, \"Times New Roman\", serif",
+            "size": "76px"
+          },
+          {
+            "text": "What would you like to focus on?",
+            "font": "Georgia, \"Times New Roman\", serif, serif",
+            "size": "38px"
+          }
+        ],
+        "inputs": [
+          {
+            "type": "radio",
+            "value": "cleanse"
+          },
+          {
+            "type": "radio",
+            "value": "softness"
+          },
+          {
+            "type": "radio",
+            "value": "scalp"
+          },
+          {
+            "type": "radio",
+            "value": "colour"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/final-1440.png",
+        "errors": []
+      },
+      {
+        "viewport": 1024,
+        "sectionHeight": 863.28125,
+        "documentWidth": 1009,
+        "controlBorder": "rgb(119, 133, 107)",
+        "headings": [
+          {
+            "text": "Find your\nritual.",
+            "font": "Georgia, \"Times New Roman\", serif",
+            "size": "54.272px"
+          },
+          {
+            "text": "What would you like to focus on?",
+            "font": "Georgia, \"Times New Roman\", serif, serif",
+            "size": "30px"
+          }
+        ],
+        "inputs": [
+          {
+            "type": "radio",
+            "value": "cleanse"
+          },
+          {
+            "type": "radio",
+            "value": "softness"
+          },
+          {
+            "type": "radio",
+            "value": "scalp"
+          },
+          {
+            "type": "radio",
+            "value": "colour"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/final-1024.png",
+        "errors": []
+      },
+      {
+        "viewport": 768,
+        "sectionHeight": 1106.609375,
+        "documentWidth": 753,
+        "controlBorder": "rgb(119, 133, 107)",
+        "headings": [
+          {
+            "text": "Find your ritual.",
+            "font": "Georgia, \"Times New Roman\", serif",
+            "size": "48px"
+          },
+          {
+            "text": "What would you like to focus on?",
+            "font": "Georgia, \"Times New Roman\", serif, serif",
+            "size": "30px"
+          }
+        ],
+        "inputs": [
+          {
+            "type": "radio",
+            "value": "cleanse"
+          },
+          {
+            "type": "radio",
+            "value": "softness"
+          },
+          {
+            "type": "radio",
+            "value": "scalp"
+          },
+          {
+            "type": "radio",
+            "value": "colour"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/final-768.png",
+        "errors": []
+      },
+      {
+        "viewport": 390,
+        "sectionHeight": 1123.390625,
+        "documentWidth": 390,
+        "controlBorder": "rgb(119, 133, 107)",
+        "headings": [
+          {
+            "text": "Find your ritual.",
+            "font": "Georgia, \"Times New Roman\", serif",
+            "size": "35.1px"
+          },
+          {
+            "text": "What would you like to focus on?",
+            "font": "Georgia, \"Times New Roman\", serif, serif",
+            "size": "27.3px"
+          }
+        ],
+        "inputs": [
+          {
+            "type": "radio",
+            "value": "cleanse"
+          },
+          {
+            "type": "radio",
+            "value": "softness"
+          },
+          {
+            "type": "radio",
+            "value": "scalp"
+          },
+          {
+            "type": "radio",
+            "value": "colour"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/final-390.png",
+        "errors": []
+      },
+      {
+        "viewport": 320,
+        "sectionHeight": 1134.453125,
+        "documentWidth": 320,
+        "controlBorder": "rgb(119, 133, 107)",
+        "headings": [
+          {
+            "text": "Find your ritual.",
+            "font": "Georgia, \"Times New Roman\", serif",
+            "size": "32px"
+          },
+          {
+            "text": "What would you like to focus on?",
+            "font": "Georgia, \"Times New Roman\", serif, serif",
+            "size": "26px"
+          }
+        ],
+        "inputs": [
+          {
+            "type": "radio",
+            "value": "cleanse"
+          },
+          {
+            "type": "radio",
+            "value": "softness"
+          },
+          {
+            "type": "radio",
+            "value": "scalp"
+          },
+          {
+            "type": "radio",
+            "value": "colour"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/final-320.png",
+        "errors": []
+      }
+    ]
+  },
+  "flow": {
+    "capturedAt": "2026-10-17T08:14:12.791Z",
+    "flows": [
+      {
+        "width": 1440,
+        "initialContinueDisabled": true,
+        "initialHeading": "Find your\nritual.",
+        "selectedContinueEnabled": true,
+        "quickCheck": {
+          "documentWidth": 1425,
+          "viewport": 1440,
+          "overflow": [],
+          "question": "Anything we should consider first?",
+          "options": 4,
+          "heading": "Find your\nritual.",
+          "focusedHeading": true,
+          "screenshot": "output/ritual-redesign/quick-check-1440.png"
+        },
+        "backPreservesSelection": true,
+        "multipleChecked": 2,
+        "exclusiveClearsOthers": true,
+        "longQuestion": {
+          "documentWidth": 1425,
+          "viewport": 1440,
+          "overflow": [],
+          "question": "Do you know what you reacted to?",
+          "options": 8,
+          "multipleChecked": 2,
+          "screenshot": "output/ritual-redesign/long-question-1440.png"
+        },
+        "ordinaryResult": {
+          "documentWidth": 1425,
+          "viewport": 1440,
+          "overflow": [],
+          "question": "Your suggested starting ritual",
+          "options": 0,
+          "kind": "candidate",
+          "heading": "Find your\nritual.",
+          "productLinks": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder"
+            },
+            {
+              "text": "Shop NatureMist Hibiscus Powder ↗",
+              "href": "/shop/hibiscus-powder"
+            },
+            {
+              "text": "Read directions ↗",
+              "href": "/shop/hibiscus-powder#product-directions"
+            }
+          ],
+          "screenshot": "output/ritual-redesign/result-1440.png"
+        },
+        "editPreservesAnswers": true,
+        "restartClearsSelection": true,
+        "errors": []
+      },
+      {
+        "width": 390,
+        "initialContinueDisabled": true,
+        "initialHeading": "Find your ritual.",
+        "selectedContinueEnabled": true,
+        "selectedScreenshot": "output/ritual-redesign/selected-goal-390.png",
+        "quickCheck": {
+          "documentWidth": 390,
+          "viewport": 390,
+          "overflow": [],
+          "question": "Anything we should consider first?",
+          "options": 4,
+          "heading": "Find your ritual.",
+          "focusedHeading": true,
+          "screenshot": "output/ritual-redesign/quick-check-390.png"
+        },
+        "backPreservesSelection": true,
+        "multipleChecked": 2,
+        "exclusiveClearsOthers": true,
+        "longQuestion": {
+          "documentWidth": 390,
+          "viewport": 390,
+          "overflow": [],
+          "question": "Do you know what you reacted to?",
+          "options": 8,
+          "multipleChecked": 2,
+          "screenshot": "output/ritual-redesign/long-question-390.png"
+        },
+        "ordinaryResult": {
+          "documentWidth": 390,
+          "viewport": 390,
+          "overflow": [],
+          "question": "Your suggested starting ritual",
+          "options": 0,
+          "kind": "candidate",
+          "heading": "Find your ritual.",
+          "productLinks": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder"
+            },
+            {
+              "text": "Shop NatureMist Hibiscus Powder ↗",
+              "href": "/shop/hibiscus-powder"
+            },
+            {
+              "text": "Read directions ↗",
+              "href": "/shop/hibiscus-powder#product-directions"
+            }
+          ],
+          "screenshot": "output/ritual-redesign/result-390.png"
+        },
+        "editPreservesAnswers": true,
+        "restartClearsSelection": true,
+        "errors": []
+      },
+      {
+        "width": 320,
+        "initialContinueDisabled": true,
+        "initialHeading": "Find your ritual.",
+        "selectedContinueEnabled": true,
+        "selectedScreenshot": "output/ritual-redesign/selected-goal-320.png",
+        "quickCheck": {
+          "documentWidth": 320,
+          "viewport": 320,
+          "overflow": [],
+          "question": "Anything we should consider first?",
+          "options": 4,
+          "heading": "Find your ritual.",
+          "focusedHeading": true,
+          "screenshot": "output/ritual-redesign/quick-check-320.png"
+        },
+        "backPreservesSelection": true,
+        "multipleChecked": 2,
+        "exclusiveClearsOthers": true,
+        "longQuestion": {
+          "documentWidth": 320,
+          "viewport": 320,
+          "overflow": [],
+          "question": "Do you know what you reacted to?",
+          "options": 8,
+          "multipleChecked": 2,
+          "screenshot": "output/ritual-redesign/long-question-320.png"
+        },
+        "ordinaryResult": {
+          "documentWidth": 320,
+          "viewport": 320,
+          "overflow": [],
+          "question": "Your suggested starting ritual",
+          "options": 0,
+          "kind": "candidate",
+          "heading": "Find your ritual.",
+          "productLinks": [
+            {
+              "text": "NatureMist Hibiscus Powder",
+              "href": "/shop/hibiscus-powder"
+            },
+            {
+              "text": "Shop NatureMist Hibiscus Powder ↗",
+              "href": "/shop/hibiscus-powder"
+            },
+            {
+              "text": "Read directions ↗",
+              "href": "/shop/hibiscus-powder#product-directions"
+            }
+          ],
+          "screenshot": "output/ritual-redesign/result-320.png"
+        },
+        "editPreservesAnswers": true,
+        "restartClearsSelection": true,
+        "errors": []
+      }
+    ],
+    "reducedMotion": {
+      "runningAnimations": 5,
+      "finderMotion": "off",
+      "focusedHeading": true,
+      "question": "Anything we should consider first?",
+      "errors": [],
+      "measurementPhase": "Immediately after the Q2 state commit; five wrapper CSS transitions have duration 0.01ms under the existing reduced-motion global rule.",
+      "settledRunningAnimations": 0,
+      "transientTransitionDurationsMs": [
+        0.01
+      ]
+    }
+  },
+  "accessibility": {
+    "capturedAt": "2026-10-17T08:15:37.517Z",
+    "keyboardRadioSelection": true,
+    "radioFocusOutline": {
+      "style": "solid",
+      "width": "3px"
+    },
+    "tabReachesContinue": true,
+    "questionFocusAfterKeyboardContinue": true,
+    "keyboardMultiSelectCount": 2,
+    "keyboardExclusiveChoice": true,
+    "labelAndDescriptionAssociations": true,
+    "fieldsetHasLegend": true,
+    "statusHeading": "Anything we should consider first?",
+    "controlBorder": "rgb(119, 133, 107)"
+  },
+  "finalResults": {
+    "capturedAt": "2026-10-17T08:17:50.613Z",
+    "results": [
+      {
+        "viewport": 1440,
+        "documentWidth": 1425,
+        "heading": "Find your\nritual.",
+        "kind": "candidate",
+        "images": [
+          {
+            "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+            "naturalWidth": 300,
+            "alt": "NatureMist Hibiscus Powder"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/result-1440.png"
+      },
+      {
+        "viewport": 390,
+        "documentWidth": 390,
+        "heading": "Find your ritual.",
+        "kind": "candidate",
+        "images": [
+          {
+            "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+            "naturalWidth": 260,
+            "alt": "NatureMist Hibiscus Powder"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/result-390.png"
+      },
+      {
+        "viewport": 320,
+        "documentWidth": 320,
+        "heading": "Find your ritual.",
+        "kind": "candidate",
+        "images": [
+          {
+            "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+            "naturalWidth": 260,
+            "alt": "NatureMist Hibiscus Powder"
+          }
+        ],
+        "overflow": [],
+        "screenshot": "output/ritual-redesign/result-320.png"
+      }
+    ]
+  },
+  "visualNotes": [
+    "Desktop and 1024 use a dark intro beside cream question panel. 768 stacks the intro above a two-column goal grid.",
+    "Phone goal rows have readable copy, icon and selection control; descriptions wrap naturally on two or three lines at 320px.",
+    "After Q1, the mobile intro compacts while retaining the same Find your ritual heading.",
+    "Eight-option question, long product name, result CTA and result stage label remain inside the section at 320px."
+  ],
+  "limitations": [
+    "No physical-device or Safari run.",
+    "The sandbox denies direct Shopify CDN image requests; the primary remote image could not be verified in this browser."
+  ]
+}

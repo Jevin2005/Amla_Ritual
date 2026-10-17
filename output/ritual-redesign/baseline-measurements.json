@@ -1,0 +1,81 @@
+{
+  "capturedAt": "2026-10-17T08:08:00.784Z",
+  "widths": [
+    {
+      "viewport": 1440,
+      "sectionHeight": 1036.46875,
+      "documentWidth": 1425,
+      "headings": [
+        {
+          "text": "A little about you.\nA ritual of your own.",
+          "font": "\"Cormorant Garamond\", \"Playfair Display\", Georgia, serif, Georgia, serif",
+          "size": "52px"
+        },
+        {
+          "text": "What would you like to focus on?",
+          "font": "\"Cormorant Garamond\", \"Playfair Display\", Georgia, serif, Georgia, serif",
+          "size": "39px"
+        }
+      ],
+      "inputs": [
+        {
+          "type": "radio",
+          "value": "cleanse"
+        },
+        {
+          "type": "radio",
+          "value": "softness"
+        },
+        {
+          "type": "radio",
+          "value": "scalp"
+        },
+        {
+          "type": "radio",
+          "value": "colour"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/baseline-1440.png",
+      "errors": []
+    },
+    {
+      "viewport": 390,
+      "sectionHeight": 1038.640625,
+      "documentWidth": 390,
+      "headings": [
+        {
+          "text": "A little about you.\nA ritual of your own.",
+          "font": "\"Cormorant Garamond\", \"Playfair Display\", Georgia, serif, Georgia, serif",
+          "size": "36px"
+        },
+        {
+          "text": "What would you like to focus on?",
+          "font": "\"Cormorant Garamond\", \"Playfair Display\", Georgia, serif, Georgia, serif",
+          "size": "31px"
+        }
+      ],
+      "inputs": [
+        {
+          "type": "radio",
+          "value": "cleanse"
+        },
+        {
+          "type": "radio",
+          "value": "softness"
+        },
+        {
+          "type": "radio",
+          "value": "scalp"
+        },
+        {
+          "type": "radio",
+          "value": "colour"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/baseline-390.png",
+      "errors": []
+    }
+  ]
+}

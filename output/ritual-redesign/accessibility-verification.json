@@ -1,0 +1,16 @@
+{
+  "capturedAt": "2026-10-17T08:15:37.517Z",
+  "keyboardRadioSelection": true,
+  "radioFocusOutline": {
+    "style": "solid",
+    "width": "3px"
+  },
+  "tabReachesContinue": true,
+  "questionFocusAfterKeyboardContinue": true,
+  "keyboardMultiSelectCount": 2,
+  "keyboardExclusiveChoice": true,
+  "labelAndDescriptionAssociations": true,
+  "fieldsetHasLegend": true,
+  "statusHeading": "Anything we should consider first?",
+  "controlBorder": "rgb(119, 133, 107)"
+}

@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { flushSync } from "react-dom";
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { matchesProductSlug } from "@/domain/catalog/canonical-slug";
 import { useStore } from "@/features/store/store-provider";
 import { useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { MediaImage } from "@/shared/ui/media-image";
 import { scrollPageTo } from "@/shared/ui/page-scroll";
-import { getQuizFlow, resolveQuizResult, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
+import { getQuizFlow, resolveQuizBrowseItems, resolveQuizResult, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
 import { createQuizNavigation, type QuizNavigation } from "./ritual-navigation";
 import styles from "./ritual-finder.module.css";
 
@@ -15,6 +16,19 @@ type QuizState = { answers: QuizAnswers; cursor: number; showResult: boolean };
 type RitualFinderProps = {
   onProgress?: (progress: { questionNumber: number; complete: boolean }) => void;
 };
+
+const botanicalArtworks = ["amla", "reetha", "shikakai", "hibiscus", "bhringraj", "indigo"];
+
+function GoalIcon({ goal }: { goal: string }) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {goal === "cleanse" && <><path d="M16 4c-3.3 4.5-8 9.5-8 15a8 8 0 0 0 16 0c0-5.5-4.7-10.5-8-15Z" /><path d="M12 19a4 4 0 0 0 4 4" /></>}
+      {goal === "softness" && <><path d="m16 5 2.7 8.3L27 16l-8.3 2.7L16 27l-2.7-8.3L5 16l8.3-2.7L16 5Z" /><path d="M25 5v5m-2.5-2.5h5M6 25v3m-1.5-1.5h3" /></>}
+      {goal === "scalp" && <><path d="M25 5C13 3 6 10 7 19c.5 4 3.2 6.5 7.2 6C23 24 27 15 25 5Z" /><path d="M5 28 20 12m-7 7v-7m0 7h7" /></>}
+      {goal === "colour" && <><path d="M16 5c-2.5 4-7.5 9.5-7.5 15a7.5 7.5 0 0 0 15 0C23.5 14.5 18.5 9 16 5Z" /><path d="M8.7 18.5c5-3 9.5 4.5 14.6 1.5M12 23c1.2 1.2 2.4 1.7 4 1.7" /></>}
+    </svg>
+  );
+}
 
 export function RitualFinder({ onProgress }: RitualFinderProps) {
   const [state, setState] = useState<QuizState>({ answers: {}, cursor: 0, showResult: false });
@@ -31,6 +45,9 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
   const question = flow.questions[state.cursor];
   const complete = state.showResult && flow.complete && Boolean(flow.outcome);
   const result = useMemo(() => flow.outcome ? resolveQuizResult(flow.outcome, products, source) : null, [flow.outcome, products, source]);
+  const browseItems = useMemo(() => resolveQuizBrowseItems(state.answers, products, source), [state.answers, products, source]);
+  const browsingOnly = Boolean(result && result.items.length === 0);
+  const displayedItems = browsingOnly ? browseItems : result?.items ?? [];
   const selection = question ? state.answers[question.id] || [] : [];
   const validSelection = selection.length > 0 && selection.every((value) => question?.options.some((option) => option.value === value));
 
@@ -98,10 +115,14 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
   }
 
   return (
-    <div className={styles.finder} data-motion={motionActive ? "on" : "off"} data-busy={busy}>
+    <div className={styles.finder} data-motion={motionActive ? "on" : "off"} data-busy={busy} data-current-question={complete ? "result" : question?.id}>
       <div className={styles.header}>
-        <p className={styles.stepLabel}>{complete ? "Your ritual" : `Question ${state.cursor + 1}`}</p>
-        <p className={styles.stage}>{complete ? "A considered next step" : question?.label}</p>
+        <span className={styles.stepNumber} aria-hidden="true">{complete ? <svg viewBox="0 0 24 24" fill="none"><path d={browsingOnly ? "M6 12h12m-5-5 5 5-5 5" : "m6 12 4 4 8-8"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg> : String(state.cursor + 1).padStart(2, "0")}</span>
+        <div className={styles.stageCopy}>
+          <p className={styles.stepLabel}>{complete ? browsingOnly ? "Your discovery" : "Your ritual" : `Question ${state.cursor + 1}`}</p>
+          <p className={styles.stage}>{complete ? browsingOnly ? "Meet the botanicals" : "A considered next step" : question?.label}</p>
+        </div>
+        <span className={styles.headerRule} aria-hidden="true" />
       </div>
       <div ref={stageRef} className={styles.stageFrame} data-direction={direction} aria-busy={busy}>
         {!complete && question ? (
@@ -110,7 +131,7 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
             <p className={styles.questionHelper} id={`${quizId}-helper`}>{question.helper}</p>
             <fieldset className={styles.fieldset} disabled={busy} aria-describedby={`${quizId}-helper`}>
               <legend className={styles.srOnly}>{question.question}</legend>
-              <div className={styles.options}>
+              <div className={`${styles.options} ${question.id === "goal" ? styles.goalOptions : ""}`}>
                 {question.options.map((option, index) => (
                   <label className={styles.option} key={option.value}>
                     <input className={styles.control} type={question.multiple ? "checkbox" : "radio"}
@@ -118,6 +139,7 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
                       onChange={() => choose(question, option.value)}
                       aria-labelledby={`${quizId}-${question.id}-option-${index}`}
                       aria-describedby={option.description ? `${quizId}-${question.id}-description-${index}` : undefined} />
+                    {question.id === "goal" && <span className={styles.goalIcon}><GoalIcon goal={option.value} /></span>}
                     <span className={styles.indicator} aria-hidden="true" />
                     <span className={styles.optionCopy}>
                       <span className={styles.optionLabel} id={`${quizId}-${question.id}-option-${index}`}>{option.label}</span>
@@ -131,48 +153,53 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
               {state.cursor > 0 ? (
                 <button type="button" className={styles.backButton} disabled={busy} onClick={() => navigate({ ...state, cursor: state.cursor - 1 }, "back")}><span aria-hidden="true">←</span> Back</button>
               ) : <span className={styles.navigationHint}>Choose an answer to continue</span>}
-              <button type="submit" className={styles.primaryButton} disabled={busy || !validSelection}>Continue <span aria-hidden="true">→</span></button>
+              <button type="submit" className={styles.primaryButton} disabled={busy || !validSelection}>{flow.complete && state.cursor === flow.questions.length - 1 ? flow.outcome && ["candidate", "conditional"].includes(flow.outcome.kind) ? "See my ritual" : "Explore products" : "Continue"} <span aria-hidden="true">→</span></button>
             </div>
           </form>
         ) : complete && result ? (
-          <div className={styles.result} data-result-kind={result.kind} data-result-reveal={motionActive}>
-            <p className={styles.resultEyebrow}>{result.kind === "candidate" ? "Chosen around your answers" : "Before your next step"}</p>
+          <div className={styles.result} data-result-kind={result.kind} data-browsing-only={browsingOnly} data-result-reveal={motionActive}>
+            <p className={styles.resultEyebrow}>{browsingOnly ? "Explore the collection" : "Chosen around your answers"}</p>
             <h3 className={styles.resultTitle} style={{ "--reveal-order": 1 } as CSSProperties} tabIndex={-1} data-quiz-focus>{result.title}</h3>
             <p className={styles.resultDescription} style={{ "--reveal-order": 2 } as CSSProperties}>{result.description}</p>
-            {result.items.length > 0 && <section className={styles.suggestions} aria-labelledby={`${quizId}-suggestions`}>
+            {displayedItems.length > 0 && <section className={styles.suggestions} aria-labelledby={`${quizId}-suggestions`}>
               <div className={styles.suggestionsHeader}>
-                <h4 className={styles.suggestionsTitle} id={`${quizId}-suggestions`}>Suggested products</h4>
-                <span className={styles.matchCount}>{result.items.length} {result.items.length === 1 ? "product" : "products"}</span>
+                <h4 className={styles.suggestionsTitle} id={`${quizId}-suggestions`}>{browsingOnly ? "Botanicals to explore" : "Suggested products"}</h4>
+                <span className={styles.matchCount}>{displayedItems.length} {displayedItems.length === 1 ? "product" : "products"}</span>
               </div>
+              {browsingOnly && <p className={styles.browseContext}>{state.answers.goal?.[0] === "colour" ? "General conditioning products for browsing; these do not provide your requested colour result." : "For browsing: ingredients, care benefits and product details."}</p>}
               <ol className={styles.resultProducts} role="list">
-              {result.items.map(({ product, role, reason }, index) => {
-                const image = product.featuredImage || product.images?.[0];
-                return (
-                  <li className={styles.resultProduct} key={product.id || product.slug}>
-                    <div className={styles.productImage}>
-                      {image ? <MediaImage src={image.url} alt={image.altText || product.name} fill sizes="(max-width: 767px) 300px, (max-width: 1023px) 280px, 300px" className={styles.image} /> : <span className={styles.imagePlaceholder}>NatureMist<br />{role}</span>}
-                    </div>
-                    <div className={styles.resultCopy}>
-                      <p className={styles.productRole}>{result.items.length > 1 ? `Step ${index + 1} · ` : ""}{role === "Condition" ? "Conditioning mask" : role === "Cleanse" ? "Botanical wash" : "Indigo colour stage"}</p>
-                      <h5 className={styles.productName} style={{ "--reveal-order": 1 } as CSSProperties}><Link href={`/shop/${product.slug}${result.kind === "conditional" ? "#product-directions" : ""}`} className={styles.productNameLink}>{product.name}</Link></h5>
-                      <div className={styles.matchReasons} style={{ "--reveal-order": 2 } as CSSProperties}>
-                        <p className={styles.reasonLabel}>Why this fits your answers</p>
-                        <p>{reason}</p>
+                {displayedItems.map(({ product, role, reason }, index) => {
+                  const image = product.featuredImage || product.images?.[0];
+                  const botanical = botanicalArtworks.find((name) => matchesProductSlug(`${name}-powder`, product));
+                  const fallbackImage = botanical ? `/images/specimen-collection/${botanical}.webp` : undefined;
+                  const imageSource = image?.url || fallbackImage;
+                  return (
+                    <li className={styles.resultProduct} key={product.id || product.slug}>
+                      <div className={styles.productImage}>
+                        {imageSource ? <MediaImage src={imageSource} fallbackSrc={fallbackImage} alt={product.name} fill sizes="(max-width: 767px) 260px, (max-width: 1023px) 280px, 300px" className={styles.image} /> : <span className={styles.imagePlaceholder}>NatureMist<br />{role}</span>}
                       </div>
-                      <div className={styles.productLinks}>
-                        {result.kind === "candidate" && <Link href={`/shop/${product.slug}`} className={styles.productLink} aria-label={`View ${product.name}`}>View product <span aria-hidden="true">↗</span></Link>}
-                        <Link href={`/shop/${product.slug}#product-directions`} className={styles.directionsLink} aria-label={`View ${product.name} directions`}>Read directions <span aria-hidden="true">↗</span></Link>
+                      <div className={styles.resultCopy}>
+                        <p className={styles.productRole}>{!browsingOnly && displayedItems.length > 1 ? `Step ${index + 1} · ` : ""}{role === "Condition" ? "Conditioning mask" : role === "Cleanse" ? "Botanical wash" : "Indigo colour stage"}</p>
+                        <h5 className={styles.productName} style={{ "--reveal-order": 1 } as CSSProperties}><Link href={`/shop/${product.slug}${result.kind === "conditional" ? "#product-directions" : ""}`} className={styles.productNameLink}>{product.name}</Link></h5>
+                        <div className={styles.matchReasons} style={{ "--reveal-order": 2 } as CSSProperties}>
+                          <p className={styles.reasonLabel}>{browsingOnly ? "About this botanical" : "Why this fits your answers"}</p>
+                          <p>{reason}</p>
+                        </div>
+                        <div className={styles.productLinks}>
+                          <Link href={`/shop/${product.slug}`} className={styles.productLink} aria-label={`${result.kind === "candidate" ? "Shop" : "Explore"} ${product.name}`}>{result.kind === "candidate" ? "Shop" : "Explore"} {product.name} <span aria-hidden="true">↗</span></Link>
+                          <Link href={`/shop/${product.slug}#product-directions`} className={styles.directionsLink} aria-label={`View ${product.name} directions`}>Read directions <span aria-hidden="true">↗</span></Link>
+                        </div>
                       </div>
-                    </div>
-                  </li>
-                );
-              })}
+                    </li>
+                  );
+                })}
               </ol>
             </section>}
+            {browsingOnly && <Link href="/shop" className={styles.directionsLink}>Browse the full collection <span aria-hidden="true">↗</span></Link>}
             {result.items.length > 0 && <p className={styles.resultNote}>{result.items.length > 1 ? "Use these as separate care steps, with the mask before the wash. " : ""}Follow each product’s current pack directions, including its patch and strand checks.</p>}
-            {source === "preview" && result.items.length > 0 && <p className={styles.resultNote}>Preview suggestions. Confirm the current product and its directions before deciding.</p>}
+            {source === "preview" && displayedItems.length > 0 && <p className={styles.resultNote}>Preview collection. See the product page for current details.</p>}
             <div className={styles.resultActions}>
-              <button type="button" className={styles.primaryButton} disabled={busy} onClick={() => navigate({ ...state, cursor: 0, showResult: false }, "back")}><span aria-hidden="true">←</span> Edit my answers</button>
+              <button type="button" className={styles.backButton} disabled={busy} onClick={() => navigate({ ...state, cursor: 0, showResult: false }, "back")}><span aria-hidden="true">←</span> Edit my answers</button>
               <button type="button" className={styles.textButton} disabled={busy} onClick={() => navigate({ answers: {}, cursor: 0, showResult: false }, "back")}>Start over</button>
             </div>
           </div>

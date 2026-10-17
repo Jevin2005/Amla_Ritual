@@ -1,0 +1,48 @@
+{
+  "completedAt": "2026-10-17T08:54:29.959Z",
+  "environment": "Actual localhost:3000 Next app in headless Chrome; desktop and mobile viewport/touch emulation. No request interception, source changes, cart mutation, or checkout.",
+  "passed": true,
+  "summary": {
+    "widths": [
+      1440,
+      1024,
+      768,
+      390,
+      320
+    ],
+    "routes": [
+      "/ #botanical-collection",
+      "/shop",
+      "/combos redirects to /shop?type=combos"
+    ],
+    "count": "9 total entries:6 individual powders and3 combos; both type filters and result counts match.",
+    "layout": "16 screenshots cover both routes at all five widths plus combo-only at1440,390,320. No horizontal overflow or clipped card/type-control text.",
+    "behavior": "Included-botanical and combo-name search, mixed ascending/descending price sorting, combo size, individual-switch size reset, available-only, and clear filters including URL collection all pass.",
+    "preview": "All3 combos open from both photo and View combo at1440,390,320. Titles, members, displayed totals and summed prices match. Focus trapping, Escape/close, and trigger focus restoration pass.",
+    "scroll": "Desktop sidebars scroll natively to the final filter without moving the page at1440x900 and1024x768. Mobile filters remain inline, do not cover the header, and return focus when collapsed.",
+    "imagery": "All combo cards and previews resolve to matching local fallback photos in the network-restricted browser. Lazy homepage photos load through ordinary scrolling.",
+    "previewStyle": "Latest preview screenshots at1440,390,320 have the forest-green CTA and rounded paper panel.",
+    "separateHomeComboBook": false,
+    "runtimeErrors": []
+  },
+  "primaryArtifacts": {
+    "desktop": "final-shop-1440.png",
+    "phone": "final-home-390.png",
+    "narrowCombos": "combos-shop-320.png",
+    "previewDesktop": "preview-1440.png",
+    "previewPhone": "preview-390.png",
+    "previewNarrow": "preview-320.png"
+  },
+  "evidence": {
+    "responsive": "responsive-verification.json",
+    "behavior": "behavior-verification.json",
+    "homeFilters": "home-filter-verification.json",
+    "geometry": "geometry-verification.json",
+    "previewImages": "preview-images-verification.json"
+  },
+  "limits": [
+    "No physical-device or Safari run.",
+    "Current live entries are available; unavailable-item exclusion has no live negative example in this browser run.",
+    "Direct Shopify CDN requests are blocked in this environment; matching local fallbacks were verified."
+  ]
+}

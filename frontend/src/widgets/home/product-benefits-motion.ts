@@ -1,25 +1,32 @@
 import type { MotionSettings } from "@/domain/motion";
 
-const pointerQuery = "(hover: hover) and (pointer: fine)";
+const pointerQuery = "(min-width: 768px) and (hover: hover) and (pointer: fine)";
 
-/** Never hide content that has already painted in the viewport during hydration. */
+/** The HTML stays visible; only newly entering, below-fold content receives an animation. */
 export function observeBenefitsEntrance(section: HTMLElement, settings: MotionSettings) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   const targets = [...section.querySelectorAll<HTMLElement>("[data-benefit-reveal]")];
   const animations = new Map<HTMLElement, Animation>();
+  const duration = Number.isFinite(settings.duration) ? Math.max(.6, Math.min(1.5, settings.duration)) : 1;
   let observer: IntersectionObserver | undefined;
+  let disposed = false;
 
   const reveal = (target: HTMLElement, delay = 0, animate = false) => {
     observer?.unobserve(target);
-    const wasPending = target.dataset.benefitReveal === "pending";
-    target.dataset.benefitReveal = "done";
-    if (!animate || !wasPending || reduced.matches || !target.animate) return;
+    const wasPending = target.dataset.benefitRevealState === "pending";
+    target.dataset.benefitRevealState = "done";
+    if (!animate || !wasPending || reduced.matches || document.hidden || !target.animate) return;
 
-    const divider = target.hasAttribute("data-benefits-divider");
+    const header = target.dataset.benefitReveal === "header";
     const animation = target.animate([
-      { opacity: 0, transform: divider ? "scaleX(0)" : "translate3d(0, 18px, 0)" },
+      { opacity: 0, transform: `translate3d(0, ${header ? 12 : 16}px, 0)` },
       { opacity: 1, transform: "none" },
-    ], { duration: 620 * settings.duration, delay, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" });
+    ], {
+      duration: (header ? 450 : 550) * duration,
+      delay,
+      easing: "cubic-bezier(.2,.8,.2,1)",
+      fill: "backwards",
+    });
     animations.set(target, animation);
     const clear = () => animations.delete(target);
     animation.onfinish = clear;
@@ -34,15 +41,25 @@ export function observeBenefitsEntrance(section: HTMLElement, settings: MotionSe
 
   if (settings.enabled && !reduced.matches && !document.hidden && "IntersectionObserver" in window) {
     observer = new IntersectionObserver((entries) => {
-      const entering = entries.filter((entry) => entry.isIntersecting)
-        .sort((left, right) => targets.indexOf(left.target as HTMLElement) - targets.indexOf(right.target as HTMLElement));
-      entering.forEach((entry, index) => reveal(entry.target as HTMLElement, Math.min(index * 70, 210), true));
-    }, { threshold: 0, rootMargin: "0px 0px -24px 0px" });
+      if (disposed) return;
+      let cardIndex = 0;
+      entries.filter((entry) => entry.isIntersecting)
+        .sort((left, right) => targets.indexOf(left.target as HTMLElement) - targets.indexOf(right.target as HTMLElement))
+        .forEach((entry) => {
+          const target = entry.target as HTMLElement;
+          if (target.dataset.benefitRevealState !== "pending") return;
+          // An observer callback can arrive after a fast scroll has already passed a card.
+          const bounds = target.getBoundingClientRect();
+          const visible = bounds.bottom > 0 && bounds.top < window.innerHeight;
+          const delay = visible && target.dataset.benefitReveal === "card" ? cardIndex++ * 60 : 0;
+          reveal(target, delay, visible);
+        });
+    }, { threshold: 0 });
     targets.forEach((target) => {
-      if (target.dataset.benefitReveal === "done" || target.getBoundingClientRect().top < window.innerHeight || target.contains(document.activeElement)) {
+      if (target.dataset.benefitRevealState === "done" || target.getBoundingClientRect().top < window.innerHeight || target.contains(document.activeElement)) {
         reveal(target);
       } else {
-        target.dataset.benefitReveal = "pending";
+        target.dataset.benefitRevealState = "pending";
         observer?.observe(target);
       }
     });
@@ -66,10 +83,12 @@ export function observeBenefitsEntrance(section: HTMLElement, settings: MotionSe
   document.addEventListener("visibilitychange", onVisibility);
 
   return () => {
+    disposed = true;
     observer?.disconnect();
     animations.forEach((animation) => animation.cancel());
+    animations.clear();
     targets.forEach((target) => {
-      if (target.dataset.benefitReveal === "pending") target.dataset.benefitReveal = "";
+      if (target.dataset.benefitRevealState === "pending") delete target.dataset.benefitRevealState;
     });
     section.removeEventListener("focusin", onFocus);
     reduced.removeEventListener("change", onPreference);
@@ -77,147 +96,80 @@ export function observeBenefitsEntrance(section: HTMLElement, settings: MotionSe
   };
 }
 
+/** Pointer depth belongs to the image wrapper, separate from hover lift and card entrance. */
 export function installBenefitsPointer(section: HTMLElement, settings: MotionSettings) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   const fine = window.matchMedia(pointerQuery);
   const cleanup: Array<() => void> = [];
   const resets: Array<() => void> = [];
-  const canMove = () => settings.enabled && settings.cursor && settings.intensity > 0 &&
-    fine.matches && !reduced.matches && !document.hidden;
+  const intensity = Number.isFinite(settings.intensity) ? Math.max(0, Math.min(1, settings.intensity)) : 0;
+  const sectionBounds = section.getBoundingClientRect();
+  let visible = sectionBounds.bottom > 0 && sectionBounds.top < window.innerHeight;
+  let disposed = false;
+  const canMove = () => !disposed && settings.enabled && settings.cursor && intensity > 0 &&
+    window.innerWidth >= 768 && fine.matches && !reduced.matches && !document.hidden && visible;
 
-  section.querySelectorAll<HTMLElement>("[data-benefit-row]").forEach((row) => {
-    const preview = row.querySelector<HTMLElement>("[data-benefit-preview]");
-    const details = row.querySelector<HTMLElement>("[data-benefit-details]");
-    const image = preview?.querySelector<HTMLImageElement>("img");
-    if (!preview || !image) return;
+  section.querySelectorAll<HTMLElement>("[data-benefit-card]").forEach((card) => {
+    const depth = card.querySelector<HTMLElement>("[data-benefit-depth]");
+    if (!depth) return;
     let bounds: DOMRect;
-    let titleLimit = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let tilt = 0;
+    let x = 0;
+    let y = 0;
     let frame = 0;
-    let lastTime = 0;
     let active = false;
 
-    const paint = () => {
-      preview.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) translate(-50%, -50%) rotate(${tilt.toFixed(2)}deg)`;
-    };
-    const tick = (time: number) => {
-      frame = 0;
-      if (!active || !canMove()) return;
-      const delta = Math.min(time - lastTime, 48);
-      lastTime = time;
-      const ease = 1 - Math.exp(-delta / 90);
-      const horizontalDistance = targetX - currentX;
-      currentX += horizontalDistance * ease;
-      currentY += (targetY - currentY) * ease;
-      // Time-based easing feels the same at 60/120 Hz, and tilt settles at rest.
-      const targetTilt = Math.max(-8, Math.min(8, horizontalDistance * .08 * settings.intensity));
-      tilt += (targetTilt - tilt) * ease;
-      paint();
-      if (Math.abs(targetX - currentX) + Math.abs(targetY - currentY) + Math.abs(tilt) > .1) {
-        frame = requestAnimationFrame(tick);
-      }
-    };
-    const schedule = () => {
-      if (!frame) {
-        lastTime = performance.now();
-        frame = requestAnimationFrame(tick);
-      }
-    };
-    const updateTarget = (event: MouseEvent) => {
-      // Keep the preview in the title column, clear of the description and action.
-      const gutter = Math.min(132, bounds.width / 2);
-      targetX = Math.max(gutter, Math.min(titleLimit, event.clientX - bounds.left));
-      targetY = Math.max(36, Math.min(bounds.height - 36, event.clientY - bounds.top));
-    };
-    const showWhenReady = () => {
-      if (active && canMove() && image.complete && image.naturalWidth > 0) row.dataset.previewVisible = "true";
-    };
-    const enter = (event: MouseEvent) => {
-      if (!canMove() || window.innerWidth <= 800) return;
-      bounds = row.getBoundingClientRect();
-      const descriptionStart = details ? details.getBoundingClientRect().left - bounds.left : bounds.width;
-      titleLimit = Math.max(Math.min(132, bounds.width / 2), descriptionStart - 140);
-      active = true;
-      updateTarget(event);
-      currentX = targetX;
-      currentY = targetY;
-      tilt = 0;
-      paint();
-      showWhenReady();
-    };
-    const move = (event: MouseEvent) => {
-      if (!active || !canMove() || event.buttons) return;
-      updateTarget(event);
-      schedule();
-    };
-    const leave = () => {
+    const reset = () => {
       active = false;
       cancelAnimationFrame(frame);
       frame = 0;
-      delete row.dataset.previewVisible;
+      depth.style.removeProperty("--specimen-x");
+      depth.style.removeProperty("--specimen-y");
+      depth.style.removeProperty("--specimen-tilt");
     };
-    row.addEventListener("mouseenter", enter);
-    row.addEventListener("mousemove", move);
-    row.addEventListener("mouseleave", leave);
-    row.addEventListener("mousedown", leave);
-    row.addEventListener("focusin", leave);
-    image.addEventListener("load", showWhenReady);
-    resets.push(leave);
-    cleanup.push(() => {
-      leave();
-      preview.style.removeProperty("transform");
-      row.removeEventListener("mouseenter", enter);
-      row.removeEventListener("mousemove", move);
-      row.removeEventListener("mouseleave", leave);
-      row.removeEventListener("mousedown", leave);
-      row.removeEventListener("focusin", leave);
-      image.removeEventListener("load", showWhenReady);
-    });
-  });
-
-  const button = section.querySelector<HTMLElement>("[data-benefits-button]");
-  const surface = section.querySelector<HTMLElement>("[data-benefits-button-surface]");
-  if (button && surface) {
-    let frame = 0;
-    let x = 0;
-    let y = 0;
-    let bounds: DOMRect;
-    const enter = () => { bounds = button.getBoundingClientRect(); };
-    const move = (event: MouseEvent) => {
-      if (!canMove() || !bounds || button.matches(":focus-visible") || event.buttons) return;
-      x = Math.max(-8, Math.min(8, (event.clientX - bounds.left - bounds.width / 2) * .16));
-      y = Math.max(-5, Math.min(5, (event.clientY - bounds.top - bounds.height / 2) * .2));
+    const update = (event: PointerEvent) => {
+      if (!active || !canMove() || event.pointerType === "touch" || event.buttons) return;
+      x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
+      y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
       if (!frame) frame = requestAnimationFrame(() => {
         frame = 0;
-        surface.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        if (!active || !canMove()) { reset(); return; }
+        depth.style.setProperty("--specimen-x", `${(x * 3 * intensity).toFixed(2)}px`);
+        depth.style.setProperty("--specimen-y", `${(y * 3 * intensity).toFixed(2)}px`);
+        depth.style.setProperty("--specimen-tilt", `${(x * 1.5 * intensity).toFixed(2)}deg`);
       });
     };
-    const reset = () => {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      surface.style.removeProperty("transform");
+    const enter = (event: PointerEvent) => {
+      if (!canMove() || event.pointerType === "touch" || event.buttons) return;
+      bounds = card.getBoundingClientRect();
+      if (bounds.width <= 0 || bounds.height <= 0) return;
+      active = true;
+      update(event);
     };
-    button.addEventListener("mouseenter", enter);
-    button.addEventListener("mousemove", move);
-    button.addEventListener("mouseleave", reset);
-    button.addEventListener("focusin", reset);
-    button.addEventListener("mousedown", reset);
+    card.addEventListener("pointerenter", enter);
+    card.addEventListener("pointermove", update);
+    card.addEventListener("pointerleave", reset);
+    card.addEventListener("pointercancel", reset);
+    card.addEventListener("pointerdown", reset);
+    card.addEventListener("focusin", reset);
     resets.push(reset);
     cleanup.push(() => {
       reset();
-      button.removeEventListener("mouseenter", enter);
-      button.removeEventListener("mousemove", move);
-      button.removeEventListener("mouseleave", reset);
-      button.removeEventListener("focusin", reset);
-      button.removeEventListener("mousedown", reset);
+      card.removeEventListener("pointerenter", enter);
+      card.removeEventListener("pointermove", update);
+      card.removeEventListener("pointerleave", reset);
+      card.removeEventListener("pointercancel", reset);
+      card.removeEventListener("pointerdown", reset);
+      card.removeEventListener("focusin", reset);
     });
-  }
+  });
 
   const resetAll = () => resets.forEach((reset) => reset());
+  const observer = "IntersectionObserver" in window ? new IntersectionObserver(([entry]) => {
+    if (disposed) return;
+    visible = entry.isIntersecting;
+    if (!visible) resetAll();
+  }) : undefined;
+  observer?.observe(section);
   window.addEventListener("scroll", resetAll, { passive: true });
   window.addEventListener("resize", resetAll);
   window.addEventListener("blur", resetAll);
@@ -225,6 +177,8 @@ export function installBenefitsPointer(section: HTMLElement, settings: MotionSet
   reduced.addEventListener("change", resetAll);
   fine.addEventListener("change", resetAll);
   return () => {
+    disposed = true;
+    observer?.disconnect();
     cleanup.forEach((dispose) => dispose());
     window.removeEventListener("scroll", resetAll);
     window.removeEventListener("resize", resetAll);

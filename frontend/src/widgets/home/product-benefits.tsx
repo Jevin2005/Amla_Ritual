@@ -3,164 +3,99 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import type { Product } from "@/domain/catalog/products";
 import type { MotionSettings } from "@/domain/motion";
 import { installBenefitsPointer, observeBenefitsEntrance } from "./product-benefits-motion";
 import styles from "./product-benefits.module.css";
 
-const benefits = [
-  {
-    title: "Follicle Vitality",
-    mobileTitle: "Root care",
-    mobileDescription: "A grounding botanical ritual for roots and scalp.",
-    botanical: "Amla",
-    description: "Delivers plant polyphenols and antioxidants to strengthen hair roots.",
-    productSlug: "amla-powder",
-  },
-  {
-    title: "Natural Slip & Cuticle Seal",
-    mobileTitle: "Softness & shine",
-    mobileDescription: "Gentle detangling for silky, luminous lengths.",
-    botanical: "Shikakai",
-    description: "Gently detangles while imparting a reflective, silky sheen.",
-    productSlug: "shikakai-powder",
-  },
-  {
-    title: "Sebum Balance",
-    mobileTitle: "A gentle reset",
-    mobileDescription: "Cleanse your scalp while caring for its natural moisture.",
-    botanical: "Reetha",
-    description: "Purifies the scalp without stripping its essential natural moisture barrier.",
-    productSlug: "reetha-powder",
-  },
-  {
-    title: "Pure Pigment Depth",
-    mobileTitle: "Botanical colour",
-    mobileDescription: "Plant-based pigment for a considered colour ritual.",
-    botanical: "Indigo",
-    description: "Enhances rich natural hair tones with zero synthetic dyes or ammonia.",
-    productSlug: "indigo-powder",
-  },
+const specimens = [
+  { name: "Amla", image: "amla", alt: "Fresh green amla fruits with delicate leafy branches", benefits: ["Softer-feeling hair", "Natural-looking shine", "Pre-wash conditioning"] },
+  { name: "Reetha", image: "reetha", alt: "Brown reetha soapnuts, an open shell and green leaves", benefits: ["Cleanses scalp and hair", "Removes everyday oil", "Lifts everyday buildup"] },
+  { name: "Shikakai", image: "shikakai", alt: "Dried shikakai pods with green compound leaves", benefits: ["Botanical cleansing", "Softer-feeling hair", "Easier manageability"] },
+  { name: "Hibiscus", image: "hibiscus", alt: "A red hibiscus flower with its yellow stamen and green leaves", benefits: ["Conditions dry-feeling lengths", "Smoother, more manageable hair", "Natural-looking shine"] },
+  { name: "Bhringraj", image: "bhringraj", alt: "Bhringraj leaves and small white flowers", benefits: ["Hair and scalp conditioning", "Softer-feeling hair", "Easier manageability"] },
+  { name: "Indigo", image: "indigo", alt: "Indigo leaves beside a wooden bowl of green botanical powder", benefits: ["Cooler, deeper-looking tones", "Deepens henna-based colour", "Botanical colour care"], note: "For a suitable henna-based routine. Colour results vary." },
 ];
 
-const tickerItems = [...benefits.map(({ title }) => title), "Single-origin shade-dried herbs"];
-
-function Arrow() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+function Leaf() {
+  return <svg viewBox="0 0 20 24" fill="none" aria-hidden="true"><path d="M16.5 2.5C7 2.5 2.4 6.6 3.4 14.7c7.8 1.2 12.8-3.1 13.1-12.2Z" fill="currentColor" /><path d="M2.5 21C4 15 7.5 10.1 13.2 5.8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /><path d="m5.3 14.1 7-7" stroke="#f7f2e4" strokeWidth=".7" /></svg>;
 }
 
-export function ProductBenefits({ products, motionSettings }: {
-  products: readonly Product[];
-  motionSettings: MotionSettings;
-}) {
-  const sectionRef = useRef<HTMLElement>(null);
+function Sprig() {
+  return <svg viewBox="0 0 38 40" fill="none" aria-hidden="true"><path d="M9 36c9-10 10-18 20-31" stroke="currentColor" strokeWidth="1" /><path d="M20 21C8 23 5 18 3 13c8 0 13 2 17 8ZM23 16c-2-8 0-12 8-15 1 7-1 11-8 15ZM13 31c10 1 16-4 18-10-9 1-15 4-18 10Z" fill="currentColor" /><path d="m6 15 13 6M29 4l-5 10M16 29l12-6" stroke="#dce0ca" strokeWidth=".7" /></svg>;
+}
 
+export function ProductBenefits({ motionSettings }: { motionSettings: MotionSettings }) {
+  const sectionRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
     const stopEntrance = observeBenefitsEntrance(section, motionSettings);
     const stopPointer = installBenefitsPointer(section, motionSettings);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktop = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)");
     let inView = false;
-    const updateLoops = () => {
-      section.dataset.motionRunning = String(inView && !document.hidden && motionSettings.enabled && !reduced.matches);
+    const updateMotion = () => {
+      const enabled = motionSettings.enabled && !reduced.matches;
+      section.dataset.motionEnabled = String(enabled);
+      section.dataset.motionRunning = String(enabled && desktop.matches && inView && !document.hidden);
     };
     const observer = "IntersectionObserver" in window ? new IntersectionObserver(([entry]) => {
       inView = entry.isIntersecting;
-      updateLoops();
+      updateMotion();
     }) : undefined;
     if (observer) observer.observe(section);
     else inView = true;
-    updateLoops();
-    document.addEventListener("visibilitychange", updateLoops);
-    reduced.addEventListener("change", updateLoops);
+    updateMotion();
+    document.addEventListener("visibilitychange", updateMotion);
+    reduced.addEventListener("change", updateMotion);
+    desktop.addEventListener("change", updateMotion);
     return () => {
-      stopEntrance();
-      stopPointer();
-      observer?.disconnect();
-      document.removeEventListener("visibilitychange", updateLoops);
-      reduced.removeEventListener("change", updateLoops);
+      stopEntrance(); stopPointer(); observer?.disconnect();
+      document.removeEventListener("visibilitychange", updateMotion);
+      reduced.removeEventListener("change", updateMotion);
+      desktop.removeEventListener("change", updateMotion);
+      delete section.dataset.motionEnabled;
       delete section.dataset.motionRunning;
     };
   }, [motionSettings]);
 
   return (
-    <section ref={sectionRef} className={styles.section} aria-labelledby="benefits-title" data-reveal-ignore>
+    <section ref={sectionRef} id="specimen-collection" className={styles.section} aria-labelledby="benefits-title" data-reveal-ignore>
+      <div className={styles.grain} aria-hidden="true" />
+      <div className={styles.leafShadows} aria-hidden="true" />
+      <div className={styles.foliage} aria-hidden="true"><span className={styles.topLeft} /><span className={styles.topRight} /><span className={styles.bottomLeft} /><span className={styles.bottomRight} /></div>
       <div className={styles.inner}>
-        <div className={styles.header}>
-          <div>
-            <p className={styles.eyebrow} data-benefit-reveal>Botanical efficacy</p>
-            <h2 className={styles.heading} id="benefits-title">
-              <span className={styles.desktopCopy} data-benefit-reveal>The benefit of</span>
-              <em className={styles.desktopCopy} data-benefit-reveal>this product.</em>
-              <span className={styles.mobileCopy} data-benefit-reveal>Find your<br /><em>botanical benefit.</em></span>
-            </h2>
-            <p className={styles.mobileIntro}>Four botanicals. A little care for every ritual.</p>
-          </div>
-          <div className={styles.intro} data-benefit-reveal>
-            <p>Proven botanical hair benefits formulated with pure, single-origin shade-dried herbs.</p>
-            <div className={styles.actions}>
-              <Link href="/shop" className={styles.button} data-benefits-button>
-                <span className={styles.buttonSurface} data-benefits-button-surface>
-                  Explore us <span className={styles.buttonArrow}><Arrow /></span>
-                </span>
-              </Link>
-              <div className={styles.seal} aria-label="100%">
-                <svg viewBox="0 0 56 56" fill="none" aria-hidden="true">
-                  <circle cx="28" cy="28" r="26.5" stroke="currentColor" strokeWidth="0.7" />
-                  <circle cx="28" cy="28" r="21.5" stroke="currentColor" strokeWidth="0.7" strokeDasharray="1 4" />
-                  <text x="28" y="32" textAnchor="middle" fill="currentColor" stroke="none">100%</text>
-                </svg>
+        <header className={styles.header} data-benefit-reveal="header">
+          <p className={styles.caption}><span>02 / The Specimen Collection</span></p>
+          <h2 className={styles.heading} id="benefits-title">Know your herbs. <em>Know their benefits.</em></h2>
+          <p className={styles.subtitle}>Discover what each botanical brings to your hair ritual.</p>
+        </header>
+        <ol className={styles.cards} role="list">
+          {specimens.map((specimen, index) => (
+            <li key={specimen.image} className={styles.card} data-benefit-card data-benefit-reveal="card" data-botanical={specimen.image}>
+              <div className={styles.paperShell} aria-hidden="true"><div className={styles.paper} /></div>
+              <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <div className={styles.engraving} aria-hidden="true" />
+              <div className={styles.art}>
+                <div className={styles.contactShadow} aria-hidden="true" />
+                <div className={styles.depth} data-benefit-depth><div className={styles.lift}>
+                  <Image src={`/images/specimen-collection/${specimen.image}.webp`} alt={specimen.alt} fill
+                    sizes="(max-width: 359px) 80px, (max-width: 767px) 30vw, (max-width: 1023px) 43vw, (max-width: 1440px) 29vw, 400px"
+                    className={styles.botanical} quality={90} />
+                </div></div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.divider} data-benefit-reveal data-benefits-divider />
-        <ol className={styles.rows}>
-          {benefits.map(({ title, description, productSlug, mobileTitle, mobileDescription, botanical: botanicalName }, index) => {
-            // Handles can survive a rename; resolve the displayed botanical
-            // from the current product name before linking its live handle.
-            const botanical = productSlug.replace(/-powder$/, "");
-            const product = products.find(({ name }) => name.toLowerCase().split(/[^a-z]+/).includes(botanical));
-            const imageSrc = product?.featuredImage?.url || `/images/${productSlug}.jpg`;
-            return (
-              <li key={title} className={styles.row} data-benefit-row data-benefit-reveal>
-                <Link className={styles.rowLink} href={product ? `/shop/${product.slug}` : "/shop"}>
-                  <div className={styles.identity}>
-                    <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                    <span className={styles.thumbnail} aria-hidden="true">
-                      <Image src={imageSrc} alt="" fill sizes="64px" className={styles.productImage} />
-                    </span>
-                  </div>
-                  <h3 className={styles.title}><span className={styles.desktopCopy}>{title}</span><span className={styles.mobileCopy}>{mobileTitle}</span></h3>
-                  <div className={styles.details} data-benefit-details>
-                    <p className={styles.description}><span className={styles.desktopCopy}>{description}</span><span className={styles.mobileCopy}>{mobileDescription}</span></p>
-                    <span className={styles.productLink}><span className={styles.desktopCopy}>{product ? `Explore ${product.name}` : "Explore botanicals"}</span><span className={styles.mobileCopy}>{product ? `Discover ${botanicalName}` : "Explore botanicals"}</span></span>
-                  </div>
-                  <span className={styles.rowArrow}><Arrow /></span>
-                </Link>
-                <div className={styles.preview} data-benefit-preview aria-hidden="true">
-                  <Image src={imageSrc} alt="" fill sizes="230px" className={styles.productImage} />
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-        <Link href="/shop" className={styles.mobileBrowse}>Explore all botanicals <Arrow /></Link>
-      </div>
-
-      <div className={styles.ticker} data-benefit-reveal aria-hidden="true">
-        <div className={styles.tickerTrack}>
-          {[0, 1].map((copy) => (
-            <div key={copy} className={styles.tickerGroup}>
-              {tickerItems.map((title) => <span key={title}>{title}<i>✦</i></span>)}
-            </div>
+              <div className={styles.cardCopy}>
+                <h3 className={styles.name}>{specimen.name}</h3>
+                <ul className={styles.benefits} role="list">{specimen.benefits.map((benefit) => <li key={benefit}><Leaf /><span>{benefit}</span></li>)}</ul>
+                {specimen.note && <p className={styles.note}>{specimen.note}</p>}
+              </div>
+            </li>
           ))}
+        </ol>
+        <div className={styles.footer}>
+          <span className={styles.ornament} aria-hidden="true"><Sprig /></span>
+          <Link href="/shop" className={styles.button}><span>Explore the herbs</span><span className={styles.buttonArrow}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></span></Link>
+          <span className={`${styles.ornament} ${styles.ornamentRight}`} aria-hidden="true"><Sprig /></span>
         </div>
       </div>
     </section>

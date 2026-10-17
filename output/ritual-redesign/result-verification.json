@@ -1,0 +1,50 @@
+{
+  "capturedAt": "2026-10-17T08:17:50.613Z",
+  "results": [
+    {
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "heading": "Find your\nritual.",
+      "kind": "candidate",
+      "images": [
+        {
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+          "naturalWidth": 300,
+          "alt": "NatureMist Hibiscus Powder"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/result-1440.png"
+    },
+    {
+      "viewport": 390,
+      "documentWidth": 390,
+      "heading": "Find your ritual.",
+      "kind": "candidate",
+      "images": [
+        {
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+          "naturalWidth": 260,
+          "alt": "NatureMist Hibiscus Powder"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/result-390.png"
+    },
+    {
+      "viewport": 320,
+      "documentWidth": 320,
+      "heading": "Find your ritual.",
+      "kind": "candidate",
+      "images": [
+        {
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=75",
+          "naturalWidth": 260,
+          "alt": "NatureMist Hibiscus Powder"
+        }
+      ],
+      "overflow": [],
+      "screenshot": "output/ritual-redesign/result-320.png"
+    }
+  ]
+}

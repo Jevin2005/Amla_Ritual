@@ -1,0 +1,184 @@
+{
+  "capturedAt": "2026-10-17T08:14:12.791Z",
+  "flows": [
+    {
+      "width": 1440,
+      "initialContinueDisabled": true,
+      "initialHeading": "Find your\nritual.",
+      "selectedContinueEnabled": true,
+      "quickCheck": {
+        "documentWidth": 1425,
+        "viewport": 1440,
+        "overflow": [],
+        "question": "Anything we should consider first?",
+        "options": 4,
+        "heading": "Find your\nritual.",
+        "focusedHeading": true,
+        "screenshot": "output/ritual-redesign/quick-check-1440.png"
+      },
+      "backPreservesSelection": true,
+      "multipleChecked": 2,
+      "exclusiveClearsOthers": true,
+      "longQuestion": {
+        "documentWidth": 1425,
+        "viewport": 1440,
+        "overflow": [],
+        "question": "Do you know what you reacted to?",
+        "options": 8,
+        "multipleChecked": 2,
+        "screenshot": "output/ritual-redesign/long-question-1440.png"
+      },
+      "ordinaryResult": {
+        "documentWidth": 1425,
+        "viewport": 1440,
+        "overflow": [],
+        "question": "Your suggested starting ritual",
+        "options": 0,
+        "kind": "candidate",
+        "heading": "Find your\nritual.",
+        "productLinks": [
+          {
+            "text": "NatureMist Hibiscus Powder",
+            "href": "/shop/hibiscus-powder"
+          },
+          {
+            "text": "Shop NatureMist Hibiscus Powder ↗",
+            "href": "/shop/hibiscus-powder"
+          },
+          {
+            "text": "Read directions ↗",
+            "href": "/shop/hibiscus-powder#product-directions"
+          }
+        ],
+        "screenshot": "output/ritual-redesign/result-1440.png"
+      },
+      "editPreservesAnswers": true,
+      "restartClearsSelection": true,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "initialContinueDisabled": true,
+      "initialHeading": "Find your ritual.",
+      "selectedContinueEnabled": true,
+      "selectedScreenshot": "output/ritual-redesign/selected-goal-390.png",
+      "quickCheck": {
+        "documentWidth": 390,
+        "viewport": 390,
+        "overflow": [],
+        "question": "Anything we should consider first?",
+        "options": 4,
+        "heading": "Find your ritual.",
+        "focusedHeading": true,
+        "screenshot": "output/ritual-redesign/quick-check-390.png"
+      },
+      "backPreservesSelection": true,
+      "multipleChecked": 2,
+      "exclusiveClearsOthers": true,
+      "longQuestion": {
+        "documentWidth": 390,
+        "viewport": 390,
+        "overflow": [],
+        "question": "Do you know what you reacted to?",
+        "options": 8,
+        "multipleChecked": 2,
+        "screenshot": "output/ritual-redesign/long-question-390.png"
+      },
+      "ordinaryResult": {
+        "documentWidth": 390,
+        "viewport": 390,
+        "overflow": [],
+        "question": "Your suggested starting ritual",
+        "options": 0,
+        "kind": "candidate",
+        "heading": "Find your ritual.",
+        "productLinks": [
+          {
+            "text": "NatureMist Hibiscus Powder",
+            "href": "/shop/hibiscus-powder"
+          },
+          {
+            "text": "Shop NatureMist Hibiscus Powder ↗",
+            "href": "/shop/hibiscus-powder"
+          },
+          {
+            "text": "Read directions ↗",
+            "href": "/shop/hibiscus-powder#product-directions"
+          }
+        ],
+        "screenshot": "output/ritual-redesign/result-390.png"
+      },
+      "editPreservesAnswers": true,
+      "restartClearsSelection": true,
+      "errors": []
+    },
+    {
+      "width": 320,
+      "initialContinueDisabled": true,
+      "initialHeading": "Find your ritual.",
+      "selectedContinueEnabled": true,
+      "selectedScreenshot": "output/ritual-redesign/selected-goal-320.png",
+      "quickCheck": {
+        "documentWidth": 320,
+        "viewport": 320,
+        "overflow": [],
+        "question": "Anything we should consider first?",
+        "options": 4,
+        "heading": "Find your ritual.",
+        "focusedHeading": true,
+        "screenshot": "output/ritual-redesign/quick-check-320.png"
+      },
+      "backPreservesSelection": true,
+      "multipleChecked": 2,
+      "exclusiveClearsOthers": true,
+      "longQuestion": {
+        "documentWidth": 320,
+        "viewport": 320,
+        "overflow": [],
+        "question": "Do you know what you reacted to?",
+        "options": 8,
+        "multipleChecked": 2,
+        "screenshot": "output/ritual-redesign/long-question-320.png"
+      },
+      "ordinaryResult": {
+        "documentWidth": 320,
+        "viewport": 320,
+        "overflow": [],
+        "question": "Your suggested starting ritual",
+        "options": 0,
+        "kind": "candidate",
+        "heading": "Find your ritual.",
+        "productLinks": [
+          {
+            "text": "NatureMist Hibiscus Powder",
+            "href": "/shop/hibiscus-powder"
+          },
+          {
+            "text": "Shop NatureMist Hibiscus Powder ↗",
+            "href": "/shop/hibiscus-powder"
+          },
+          {
+            "text": "Read directions ↗",
+            "href": "/shop/hibiscus-powder#product-directions"
+          }
+        ],
+        "screenshot": "output/ritual-redesign/result-320.png"
+      },
+      "editPreservesAnswers": true,
+      "restartClearsSelection": true,
+      "errors": []
+    }
+  ],
+  "reducedMotion": {
+    "runningAnimations": 5,
+    "finderMotion": "off",
+    "focusedHeading": true,
+    "question": "Anything we should consider first?",
+    "errors": [],
+    "measurementPhase": "Immediately after the Q2 state commit; five wrapper CSS transitions have duration 0.01ms under the existing reduced-motion global rule.",
+    "settledRunningAnimations": 0,
+    "transientTransitionDurationsMs": [
+      0.01
+    ]
+  }
+}

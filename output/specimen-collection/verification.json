@@ -1,0 +1,612 @@
+{
+  "url": "http://localhost:3000",
+  "capturedAt": "2026-10-17T07:43:35.903Z",
+  "widths": [
+    {
+      "height": 1349.265625,
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "sectionWidth": 1445,
+      "cta": {
+        "fontWeight": "400",
+        "whiteSpace": "nowrap",
+        "href": "/shop"
+      },
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "benefits": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "overflow": [],
+      "fonts": {
+        "heading": "Georgia, \"Times New Roman\", serif",
+        "body": "\"Specimen Sans\", Manrope, sans-serif",
+        "loaded": [
+          {
+            "family": "Combo Cormorant",
+            "style": "normal"
+          },
+          {
+            "family": "Combo Script",
+            "style": "normal"
+          },
+          {
+            "family": "Specimen Sans",
+            "style": "normal"
+          }
+        ]
+      },
+      "images": [
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=640&q=90",
+          "loaded": true,
+          "width": 359,
+          "height": 253
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Freetha.webp&w=640&q=90",
+          "loaded": true,
+          "width": 359,
+          "height": 253
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fshikakai.webp&w=640&q=90",
+          "loaded": true,
+          "width": 359,
+          "height": 253
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=640&q=90",
+          "loaded": true,
+          "width": 359,
+          "height": 253
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=640&q=90",
+          "loaded": true,
+          "width": 359,
+          "height": 253
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Findigo.webp&w=640&q=90",
+          "loaded": true,
+          "width": 359,
+          "height": 253
+        }
+      ],
+      "screenshot": "specimen-1440.png",
+      "errors": [],
+      "missingCopy": [],
+      "orderCorrect": true
+    },
+    {
+      "height": 1146.65625,
+      "viewport": 1024,
+      "documentWidth": 1009,
+      "sectionWidth": 1029,
+      "cta": {
+        "fontWeight": "400",
+        "whiteSpace": "nowrap",
+        "href": "/shop"
+      },
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "benefits": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "overflow": [],
+      "fonts": {
+        "heading": "Georgia, \"Times New Roman\", serif",
+        "body": "\"Specimen Sans\", Manrope, sans-serif",
+        "loaded": [
+          {
+            "family": "Combo Cormorant",
+            "style": "normal"
+          },
+          {
+            "family": "Combo Script",
+            "style": "normal"
+          },
+          {
+            "family": "Specimen Sans",
+            "style": "normal"
+          }
+        ]
+      },
+      "images": [
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=384&q=90",
+          "loaded": true,
+          "width": 234,
+          "height": 165
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Freetha.webp&w=384&q=90",
+          "loaded": true,
+          "width": 234,
+          "height": 165
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fshikakai.webp&w=384&q=90",
+          "loaded": true,
+          "width": 234,
+          "height": 165
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=90",
+          "loaded": true,
+          "width": 234,
+          "height": 165
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=384&q=90",
+          "loaded": true,
+          "width": 234,
+          "height": 165
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Findigo.webp&w=384&q=90",
+          "loaded": true,
+          "width": 234,
+          "height": 165
+        }
+      ],
+      "screenshot": "specimen-1024.png",
+      "errors": [],
+      "missingCopy": [],
+      "orderCorrect": true
+    },
+    {
+      "height": 1669.984375,
+      "viewport": 768,
+      "documentWidth": 753,
+      "sectionWidth": 773,
+      "cta": {
+        "fontWeight": "400",
+        "whiteSpace": "nowrap",
+        "href": "/shop"
+      },
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "benefits": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "overflow": [],
+      "fonts": {
+        "heading": "Georgia, \"Times New Roman\", serif",
+        "body": "\"Specimen Sans\", Manrope, sans-serif",
+        "loaded": [
+          {
+            "family": "Combo Cormorant",
+            "style": "normal"
+          },
+          {
+            "family": "Combo Script",
+            "style": "normal"
+          },
+          {
+            "family": "Specimen Sans",
+            "style": "normal"
+          }
+        ]
+      },
+      "images": [
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=384&q=90",
+          "loaded": true,
+          "width": 289,
+          "height": 203
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Freetha.webp&w=384&q=90",
+          "loaded": true,
+          "width": 289,
+          "height": 203
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fshikakai.webp&w=384&q=90",
+          "loaded": true,
+          "width": 289,
+          "height": 203
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=384&q=90",
+          "loaded": true,
+          "width": 289,
+          "height": 203
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=384&q=90",
+          "loaded": true,
+          "width": 289,
+          "height": 203
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Findigo.webp&w=384&q=90",
+          "loaded": true,
+          "width": 289,
+          "height": 203
+        }
+      ],
+      "screenshot": "specimen-768.png",
+      "errors": [],
+      "missingCopy": [],
+      "orderCorrect": true
+    },
+    {
+      "height": 1201.984375,
+      "viewport": 390,
+      "documentWidth": 390,
+      "sectionWidth": 410,
+      "cta": {
+        "fontWeight": "400",
+        "whiteSpace": "nowrap",
+        "href": "/shop"
+      },
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "benefits": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "overflow": [],
+      "fonts": {
+        "heading": "Georgia, \"Times New Roman\", serif",
+        "body": "\"Specimen Sans\", Manrope, sans-serif",
+        "loaded": [
+          {
+            "family": "Combo Cormorant",
+            "style": "normal"
+          },
+          {
+            "family": "Combo Script",
+            "style": "normal"
+          },
+          {
+            "family": "Specimen Sans",
+            "style": "normal"
+          }
+        ]
+      },
+      "images": [
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=256&q=90",
+          "loaded": true,
+          "width": 122,
+          "height": 122
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Freetha.webp&w=256&q=90",
+          "loaded": true,
+          "width": 122,
+          "height": 122
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fshikakai.webp&w=256&q=90",
+          "loaded": true,
+          "width": 122,
+          "height": 122
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=256&q=90",
+          "loaded": true,
+          "width": 122,
+          "height": 122
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=256&q=90",
+          "loaded": true,
+          "width": 122,
+          "height": 122
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Findigo.webp&w=256&q=90",
+          "loaded": true,
+          "width": 122,
+          "height": 122
+        }
+      ],
+      "screenshot": "specimen-390.png",
+      "errors": [],
+      "missingCopy": [],
+      "orderCorrect": true
+    },
+    {
+      "height": 1200.90625,
+      "viewport": 320,
+      "documentWidth": 320,
+      "sectionWidth": 340,
+      "cta": {
+        "fontWeight": "400",
+        "whiteSpace": "nowrap",
+        "href": "/shop"
+      },
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "benefits": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "overflow": [],
+      "fonts": {
+        "heading": "Georgia, \"Times New Roman\", serif",
+        "body": "\"Specimen Sans\", Manrope, sans-serif",
+        "loaded": [
+          {
+            "family": "Combo Cormorant",
+            "style": "normal"
+          },
+          {
+            "family": "Combo Script",
+            "style": "normal"
+          },
+          {
+            "family": "Specimen Sans",
+            "style": "normal"
+          },
+          {
+            "family": "__nextjs-Geist",
+            "style": "normal"
+          }
+        ]
+      },
+      "images": [
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=256&q=90",
+          "loaded": true,
+          "width": 76,
+          "height": 76
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Freetha.webp&w=256&q=90",
+          "loaded": true,
+          "width": 76,
+          "height": 76
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fshikakai.webp&w=256&q=90",
+          "loaded": true,
+          "width": 76,
+          "height": 76
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=256&q=90",
+          "loaded": true,
+          "width": 76,
+          "height": 76
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=256&q=90",
+          "loaded": true,
+          "width": 76,
+          "height": 76
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Findigo.webp&w=256&q=90",
+          "loaded": true,
+          "width": 76,
+          "height": 76
+        }
+      ],
+      "screenshot": "specimen-320.png",
+      "errors": [],
+      "missingCopy": [],
+      "orderCorrect": true
+    }
+  ],
+  "checks": {
+    "noJavaScript": {
+      "height": 0,
+      "viewport": 390,
+      "documentWidth": 390,
+      "sectionWidth": 0,
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "benefits": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "overflow": [],
+      "fonts": {
+        "heading": "Georgia, \"Times New Roman\", serif",
+        "body": "\"Specimen Sans\", Manrope, sans-serif",
+        "loaded": []
+      },
+      "images": [
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Famla.webp&w=256&q=90",
+          "loaded": true,
+          "width": 256,
+          "height": 192
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Freetha.webp&w=256&q=90",
+          "loaded": true,
+          "width": 256,
+          "height": 192
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fshikakai.webp&w=256&q=90",
+          "loaded": true,
+          "width": 256,
+          "height": 192
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fhibiscus.webp&w=256&q=90",
+          "loaded": true,
+          "width": 256,
+          "height": 192
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Fbhringraj.webp&w=256&q=90",
+          "loaded": true,
+          "width": 256,
+          "height": 192
+        },
+        {
+          "src": "http://localhost:3000/_next/image?url=%2Fimages%2Fspecimen-collection%2Findigo.webp&w=256&q=90",
+          "loaded": true,
+          "width": 256,
+          "height": 192
+        }
+      ],
+      "visible": false
+    },
+    "reducedMotion": {
+      "animations": 0,
+      "hiddenCards": 0
+    },
+    "keyboard": {
+      "focused": true,
+      "href": "/shop",
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    },
+    "fastScroll": {
+      "hiddenCards": [],
+      "pending": 0,
+      "runningDecorations": 0
+    },
+    "pointer": {
+      "x": 2.88,
+      "y": 2.88,
+      "tilt": 1.44,
+      "reset": true
+    },
+    "shadow": {
+      "inViewRunning": "true",
+      "offscreenRunning": "false"
+    },
+    "overlays": {
+      "searchVisible": true,
+      "searchOnTop": true,
+      "bagVisible": true,
+      "bagOnTop": true
+    },
+    "productionNoJavaScript": {
+      "visible": false,
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "hiddenAncestor": "S:0",
+      "explanation": "The existing Next.js route loading boundary streams the populated homepage into hidden #S:0 and requires its reveal script. No global streaming/loading changes were made for the scoped section redesign."
+    },
+    "isolatedServerRenderedSectionNoJavaScript": {
+      "visible": true,
+      "height": 1200.90625,
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "hiddenCards": 0,
+      "source": "Unmodified server-rendered section HTML and production stylesheets, placed outside the existing app-level streaming/loading boundary in a temporary fixture."
+    },
+    "hiddenTabProbe": {
+      "before": {
+        "visibility": "visible",
+        "running": "true"
+      },
+      "background": {
+        "visibility": "visible",
+        "running": "true"
+      },
+      "verified": null,
+      "note": "Headless Chromium kept the page visible; hidden-tab handling is covered by the motion unit tests instead."
+    },
+    "applicationBundleFailure": {
+      "visible": false,
+      "height": 0,
+      "names": [
+        "Amla",
+        "Reetha",
+        "Shikakai",
+        "Hibiscus",
+        "Bhringraj",
+        "Indigo"
+      ],
+      "benefits": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "hiddenCards": 0,
+      "blockedScripts": 14,
+      "note": "All external application JavaScript requests were aborted. The existing inline Next.js stream reveal script was allowed to run."
+    }
+  }
+}

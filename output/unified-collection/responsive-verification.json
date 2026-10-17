@@ -1,0 +1,2038 @@
+{
+  "capturedAt": "2026-10-17T08:48:19.718Z",
+  "cases": [
+    {
+      "route": "shop",
+      "width": 1440,
+      "state": "all",
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "height": 2729.734375,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 331.328125,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n\nBotanical Hair Mask for Softness & Shine · 250 g\n\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=640&q=82",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 331.328125,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n\nBotanical Hair & Scalp Cleanser · 250g Jar\n\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=640&q=82",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 331.34375,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=640&q=82",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 331.328125,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n\nTraditional Botanical Hair Colour · 250g\n\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 331.328125,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n\nBotanical Conditioning Hair Powder · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 331.34375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 331.328125,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n\nFloral Botanical Conditioning Powder · 250 g Jar\n\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 331.328125,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n\nHair-colour ritualTraditional Botanical Hair Cleanser · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 331.34375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-shop-1440.png",
+      "errors": []
+    },
+    {
+      "route": "shop",
+      "width": 1440,
+      "state": "combos",
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "height": 1614.4375,
+      "cards": [
+        {
+          "kind": "combo",
+          "width": 331.328125,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=640&q=82",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 331.328125,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=82",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 331.34375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=82",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "false"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "true"
+        }
+      ],
+      "count": [
+        "3 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/combos-shop-1440.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 1440,
+      "state": "all",
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "height": 2520.9375,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 409.71875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n\nBotanical Hair Mask for Softness & Shine · 250 g\n\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 409.734375,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n\nBotanical Hair & Scalp Cleanser · 250g Jar\n\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 409.71875,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 409.71875,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n\nTraditional Botanical Hair Colour · 250g\n\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 409.734375,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n\nBotanical Conditioning Hair Powder · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 409.71875,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 409.71875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n\nFloral Botanical Conditioning Powder · 250 g Jar\n\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 409.734375,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n\nHair-colour ritualTraditional Botanical Hair Cleanser · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=640&q=75",
+              "naturalWidth": 475
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 409.71875,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-home-1440.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 1440,
+      "state": "combos",
+      "viewport": 1440,
+      "documentWidth": 1425,
+      "height": 1099.453125,
+      "cards": [
+        {
+          "kind": "combo",
+          "width": 409.71875,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 409.734375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 409.71875,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+              "naturalWidth": 475
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "false"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "true"
+        }
+      ],
+      "count": [
+        "3 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/combos-home-1440.png",
+      "errors": []
+    },
+    {
+      "route": "shop",
+      "width": 390,
+      "state": "all",
+      "viewport": 390,
+      "documentWidth": 390,
+      "height": 2750.234375,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=256&q=82",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=256&q=82",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=82",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-shop-390.png",
+      "errors": []
+    },
+    {
+      "route": "shop",
+      "width": 390,
+      "state": "combos",
+      "viewport": 390,
+      "documentWidth": 390,
+      "height": 1652.890625,
+      "cards": [
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=82",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=82",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=82",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "false"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "true"
+        }
+      ],
+      "count": [
+        "3 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/combos-shop-390.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 390,
+      "state": "all",
+      "viewport": 390,
+      "documentWidth": 390,
+      "height": 2137.734375,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 181,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 195
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-home-390.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 390,
+      "state": "combos",
+      "viewport": 390,
+      "documentWidth": 390,
+      "height": 1047.078125,
+      "cards": [
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 181,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=75",
+              "naturalWidth": 195
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "false"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "true"
+        }
+      ],
+      "count": [
+        "3 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/combos-home-390.png",
+      "errors": []
+    },
+    {
+      "route": "shop",
+      "width": 320,
+      "state": "all",
+      "viewport": 320,
+      "documentWidth": 320,
+      "height": 2605.96875,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=256&q=82",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=256&q=82",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=82",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-shop-320.png",
+      "errors": []
+    },
+    {
+      "route": "shop",
+      "width": 320,
+      "state": "combos",
+      "viewport": 320,
+      "documentWidth": 320,
+      "height": 1630.359375,
+      "cards": [
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=82",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=82",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=82",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "false"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "true"
+        }
+      ],
+      "count": [
+        "3 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/combos-shop-320.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 320,
+      "state": "all",
+      "viewport": 320,
+      "documentWidth": 320,
+      "height": 1983.65625,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 146,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 160
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-home-320.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 320,
+      "state": "combos",
+      "viewport": 320,
+      "documentWidth": 320,
+      "height": 977.9375,
+      "cards": [
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 146,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=256&q=75",
+              "naturalWidth": 160
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "false"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "true"
+        }
+      ],
+      "count": [
+        "3 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/combos-home-320.png",
+      "errors": []
+    },
+    {
+      "route": "shop",
+      "width": 1024,
+      "state": "all",
+      "viewport": 1024,
+      "documentWidth": 1009,
+      "height": 3714.25,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 328.1875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n\nBotanical Hair Mask for Softness & Shine · 250 g\n\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=384&q=82",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 328.1875,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n\nBotanical Hair & Scalp Cleanser · 250g Jar\n\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=384&q=82",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 328.1875,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=384&q=82",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 328.1875,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n\nTraditional Botanical Hair Colour · 250g\n\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 328.1875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n\nBotanical Conditioning Hair Powder · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 328.1875,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 328.1875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n\nFloral Botanical Conditioning Powder · 250 g Jar\n\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 328.1875,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n\nHair-colour ritualTraditional Botanical Hair Cleanser · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 328.1875,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-shop-1024.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 1024,
+      "state": "all",
+      "viewport": 1024,
+      "documentWidth": 1009,
+      "height": 2083.765625,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 289.921875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n\nBotanical Hair Mask for Softness & Shine · 250 g\n\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 289.921875,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n\nBotanical Hair & Scalp Cleanser · 250g Jar\n\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 289.9375,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 289.921875,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n\nTraditional Botanical Hair Colour · 250g\n\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 289.921875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n\nBotanical Conditioning Hair Powder · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 289.9375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 289.921875,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n\nFloral Botanical Conditioning Powder · 250 g Jar\n\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 289.921875,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n\nHair-colour ritualTraditional Botanical Hair Cleanser · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 337
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 289.9375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=384&q=75",
+              "naturalWidth": 337
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-home-1024.png",
+      "errors": []
+    },
+    {
+      "route": "shop",
+      "width": 768,
+      "state": "all",
+      "viewport": 768,
+      "documentWidth": 753,
+      "height": 3610.15625,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 337.78125,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=384&q=82",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 337.78125,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=384&q=82",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 337.78125,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=384&q=82",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 337.78125,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 337.78125,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 337.78125,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 337.78125,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 337.78125,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 337.78125,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-shop-768.png",
+      "errors": []
+    },
+    {
+      "route": "home",
+      "width": 768,
+      "state": "all",
+      "viewport": 768,
+      "documentWidth": 753,
+      "height": 3197.59375,
+      "cards": [
+        {
+          "kind": "product",
+          "width": 330.109375,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Amla_powder_botanical_hero.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Care_Guide.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 330.109375,
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethaPowderinWarmLight.png%3Fv%3D1789634963&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistReethawash-dayritualtips.png%3Fv%3D1789634963&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 330.109375,
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fclassic-trio.webp&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 330.109375,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigopowderhero.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistIndigoBenefitsGuide.png%3Fv%3D1789636168&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 330.109375,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FBhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png%3Fv%3D1789639509&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 330.109375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 330.109375,
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusPowderHero.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMistHibiscusBenefitsGuide.png%3Fv%3D1789640062&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "product",
+          "width": 330.109375,
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Powder_Hero.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 384
+            },
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0777%2F1291%2F6666%2Ffiles%2FNatureMist_Shikakai_Benefits_Graphic.png%3Fv%3D1789634129&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        },
+        {
+          "kind": "combo",
+          "width": 330.109375,
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "images": [
+            {
+              "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=384&q=75",
+              "naturalWidth": 384
+            }
+          ],
+          "overflow": []
+        }
+      ],
+      "types": [
+        {
+          "text": "All products\n9",
+          "pressed": "true"
+        },
+        {
+          "text": "Individual powders\n6",
+          "pressed": "false"
+        },
+        {
+          "text": "Combos\n3",
+          "pressed": "false"
+        }
+      ],
+      "count": [
+        "9 items in the collection"
+      ],
+      "separateComboBook": 0,
+      "overflow": [],
+      "screenshot": "output/unified-collection/final-home-768.png",
+      "errors": []
+    }
+  ],
+  "completedAt": "2026-10-17T08:49:36.595Z"
+}

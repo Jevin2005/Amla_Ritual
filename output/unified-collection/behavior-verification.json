@@ -1,0 +1,1178 @@
+{
+  "capturedAt": "2026-10-17T08:46:38.460Z",
+  "cases": [
+    {
+      "width": 1440,
+      "redirectUrl": "http://localhost:3000/shop?type=combos",
+      "checks": {
+        "redirectToComboFilter": true,
+        "redirectShowsOnlyCombos": true,
+        "includedBotanicalSearch": true,
+        "comboNameSearch": true,
+        "mixedNineItems": true,
+        "typeCountsCorrect": true,
+        "resultCountCorrect": true,
+        "globalPriceLow": true,
+        "globalPriceHigh": true,
+        "comboSize": true,
+        "switchIndividualResetsSize": true,
+        "returnComboSizeReset": true,
+        "availableOnly": true,
+        "comboPreviews": true,
+        "collectionFilterShowsEmpty": true,
+        "clearFiltersRemovesUrlFilters": true,
+        "noRuntimeErrors": true
+      },
+      "initialCombos": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "searchAmla": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "searchComboName": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        }
+      ],
+      "typeLabels": "All products\n9\nIndividual powders\n6\nCombos\n3",
+      "status": "9 items",
+      "priceLow": [
+        {
+          "kind": "product",
+          "price": 234
+        },
+        {
+          "kind": "product",
+          "price": 325
+        },
+        {
+          "kind": "product",
+          "price": 350
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 450
+        },
+        {
+          "kind": "combo",
+          "price": 634
+        },
+        {
+          "kind": "combo",
+          "price": 684
+        },
+        {
+          "kind": "combo",
+          "price": 959
+        }
+      ],
+      "priceHigh": [
+        {
+          "kind": "combo",
+          "price": 959
+        },
+        {
+          "kind": "combo",
+          "price": 684
+        },
+        {
+          "kind": "combo",
+          "price": 634
+        },
+        {
+          "kind": "product",
+          "price": 450
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 350
+        },
+        {
+          "kind": "product",
+          "price": 325
+        },
+        {
+          "kind": "product",
+          "price": 234
+        }
+      ],
+      "threeJars": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        }
+      ],
+      "available": [
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n\nBotanical Hair Mask for Softness & Shine · 250 g\n\n₹234\nIN STOCK\n＋",
+          "title": "NatureMist Amla Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n\nBotanical Hair & Scalp Cleanser · 250g Jar\n\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "title": "NatureMist Reetha Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n\nTraditional Botanical Hair Colour · 250g\n\n₹350\nIN STOCK\n＋",
+          "title": "NatureMist Indigo Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n\nBotanical Conditioning Hair Powder · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "title": "NatureMist Bhringraj Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n\nFloral Botanical Conditioning Powder · 250 g Jar\n\n₹450\nIN STOCK\n＋",
+          "title": "NatureMist Hibiscus Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n\nHair-colour ritualTraditional Botanical Hair Cleanser · 250 g Jar\n\n₹400\nIN STOCK\n＋",
+          "title": "NatureMist Shikakai Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "previews": [
+        {
+          "index": 0,
+          "trigger": "photo",
+          "title": "Classic Trio",
+          "members": [
+            "amla",
+            "reetha",
+            "shikakai"
+          ],
+          "total": "₹959",
+          "prices": [
+            "₹234",
+            "₹325",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusTrap": true,
+            "focusRestored": true
+          },
+          "screenshot": "output/unified-collection/preview-1440.png"
+        },
+        {
+          "index": 0,
+          "trigger": "button",
+          "title": "Classic Trio",
+          "members": [
+            "amla",
+            "reetha",
+            "shikakai"
+          ],
+          "total": "₹959",
+          "prices": [
+            "₹234",
+            "₹325",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 1,
+          "trigger": "photo",
+          "title": "Botanical Duo",
+          "members": [
+            "amla",
+            "bhringraj"
+          ],
+          "total": "₹634",
+          "prices": [
+            "₹234",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 1,
+          "trigger": "button",
+          "title": "Botanical Duo",
+          "members": [
+            "amla",
+            "bhringraj"
+          ],
+          "total": "₹634",
+          "prices": [
+            "₹234",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Fbotanical-duo.webp&w=640&q=75",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 2,
+          "trigger": "photo",
+          "title": "Floral Duo",
+          "members": [
+            "amla",
+            "hibiscus"
+          ],
+          "total": "₹684",
+          "prices": [
+            "₹450",
+            "₹234"
+          ],
+          "focusedInside": true,
+          "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 2,
+          "trigger": "button",
+          "title": "Floral Duo",
+          "members": [
+            "amla",
+            "hibiscus"
+          ],
+          "total": "₹684",
+          "prices": [
+            "₹450",
+            "₹234"
+          ],
+          "focusedInside": true,
+          "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        }
+      ],
+      "clearedUrl": "http://localhost:3000/shop?campaign=qa",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "width": 390,
+      "redirectUrl": "http://localhost:3000/shop?type=combos",
+      "checks": {
+        "redirectToComboFilter": true,
+        "redirectShowsOnlyCombos": true,
+        "includedBotanicalSearch": true,
+        "comboNameSearch": true,
+        "mixedNineItems": true,
+        "typeCountsCorrect": true,
+        "resultCountCorrect": true,
+        "globalPriceLow": true,
+        "globalPriceHigh": true,
+        "comboSize": true,
+        "switchIndividualResetsSize": true,
+        "returnComboSizeReset": true,
+        "availableOnly": true,
+        "inlineFilterLayout": true,
+        "filterCollapseReturnsFocus": true,
+        "comboPreviews": true,
+        "collectionFilterShowsEmpty": true,
+        "clearFiltersRemovesUrlFilters": true,
+        "noRuntimeErrors": true
+      },
+      "initialCombos": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "searchAmla": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "searchComboName": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        }
+      ],
+      "typeLabels": "All products\n9\nIndividual powders\n6\nCombos\n3",
+      "status": "9 items",
+      "priceLow": [
+        {
+          "kind": "product",
+          "price": 234
+        },
+        {
+          "kind": "product",
+          "price": 325
+        },
+        {
+          "kind": "product",
+          "price": 350
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 450
+        },
+        {
+          "kind": "combo",
+          "price": 634
+        },
+        {
+          "kind": "combo",
+          "price": 684
+        },
+        {
+          "kind": "combo",
+          "price": 959
+        }
+      ],
+      "priceHigh": [
+        {
+          "kind": "combo",
+          "price": 959
+        },
+        {
+          "kind": "combo",
+          "price": 684
+        },
+        {
+          "kind": "combo",
+          "price": 634
+        },
+        {
+          "kind": "product",
+          "price": 450
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 350
+        },
+        {
+          "kind": "product",
+          "price": 325
+        },
+        {
+          "kind": "product",
+          "price": 234
+        }
+      ],
+      "threeJars": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        }
+      ],
+      "available": [
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "title": "NatureMist Amla Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "title": "NatureMist Reetha Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "title": "NatureMist Indigo Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "title": "NatureMist Bhringraj Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "title": "NatureMist Hibiscus Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "title": "NatureMist Shikakai Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "inlineFilters": {
+        "width": 390,
+        "position": "static",
+        "resultsBelow": true,
+        "documentWidth": 390,
+        "viewport": 390,
+        "visibleDialogs": 0,
+        "headerBottom": 84,
+        "headerOnTop": true,
+        "panelTop": 669.4375,
+        "focusReturned": true,
+        "passed": true
+      },
+      "previews": [
+        {
+          "index": 0,
+          "trigger": "photo",
+          "title": "Classic Trio",
+          "members": [
+            "amla",
+            "reetha",
+            "shikakai"
+          ],
+          "total": "₹959",
+          "prices": [
+            "₹234",
+            "₹325",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusTrap": true,
+            "focusRestored": true
+          },
+          "screenshot": "output/unified-collection/preview-390.png"
+        },
+        {
+          "index": 0,
+          "trigger": "button",
+          "title": "Classic Trio",
+          "members": [
+            "amla",
+            "reetha",
+            "shikakai"
+          ],
+          "total": "₹959",
+          "prices": [
+            "₹234",
+            "₹325",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 1,
+          "trigger": "photo",
+          "title": "Botanical Duo",
+          "members": [
+            "amla",
+            "bhringraj"
+          ],
+          "total": "₹634",
+          "prices": [
+            "₹234",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 1,
+          "trigger": "button",
+          "title": "Botanical Duo",
+          "members": [
+            "amla",
+            "bhringraj"
+          ],
+          "total": "₹634",
+          "prices": [
+            "₹234",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 2,
+          "trigger": "photo",
+          "title": "Floral Duo",
+          "members": [
+            "amla",
+            "hibiscus"
+          ],
+          "total": "₹684",
+          "prices": [
+            "₹450",
+            "₹234"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 2,
+          "trigger": "button",
+          "title": "Floral Duo",
+          "members": [
+            "amla",
+            "hibiscus"
+          ],
+          "total": "₹684",
+          "prices": [
+            "₹450",
+            "₹234"
+          ],
+          "focusedInside": true,
+          "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        }
+      ],
+      "clearedUrl": "http://localhost:3000/shop?campaign=qa",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "width": 320,
+      "redirectUrl": "http://localhost:3000/shop?type=combos",
+      "checks": {
+        "redirectToComboFilter": true,
+        "redirectShowsOnlyCombos": true,
+        "includedBotanicalSearch": true,
+        "comboNameSearch": true,
+        "mixedNineItems": true,
+        "typeCountsCorrect": true,
+        "resultCountCorrect": true,
+        "globalPriceLow": true,
+        "globalPriceHigh": true,
+        "comboSize": true,
+        "switchIndividualResetsSize": true,
+        "returnComboSizeReset": true,
+        "availableOnly": true,
+        "inlineFilterLayout": true,
+        "filterCollapseReturnsFocus": true,
+        "comboPreviews": true,
+        "collectionFilterShowsEmpty": true,
+        "clearFiltersRemovesUrlFilters": true,
+        "noRuntimeErrors": true
+      },
+      "initialCombos": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "searchAmla": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "searchComboName": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        }
+      ],
+      "typeLabels": "All products\n9\nIndividual powders\n6\nCombos\n3",
+      "status": "9 items",
+      "priceLow": [
+        {
+          "kind": "product",
+          "price": 234
+        },
+        {
+          "kind": "product",
+          "price": 325
+        },
+        {
+          "kind": "product",
+          "price": 350
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 450
+        },
+        {
+          "kind": "combo",
+          "price": 634
+        },
+        {
+          "kind": "combo",
+          "price": 684
+        },
+        {
+          "kind": "combo",
+          "price": 959
+        }
+      ],
+      "priceHigh": [
+        {
+          "kind": "combo",
+          "price": 959
+        },
+        {
+          "kind": "combo",
+          "price": 684
+        },
+        {
+          "kind": "combo",
+          "price": 634
+        },
+        {
+          "kind": "product",
+          "price": 450
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 400
+        },
+        {
+          "kind": "product",
+          "price": 350
+        },
+        {
+          "kind": "product",
+          "price": 325
+        },
+        {
+          "kind": "product",
+          "price": 234
+        }
+      ],
+      "threeJars": [
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        }
+      ],
+      "available": [
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Amla Powder\n₹234\nIN STOCK\n＋",
+          "title": "NatureMist Amla Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "19% OFF\n♡\n\nCLEANSE RITUAL\n\nNatureMist Reetha Powder\n₹325\n₹400\n19% OFF\nSave ₹75\n· IN STOCK\n＋",
+          "title": "NatureMist Reetha Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n3 jars\n\nBOTANICAL PAIRING\n\nClassic Trio\n\nAmla + Reetha + Shikakai\n\nCombined total\n\n₹959\n\nAvailable\n\nView combo\n↗",
+          "title": "Classic Trio",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Indigo Powder\n₹350\nIN STOCK\n＋",
+          "title": "NatureMist Indigo Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Bhringraj Powder\n₹400\nIN STOCK\n＋",
+          "title": "NatureMist Bhringraj Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nBotanical Duo\n\nAmla + Bhringraj\n\nCombined total\n\n₹634\n\nAvailable\n\nView combo\n↗",
+          "title": "Botanical Duo",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCONDITION RITUAL\n\nNatureMist Hibiscus Powder\n₹450\nIN STOCK\n＋",
+          "title": "NatureMist Hibiscus Powder",
+          "available": true
+        },
+        {
+          "kind": "product",
+          "text": "♡\n\nCOLOUR RITUAL\n\nNatureMist Shikakai Powder\n₹400\nIN STOCK\n＋",
+          "title": "NatureMist Shikakai Powder",
+          "available": true
+        },
+        {
+          "kind": "combo",
+          "text": "Combo\n·\n2 jars\n\nBOTANICAL PAIRING\n\nFloral Duo\n\nHibiscus + Amla\n\nCombined total\n\n₹684\n\nAvailable\n\nView combo\n↗",
+          "title": "Floral Duo",
+          "available": true
+        }
+      ],
+      "inlineFilters": {
+        "width": 320,
+        "position": "static",
+        "resultsBelow": true,
+        "documentWidth": 320,
+        "viewport": 320,
+        "visibleDialogs": 0,
+        "headerBottom": 83.0625,
+        "headerOnTop": true,
+        "panelTop": 658.78125,
+        "focusReturned": true,
+        "passed": true
+      },
+      "previews": [
+        {
+          "index": 0,
+          "trigger": "photo",
+          "title": "Classic Trio",
+          "members": [
+            "amla",
+            "reetha",
+            "shikakai"
+          ],
+          "total": "₹959",
+          "prices": [
+            "₹234",
+            "₹325",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusTrap": true,
+            "focusRestored": true
+          },
+          "screenshot": "output/unified-collection/preview-320.png"
+        },
+        {
+          "index": 0,
+          "trigger": "button",
+          "title": "Classic Trio",
+          "members": [
+            "amla",
+            "reetha",
+            "shikakai"
+          ],
+          "total": "₹959",
+          "prices": [
+            "₹234",
+            "₹325",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 1,
+          "trigger": "photo",
+          "title": "Botanical Duo",
+          "members": [
+            "amla",
+            "bhringraj"
+          ],
+          "total": "₹634",
+          "prices": [
+            "₹234",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 1,
+          "trigger": "button",
+          "title": "Botanical Duo",
+          "members": [
+            "amla",
+            "bhringraj"
+          ],
+          "total": "₹634",
+          "prices": [
+            "₹234",
+            "₹400"
+          ],
+          "focusedInside": true,
+          "image": "",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 2,
+          "trigger": "photo",
+          "title": "Floral Duo",
+          "members": [
+            "amla",
+            "hibiscus"
+          ],
+          "total": "₹684",
+          "prices": [
+            "₹450",
+            "₹234"
+          ],
+          "focusedInside": true,
+          "image": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-combo-floral-duo.webp?v=1791606513&width=640",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        },
+        {
+          "index": 2,
+          "trigger": "button",
+          "title": "Floral Duo",
+          "members": [
+            "amla",
+            "hibiscus"
+          ],
+          "total": "₹684",
+          "prices": [
+            "₹450",
+            "₹234"
+          ],
+          "focusedInside": true,
+          "image": "http://localhost:3000/_next/image?url=%2Fimages%2Fbotanical-combos%2Ffloral-duo.webp&w=640&q=75",
+          "overflow": false,
+          "checks": {
+            "title": true,
+            "members": true,
+            "total": true,
+            "sum": true,
+            "focusInside": true,
+            "noHorizontalOverflow": true,
+            "focusRestored": true
+          }
+        }
+      ],
+      "clearedUrl": "http://localhost:3000/shop?campaign=qa",
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "completedAt": "2026-10-17T08:47:22.691Z",
+  "geometryCheckedAt": "2026-10-17T08:51:17.827Z"
+}

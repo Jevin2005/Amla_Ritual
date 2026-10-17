@@ -29,39 +29,7 @@ class EventTarget {
   }
 }
 
-function fixture(tops, { reducedMotion = false, enabled = true, duration = 1 } = {}) {
-  class Node extends EventTarget {
-    children = [];
-    contains(node) { return node === this || this.children.some((child) => child.contains(node)); }
-  }
-  class Target extends Node {
-    animations = [];
-    revealStates = [];
-    attributes = new Set();
-    constructor(top) {
-      super();
-      this.top = top;
-      this.dataset = new Proxy({ benefitReveal: "" }, {
-        set: (data, key, value) => {
-          if (key === "benefitReveal") this.revealStates.push(value);
-          data[key] = value;
-          return true;
-        },
-      });
-    }
-    getBoundingClientRect() { return { top: this.top }; }
-    hasAttribute(attribute) { return this.attributes.has(attribute); }
-    animate(keyframes, options) {
-      const animation = {
-        keyframes, options, cancelled: false, finished: false,
-        cancel() { this.cancelled = true; this.oncancel?.(); },
-        finish() { this.finished = true; this.onfinish?.(); },
-      };
-      this.animations.push(animation);
-      return animation;
-    }
-  }
-
+function observerFixture() {
   const observers = [];
   class IntersectionObserver {
     observed = new Set();
@@ -76,82 +44,169 @@ function fixture(tops, { reducedMotion = false, enabled = true, duration = 1 } =
     disconnect() { this.disconnected = true; this.observed.clear(); }
     emit(entries) { this.callback(entries); }
   }
+  return { observers, IntersectionObserver };
+}
 
+function entranceFixture(tops, {
+  reducedMotion = false, enabled = true, duration = 1, hidden = false, supportsObserver = true,
+  kinds = tops.map(() => "card"),
+} = {}) {
+  class Node extends EventTarget {
+    children = [];
+    contains(node) { return node === this || this.children.some((child) => child.contains(node)); }
+  }
+  class Target extends Node {
+    animations = [];
+    revealStates = [];
+    style = {};
+    constructor(top, kind) {
+      super();
+      this.top = top;
+      this.dataset = new Proxy({ benefitReveal: kind }, {
+        set: (data, key, value) => {
+          if (key === "benefitRevealState") this.revealStates.push(value);
+          data[key] = value;
+          return true;
+        },
+      });
+    }
+    getBoundingClientRect() { return { top: this.top, bottom: this.top + 180 }; }
+    animate(keyframes, options) {
+      const animation = {
+        keyframes, options, cancelled: false, finished: false,
+        cancel() { this.cancelled = true; this.oncancel?.(); },
+        finish() { this.finished = true; this.onfinish?.(); },
+      };
+      this.animations.push(animation);
+      return animation;
+    }
+  }
+
+  const { observers, IntersectionObserver } = observerFixture();
   const media = Object.assign(new EventTarget(), { matches: reducedMotion });
-  const document = Object.assign(new EventTarget(), { hidden: false, activeElement: null });
-  const targets = tops.map((top) => new Target(top));
+  const document = Object.assign(new EventTarget(), { hidden, activeElement: null });
+  const targets = tops.map((top, index) => new Target(top, kinds[index]));
   const section = Object.assign(new Node(), {
     children: targets,
-    querySelectorAll: () => targets.filter((target) => Object.hasOwn(target.dataset, "benefitReveal")),
+    querySelectorAll: () => targets,
   });
-  const window = { innerHeight: 800, matchMedia: () => media, IntersectionObserver };
+  const window = { innerHeight: 800, matchMedia: () => media };
+  if (supportsObserver) window.IntersectionObserver = IntersectionObserver;
   const context = vm.createContext({ window, document, Node, IntersectionObserver });
   vm.runInContext(bundle, context);
   const setup = () => context.benefitsMotion.observeBenefitsEntrance(section, {
     enabled, cursor: true, intensity: 1, duration,
   });
-  return { targets, section, document, media, observers, setup, Node };
+  const enter = (...items) => {
+    items.forEach((target) => { target.top = 300; });
+    observers.at(-1).emit(items.map((target) => ({ target, isIntersecting: true })));
+  };
+  return { targets, section, document, media, observers, setup, enter, Node };
 }
 
-test("fresh hydration never hides or animates content already in or above the viewport", () => {
-  const { targets, observers, setup } = fixture([-180, 0, 300, 799, 900]);
+test("hydration preserves already painted content and leaves below-fold HTML readable", () => {
+  const { targets, observers, setup } = entranceFixture([-200, 0, 300, 799, 900]);
   const cleanup = setup();
-
   for (const target of targets.slice(0, 4)) {
-    assert.equal(target.dataset.benefitReveal, "done");
-    assert.ok(!target.revealStates.includes("pending"), "painted content must remain visible");
+    assert.equal(target.dataset.benefitRevealState, "done");
+    assert.ok(!target.revealStates.includes("pending"));
     assert.equal(target.animations.length, 0);
     assert.ok(!observers[0].observed.has(target));
   }
-  assert.equal(targets[4].dataset.benefitReveal, "pending");
+  assert.equal(targets[4].dataset.benefitRevealState, "pending");
+  for (const target of targets) {
+    assert.deepEqual(target.style, {}, "pending content must not be hidden with inline styles");
+    assert.equal(target.dataset.benefitReveal, "card", "the original kind survives setup");
+  }
   cleanup();
 });
 
-test("below-fold rows reveal separately only when each row intersects", () => {
-  const { targets: [first, second, third], observers, setup } = fixture([900, 1200, 1500], { duration: 1.25 });
+test("header and cards use their specified distances, durations and card-only stagger", () => {
+  const { targets: [heading, first, second, third], setup, enter } = entranceFixture(
+    [900, 1200, 1500, 1800], { kinds: ["header", "card", "card", "card"] },
+  );
   const cleanup = setup();
-  const observer = observers[0];
-
-  observer.emit([{ target: first, isIntersecting: false }]);
-  assert.equal(first.dataset.benefitReveal, "pending");
-  assert.equal(first.animations.length, 0);
-  observer.emit([{ target: first, isIntersecting: true }]);
-  assert.equal(first.dataset.benefitReveal, "done");
-  assert.equal(first.animations.length, 1);
-  assert.equal(first.animations[0].options.duration, 775);
-  assert.ok(!observer.observed.has(first));
-  assert.equal(second.dataset.benefitReveal, "pending");
-  assert.equal(third.dataset.benefitReveal, "pending");
-  assert.equal(second.animations.length + third.animations.length, 0);
-
-  observer.emit([{ target: third, isIntersecting: true }]);
-  assert.equal(third.animations.length, 1);
-  assert.equal(third.animations[0].options.delay, 0, "one newly visible row should not wait for offscreen rows");
-  assert.equal(second.dataset.benefitReveal, "pending");
+  enter(second, heading, first);
+  assert.equal(heading.animations[0].keyframes[0].transform, "translate3d(0, 12px, 0)");
+  assert.equal(heading.animations[0].options.duration, 450);
+  assert.equal(heading.animations[0].options.delay, 0);
+  assert.equal(first.animations[0].keyframes[0].transform, "translate3d(0, 16px, 0)");
+  assert.equal(first.animations[0].options.duration, 550);
+  assert.equal(first.animations[0].options.delay, 0);
+  assert.equal(second.animations[0].options.delay, 60);
+  assert.equal(first.animations[0].options.fill, "backwards");
+  assert.equal(third.animations.length, 0);
+  enter(third);
+  assert.equal(third.animations[0].options.delay, 0, "a separate batch never waits for earlier cards");
   cleanup();
 });
 
-test("enabling reduced motion exposes pending rows and cancels active entrances", () => {
-  const { targets: [entering, pending], observers, media, setup } = fixture([900, 1200]);
+test("each target reveals once across duplicate observations and repeated setup", () => {
+  const { targets: [completed, pending], observers, setup, enter } = entranceFixture([900, 1200], { duration: 1.25 });
+  const cleanupFirst = setup();
+  enter(completed);
+  assert.equal(completed.animations[0].options.duration, 687.5);
+  enter(completed);
+  assert.equal(completed.animations.length, 1);
+  completed.animations[0].finish();
+  cleanupFirst();
+  assert.equal(pending.dataset.benefitReveal, "card");
+  assert.equal(pending.dataset.benefitRevealState, undefined);
+  const cleanupSecond = setup();
+  assert.equal(completed.dataset.benefitRevealState, "done");
+  assert.ok(!observers[1].observed.has(completed));
+  assert.ok(observers[1].observed.has(pending));
+  enter(pending);
+  assert.equal(pending.animations[0].options.duration, 687.5);
+  assert.equal(completed.animations.length, 1);
+  cleanupSecond();
+});
+
+test("stale callbacks after a fast scroll reveal cards immediately without hiding them again", () => {
+  const { targets: [passed, entering, later], observers, setup } = entranceFixture([900, 1200, 1500]);
   const cleanup = setup();
-  observers[0].emit([{ target: entering, isIntersecting: true }]);
-  media.matches = true;
-  media.dispatch("change");
-
-  assert.equal(entering.animations[0].cancelled, true);
-  assert.equal(entering.dataset.benefitReveal, "done");
-  assert.equal(pending.dataset.benefitReveal, "done");
-  assert.equal(pending.animations.length, 0);
-  assert.equal(observers[0].observed.size, 0);
+  passed.top = -200;
+  entering.top = 700;
+  observers[0].emit([
+    { target: passed, isIntersecting: true },
+    { target: entering, isIntersecting: true },
+    { target: later, isIntersecting: false },
+  ]);
+  assert.equal(passed.dataset.benefitRevealState, "done");
+  assert.equal(passed.animations.length, 0);
+  assert.equal(entering.animations[0].options.delay, 0);
+  assert.equal(later.dataset.benefitRevealState, "pending");
+  assert.deepEqual(later.style, {});
   cleanup();
 });
 
-test("motion disabled or reduced on initial load leaves all content readable", () => {
-  for (const preferences of [{ enabled: false }, { reducedMotion: true }]) {
-    const { targets, observers, setup } = fixture([900, 1200], preferences);
+test("reduced motion or a hidden page cancels entrances and exposes every pending card", () => {
+  for (const change of ["preference", "visibility"]) {
+    const { targets: [entering, pending], observers, media, document, setup, enter } = entranceFixture([900, 1200]);
+    const cleanup = setup();
+    enter(entering);
+    if (change === "preference") {
+      media.matches = true;
+      media.dispatch("change");
+    } else {
+      document.hidden = true;
+      document.dispatch("visibilitychange");
+    }
+    assert.equal(entering.animations[0].cancelled, true);
+    assert.equal(entering.dataset.benefitRevealState, "done");
+    assert.equal(pending.dataset.benefitRevealState, "done");
+    assert.equal(pending.animations.length, 0);
+    assert.equal(observers[0].observed.size, 0);
+    cleanup();
+  }
+});
+
+test("disabled motion, reduced motion, hidden documents and absent observers remain static", () => {
+  for (const preferences of [{ enabled: false }, { reducedMotion: true }, { hidden: true }, { supportsObserver: false }]) {
+    const { targets, observers, setup } = entranceFixture([900, 1200], preferences);
     const cleanup = setup();
     for (const target of targets) {
-      assert.equal(target.dataset.benefitReveal, "done");
+      assert.equal(target.dataset.benefitRevealState, "done");
       assert.ok(!target.revealStates.includes("pending"));
       assert.equal(target.animations.length, 0);
     }
@@ -160,190 +215,213 @@ test("motion disabled or reduced on initial load leaves all content readable", (
   }
 });
 
-test("keyboard focus immediately reveals its pending row and stops its entrance", () => {
-  const { targets: [pending, entering], section, observers, setup, Node } = fixture([900, 1200]);
+test("missing Web Animations support still exposes observed content", () => {
+  const { targets: [target], setup, enter } = entranceFixture([900]);
+  target.animate = undefined;
+  const cleanup = setup();
+  enter(target);
+  assert.equal(target.dataset.benefitRevealState, "done");
+  assert.deepEqual(target.style, {});
+  cleanup();
+});
+
+test("keyboard focus immediately reveals its target and cancels active entrance", () => {
+  const { targets: [pending, entering], section, observers, setup, enter, Node } = entranceFixture([900, 1200]);
   const link = new Node();
   pending.children.push(link);
   const cleanup = setup();
-
   section.dispatch("focusin", { target: link });
-  assert.equal(pending.dataset.benefitReveal, "done");
+  assert.equal(pending.dataset.benefitRevealState, "done");
   assert.equal(pending.animations.length, 0);
   assert.ok(!observers[0].observed.has(pending));
-
-  observers[0].emit([{ target: entering, isIntersecting: true }]);
+  enter(entering);
   section.dispatch("focusin", { target: entering });
   assert.equal(entering.animations[0].cancelled, true);
   cleanup();
 });
 
-test("cleanup releases observers, listeners and animations and exposes pending content", () => {
-  const { targets: [entering, pending], section, observers, media, document, setup } = fixture([900, 1200]);
+test("entrance cleanup releases all resources and ignores callbacks already queued", () => {
+  const { targets: [entering, pending], section, observers, media, document, setup, enter } = entranceFixture([900, 1200]);
   const cleanup = setup();
-  observers[0].emit([{ target: entering, isIntersecting: true }]);
+  enter(entering);
   assert.ok(section.listenerCount() + media.listenerCount() + document.listenerCount() > 0);
   cleanup();
-
   assert.equal(observers[0].disconnected, true);
   assert.equal(observers[0].observed.size, 0);
   assert.equal(entering.animations[0].cancelled, true);
-  assert.notEqual(pending.dataset.benefitReveal, "pending");
-  assert.ok(Object.hasOwn(pending.dataset, "benefitReveal"), "cleanup preserves the marker for React effect re-setup");
+  assert.equal(pending.dataset.benefitRevealState, undefined);
+  assert.equal(pending.dataset.benefitReveal, "card");
   assert.equal(section.listenerCount() + media.listenerCount() + document.listenerCount(), 0);
+  enter(pending);
+  assert.equal(pending.animations.length, 0);
+  assert.equal(pending.dataset.benefitRevealState, undefined);
 });
 
-test("repeated setup preserves completed entrances while observing unrevealed rows again", () => {
-  const { targets: [completed, pending], observers, setup } = fixture([900, 1200]);
-  const cleanupFirst = setup();
-  observers[0].emit([{ target: completed, isIntersecting: true }]);
-  completed.animations[0].finish();
-  cleanupFirst();
-  const cleanupSecond = setup();
-
-  assert.equal(completed.dataset.benefitReveal, "done");
-  assert.equal(completed.animations.length, 1);
-  assert.ok(!observers[1].observed.has(completed));
-  assert.equal(pending.dataset.benefitReveal, "pending");
-  assert.ok(observers[1].observed.has(pending));
-  cleanupSecond();
-});
-
-function pointerFixture({ loaded = true, rowWidth = 1040, detailsLeft = 680 } = {}) {
+function pointerFixture({
+  intensity = 1, enabled = true, cursor = true, reducedMotion = false, finePointer = true,
+  width = 1200, hidden = false, sectionTop = 100, supportsObserver = true,
+} = {}) {
   const writes = [];
   const frames = new Map();
+  const values = new Map();
   let nextFrame = 0;
-  let now = 0;
-  let rowMeasurements = 0;
-  const reduced = Object.assign(new EventTarget(), { matches: false });
-  const fine = Object.assign(new EventTarget(), { matches: true });
-  const image = Object.assign(new EventTarget(), { complete: loaded, naturalWidth: loaded ? 460 : 0 });
-  const preview = {
-    offsetWidth: 230, offsetHeight: 280,
-    getBoundingClientRect: () => ({ width: 230, height: 280 }),
-    querySelector: () => image,
-    style: new Proxy({ removeProperty(property) { delete this[property]; } }, {
-      set(object, property, value) { writes.push({ property, value }); object[property] = value; return true; },
-    }),
+  let cardMeasurements = 0;
+  const reduced = Object.assign(new EventTarget(), { matches: reducedMotion });
+  const fine = Object.assign(new EventTarget(), { matches: finePointer });
+  const depth = {
+    style: {
+      setProperty(property, value) { writes.push({ property, value }); values.set(property, value); },
+      removeProperty(property) { values.delete(property); },
+    },
   };
-  const details = { getBoundingClientRect: () => ({ left: detailsLeft, width: 300 }) };
-  const row = Object.assign(new EventTarget(), {
-    dataset: {},
-    querySelector: (selector) => selector === "[data-benefit-preview]" ? preview : details,
+  const card = Object.assign(new EventTarget(), {
+    querySelector: (selector) => selector === "[data-benefit-depth]" ? depth : null,
     getBoundingClientRect: () => {
-      rowMeasurements++;
-      return { top: 200, left: 40, width: rowWidth, height: 182 };
+      cardMeasurements++;
+      return { top: 200, left: 40, width: 320, height: 400 };
     },
   });
   const section = {
-    querySelectorAll: () => [row],
-    querySelector: () => null,
+    querySelectorAll: (selector) => selector === "[data-benefit-card]" ? [card] : [],
+    getBoundingClientRect: () => ({ top: sectionTop, bottom: sectionTop + 1000 }),
   };
-  const document = Object.assign(new EventTarget(), { hidden: false });
+  const { observers, IntersectionObserver } = observerFixture();
+  const document = Object.assign(new EventTarget(), { hidden });
   const window = Object.assign(new EventTarget(), {
-    innerWidth: 1200,
+    innerWidth: width, innerHeight: 800,
     matchMedia: (query) => query.includes("prefers-reduced-motion") ? reduced : fine,
   });
+  if (supportsObserver) window.IntersectionObserver = IntersectionObserver;
   const context = vm.createContext({
-    window, document,
-    performance: { now: () => now },
+    window, document, IntersectionObserver,
     requestAnimationFrame(callback) { frames.set(++nextFrame, callback); return nextFrame; },
     cancelAnimationFrame(id) { frames.delete(id); },
   });
   vm.runInContext(bundle, context);
   const cleanup = context.benefitsMotion.installBenefitsPointer(section, {
-    enabled: true, cursor: true, intensity: 1, duration: 1,
+    enabled, cursor, intensity, duration: 1,
   });
-  const tick = (elapsed = 16) => {
-    now += elapsed;
+  const tick = () => {
     const queued = [...frames.values()];
     frames.clear();
-    queued.forEach((callback) => callback(now));
+    queued.forEach((callback) => callback());
   };
-  const mouse = (x, y = 280) => ({ clientX: x, clientY: y, buttons: 0 });
-  return { row, image, preview, writes, frames, reduced, fine, document, window, tick, mouse, cleanup,
-    rowMeasurements: () => rowMeasurements };
+  const pointer = (x = 200, y = 400, extra = {}) => ({ clientX: x, clientY: y, buttons: 0, pointerType: "mouse", ...extra });
+  return { card, depth, writes, values, frames, observers, reduced, fine, document, window, tick, pointer, cleanup,
+    cardMeasurements: () => cardMeasurements };
 }
 
-test("pointer moves coalesce into a single frame and update only transforms without measuring each move", () => {
-  const { row, writes, frames, tick, mouse, rowMeasurements, cleanup } = pointerFixture();
-  row.dispatch("mouseenter", mouse(220));
-  assert.equal(row.dataset.previewVisible, "true");
-  const initialTransform = writes.at(-1).value;
-  const measurementsAtEnter = rowMeasurements();
-  writes.length = 0;
-
-  row.dispatch("mousemove", mouse(300));
-  row.dispatch("mousemove", mouse(360));
-  row.dispatch("mousemove", mouse(420));
+test("pointer events coalesce into one frame, update only image variables and stop when idle", () => {
+  const { card, writes, frames, values, tick, pointer, cardMeasurements, cleanup } = pointerFixture();
+  card.dispatch("pointerenter", pointer());
+  card.dispatch("pointermove", pointer(280, 500));
+  card.dispatch("pointermove", pointer(360, 600));
   assert.equal(frames.size, 1);
-  assert.equal(writes.length, 0, "mouse events should only update targets until the next frame");
+  assert.equal(writes.length, 0);
+  assert.equal(cardMeasurements(), 1);
   tick();
-  assert.equal(writes.length, 1);
-  assert.equal(writes[0].property, "transform");
-  assert.ok(writes[0].value.startsWith("translate3d("));
-  assert.notEqual(writes[0].value, initialTransform);
-  assert.equal(rowMeasurements(), measurementsAtEnter);
-  assert.equal(frames.size, 1, "trailing movement continues on a single frame loop");
-
-  let remaining = 200;
-  while (frames.size && remaining-- > 0) tick();
-  assert.equal(frames.size, 0, "settled pointers stop consuming animation frames");
-  assert.ok(writes.every(({ property }) => property === "transform"));
+  assert.equal(frames.size, 0, "a stationary pointer must not run an animation loop");
+  assert.equal(values.get("--specimen-x"), "3.00px");
+  assert.equal(values.get("--specimen-y"), "3.00px");
+  assert.equal(values.get("--specimen-tilt"), "1.50deg");
+  assert.deepEqual(writes.map(({ property }) => property), ["--specimen-x", "--specimen-y", "--specimen-tilt"]);
+  card.dispatch("pointermove", pointer(40, 200));
+  tick();
+  assert.equal(values.get("--specimen-x"), "-3.00px");
+  assert.equal(cardMeasurements(), 1, "pointer moves never force layout measurement");
   cleanup();
 });
 
-test("preview stays hidden for unloaded or broken images and never appears after the pointer leaves", () => {
-  const { row, image, mouse, cleanup } = pointerFixture({ loaded: false });
-  row.dispatch("mouseenter", mouse(220));
-  assert.notEqual(row.dataset.previewVisible, "true");
-  image.complete = true;
-  image.dispatch("load");
-  assert.notEqual(row.dataset.previewVisible, "true", "a failed image has zero natural width");
-  image.naturalWidth = 460;
-  image.dispatch("load");
-  assert.equal(row.dataset.previewVisible, "true");
-
-  row.dispatch("mouseleave");
-  image.dispatch("load");
-  assert.notEqual(row.dataset.previewVisible, "true");
-  cleanup();
-});
-
-test("preview uses the measured description boundary at wide and narrow desktop sizes", () => {
-  for (const geometry of [{ rowWidth: 1040, detailsLeft: 680 }, { rowWidth: 721, detailsLeft: 417 }]) {
-    const { row, preview, mouse, cleanup } = pointerFixture(geometry);
-    row.dispatch("mouseenter", mouse(1100));
-    const x = Number(preview.style.transform.match(/^translate3d\(([-\d.]+)px/)[1]);
-    const halfRotatedWidth = (230 * Math.cos(8 * Math.PI / 180) + 280 * Math.sin(8 * Math.PI / 180)) / 2;
-    assert.ok(x + halfRotatedWidth < geometry.detailsLeft - 40, "even a tilted image stays before the description");
+test("depth clamps extreme input and administrator intensity to the specified limits", () => {
+  for (const [intensity, movement, tilt] of [[1.5, 3, 1.5], [50, 3, 1.5], [.5, 1.5, .75]]) {
+    const { card, values, tick, pointer, cleanup } = pointerFixture({ intensity });
+    card.dispatch("pointerenter", pointer(10000, -10000));
+    tick();
+    assert.equal(Number.parseFloat(values.get("--specimen-x")), movement);
+    assert.equal(Number.parseFloat(values.get("--specimen-y")), -movement);
+    assert.equal(Number.parseFloat(values.get("--specimen-tilt")), tilt);
     cleanup();
   }
 });
 
-test("pointer leave and scroll cancel queued frames, while disposal releases every listener", () => {
-  const { row, image, preview, writes, frames, tick, mouse, window, document, reduced, fine, cleanup } = pointerFixture();
-  row.dispatch("mouseenter", mouse(220));
-  row.dispatch("mousemove", mouse(420));
-  assert.equal(frames.size, 1);
-  row.dispatch("mouseleave");
-  assert.equal(frames.size, 0);
-  assert.notEqual(row.dataset.previewVisible, "true");
-  const writesAfterLeave = writes.length;
+test("phone, coarse pointer, motion preferences and unavailable visibility disable depth", () => {
+  for (const options of [
+    { width: 767 }, { finePointer: false }, { reducedMotion: true }, { enabled: false },
+    { cursor: false }, { intensity: 0 }, { intensity: -1 }, { intensity: Number.NaN },
+    { hidden: true }, { sectionTop: 1000 },
+  ]) {
+    const { card, writes, frames, pointer, tick, cleanup } = pointerFixture(options);
+    card.dispatch("pointerenter", pointer(360, 600));
+    card.dispatch("pointermove", pointer(40, 200));
+    tick();
+    assert.equal(frames.size, 0, JSON.stringify(options));
+    assert.equal(writes.length, 0, JSON.stringify(options));
+    cleanup();
+  }
+  const { card, frames, pointer, cleanup } = pointerFixture({ width: 768 });
+  card.dispatch("pointerenter", pointer());
+  assert.equal(frames.size, 1, "fine-pointer tablets can use depth from 768px");
+  cleanup();
+});
+
+test("touch and pressed pointers cannot start depth on a hybrid device", () => {
+  const { card, writes, frames, pointer, tick, cleanup } = pointerFixture();
+  for (const extra of [{ pointerType: "touch" }, { buttons: 1 }]) {
+    card.dispatch("pointerenter", pointer(360, 600, extra));
+    card.dispatch("pointermove", pointer(40, 200, extra));
+    tick();
+    assert.equal(frames.size, 0);
+    assert.equal(writes.length, 0);
+  }
+  cleanup();
+});
+
+test("leave, cancellation, interaction and global changes restore rest and cancel queued frames", () => {
+  for (const event of ["pointerleave", "pointercancel", "pointerdown", "focusin", "scroll", "resize", "blur", "visibilitychange", "reduced", "fine", "outside"]) {
+    const { card, writes, values, frames, observers, tick, pointer, window, document, reduced, fine, cleanup } = pointerFixture();
+    card.dispatch("pointerenter", pointer(360, 600));
+    tick();
+    assert.equal(values.size, 3);
+    card.dispatch("pointermove", pointer(40, 200));
+    assert.equal(frames.size, 1);
+    if (["scroll", "resize", "blur"].includes(event)) window.dispatch(event);
+    else if (event === "visibilitychange") { document.hidden = true; document.dispatch(event); }
+    else if (event === "reduced") { reduced.matches = true; reduced.dispatch("change"); }
+    else if (event === "fine") { fine.matches = false; fine.dispatch("change"); }
+    else if (event === "outside") observers[0].emit([{ isIntersecting: false }]);
+    else card.dispatch(event);
+    assert.equal(frames.size, 0, event);
+    assert.equal(values.size, 0, event);
+    const writeCount = writes.length;
+    tick();
+    card.dispatch("pointermove", pointer(360, 600));
+    tick();
+    assert.equal(writes.length, writeCount, "movement resumes only after a fresh pointer entry");
+    cleanup();
+  }
+});
+
+test("preference changes between a pointer event and its frame prevent late motion", () => {
+  const { card, writes, frames, fine, pointer, tick, cleanup } = pointerFixture();
+  card.dispatch("pointerenter", pointer(360, 600));
+  fine.matches = false;
   tick();
-  assert.equal(writes.length, writesAfterLeave);
-
-  row.dispatch("mouseenter", mouse(220));
-  row.dispatch("mousemove", mouse(420));
-  window.dispatch("scroll");
   assert.equal(frames.size, 0);
-  assert.notEqual(row.dataset.previewVisible, "true");
+  assert.equal(writes.length, 0);
+  cleanup();
+});
 
-  row.dispatch("mouseenter", mouse(220));
-  row.dispatch("mousemove", mouse(420));
+test("pointer cleanup removes its styles, observers, frames and every listener", () => {
+  const { card, values, frames, observers, window, document, reduced, fine, pointer, tick, cleanup } = pointerFixture();
+  card.dispatch("pointerenter", pointer(360, 600));
+  tick();
+  card.dispatch("pointermove", pointer(40, 200));
   cleanup();
   assert.equal(frames.size, 0);
-  assert.equal(preview.style.transform, undefined);
-  for (const target of [row, image, window, document, reduced, fine]) {
-    assert.equal(target.listenerCount(), 0);
-  }
+  assert.equal(values.size, 0);
+  assert.equal(observers[0].disconnected, true);
+  for (const target of [card, window, document, reduced, fine]) assert.equal(target.listenerCount(), 0);
+  observers[0].emit([{ isIntersecting: true }]);
+  card.dispatch("pointerenter", pointer(360, 600));
+  assert.equal(frames.size, 0);
 });
