@@ -236,6 +236,9 @@ test("entrance animations wait until the lower hero has been seen and its images
   const poster = all(env.tree).find((node) => node.type === "SheryPoster");
   assert.ok(background && poster);
   assert.equal(background.props.duration, poster.props.duration);
+  assert.equal(background.props.duration, 2800);
+  assert.equal(env.tree.props.style["--hero-media-duration"], "2800ms");
+  assert.equal(env.tree.props.style["--hero-content-duration"], "1300ms");
   assert.equal(background.props.active, true);
   assert.equal(poster.props.cursor, true);
   env.dispose();
@@ -474,7 +477,9 @@ test("mobile changes retain outgoing images until the incoming poster and edge c
   assert.ok(env.mediaNodes.get("canvas:p1").paints > 0);
   assert.ok(!all(env.tree).some((node) => ["SheryPoster", "SheryBackground"].includes(node.type)), "phones do not gain extra WebGL contexts");
   assert.equal(all(env.tree).filter((node) => node.type === "ProductModel").length, 1);
-  env.advanceTime(731);
+  env.advanceTime(1000);
+  assert.equal(env.tree.props["data-media-transition"], "running", "the slower reveal retains both products beyond the old transition duration");
+  env.advanceTime(1881);
   assert.equal(env.tree.props["data-media-transition"], "idle");
   assert.equal(layers().length, 2, "completion releases the old background and poster");
   env.dispose();
@@ -524,7 +529,7 @@ test("returning to a retained mobile poster does not require a second load event
   env.flushFrames(); env.flushFrames();
   assert.equal(env.tree.props["data-media-transition"], "running", "the already-decoded retained poster can transition immediately after canvas preparation");
   assert.equal(all(env.tree).find((node) => node.type === "ProductModel").props.model.url, products[0].heroModel.url);
-  env.advanceTime(731);
+  env.advanceTime(2881);
   assert.equal(env.tree.props["data-media-transition"], "idle");
   env.dispose();
 });

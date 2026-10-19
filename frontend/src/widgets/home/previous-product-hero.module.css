@@ -1,4 +1,5 @@
 .hero {
+  --landing-height: 100vh;
   --hero-font-serif: "Cormorant Garamond", "Palatino Linotype", Georgia, serif;
   --hero-font-sans: "Manrope", "Segoe UI", Arial, sans-serif;
   --font-sans: var(--hero-font-sans);
@@ -14,13 +15,14 @@
   font-style: normal;
   font-synthesis: none;
 }
+@supports (height: 100dvh) { .hero { --landing-height: 100dvh; } }
 .landing { position: relative; isolation: isolate; background: var(--hero-surface, var(--ivory)); }
 /* The outgoing scene overlaps this runway. Native sticky positioning holds the
    complete incoming layout through the fade and a short arrival, in either direction. */
 .hero[data-arrival="true"] .landing {
   position: sticky;
   top: 0;
-  min-height: 100svh;
+  min-height: var(--landing-height);
   padding-top: var(--header-height, 68px);
 }
 .hero[data-arrival="true"]::after { content: ""; display: block; height: var(--arrival-runway, 0px); }
@@ -169,21 +171,21 @@
 .count { color: var(--hero-body); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .hero a:focus-visible, .hero button:focus-visible, .disclosures summary:focus-visible { outline: 2px solid var(--hero-heading); outline-offset: 4px; }
 .progress { position: absolute; inset: auto 0 0; height: 2px; background: var(--hero-accent); transform-origin: left; animation: progress linear both; }
-.background:is([data-transition="fade"], [data-transition="slide"]) .backgroundImage { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
+.background:is([data-transition="fade"], [data-transition="slide"]) .backgroundImage { animation: fade var(--hero-media-duration, 2000ms) ease backwards; }
 .scene[data-transition="fade"],
-.model[data-transition="fade"] { animation: fade calc(.45s * var(--motion-duration, 1)) ease backwards; }
-.scene[data-transition="slide"] { animation: slide calc(.45s * var(--motion-duration, 1)) var(--ease) backwards; }
-.model[data-transition="slide"] { animation: modelEntrance calc(500ms * var(--motion-duration, 1)) var(--ease) backwards; }
-.caption[data-transition="fade"] { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(140ms * var(--motion-duration, 1)) backwards; }
-.caption[data-transition="slide"] { animation: slide calc(500ms * var(--motion-duration, 1)) var(--ease) calc(140ms * var(--motion-duration, 1)) backwards; }
-.copy[data-transition="fade"] :is(.introEyebrow, .headlineText, .description) { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
-.copy[data-transition="slide"] :is(.introEyebrow, .headlineText, .description) { animation: lineReveal calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
-.purchase[data-transition="fade"] { animation: fade calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
-.purchase[data-transition="slide"] { animation: slide calc(450ms * var(--motion-duration, 1)) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
-.productDetails[data-transition="fade"] { animation: fade calc(450ms * var(--motion-duration, 1)) ease backwards; }
-.productDetails[data-transition="slide"] { animation: fade calc(450ms * var(--motion-duration, 1)) ease backwards; }
-.productDetails[data-transition="fade"] :is(.eyebrow, .productName, .subtitle, .disclosures) { animation: fade calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
-.productDetails[data-transition="slide"] :is(.eyebrow, .productName, .subtitle, .disclosures) { animation: slide calc(500ms * var(--motion-duration, 1)) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.model[data-transition="fade"] { animation: fade var(--hero-media-duration, 2000ms) ease backwards; }
+.scene[data-transition="slide"] { animation: slide var(--hero-media-duration, 2000ms) var(--ease) backwards; }
+.model[data-transition="slide"] { animation: modelEntrance var(--hero-content-duration, 1300ms) var(--ease) backwards; }
+.caption[data-transition="fade"] { animation: fade var(--hero-content-duration, 1300ms) var(--ease) calc(140ms * var(--motion-duration, 1)) backwards; }
+.caption[data-transition="slide"] { animation: slide var(--hero-content-duration, 1300ms) var(--ease) calc(140ms * var(--motion-duration, 1)) backwards; }
+.copy[data-transition="fade"] :is(.introEyebrow, .headlineText, .description) { animation: fade var(--hero-content-duration, 1300ms) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.copy[data-transition="slide"] :is(.introEyebrow, .headlineText, .description) { animation: lineReveal var(--hero-content-duration, 1300ms) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.purchase[data-transition="fade"] { animation: fade var(--hero-content-duration, 1300ms) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
+.purchase[data-transition="slide"] { animation: slide var(--hero-content-duration, 1300ms) var(--ease) calc(100ms * var(--motion-duration, 1)) backwards; }
+.productDetails[data-transition="fade"] { animation: fade var(--hero-content-duration, 1300ms) ease backwards; }
+.productDetails[data-transition="slide"] { animation: fade var(--hero-content-duration, 1300ms) ease backwards; }
+.productDetails[data-transition="fade"] :is(.eyebrow, .productName, .subtitle, .disclosures) { animation: fade var(--hero-content-duration, 1300ms) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
+.productDetails[data-transition="slide"] :is(.eyebrow, .productName, .subtitle, .disclosures) { animation: slide var(--hero-content-duration, 1300ms) var(--ease) calc(var(--line-delay, 0ms) * var(--motion-duration, 1)) backwards; }
 .disclosures details[open] .disclosureBody { animation: slide 350ms var(--ease) backwards; }
 .hero[data-transition="none"] .disclosureBody { animation: none; }
 @keyframes modelEntrance { from { opacity: 0; transform: scale(.96) translateY(8px); } to { opacity: 1; transform: none; } }
@@ -201,7 +203,7 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.16fr) minmax(250px, .9fr);
     column-gap: clamp(24px, 2.8vw, 52px);
     max-width: 1760px;
-    min-height: calc(100svh - var(--header-height, 68px));
+    min-height: calc(var(--landing-height) - var(--header-height, 68px));
     padding: var(--desktop-hero-padding) clamp(28px, 3.5vw, 64px);
   }
   .introEyebrow { margin-bottom: 16px; }
@@ -274,7 +276,7 @@
   .mediaLayer[data-layer="outgoing"] { z-index: 0; }
   .mediaLayer[data-layer="incoming"] { z-index: 1; opacity: 0; }
   .mediaLayer[data-layer="incoming"][data-active="true"] {
-    animation: mediaCrossfade var(--hero-media-duration, 650ms) var(--ease) both;
+    animation: mediaCrossfade var(--hero-media-duration, 2000ms) cubic-bezier(.4, 0, .2, 1) both;
     will-change: opacity, transform;
   }
   .mediaLayer[data-layer="incoming"][data-active="true"][data-transition="slide"] {
@@ -283,12 +285,13 @@
   .layout {
     grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
     grid-template-areas: "copy scene" "purchase scene" "featured featured";
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto 1fr;
     align-content: start;
     column-gap: clamp(12px, 2.5vw, 24px);
     row-gap: 0;
     max-width: none;
-    padding: clamp(18px, 2.5vw, 24px) max(14px, env(safe-area-inset-right)) 20px max(14px, env(safe-area-inset-left));
+    min-height: calc(var(--landing-height) - var(--header-height, 68px));
+    padding: clamp(18px, 2.5vw, 24px) max(14px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
   }
   .copy { align-self: end; padding-top: 16px; }
   .introEyebrow, .description { display: none; }
@@ -310,6 +313,8 @@
   .heroPosterEffect[data-ready="true"] { pointer-events: none; }
   .featured {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    align-self: stretch;
     align-items: start;
     column-gap: clamp(12px, 2.6vw, 24px);
     row-gap: 12px;

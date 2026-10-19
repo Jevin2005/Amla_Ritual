@@ -15,7 +15,9 @@
 .stage[data-presentation="showcase"]::after { position: absolute; z-index: -1; pointer-events: none; content: ""; opacity: 0; transition: opacity .6s ease, transform .65s cubic-bezier(.2,.75,.25,1); }
 .stage[data-presentation="showcase"]::before { inset: 4% -8%; border-radius: 50%; background: radial-gradient(ellipse at var(--model-glow-x, 50%) var(--model-glow-y, 50%), color-mix(in srgb, var(--hero-accent, #b7c58e) 18%, transparent), transparent 64%); transform: scale(.9); }
 .stage[data-presentation="showcase"]::after { inset: auto 23% 4%; height: 12px; border-radius: 50%; background: radial-gradient(ellipse, rgb(0 0 0 / .22), transparent 70%); filter: blur(5px); transform: translateX(calc(var(--model-x, 0px) * -.5)) scale(.9); }
-.stage[data-presentation="showcase"] .viewer { transform: translate3d(var(--model-x, 0px), var(--model-y, 0px), 0) rotate(var(--model-roll, 0deg)) scale(var(--model-scale, 1)); transition: transform .65s cubic-bezier(.2,.75,.25,1), opacity .3s ease; }
+/* Cursor tracking stays responsive while the photo/model reveal takes its time. */
+.stage[data-presentation="showcase"] .viewer { transform: translate3d(var(--model-x, 0px), var(--model-y, 0px), 0) rotate(var(--model-roll, 0deg)) scale(var(--model-scale, 1)); transition: transform .65s cubic-bezier(.2,.75,.25,1), opacity var(--hero-media-duration, 2800ms) ease; }
+.stage[data-presentation="showcase"] .posterLayer { transition-duration: var(--hero-media-duration, 2800ms); }
 .stage[data-presentation="showcase"][data-motion="true"][data-hovered="true"]::before { opacity: 1; transform: scale(1.04); }
 .stage[data-presentation="showcase"][data-motion="true"][data-hovered="true"]::after { opacity: .65; transform: translateX(calc(var(--model-x, 0px) * -.5)) scale(1.08); }
 .stage[data-presentation="showcase"][data-motion="false"] .viewer { transform: none; }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { LoadingIndicator } from "@/shared/ui/loading-indicator";
 import { TrackingForm } from "@/features/tracking/tracking-form";
 import { PageHero } from "@/shared/ui/page-hero";
 
@@ -45,7 +46,7 @@ export default function TrackOrderPage() {
             ))}
           </ol>
         </div>
-        <Suspense fallback={<div className="p-8 text-center text-sm text-[var(--muted)]">Loading tracking console…</div>}>
+        <Suspense fallback={<LoadingIndicator page label="Loading tracking console…" />}>
           <TrackingForm />
         </Suspense>
       </section>

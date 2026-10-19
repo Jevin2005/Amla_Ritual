@@ -385,7 +385,9 @@ async function start() {
             uniforms.mousei.value = { x: .5, y: .5 };
 
             const split = transition.expansionFraction;
-            const ease = (value: number) => value < .5 ? 16 * value ** 5 : 1 - (-2 * value + 2) ** 5 / 2;
+            // Spread the reveal across each phase instead of rushing through
+            // its middle with a steep quintic acceleration.
+            const ease = (value: number) => value * value * (3 - 2 * value);
             if (progress < split) {
               // Phase 1: Bloom expands outward from center (0 -> 1)
               const p = progress / split;

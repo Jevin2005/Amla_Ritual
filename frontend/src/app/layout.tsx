@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import type { CSSProperties } from "react";
+import { Suspense, type CSSProperties, type ReactNode } from "react";
 import { getDefaultVariant, type Product } from "@/domain/catalog/products";
 import { StoreProvider } from "@/features/store/store-provider";
 import { getPublicSiteUrl } from "@/lib/site-url";
@@ -7,6 +7,8 @@ import { SUPPORT } from "@/shared/config/support";
 import { getStorefront } from "@/lib/shopify/storefront";
 import { SiteChrome } from "@/widgets/site-chrome/site-chrome";
 import { JudgemeScript } from "@/features/reviews/judgeme-script";
+import { SiteLoading } from "@/shared/ui/site-loading";
+import { LoadingIndicator } from "@/shared/ui/loading-indicator";
 import "./globals.css";
 import "@/features/reviews/judgeme.css";
 
@@ -98,7 +100,7 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
+async function StorefrontShell({ children }: { children: ReactNode }) {
   const storefront = await getStorefront();
   const globalProducts = storefront.products.map(productForGlobalStore);
   const siteUrl = getPublicSiteUrl();
@@ -135,13 +137,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   };
 
   return (
-    <html
-      lang="en-IN"
-      className="scroll-pt-[calc(var(--header-height)+20px)] bg-[var(--ivory)] [--header-height:88px] max-[1180px]:[--header-height:76px] max-[680px]:[--header-height:60px]"
+    <div
+      style={{ display: "contents", "--motion-duration": storefront.content.motionSettings.duration, "--motion-intensity": storefront.content.motionSettings.intensity } as CSSProperties}
       data-site-motion={storefront.content.motionSettings.enabled ? "on" : "off"}
-      style={{ "--motion-duration": storefront.content.motionSettings.duration, "--motion-intensity": storefront.content.motionSettings.intensity } as CSSProperties}
     >
-      <body className="m-0 min-h-screen overflow-x-hidden bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -157,6 +156,20 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <SiteChrome>{children}</SiteChrome>
         </StoreProvider>
         <JudgemeScript />
+    </div>
+  );
+}
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="en-IN" className="scroll-pt-[calc(var(--header-height)+20px)] bg-[var(--ivory)] [--header-height:88px] max-[1180px]:[--header-height:76px] max-[680px]:[--header-height:60px]">
+      <body className="m-0 min-h-screen overflow-x-hidden bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
+        <SiteLoading />
+        <div id="site-content" style={{ display: "contents" }}>
+          <Suspense fallback={<LoadingIndicator page label="Opening the botanical cabinet…" />}>
+            <StorefrontShell>{children}</StorefrontShell>
+          </Suspense>
+        </div>
       </body>
     </html>
   );

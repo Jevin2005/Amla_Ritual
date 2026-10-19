@@ -65,7 +65,8 @@ export function PreviousProductHero({ products, settings }: { products: Product[
   const animateMedia = compactViewport && transitioning && inView && pageVisible;
   const activeTransition = animateMedia && mediaTransition?.incomingId === product?.heroEntryId ? mediaTransition : null;
   const transitionReady = Boolean(activeTransition?.posterReady && activeTransition.backgroundReady);
-  const mediaDuration = Math.max(240, Math.min(1200, 650 * motionSettings.duration));
+  // Give each product change a readable reveal on both CSS and WebGL paths.
+  const mediaDuration = Math.max(1400, Math.min(4200, 2800 * motionSettings.duration));
   const mediaLayers = activeTransition && product ? [activeTransition.outgoing, product] : product ? [product] : [];
   const departingProduct = mediaTransition?.outgoing;
   const mediaToken = mediaTransition?.token;
@@ -322,7 +323,7 @@ export function PreviousProductHero({ products, settings }: { products: Product[
 
   const { theme, firstLine, productLine, tagline, description } = getHeroPresentation(product);
   const animation = !mediaReady || !visited || reducedMotion || !motionSettings.enabled ? "none" : settings.transition;
-  const heroTransitionDuration = 1400 * motionSettings.duration;
+  const heroTransitionDuration = mediaDuration;
 
   return (
     <section id="previous-hero" data-previous-hero ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
@@ -346,6 +347,7 @@ export function PreviousProductHero({ products, settings }: { products: Product[
         "--hero-surface": theme.surface,
         "--hero-soft": product.accentSoft,
         "--hero-media-duration": `${mediaDuration}ms`,
+        "--hero-content-duration": `${Math.max(650, Math.min(2340, 1300 * motionSettings.duration))}ms`,
       } as CSSProperties}>
       <div className={styles.landing} data-hero-landing>
       <div className={styles.background} data-transition={animation} aria-hidden="true">

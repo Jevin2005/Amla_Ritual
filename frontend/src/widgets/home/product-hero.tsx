@@ -8,7 +8,7 @@ import type { HeroSettings } from "@/domain/catalog/hero";
 import { useStore } from "@/features/store/store-provider";
 import { MediaImage } from "@/shared/ui/media-image";
 import { scrollPageTo } from "@/shared/ui/page-scroll";
-import { clamp, getCoverScale, getHeroBackdrop, getHeroFrame, getHeroHandoffMetrics, getHeroLayout, getHeroScrollMetrics, getHeroScrollProgress, smoothstep } from "./hero-motion";
+import { clamp, createHeroArrivalGuard, getCoverScale, getHeroBackdrop, getHeroFrame, getHeroHandoffMetrics, getHeroLayout, getHeroScrollMetrics, getHeroScrollProgress, smoothstep } from "./hero-motion";
 import { heroSealPath, heroSealTitleLength, heroSealTitlePath } from "./hero-seal";
 import { HeroDiscoverHint } from "./hero-discover-hint";
 import styles from "./product-hero.module.css";
@@ -39,6 +39,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     let frame = 0;
     let width = 1;
     let height = 1;
+    let storyHeight = 1;
     let layout = getHeroLayout(1440, 900);
     let start = 0;
     let diameter = 1;
@@ -59,6 +60,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     let suppressClickUntil = 0;
     let browsed = false;
     let pendingFocus: number | null = null;
+    const arrival = createHeroArrivalGuard();
     let gesture: { id: number; x: number; y: number; lastX: number; time: number; velocity: number; dragging: boolean } | null = null;
     const scrollTravel = () => smoothstep((reduced ? 0 : target) / 0.48) * Math.max(0, slides.length - 1);
     const limitManual = (value: number) => clamp(value, -scrollTravel(), slides.length - 1 - scrollTravel());
@@ -78,10 +80,9 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       // Time-based damping gives the same gentle scrub on 60 Hz and 120 Hz screens.
       const ease = 1 - Math.exp(-delta / 140);
       const pointerEase = 1 - Math.exp(-delta / 180);
-      // Lenis already smooths wheel/navigation input; follow its real position
-      // directly so a second easing layer cannot make the scene trail behind.
-      const managedScroll = document.documentElement?.classList.contains("lenis");
-      current = settle || managedScroll ? target : current + (target - current) * ease;
+      // Both Lenis and native touch must stay aligned with sticky geometry;
+      // a second easing layer lets the incoming section outrun the scene.
+      current = target;
       const previousManual = manualCurrent;
       manualCurrent = reduced || settle ? manualTarget : manualCurrent + (manualTarget - manualCurrent) * ease;
       if (Math.abs(manualTarget - manualCurrent) < 0.0001) manualCurrent = manualTarget;
@@ -150,14 +151,10 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         if (link) {
           const reach = adjusted.height * height * (0.74 * Math.abs(Math.cos(adjusted.roll)) + Math.abs(Math.sin(adjusted.roll))) / (2 * width);
           const visible = adjusted.x + reach > 0 && adjusted.x - reach < 1 && adjusted.opacity > 0.2 && adjusted.y > -0.4;
-          link.style.left = `${adjusted.x * 100}%`;
-          link.style.top = `${adjusted.y * 100}%`;
-          link.style.height = `${adjusted.height * 100}%`;
-          link.style.width = `${adjusted.height * height * 0.74}px`;
-          link.style.transform = `translate(-50%,-50%) rotate(${-adjusted.roll}rad)`;
+          // Size once on resize; animate only the composited transform.
+          link.style.transform = `translate3d(${adjusted.x * width}px,${adjusted.y * height}px,0) translate(-50%,-50%) rotate(${-adjusted.roll}rad) scale(${adjusted.height / layout.centerHeight})`;
           link.style.opacity = String(adjusted.opacity);
           link.style.setProperty("--jar-brightness", String(reduced ? 1 : pose.brightness));
-          link.style.setProperty("--jar-blur", `${reduced ? 0 : pose.depthBlur}px`);
           link.style.zIndex = String(Math.round(pose.height * 100));
           link.style.visibility = visible ? "visible" : "hidden";
           link.tabIndex = visible ? 0 : -1;
@@ -178,6 +175,15 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     };
     const readScroll = () => {
       if (disposed) return;
+      if (incoming && !reduced) {
+        const offset = window.scrollY - start;
+        const limited = arrival.limit(offset, performance.now(), getHeroHandoffMetrics(storyHeight, slides.length));
+        if (limited < offset) {
+          // Use the document's scroll owner so pending Lenis inertia is also
+          // cancelled, rather than replayed after the arrival pause.
+          scrollPageTo(start + limited, { immediate: true });
+        }
+      }
       const bounds = section.getBoundingClientRect();
       start = bounds.top + window.scrollY;
       const wasActive = active;
@@ -185,7 +191,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       // Current geometry must be able to restart the paused story on its own.
       active = bounds.bottom > 0 && bounds.top < window.innerHeight;
       if (active !== wasActive) lastTime = 0;
-      const nextTarget = reduced ? 0 : getHeroScrollProgress(window.scrollY - start, height, slides.length);
+      const nextTarget = reduced ? 0 : getHeroScrollProgress(window.scrollY - start, storyHeight, slides.length);
       if (nextTarget !== target) manualTarget = 0;
       target = nextTarget;
       if (!active) {
@@ -207,14 +213,25 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       const bounds = section.getBoundingClientRect();
       width = section.clientWidth;
       height = surface.clientHeight;
+      // The visible scene follows browser chrome; the story keeps the small
+      // viewport's scroll distances so hiding the address bar cannot skip ahead.
+      storyHeight = Number.parseFloat(getComputedStyle(surface).minHeight) || height;
       layout = getHeroLayout(width, height);
-      section.style.setProperty("--stage-height", `${height}px`);
+      for (const link of productLinks.current) {
+        if (!link) continue;
+        link.style.left = "0px";
+        link.style.top = "0px";
+        link.style.height = `${layout.centerHeight * height}px`;
+        link.style.width = `${layout.centerHeight * height * 0.74}px`;
+      }
       start = bounds.top + window.scrollY;
-      const metrics = getHeroScrollMetrics(height, slides.length);
-      section.style.setProperty("--story-extra", `${metrics.distance - height * 1.35}px`);
+      const metrics = getHeroScrollMetrics(storyHeight, slides.length);
+      section.style.setProperty("--story-extra", `${metrics.distance - storyHeight * 1.35}px`);
       if (incoming) {
-        const handoff = getHeroHandoffMetrics(height, slides.length);
-        section.style.setProperty("--handoff-overlap", `${handoff.overlap}px`);
+        const handoff = getHeroHandoffMetrics(storyHeight, slides.length);
+        // CSS updates both the section and overlap in the same layout pass.
+        // Their dynamic heights cancel, keeping the incoming scene in place.
+        section.style.setProperty("--handoff-overlap", `calc(var(--stage-height) + ${handoff.lead}px)`);
         incoming.dataset.arrival = String(!reduced);
         incoming.style.setProperty("--arrival-runway", `${handoff.runway}px`);
         incoming.style.setProperty("--arrival-lead", `${handoff.lead}px`);
@@ -229,6 +246,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       readScroll();
     };
     const preferencesChanged = () => {
+      arrival.reset();
       reduced = media.matches || !motionSettings.enabled;
       section.dataset.reducedMotion = String(reduced);
       aimX = aimY = pointerX = pointerY = 0;
@@ -325,6 +343,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (!gesture?.dragging) cancelGesture();
     };
     const resume = () => {
+      arrival.reset();
       cancelDraw();
       lastTime = 0;
       cancelGesture();
@@ -336,6 +355,22 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (document.hidden) { section.dataset.idle = "false"; cancelGesture(); aimX = aimY = pointerX = pointerY = 0; cancelDraw(); }
       else resume();
     };
+    const armArrival = (event: Event) => {
+      if (reduced || !incoming || event.defaultPrevented) return;
+      const element = event.target as Element | null;
+      if (element?.closest?.('input, textarea, select, [contenteditable], dialog, [role="dialog"], [data-native-scroll]')) return;
+      if (event.type === "keydown" && element?.closest?.("a, button")) return;
+      if (event.type === "wheel") {
+        const wheel = event as WheelEvent;
+        if (wheel.ctrlKey || wheel.metaKey || wheel.shiftKey || wheel.deltaY <= 0 || Math.abs(wheel.deltaX) > Math.abs(wheel.deltaY)) return;
+      }
+      const offset = window.scrollY - start;
+      if (offset >= 0 && offset < getHeroHandoffMetrics(storyHeight, slides.length).revealEnd) arrival.arm();
+    };
+    const arrivalKey = (event: KeyboardEvent) => {
+      if (["ArrowDown", "PageDown", " "].includes(event.key) && !event.shiftKey) armArrival(event);
+      else arrival.reset();
+    };
     section.dataset.reducedMotion = String(reduced);
     measure();
     current = target;
@@ -344,6 +379,12 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     const resizeObserver = new ResizeObserver(measure);
     resizeObserver.observe(surface);
     window.addEventListener("scroll", readScroll, { passive: true });
+    window.addEventListener("wheel", armArrival, { passive: true });
+    window.addEventListener("touchstart", armArrival, { passive: true });
+    window.addEventListener("keydown", arrivalKey);
+    window.addEventListener("click", arrival.reset, true);
+    window.addEventListener("popstate", arrival.reset);
+    window.addEventListener("hashchange", arrival.reset);
     window.addEventListener("resize", measure, { passive: true });
     window.addEventListener("pageshow", resume);
     window.addEventListener("blur", windowBlur);
@@ -367,6 +408,12 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       observer.disconnect();
       resizeObserver.disconnect();
       window.removeEventListener("scroll", readScroll);
+      window.removeEventListener("wheel", armArrival);
+      window.removeEventListener("touchstart", armArrival);
+      window.removeEventListener("keydown", arrivalKey);
+      window.removeEventListener("click", arrival.reset, true);
+      window.removeEventListener("popstate", arrival.reset);
+      window.removeEventListener("hashchange", arrival.reset);
       window.removeEventListener("resize", measure);
       window.removeEventListener("pageshow", resume);
       window.removeEventListener("blur", windowBlur);
@@ -408,7 +455,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   if (!slides.length) return null;
   const initial = getHeroFrame(0, slides.length, false, 0, 0, getHeroLayout(1440, 900));
   return (
-    <section ref={root} className={styles.hero} style={{ "--story-extra": slides.length > 1 ? `calc(max(380px, calc(var(--stage-height) * 0.62)) * ${slides.length - 1} - var(--stage-height) * 0.648)` : "0px" } as CSSProperties} data-ritual-hero data-reduced-motion={!motionSettings.enabled ? "true" : undefined} aria-label="NatureMist botanical rituals">
+    <section ref={root} className={styles.hero} style={{ "--story-extra": slides.length > 1 ? `calc(max(380px, calc(var(--story-height) * 0.62)) * ${slides.length - 1} - var(--story-height) * 0.648)` : "0px" } as CSSProperties} data-ritual-hero data-reduced-motion={!motionSettings.enabled ? "true" : undefined} aria-label="NatureMist botanical rituals">
       <div ref={stage} className={styles.stage}>
         <div className={styles.botanicalBackdrop} aria-hidden="true" />
         <h1 className="sr-only">Rooted in nature. Made for your ritual.</h1>
@@ -445,7 +492,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
             return <Link key={product.heroEntryId} ref={(element) => { productLinks.current[i] = element; }} href={`/shop/${product.slug}`} className={styles.product} data-hero-product={i} aria-label={`Discover ${product.name}`} aria-describedby={slides.length > 1 ? "jar-browse-instructions" : undefined} draggable={false} tabIndex={initial.poses[i].x > -0.12 && initial.poses[i].x < 1.12 ? 0 : -1} style={{ ...openingStyle, transform: `translate(-50%, -50%) rotate(${initialRoll}rad)` }}>
               <div className={styles.float}>
                 <div className={styles.artwork} style={{ animationDelay: `${i * 70}ms` }}>
-                  <MediaImage src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62svh" preload draggable={false} className={styles.jarImage} />
+                  <MediaImage src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62dvh" preload draggable={false} className={styles.jarImage} />
                 </div>
               </div>
             </Link>;
@@ -462,7 +509,8 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
           event.preventDefault();
           const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches || !motionSettings.enabled;
           const top = section.getBoundingClientRect().top + window.scrollY;
-          const height = stage.current?.clientHeight || window.innerHeight;
+          const surface = stage.current;
+          const height = surface ? Number.parseFloat(getComputedStyle(surface).minHeight) || surface.clientHeight : window.innerHeight;
           // The second hero overlaps the first. Its DOM top is the start of
           // the crossfade; the story's end is the fully revealed landing.
           scrollPageTo(top + (reduced ? section.offsetHeight : getHeroScrollMetrics(height, slides.length).distance), { immediate: reduced });

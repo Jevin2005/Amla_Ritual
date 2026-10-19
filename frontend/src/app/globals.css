@@ -342,14 +342,14 @@
   }
 }
 
-html[data-site-motion="off"],
-html[data-site-motion="off"] * {
+[data-site-motion="off"],
+[data-site-motion="off"] * {
   scroll-behavior: auto !important;
 }
 
-html[data-site-motion="off"] *,
-html[data-site-motion="off"] *::before,
-html[data-site-motion="off"] *::after {
+[data-site-motion="off"] *,
+[data-site-motion="off"] *::before,
+[data-site-motion="off"] *::after {
   animation: none !important;
   transition-duration: 0ms !important;
 }

@@ -60,7 +60,7 @@ export function getHeroHandoffMetrics(height: number, count: number) {
   const { distance } = getHeroScrollMetrics(measured.height, measured.count);
   const start = getHeroScrollOffset(0.72, measured.height, measured.count);
   const lead = distance - start;
-  const hold = clamp(measured.height * 0.24, 120, 240);
+  const hold = clamp(measured.height * 0.85, 480, 960);
   return {
     start,
     revealEnd: getHeroScrollOffset(0.9, measured.height, measured.count),
@@ -69,6 +69,29 @@ export function getHeroHandoffMetrics(height: number, count: number) {
     runway: lead + hold,
     lead,
     hold,
+  };
+}
+
+/** Discard a fast gesture's overshoot until the incoming hero has been visible
+ * for one second. No timer scrolls the page later; continued input releases it.
+ * Explicit navigation and restored scroll positions can bypass this guard.
+ */
+export function createHeroArrivalGuard() {
+  let armed = false;
+  let arrivedAt: number | null = null;
+  let released = false;
+  const reset = () => { armed = false; arrivedAt = null; released = false; };
+  return {
+    reset,
+    arm() { armed = true; },
+    limit(offset: number, time: number, metrics: ReturnType<typeof getHeroHandoffMetrics>) {
+      if (offset < metrics.start) { arrivedAt = null; released = false; }
+      if (!armed || released) return offset;
+      if (offset < metrics.revealEnd) { arrivedAt = null; return offset; }
+      arrivedAt ??= time;
+      if (time - arrivedAt >= 1000) { released = true; return offset; }
+      return Math.min(offset, metrics.end - metrics.hold);
+    },
   };
 }
 
