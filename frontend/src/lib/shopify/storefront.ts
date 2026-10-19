@@ -935,6 +935,7 @@ function mapProduct(product: GraphProduct, index: number): Product {
     id: product.id,
     slug: canonicalSlug,
     shopifyHandle: product.handle,
+    productType: product.productType,
     name: product.title,
     botanical:
       meta(product, "botanicalName") ||

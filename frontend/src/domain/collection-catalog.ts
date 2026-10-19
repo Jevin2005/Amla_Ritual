@@ -1,6 +1,7 @@
 import type { BotanicalCombo } from "./botanical-combos";
 import { getDefaultVariant, matchesRitualGoal, type Product, type RitualGoal } from "./catalog/products";
-import { buildComboCatalog, type ComboCatalogEntry, type ComboCatalogSize } from "./combo-catalog";
+import { buildComboProductCatalog, type ComboCatalogEntry, type ComboCatalogSize } from "./combo-catalog";
+import { isComboProduct } from "./catalog/product-kind";
 
 export type CollectionKind = "all" | "individual" | "combos";
 export type CollectionSort = "collection" | "price-low" | "price-high" | "name";
@@ -23,20 +24,21 @@ export type CollectionFilters = {
 export function buildCollectionCatalog(products: Product[], combos: BotanicalCombo[], source: "shopify" | "preview"): CollectionEntry[] {
   const seenIds = new Set<string>();
   const seenSlugs = new Set<string>();
-  const individualProducts = products.filter((product) => {
+  const uniqueProducts = products.filter((product) => {
     const id = product.id || product.slug;
     if (seenIds.has(id) || seenSlugs.has(product.slug)) return false;
     seenIds.add(id);
     seenSlugs.add(product.slug);
     return true;
   }).sort((a, b) => a.collectionNumber.localeCompare(b.collectionNumber, "en", { numeric: true }));
+  const individualProducts = uniqueProducts.filter((product) => !isComboProduct(product));
   const seenCombos = new Set<string>();
   const uniqueCombos = combos.filter((combo) => {
     if (seenCombos.has(combo.id)) return false;
     seenCombos.add(combo.id);
     return true;
   });
-  const comboEntries = buildComboCatalog(uniqueCombos, individualProducts, source);
+  const comboEntries = buildComboProductCatalog(uniqueCombos, uniqueProducts, source);
   const entries: CollectionEntry[] = [];
   let productIndex = 0;
   let comboIndex = 0;
@@ -91,11 +93,12 @@ export function filterCollectionCatalog(entries: CollectionEntry[], filters: Col
         && (!filters.availableOnly || individualAvailable(entry.product))
         && (!query || productSearchFields(entry.product).join(" ").toLowerCase().includes(query));
     }
-    const { combo, products, count, purchase } = entry.combo;
+    const { combo, products, count, purchase, listingProduct } = entry.combo;
     const matchesSize = filters.size === "all" || (filters.size === "4+" ? count >= 4 : count === Number(filters.size));
-    const searchText = [combo.name, combo.ingredients, ...products.flatMap(productSearchFields)].join(" ").toLowerCase();
+    const candidates = listingProduct ? [listingProduct, ...products] : products;
+    const searchText = [combo.name, combo.ingredients, ...candidates.flatMap(productSearchFields)].join(" ").toLowerCase();
     return matchesSize
-      && (!hasMemberFilter || products.some(matchesMember))
+      && (!hasMemberFilter || candidates.some(matchesMember))
       && (!filters.availableOnly || purchase.purchasable)
       && (!query || searchText.includes(query));
   });

@@ -26,7 +26,7 @@ const bundle = await build({
       builder.onLoad({ filter: /.*/, namespace: "detail-test" }, ({ path }) => ({
         contents: {
           react: hookSource,
-          "react/jsx-runtime": "export const jsx = (type, props) => ({ type, props }); export const jsxs = jsx;",
+          "react/jsx-runtime": "export const jsx = (type, props) => ({ type, props }); export const jsxs = jsx; export const Fragment = Symbol.for('react.fragment');",
           "react-dom": "export const createPortal = (children) => children;",
           "next/navigation": "export const useRouter = () => globalThis.__detailActionTest.router;",
           "@/features/store/store-provider": "export const useStore = () => globalThis.__detailActionTest.store;",

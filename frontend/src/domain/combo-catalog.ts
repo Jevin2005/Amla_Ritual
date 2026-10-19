@@ -1,5 +1,6 @@
 import { comboProductCount, resolveComboProducts, type BotanicalCombo } from "./botanical-combos";
 import { getDefaultVariant, type Product } from "./catalog/products";
+import { comboJarCount, isComboProduct } from "./catalog/product-kind";
 
 type ComboSource = "shopify" | "preview";
 
@@ -45,11 +46,58 @@ export function getComboPurchaseSummary(products: Product[], expectedProductCoun
 }
 
 export type ComboCatalogEntry = {
+  listingProduct?: Product;
   combo: BotanicalCombo;
   products: Product[];
   count: number;
   purchase: ReturnType<typeof getComboPurchaseSummary>;
 };
+
+/** A combo is purchased as its own Shopify product, never as a sum of jars. */
+export function buildComboProductCatalog(combos: BotanicalCombo[], products: Product[], source: ComboSource): ComboCatalogEntry[] {
+  const listings = products.filter(isComboProduct);
+  const normalizedName = (name: string) => name.trim().replace(/^naturemist\s+/i, "").toLowerCase();
+  const used = new Set<string>();
+  const entryFor = (product: Product, combo?: BotanicalCombo): ComboCatalogEntry => {
+    used.add(product.slug);
+    const purchase = getComboPurchaseSummary([product], 1, source);
+    const variant = getDefaultVariant(product);
+    return {
+      listingProduct: {
+        ...product,
+        pricePaise: purchase.total,
+        currencyCode: purchase.currencyCode,
+        compareAtPricePaise: variant ? variant.compareAtPricePaise : product.compareAtPricePaise,
+        availableForSale: purchase.purchasable && product.availableForSale !== false,
+      },
+      combo: combo ? { ...combo, name: product.name } : {
+        id: product.id || product.slug, name: product.name, ingredients: product.subtitle,
+        caption: "", productIds: [], previewSlugs: [],
+        image: product.featuredImage || product.images?.[0] || { url: "/images/product-placeholder.svg", altText: product.name, width: 800, height: 800 },
+      },
+      products: combo ? resolveComboProducts(combo, products) : [product],
+      count: combo ? comboProductCount(combo) : comboJarCount(product),
+      purchase: { ...purchase, purchasable: purchase.purchasable && product.availableForSale !== false },
+    };
+  };
+  const entries = combos.map((combo) => {
+    const candidates = listings.filter((product) => !used.has(product.slug));
+    const explicit = candidates.filter((product) => product.tags?.some((tag) => tag.trim().toLowerCase() === `combo:${combo.id}`.toLowerCase()));
+    const matches = explicit.length ? explicit : candidates.filter((product) =>
+      !product.tags?.some((tag) => tag.trim().toLowerCase().startsWith("combo:")) &&
+      (product.slug === combo.id || product.shopifyHandle === combo.id || normalizedName(product.name) === normalizedName(combo.name)));
+    if (matches.length === 1) return entryFor(matches[0], combo);
+    const members = resolveComboProducts(combo, products);
+    return {
+      combo, products: members, count: comboProductCount(combo),
+      purchase: {
+        ...getComboPurchaseSummary([], 1, source),
+        notice: "This combo is not available yet. Explore the individual jars below.",
+      },
+    };
+  });
+  return [...entries, ...listings.filter((product) => !used.has(product.slug)).map((product) => entryFor(product))];
+}
 
 export function buildComboCatalog(combos: BotanicalCombo[], products: Product[], source: ComboSource): ComboCatalogEntry[] {
   return combos.map((combo) => {

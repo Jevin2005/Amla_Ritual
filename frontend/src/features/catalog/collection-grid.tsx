@@ -29,12 +29,15 @@ export function CollectionGrid({ entries, eagerImages = false }: { entries: Coll
         ))}
       </div>
       {preview && <ComboPreview
+        key={preview.combo.id}
         title={preview.combo.name}
         ingredientLabel={preview.combo.ingredients}
-        image={preview.combo.image.url}
+        image={preview.listingProduct?.featuredImage?.url || preview.combo.image.url}
         imageFallback={getComboArtworkFallback(preview)}
         products={preview.products}
         expectedProductCount={preview.count}
+        listingProduct={preview.listingProduct}
+        purchaseUnavailable={!preview.listingProduct}
         onClose={closePreview}
       />}
     </div>

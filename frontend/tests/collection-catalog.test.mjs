@@ -105,7 +105,7 @@ test("available-only excludes unavailable individual stock and incomplete or unp
   const untracked = product(4, { variants: [variant(4, 10000, { quantityAvailable: null })] });
   const products = [available, soldOut, emptyStock, untracked];
   const entries = buildCollectionCatalog(products, [combo("available", [available, untracked]), combo("sold-out", [available, soldOut]), combo("zero-stock", [available, emptyStock]), combo("incomplete", [available, product(99)])], "shopify");
-  assert.deepEqual(labels(filter(entries, { availableOnly: true })), ["jar-1", "available", "jar-4"]);
+  assert.deepEqual(labels(filter(entries, { availableOnly: true })), ["jar-1", "jar-4"]);
   assert.equal(entries.find((entry) => entry.kind === "combo" && entry.combo.combo.id === "incomplete").combo.count, 2);
   assert.equal(filter(entries, { kind: "combos", size: "2" }).length, 4);
 });
@@ -120,26 +120,31 @@ test("unknown member sets stay discoverable without member filters, but cannot s
   assert.deepEqual(filter(entries, { availableOnly: true }), []);
 });
 
-test("preview combos resolve slugs while live combos retain the existing variant and currency safeguards", () => {
+test("editorial pairings resolve their jars but cannot be purchased without a separate listing", () => {
   const amla = product(1, { variants: undefined });
   const reetha = product(2, { variants: undefined });
   const preview = combo("preview", [], { previewSlugs: [amla.slug, reetha.slug] });
   const entries = buildCollectionCatalog([amla, reetha], [preview], "preview");
-  assert.equal(filter(entries, { kind: "combos", availableOnly: true }).length, 1);
+  assert.equal(filter(entries, { kind: "combos", availableOnly: true }).length, 0);
+  assert.deepEqual(entries[2].combo.products, [amla, reetha]);
+  assert.equal(entries[2].combo.purchase.canShowTotal, false);
   assert.equal(filter(buildCollectionCatalog([amla, reetha], [preview], "shopify"), { kind: "combos", availableOnly: true }).length, 0);
   const dollars = product(2, { variants: [variant(2, 100, { currencyCode: "USD" })] });
   const mixed = buildCollectionCatalog([product(1), dollars], [combo("mixed", [product(1), dollars])], "shopify");
   assert.equal(filter(mixed, { kind: "combos", availableOnly: true }).length, 0);
 });
 
-test("price order compares displayed individual prices with selected variant combo totals", () => {
+test("price order uses the combo product's own variant price instead of summing its members", () => {
   const low = product(1, { pricePaise: 5000, variants: [variant(1, 40000)] });
   const high = product(2, { pricePaise: 30000, variants: [variant(2, 10000)] });
   const mid = product(3, { pricePaise: 20000 });
-  const entries = buildCollectionCatalog([low, high, mid], [combo("pair", [low, high])], "shopify");
+  const listing = product(4, { tags: ["combo:pair"], pricePaise: 1000, variants: [variant(4, 45000)] });
+  const entries = buildCollectionCatalog([low, high, mid, listing], [combo("pair", [low, high])], "shopify");
   assert.deepEqual(labels(filter(entries, { sort: "price-low" })), ["jar-1", "jar-3", "jar-2", "pair"]);
   assert.deepEqual(labels(filter(entries, { sort: "price-high" })), ["pair", "jar-2", "jar-3", "jar-1"]);
-  assert.equal(entries[2].combo.purchase.total, 50000);
+  assert.equal(entries[2].combo.purchase.total, 45000);
+  assert.equal(entries[2].combo.listingProduct.pricePaise, 45000);
+  assert.equal(filter(entries, { kind: "individual" }).length, 3);
   assert.deepEqual(labels(entries), ["jar-1", "jar-2", "pair", "jar-3"]);
 });
 
@@ -154,7 +159,8 @@ test("unknown totals and invalid individual prices remain last in either price d
 
 test("price sorting groups currencies and leaves equal-price entries in curated order", () => {
   const products = [product(1, { pricePaise: 50000 }), product(2, { pricePaise: 100, currencyCode: "USD" }), product(3, { pricePaise: 20000 }), product(4, { pricePaise: 20000 })];
-  const entries = buildCollectionCatalog(products, [combo("pair", [products[0], products[2]])], "shopify");
+  const listing = product(5, { tags: ["combo:pair"], variants: [variant(5, 20000)] });
+  const entries = buildCollectionCatalog([...products, listing], [combo("pair", [products[0], products[2]])], "shopify");
   assert.deepEqual(labels(filter(entries, { sort: "price-low" })), ["pair", "jar-3", "jar-4", "jar-1", "jar-2"]);
   assert.deepEqual(labels(filter(entries, { sort: "price-high" })), ["jar-1", "pair", "jar-3", "jar-4", "jar-2"]);
 });
@@ -164,4 +170,51 @@ test("name sort spans individual products and combos without changing collection
   const entries = buildCollectionCatalog(products, [combo("Botanical Duo", products)], "shopify");
   assert.deepEqual(labels(filter(entries, { sort: "name" })), ["jar-2", "Botanical Duo", "jar-1"]);
   assert.deepEqual(labels(filter(entries)), ["jar-1", "jar-2", "Botanical Duo"]);
+});
+
+test("standalone combo products have their own listing, currency, count, and stock", () => {
+  const single = product(1);
+  const bundle = product(2, { productType: "Combo", tags: ["combo-count:3"], name: "Custom Trio", variants: [variant(2, 39900, { currencyCode: "INR" })] });
+  const entries = buildCollectionCatalog([single, bundle, bundle], [], "shopify");
+  assert.deepEqual(labels(filter(entries, { kind: "individual" })), [single.slug]);
+  const [entry] = filter(entries, { kind: "combos", size: "3", availableOnly: true });
+  assert.equal(entry.combo.listingProduct.slug, bundle.slug);
+  assert.equal(entry.combo.purchase.total, 39900);
+  assert.equal(entry.combo.purchase.items.length, 1);
+  assert.equal(entry.combo.purchase.items[0].variant.id, bundle.variants[0].id);
+  assert.equal(filter(entries, { kind: "combos", query: "custom" }).length, 1);
+});
+
+test("published combos use their own stock even if an individual jar is sold out", () => {
+  const jars = [product(1, { availableForSale: false }), product(2)];
+  const listing = product(3, { name: "NatureMist Classic Trio", tags: ["combo"], variants: [variant(3, 49900)] });
+  const entries = buildCollectionCatalog([...jars, listing], [combo("saved-entry", jars, { name: "Classic Trio" })], "shopify");
+  const [entry] = filter(entries, { kind: "combos", availableOnly: true });
+  assert.equal(entry.combo.listingProduct.slug, listing.slug);
+  assert.equal(entry.combo.purchase.total, 49900);
+  assert.equal(filter(entries, { kind: "combos" }).length, 1);
+  for (const overrides of [{ availableForSale: false }, { variants: [variant(3, 49900, { quantityAvailable: 0 })] }, { variants: [] }]) {
+    const unavailable = buildCollectionCatalog([...jars, { ...listing, ...overrides }], [], "shopify");
+    assert.equal(filter(unavailable, { kind: "combos", availableOnly: true }).length, 0);
+  }
+});
+
+test("unknown combo counts do not invent a duo or trio and ambiguous names never pick a price", () => {
+  const listings = [product(1, { tags: ["combo"], name: "Duo" }), product(2, { tags: ["combo"], name: "Duo" })];
+  const entries = buildCollectionCatalog(listings, [combo("saved-duo", [], { name: "Duo" })], "shopify");
+  assert.equal(entries[0].combo.listingProduct, undefined);
+  assert.equal(entries[0].combo.purchase.canShowTotal, false);
+  assert.equal(filter(entries, { kind: "individual" }).length, 0);
+  assert.equal(filter(entries, { size: "2" }).length, 0);
+  assert.equal(filter(entries, { availableOnly: true }).length, 2);
+});
+
+test("explicit pairing links take precedence over names and never attach to another pairing", () => {
+  const tagged = product(1, { name: "Duo", tags: ["combo:specific"], variants: [variant(1, 34500, { compareAtPricePaise: null })], compareAtPricePaise: 60000 });
+  const sameName = product(2, { name: "Duo", tags: ["combo"] });
+  const entries = buildCollectionCatalog([tagged, sameName], [combo("other", [], { name: "Duo" }), combo("specific", [], { name: "Duo" })], "shopify");
+  assert.equal(entries[0].combo.listingProduct.id, sameName.id);
+  assert.equal(entries[1].combo.listingProduct.id, tagged.id);
+  assert.equal(entries[1].combo.listingProduct.compareAtPricePaise, null);
+  assert.equal(entries[1].combo.purchase.total, 34500);
 });

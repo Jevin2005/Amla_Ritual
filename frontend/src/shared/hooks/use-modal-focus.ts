@@ -3,10 +3,12 @@
 import { useEffect, type RefObject } from "react";
 
 const focusableSelector =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  'a[href], button:not([disabled]), summary, input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function getFocusableElements(node: HTMLElement) {
-  return Array.from(node.querySelectorAll<HTMLElement>(focusableSelector));
+  return Array.from(node.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+    (element) => !element.closest("[hidden], [inert]") && element.getClientRects().length > 0,
+  );
 }
 
 export function useModalFocus(

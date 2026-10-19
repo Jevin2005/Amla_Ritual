@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
+import { MediaImage as Image } from "@/shared/ui/media-image";
 import Link from "next/link";
-import { useState, type CSSProperties } from "react";
+import { useState, type CSSProperties, type ComponentProps } from "react";
+import { isComboProduct } from "@/domain/catalog/product-kind";
 import { formatCurrency, calculateDiscountPercent, calculateSavingsPaise, type Product } from "@/domain/catalog/products";
 import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
 import { StarRating } from "@/features/reviews/star-rating";
@@ -11,12 +12,23 @@ import { isJudgemeConfigured } from "@/lib/judgeme/config";
 import { useStore } from "@/features/store/store-provider";
 import styles from "./product-card.module.css";
 
+function CardDestination({ onPreview, children, ...props }: ComponentProps<typeof Link> & { onPreview?: () => void }) {
+  if (onPreview) return <button type="button" className={`${props.className} text-left`} aria-label={props["aria-label"]} aria-haspopup="dialog" onClick={onPreview}>{children}</button>;
+  return <Link {...props}>{children}</Link>;
+}
+
 export function ProductCard({
   product,
   eagerImage = false,
+  onPreview,
+  imageFallback,
+  unpublished = false,
 }: {
   product: Product;
   eagerImage?: boolean;
+  onPreview?: () => void;
+  imageFallback?: string;
+  unpublished?: boolean;
 }) {
   const { addToCart, toggleWishlist, isWishlisted, track, content } = useStore();
   const wished = isWishlisted(product.slug);
@@ -25,6 +37,7 @@ export function ProductCard({
     product.slug,
   );
   const currencyCode = product.currencyCode || "INR";
+  const isCombo = isComboProduct(product);
   const isAvailable = product.availableForSale !== false;
   const compareAtPrice =
     product.compareAtPricePaise &&
@@ -33,7 +46,7 @@ export function ProductCard({
       : null;
   const discountPercent = calculateDiscountPercent(product.pricePaise, compareAtPrice);
   const savingsPaise = calculateSavingsPaise(product.pricePaise, compareAtPrice);
-  const stockLabel = isAvailable
+  const stockLabel = unpublished ? "Coming soon" : isAvailable
     ? product.availability || "In stock"
     : "Sold out";
   const style = {
@@ -50,6 +63,7 @@ export function ProductCard({
     <article
       className="group/card @container relative flex flex-col self-start overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow,ring-color] duration-[420ms] ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] hover:ring-[color-mix(in_srgb,var(--product-accent)_34%,transparent)] max-[680px]:rounded-lg"
       style={style}
+      data-collection-kind={isCombo ? "combo" : "product"}
     >
       {/* Product listing photo area - Full Cover */}
       <div className="relative aspect-square w-full flex-none overflow-hidden bg-[var(--paper)]">
@@ -60,7 +74,7 @@ export function ProductCard({
           </span>
         )}
         {/* Wishlist button */}
-        <button
+        {!unpublished && <button
           className={`absolute top-3 right-3 z-[3] grid size-10 place-items-center rounded-full border text-[1rem] shadow-[0_4px_16px_rgba(21,59,45,0.12)] backdrop-blur-md transition-[background,color,transform,border-color] duration-200 hover:scale-105 active:scale-95 max-[680px]:top-2 max-[680px]:right-2 max-[680px]:size-8 max-[680px]:text-[0.85rem] ${
             wished
               ? "border-[var(--product-accent)] bg-[var(--paper)] text-[var(--product-accent)]"
@@ -72,10 +86,11 @@ export function ProductCard({
           aria-pressed={wished}
         >
           <span aria-hidden="true">{wished ? "♥" : "♡"}</span>
-        </button>
+        </button>}
 
         {/* Full-Cover listing product photo */}
-        <Link
+        <CardDestination
+          onPreview={onPreview}
           href={`/shop/${product.slug}`}
           className={styles.photoLink}
           data-alternate={Boolean(alternateImage && loadedAlternate === alternateImage.url)}
@@ -84,6 +99,7 @@ export function ProductCard({
         >
           <Image
             src={imageUrl}
+            fallbackSrc={imageFallback}
             alt={imageAlt}
             fill
             loading={eagerImage ? "eager" : "lazy"}
@@ -103,28 +119,29 @@ export function ProductCard({
               className={styles.alternate}
             />
           )}
-        </Link>
+        </CardDestination>
       </div>
 
       {/* Info area */}
       <div className="flex flex-col border-t border-[var(--line)] px-5 pt-4 pb-4 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5 max-[420px]:px-2.5 max-[420px]:py-2.5">
         <p className="mb-1 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.1em]">
-          {product.ritualStep ? `${product.ritualStep} Ritual` : "Botanical hair care"}
+          {isCombo ? "Botanical combo" : product.ritualStep ? `${product.ritualStep} Ritual` : "Botanical hair care"}
         </p>
 
-        <Link
+        <CardDestination
+          onPreview={onPreview}
           href={`/shop/${product.slug}`}
           className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,1.95rem)] leading-[1.08] tracking-[-0.03em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:mb-1 max-[680px]:text-[1.18rem] max-[420px]:text-[1.05rem]"
           onClick={() => track("select_item", { item_id: product.slug, placement: "product_title" })}
         >
           {product.name}
-        </Link>
+        </CardDestination>
 
         <p className="mb-0 text-[0.82rem] leading-[1.5] text-[var(--muted)] max-[900px]:hidden">
           {[product.subtitle, product.size].filter(Boolean).join(" · ")}
         </p>
 
-        {isJudgemeConfigured() ? (
+        {!unpublished && (isJudgemeConfigured() ? (
           <Link
             href={`/shop/${product.slug}#customer-reviews`}
             className={`${styles.vendorReviews} mt-1 inline-flex items-center self-start rounded-sm py-1 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]`}
@@ -156,14 +173,14 @@ export function ProductCard({
               size="compact"
             />
           </Link>
-        ) : null}
+        ) : null)}
 
         <div className="mt-3 max-[680px]:mt-2.5">
           <div className="flex items-center justify-between gap-2 border-t border-[var(--line)] pt-3 max-[680px]:pt-2.5">
             <div>
               <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
                 <span className="[font-family:var(--font-display)] text-[1.32rem] font-bold leading-none text-[var(--forest)] max-[680px]:text-[1.12rem] max-[420px]:text-[1.02rem]">
-                  {formatCurrency(product.pricePaise, currencyCode)}
+                  {unpublished ? "Coming soon" : formatCurrency(product.pricePaise, currencyCode)}
                 </span>
                 {compareAtPrice && (
                   <>
@@ -197,15 +214,16 @@ export function ProductCard({
             <button
               type="button"
               className="grid size-11 place-items-center rounded-full border border-[var(--product-accent)] bg-[var(--product-accent)] text-[1.15rem] text-white shadow-[0_6px_18px_color-mix(in_srgb,var(--product-accent)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:border-[var(--line-strong)] disabled:bg-[var(--line-strong)] disabled:text-[var(--muted)] disabled:shadow-none disabled:hover:translate-y-0 max-[680px]:size-9 max-[680px]:text-[0.95rem] max-[420px]:size-8.5 max-[420px]:text-[0.88rem]"
-              onClick={() => addToCart(product.slug)}
-              disabled={!isAvailable}
+              onClick={() => onPreview ? onPreview() : addToCart(product.slug)}
+              disabled={!isAvailable && !onPreview}
+              aria-haspopup={onPreview ? "dialog" : undefined}
               aria-label={
-                isAvailable
+                onPreview ? `View ${product.name} combo` : isAvailable
                   ? `Add ${product.name} to bag`
                   : `${product.name} is sold out`
               }
             >
-              <span aria-hidden="true">＋</span>
+              <span aria-hidden="true">{onPreview ? "↗" : "＋"}</span>
             </button>
           </div>
         </div>
