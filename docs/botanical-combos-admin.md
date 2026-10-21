@@ -1,6 +1,6 @@
 # Combo products and custom pricing
 
-The homepage's **The botanical cabinet** shows only single products. The final **Botanical combos** section shows combos. Both sections, the shop, and wishlist use the same product card. `/combos` opens `/shop?type=combos`.
+The homepage's **The botanical cabinet** shows only single products. **Botanical combos** sits in its original position, after Ingredient clarity and before customer reviews. It uses the original book layout: a large photo, one featured combo, and two smaller entries per page. Its buttons open the same photo and purchase popup used by the shop's product cards. The shop and wishlist retain their shared product-card layout. `/combos` opens `/shop?type=combos`.
 
 ## Create a combo listing
 
@@ -23,9 +23,9 @@ Adding a set adds **one variant of the combo product**, independently of the ind
 
 [Open the section editor](https://admin.shopify.com/store/amla-ritual/content/metaobjects/entries/botanical_combos/431929295034).
 
-Saved Botanical combo metaobjects still supply pairing order, ingredients, photos, and included-jar references. The Botanical combos section's headings, description, and Show section switch control the final homepage section. The old book animation controls are not used by the card grid.
+Saved Botanical combo metaobjects supply pairing order, ingredients, book photos, and included-jar references. The Botanical combos section's headings, description, and Show section switch control the homepage book section. Its page-turn animation controls apply to the restored book on desktop; mobile and reduced-motion preferences use immediate page changes.
 
-A saved pairing without a published combo product appears as **Coming soon**. Its preview shows individual jars, but it has no combined price or combo checkout action. Publishing its matching combo product automatically replaces it with the standard purchasable product card. The homepage visibility switch does not hide combos from the shop.
+A saved pairing without a published combo product appears as **Coming soon** in the shop and its popup. The book can still display its editorial entry. Its preview shows individual jars, but it has no combined price or combo checkout action. Publishing its matching combo product enables its independently priced purchase popup and shop card. The homepage visibility switch does not hide combos from the shop.
 
 ## Catalog audit — 19 October 2026
 

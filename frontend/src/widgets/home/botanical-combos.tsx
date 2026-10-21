@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { MediaImage as Image } from "@/shared/ui/media-image";
-import { useCallback, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { COMBOS_PER_PAGE, comboProductCount, getBotanicalComboPage, resolveComboProducts, type BotanicalCombo, type BotanicalCombosContent } from "@/domain/botanical-combos";
+import { useCallback, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { COMBOS_PER_PAGE, comboProductCount, getBotanicalComboPage, type BotanicalCombo, type BotanicalCombosContent } from "@/domain/botanical-combos";
+import { buildComboProductCatalog } from "@/domain/combo-catalog";
+import { getComboArtworkFallback } from "@/domain/combo-artwork";
 import { useStore } from "@/features/store/store-provider";
 import { useCompactViewport, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { BotanicalBookTurn } from "./botanical-book-turn";
@@ -128,7 +130,8 @@ export function BotanicalCombos() {
 
 function ComboBook({ content }: { content: BotanicalCombosContent }) {
   const { combos } = content;
-  const { products, content: { motionSettings } } = useStore();
+  const { products, source, content: { motionSettings } } = useStore();
+  const catalog = useMemo(() => buildComboProductCatalog(combos, products, source), [combos, products, source]);
   const [pageIndex, setPageIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [turn, setTurn] = useState<PageTurn | null>(null);
@@ -140,7 +143,7 @@ function ComboBook({ content }: { content: BotanicalCombosContent }) {
   const page = getBotanicalComboPage(combos, pageIndex);
   const dotStart = Math.max(0, Math.min(pageIndex - 2, page.pageCount - 5));
   const visiblePages = Array.from({ length: Math.min(5, page.pageCount) }, (_, index) => dotStart + index);
-  const preview = previewIndex === null ? null : combos[previewIndex];
+  const preview = previewIndex === null ? null : catalog.find((entry) => entry.combo.id === combos[previewIndex]?.id);
   const finishTurn = useCallback(() => {
     const pending = turnRef.current;
     if (!pending) return;
@@ -230,11 +233,15 @@ function ComboBook({ content }: { content: BotanicalCombosContent }) {
         </div>
       </div>
       {preview && <ComboPreview
-        title={preview.name}
-        ingredientLabel={preview.ingredients}
-        image={preview.image.url}
-        products={resolveComboProducts(preview, products)}
-        expectedProductCount={comboProductCount(preview)}
+        key={preview.combo.id}
+        title={preview.combo.name}
+        ingredientLabel={preview.combo.ingredients}
+        image={preview.listingProduct?.featuredImage?.url || preview.combo.image.url}
+        imageFallback={getComboArtworkFallback(preview)}
+        products={preview.products}
+        expectedProductCount={preview.count}
+        listingProduct={preview.listingProduct}
+        purchaseUnavailable={!preview.listingProduct}
         onClose={closePreview}
       />}
     </section>
