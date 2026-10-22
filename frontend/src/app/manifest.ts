@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "NatureMist Botanical Rituals",
     short_name: "NatureMist",
-    description: "Traditional Indian botanicals, made clear for modern hair rituals.",
+    description: "Traditional botanical powders for hair packs, herbal washing and plant-based hair colour.",
     start_url: "/",
     display: "standalone",
     background_color: "#f7f4e8",

@@ -10,6 +10,7 @@ import { defaultIngredientClarity, defaultIngredientPosterSettings, parseIngredi
 import {
   bundles as previewBundles,
   products as previewProducts,
+  careAreas,
   type Product,
   type ProductBundle,
   type ProductFaq,
@@ -59,6 +60,7 @@ const productMetafields = `
   botanical: metafield(namespace: "custom", key: "botanical") { value }
   botanicalName: metafield(namespace: "custom", key: "botanical_name") { value }
   plantPart: metafield(namespace: "custom", key: "plant_part") { value }
+  careAreas: metafield(namespace: "custom", key: "care_areas") { value }
   collectionNumber: metafield(namespace: "custom", key: "collection_number") { value }
   subtitle: metafield(namespace: "custom", key: "subtitle") { value }
   accent: metafield(namespace: "custom", key: "accent") { value }
@@ -447,6 +449,7 @@ type GraphProduct = {
   description: string;
   descriptionHtml?: string;
   productType: string;
+  careAreas?: { value: string } | null;
   vendor: string;
   tags: string[];
   availableForSale: boolean;
@@ -629,12 +632,12 @@ export const previewContent: StorefrontContent = {
   ritualPosters: defaultRitualPosters,
   ritualPosterSettings: defaultIngredientPosterSettings,
   ingredientClarity: defaultIngredientClarity,
-  announcementText: "Rooted in Ayurveda · Made for modern rituals",
+  announcementText: "200 g botanicals for hair packs, cleansing and colour",
   announcementLinkLabel: "",
   announcementLinkUrl: "",
   homeHeroPoster: {
     url: "/images/naturemist-hero.png",
-    altText: "NatureMist botanical hair ritual",
+    altText: "NatureMist botanical care ritual",
     width: 1692,
     height: 930,
   },
@@ -646,7 +649,7 @@ export const previewContent: StorefrontContent = {
   },
   storyPoster: {
     url: "/images/naturemist-hero.png",
-    altText: "NatureMist botanical hair care",
+    altText: "NatureMist botanical care",
     width: 1692,
     height: 930,
   },
@@ -906,12 +909,16 @@ function mapProduct(product: GraphProduct, index: number): Product {
   const fallbackDescription = `Explore ${product.title}.`;
   const ritualStepValue = meta(product, "ritualStep")?.toLowerCase();
   const canonicalStep = ritualStepValue === "color" ? "colour" : ritualStepValue;
-  const ritualStep = (["Cleanse", "Condition", "Colour"] as const)
+  const ritualStep = (["Cleanse", "Pack", "Condition", "Colour"] as const)
     .find((step) => step.toLowerCase() === canonicalStep) || "";
   const experienceValue = meta(product, "experience")?.toLowerCase();
   const experience = (["Beginner", "Familiar", "Advanced"] as const)
     .find((level) => level.toLowerCase() === experienceValue) || "";
   const howToUse = listMeta(product, "howToUse", []);
+  const authoredCareAreas = listMeta(product, "careAreas", []);
+  const productCareAreas = careAreas.filter((area) =>
+    authoredCareAreas.some((value) => value.toLowerCase() === area.toLowerCase()),
+  );
   const featuredImage = toImage(product.featuredImage) || product.images.nodes.map(toImage).find(Boolean) || null;
   const heroReference = (key: string) =>
     (product as unknown as Record<string, GraphMetaobjectField | undefined>)[key]?.reference;
@@ -936,6 +943,7 @@ function mapProduct(product: GraphProduct, index: number): Product {
     slug: canonicalSlug,
     shopifyHandle: product.handle,
     productType: product.productType,
+    careAreas: productCareAreas,
     name: product.title,
     botanical:
       meta(product, "botanicalName") ||
@@ -1410,7 +1418,7 @@ const previewCatalog: Product[] = previewProducts.map((product) => {
   ],
   collections: [],
   tags: product.searchTerms,
-  hero: {
+  hero: product.hero || {
     eyebrow: `The ${product.name.replace(/ Powder$/i, "")} Ritual · No. ${product.collectionNumber}`,
     headlineFirst: "Discover",
     headlineMiddle: product.name.replace(/ Powder$/i, ""),

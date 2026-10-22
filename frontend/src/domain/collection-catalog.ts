@@ -4,13 +4,15 @@ import { buildComboProductCatalog, type ComboCatalogEntry, type ComboCatalogSize
 import { isComboProduct } from "./catalog/product-kind";
 
 export type CollectionKind = "all" | "individual" | "combos";
+export type CollectionCare = "all" | "hair" | "skin" | "colour" | "both";
 export type CollectionSort = "collection" | "price-low" | "price-high" | "name";
-export type CollectionStep = "All" | "Cleanse" | "Condition" | "Colour";
+export type CollectionStep = "All" | "Cleanse" | "Pack" | "Condition" | "Colour";
 export type CollectionEntry =
   | { kind: "product"; id: string; product: Product }
   | { kind: "combo"; id: string; combo: ComboCatalogEntry };
 export type CollectionFilters = {
   kind: CollectionKind;
+  care?: CollectionCare;
   query: string;
   goal: RitualGoal | "All";
   step: CollectionStep;
@@ -56,7 +58,15 @@ export function buildCollectionCatalog(products: Product[], combos: BotanicalCom
 }
 
 function productSearchFields(product: Product) {
-  return [product.name, product.botanical, product.subtitle, product.ingredient, product.formulation, product.size, ...(product.searchTerms ?? [])];
+  return [product.name, product.botanical, product.subtitle, product.ingredient, product.formulation, product.size, ...(product.careAreas ?? []), ...(product.searchTerms ?? [])];
+}
+
+/** Care use is explicit product information, never inferred from a botanical name. */
+export function matchesCollectionCare(product: Product, care: CollectionCare = "all") {
+  if (care === "all") return true;
+  const areas = product.careAreas ?? [];
+  if (care === "both") return areas.includes("Hair Care") && areas.includes("Skin Care");
+  return areas.includes(care === "hair" ? "Hair Care" : care === "skin" ? "Skin Care" : "Hair Colour");
 }
 
 function individualAvailable(product: Product) {
@@ -75,13 +85,15 @@ function entryPrice(entry: CollectionEntry) {
   return { price: pricePaise, known: Number.isFinite(pricePaise) && pricePaise >= 0, currency: currencyCode || "INR" };
 }
 
-/** Goal, step and collection must describe the same jar inside a pairing. */
+/** Care, goal, step and collection must describe the same jar inside a pairing. */
 export function filterCollectionCatalog(entries: CollectionEntry[], filters: CollectionFilters): CollectionEntry[] {
   const query = filters.query.trim().toLowerCase();
   const collection = filters.collection?.trim().toLowerCase();
-  const hasMemberFilter = filters.goal !== "All" || filters.step !== "All" || Boolean(collection);
+  const care = filters.care ?? "all";
+  const hasMemberFilter = care !== "all" || filters.goal !== "All" || filters.step !== "All" || Boolean(collection);
   const matchesMember = (product: Product) =>
-    (filters.goal === "All" || matchesRitualGoal(product, filters.goal))
+    matchesCollectionCare(product, care)
+    && (filters.goal === "All" || matchesRitualGoal(product, filters.goal))
     && (filters.step === "All" || product.ritualStep === filters.step)
     && (!collection || (product.collections ?? []).some((membership) => membership.handle.toLowerCase() === collection));
   const filtered = entries.filter((entry) => {
@@ -96,8 +108,13 @@ export function filterCollectionCatalog(entries: CollectionEntry[], filters: Col
     const { combo, products, count, purchase, listingProduct } = entry.combo;
     const matchesSize = filters.size === "all" || (filters.size === "4+" ? count >= 4 : count === Number(filters.size));
     const candidates = listingProduct ? [listingProduct, ...products] : products;
+    // A skincare set must contain only identified, skin-eligible jars. A listing
+    // tag cannot make hair cleansers or colour powders suitable for the face.
+    const matchesSkinSet = care !== "skin" && care !== "both"
+      || (count > 0 && products.length === count && products.every((product) => !isComboProduct(product) && matchesCollectionCare(product, care)));
     const searchText = [combo.name, combo.ingredients, ...candidates.flatMap(productSearchFields)].join(" ").toLowerCase();
     return matchesSize
+      && matchesSkinSet
       && (!hasMemberFilter || candidates.some(matchesMember))
       && (!filters.availableOnly || purchase.purchasable)
       && (!query || searchText.includes(query));

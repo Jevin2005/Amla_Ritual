@@ -1,0 +1,59 @@
+{
+  "source": "E:/jevin/NatureMist_Six_Powders_Benefits_and_Claims.xlsx",
+  "sourceSheets": [
+    "Product guide",
+    "Benefits and evidence",
+    "Combos"
+  ],
+  "date": "2026-10-21",
+  "status": {
+    "shopify": "Saved and read back",
+    "websiteCode": "Local changes ready for review; not committed, pushed or deployed"
+  },
+  "productRoles": {
+    "Amla": "Traditional herbal hair packs",
+    "Reetha": "Herbal hair washes",
+    "Shikakai": "Traditional hair washing",
+    "Bhringraj": "Traditional hair and scalp packs",
+    "Hibiscus": "Herbal hair packs",
+    "Indigo": "Botanical hair colour"
+  },
+  "quantities": {
+    "singleGrams": 200,
+    "duoGrams": 400,
+    "trioGrams": 600
+  },
+  "saved": {
+    "individualProducts": 6,
+    "existingSets": 8,
+    "productMetafieldValues": 339,
+    "metaobjects": 9,
+    "variantWeights": 14
+  },
+  "verifiedPreserved": [
+    "Product IDs and handles",
+    "Listing images and featured-image URLs",
+    "Hero media, order and enabled settings",
+    "Prices and compare-at prices",
+    "Inventory quantities",
+    "Product status and vendor",
+    "Customer review content and ratings"
+  ],
+  "claimBoundary": "Traditional use is distinguished from finished-product proof. Skin use remains a development option; no unestablished skin, conditioning, regrowth or clinical-efficacy promises are made in the updated merchant-authored text.",
+  "checks": {
+    "typecheck": "Passed after final metadata change",
+    "nextBuild": "Passed before final neutral copy and absolute SEO-title adjustments",
+    "coreTests": "116 passed",
+    "checkoutReviewTests": "14 passed",
+    "discoveryTests": "90 passed; canonical title/handle cases passed",
+    "lint": "Scoped ESLint passed",
+    "whitespace": "git diff --check passed",
+    "shopifyReadback": "All listing text (normalized HTML), SEO, type, tags, 339 metafields, weights and preservation checks passed",
+    "browser": "Catalog shows 14 products with correct roles and 200g/400g/600g sizes; Hibiscus page has current title, 200g specification, revised directions and skin-use limitations"
+  },
+  "limitations": [
+    "Photos were intentionally not edited and can still show 250g or old claims within their pixels.",
+    "Vinext compatibility check passed with 0 issues; two sequential Vinext builds crashed during Windows client bundling with exit 3221226505 and no source diagnostic.",
+    "Website source is intentionally unpublished, per the user's earlier instruction."
+  ]
+}

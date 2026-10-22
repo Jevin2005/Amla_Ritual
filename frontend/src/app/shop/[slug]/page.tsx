@@ -71,7 +71,7 @@ export async function generateMetadata(
   const image = product.featuredImage;
 
   return {
-    title: product.seoTitle || product.name,
+    title: product.seoTitle ? { absolute: product.seoTitle } : product.name,
     description: product.metaDescription,
     alternates: { canonical: `/shop/${slug}` },
     openGraph: {
@@ -124,6 +124,16 @@ export default async function ProductPage(props: ProductPageProps) {
   const fullDescription =
     product.description?.trim() || product.shortDescription.trim();
   const descriptionBlocks = productDescriptionBlocks(fullDescription);
+  const usageGroups = product.howTo.reduce<Array<{ title: string; steps: string[] }>>((groups, step) => {
+    const prefix = step.match(/^(Preparation|Before colouring|Hair colour|Hair|Skin|Rinse|After use):\s*(.*)$/i);
+    const label = prefix?.[1].toLowerCase();
+    const title = label === "hair" ? "Hair care" : label === "skin" ? "Skin care" : prefix?.[1] || "";
+    const text = prefix?.[2] || step;
+    const previous = groups.at(-1);
+    if (previous?.title === title) previous.steps.push(text);
+    else groups.push({ title, steps: [text] });
+    return groups;
+  }, []);
   const descriptionHtml = product.descriptionHtml?.trim()
     ? sanitizeProductDescription(product.descriptionHtml)
     : "";
@@ -186,7 +196,7 @@ export default async function ProductPage(props: ProductPageProps) {
     name: product.name,
     description: product.metaDescription || product.shortDescription,
     brand: { "@type": "Brand", name: "NatureMist" },
-    category: "Botanical hair care powder",
+    category: product.careAreas?.join(" / ") || product.productType || "Botanical powder",
     image: imageUrl,
     url: productUrl,
     offers: {
@@ -278,6 +288,9 @@ export default async function ProductPage(props: ProductPageProps) {
             <h1 className="m-0 [font-family:var(--font-display)] text-[clamp(2rem,3.8vw,3.4rem)] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--forest)] max-[680px]:text-[1.85rem]">
               {product.name}
             </h1>
+            {Boolean(product.careAreas?.length) && <div className="mt-3 flex flex-wrap gap-2" aria-label="Product care areas">
+              {product.careAreas?.map((area) => <span key={area} className="rounded-full border border-[var(--line)] bg-[var(--pdp-soft)] px-3 py-1 text-[0.7rem] font-semibold text-[var(--forest)]">{area}</span>)}
+            </div>}
             {product.subtitle && <p className="mt-1.5 mb-0 [font-family:var(--font-display)] text-[1.05rem] italic text-[var(--botanical)] max-[680px]:text-[0.92rem]">
               {product.subtitle}
             </p>}
@@ -345,6 +358,11 @@ export default async function ProductPage(props: ProductPageProps) {
             </ul>
           </div>}
 
+          {Boolean(product.suitableFor?.length) && <div className="text-[0.8rem] leading-relaxed text-[var(--muted)]">
+            <span className="font-semibold text-[var(--forest)]">Best suited to: </span>
+            {product.suitableFor.join(" · ")}
+          </div>}
+
           {/* Main Purchase Actions (Inline & Seamless) */}
           <div className="pt-1">
             <ProductDetailActions product={product} />
@@ -357,13 +375,12 @@ export default async function ProductPage(props: ProductPageProps) {
                 <span>How to prepare & apply</span>
                 <span className="text-base text-[var(--botanical)] transition-transform duration-300 group-open:rotate-45">＋</span>
               </summary>
-              <ol className="mt-2.5 mb-0 space-y-1.5 pl-4 text-[0.82rem] text-[var(--muted)] max-[680px]:text-[0.75rem]">
-                {product.howTo.map((step) => (
-                  <li key={step} className="list-decimal leading-relaxed">
-                    {step}
-                  </li>
-                ))}
-              </ol>
+              {usageGroups.map((group, index) => <div key={`${group.title}-${index}`} className="mt-3">
+                {group.title && <h3 className="m-0 text-[0.8rem] font-semibold text-[var(--forest)]">{group.title}</h3>}
+                <ol className="mt-1.5 mb-0 space-y-1.5 pl-4 text-[0.82rem] text-[var(--muted)] max-[680px]:text-[0.75rem]">
+                  {group.steps.map((step) => <li key={step} className="list-decimal leading-relaxed">{step}</li>)}
+                </ol>
+              </div>)}
             </details>}
 
             <details className="group rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-4 transition-all max-[680px]:p-3 max-[680px]:rounded-xl">
@@ -373,6 +390,9 @@ export default async function ProductPage(props: ProductPageProps) {
               </summary>
               <div className="mt-2.5 text-[0.82rem] text-[var(--muted)] leading-relaxed max-[680px]:text-[0.75rem]">
                 {product.storage && <p className="m-0 font-medium text-[var(--forest)]">{product.storage}</p>}
+                {Boolean(product.safety?.length) && <ul className="mt-2 mb-0 list-disc space-y-1 pl-4">
+                  {product.safety.map((instruction) => <li key={instruction}>{instruction}</li>)}
+                </ul>}
                 <p className="mt-1.5 mb-0 text-[0.74rem] text-[var(--muted)]">
                   {globalSafety}
                 </p>
@@ -464,7 +484,7 @@ export default async function ProductPage(props: ProductPageProps) {
             </h2>
           </div>
           <span className="text-[0.64rem] text-[var(--muted)] max-[680px]:text-[0.56rem]">
-            Authentic Ayurvedic answers
+            Clear guidance for your ritual
           </span>
         </div>
 

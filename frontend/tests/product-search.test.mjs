@@ -51,3 +51,15 @@ test("search payload is limited to public result fields and does not mutate prod
   searchProducts([entry], "amla");
   assert.equal(JSON.stringify(source), before);
 });
+
+test("care category searches use explicit care areas instead of negative skin-use mentions", () => {
+  const catalog = [
+    toSearchProduct(product({ careAreas: ["Hair Care", "Skin Care"] })),
+    toSearchProduct(product({ slug: "reetha", name: "Reetha Powder", careAreas: ["Hair Care"], description: "For hair care. Not for skin care." })),
+    toSearchProduct(product({ slug: "indigo", name: "Indigo Powder", careAreas: ["Hair Colour"] })),
+    toSearchProduct(product({ slug: "unknown", name: "Unclassified powder", description: "Skin care uses not confirmed" })),
+  ];
+  for (const query of ["skin care", "skincare", "hair and skin"]) assert.deepEqual(searchProducts(catalog, query).map((entry) => entry.slug), ["amla-powder"]);
+  assert.deepEqual(searchProducts(catalog, "haircare").map((entry) => entry.slug), ["amla-powder", "reetha"]);
+  assert.deepEqual(searchProducts(catalog, "hair color").map((entry) => entry.slug), ["indigo"]);
+});

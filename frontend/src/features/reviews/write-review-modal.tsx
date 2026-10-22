@@ -456,7 +456,7 @@ export function WriteReviewModal({
               required
               value={quote}
               onChange={(e) => setQuote(e.target.value)}
-              placeholder="How did you prepare the ritual? How did your hair feel after 2–3 applications?"
+              placeholder="Which hair-pack, wash or colour routine did you try? Share how you prepared it and your experience."
               className="w-full rounded-xl border border-[var(--line)] bg-white px-3.5 py-2.5 text-[0.84rem] text-[var(--charcoal)] placeholder:text-[var(--muted)] focus:border-[var(--botanical)] focus:outline-none focus:ring-2 focus:ring-[var(--botanical)]/20 resize-y"
             />
           </div>

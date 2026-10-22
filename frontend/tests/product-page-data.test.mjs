@@ -82,6 +82,22 @@ test("product page renders merchant formulation and uses saved SEO copy without 
   ]);
 });
 
+test("dual-use products show separate directions and their own safety guidance", async (t) => {
+  const fixture = {
+    ...product, careAreas: ["Hair Care", "Skin Care"],
+    howTo: ["Preparation: Mix with water.", "Hair: Follow the hair-use instructions.", "Skin: Follow the skin-use instructions."],
+    safety: ["Do not use hair-mask timing on the face."], suitableFor: ["Rinse-off skin masks"],
+  };
+  const html = renderToStaticMarkup(await ProductPage(setup(t, fixture)));
+  assert.match(html, /aria-label="Product care areas"/);
+  assert.match(html, />Hair Care<\/span>/);
+  assert.match(html, />Skin Care<\/span>/);
+  assert.match(html, />Hair care<\/h3>/);
+  assert.match(html, />Skin care<\/h3>/);
+  assert.match(html, /Do not use hair-mask timing on the face/);
+  assert.match(html, /Rinse-off skin masks/);
+});
+
 test("sparse live products omit empty detail sections and structured-data facts", async (t) => {
   const sparse = { ...product, botanical: "", plantPart: " ", size: "", formulation: undefined, subtitle: "", benefits: [], howTo: [], faqs: [], storage: "" };
   const props = setup(t, sparse);

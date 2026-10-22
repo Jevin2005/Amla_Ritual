@@ -12,6 +12,11 @@ import { LoadingIndicator } from "@/shared/ui/loading-indicator";
 import "./globals.css";
 import "@/features/reviews/judgeme.css";
 
+function getBrandName(shopName: string) {
+  const name = shopName.trim();
+  return !name || /^my store$/i.test(name) ? "NatureMist" : name;
+}
+
 function productForGlobalStore(product: Product): Product {
   const defaultVariant = getDefaultVariant(product);
   const photos = [...(product.featuredImage ? [product.featuredImage] : []), ...(product.images || [])];
@@ -26,10 +31,10 @@ function productForGlobalStore(product: Product): Product {
 export async function generateMetadata(): Promise<Metadata> {
   const storefront = await getStorefront();
   const metadataBase = new URL(getPublicSiteUrl());
-  const brandName = storefront.shopName || "NatureMist";
-  const title = `${brandName} — Pure Botanicals, Powerful Rituals`;
+  const brandName = getBrandName(storefront.shopName);
+  const title = `${brandName} — Traditional Botanical Hair Rituals`;
   const description =
-    "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.";
+    "Explore six NatureMist botanical powders in 200 g packs for traditional hair packs, herbal washing and plant-based hair colour, with clear product-specific guidance.";
   const socialImage =
     storefront.source === "shopify"
       ? storefront.content.homeHeroPoster
@@ -53,6 +58,9 @@ export async function generateMetadata(): Promise<Metadata> {
       "Ayurvedic hair rituals",
       "Amla powder",
       "botanical hair care",
+      "herbal hair packs",
+      "200 g botanical powders",
+      "plant-based hair colour",
       "Indian beauty rituals",
     ],
     alternates: {
@@ -105,7 +113,7 @@ async function StorefrontShell({ children }: { children: ReactNode }) {
   const globalProducts = storefront.products.map(productForGlobalStore);
   const siteUrl = getPublicSiteUrl();
 
-  const brandName = storefront.shopName || "NatureMist";
+  const brandName = getBrandName(storefront.shopName);
   const organizationSchema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -116,7 +124,7 @@ async function StorefrontShell({ children }: { children: ReactNode }) {
         url: siteUrl,
         logo: `${siteUrl}/og-image.jpg`,
         description:
-          "Traditional Indian botanical powders, translated into clear and considered rituals for modern hair care.",
+          "Traditional botanical powders for hair packs, herbal washing and plant-based hair colour.",
         email: SUPPORT.email,
         telephone: SUPPORT.phone,
         contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: SUPPORT.email, telephone: SUPPORT.phone },
@@ -128,7 +136,7 @@ async function StorefrontShell({ children }: { children: ReactNode }) {
         url: siteUrl,
         name: brandName,
         description:
-          "Traditional Indian botanical powders, translated into clear rituals for modern hair care.",
+          "Explore six NatureMist botanical powders in 200 g packs for hair-care and hair-colour routines.",
         publisher: {
           "@id": `${siteUrl}/#organization`,
         },

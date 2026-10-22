@@ -477,7 +477,7 @@ export function PreviousProductHero({ products, settings }: { products: Product[
               onLoadingChange={handleModelLoading} />
           </div>
           <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>
-            <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical hair care"}</p>
+            <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical care rituals"}</p>
             <h3 className={styles.productName}><Link href={`/shop/${product.slug}`}>{product.name}</Link></h3>
             {(product.subtitle || product.size) && <p className={styles.subtitle}>{[product.subtitle, product.size].filter(Boolean).join(" · ")}</p>}
             <div className={styles.disclosures}>

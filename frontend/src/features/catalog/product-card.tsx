@@ -125,7 +125,7 @@ export function ProductCard({
       {/* Info area */}
       <div className="flex flex-col border-t border-[var(--line)] px-5 pt-4 pb-4 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5 max-[420px]:px-2.5 max-[420px]:py-2.5">
         <p className="mb-1 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.1em]">
-          {isCombo ? "Botanical combo" : product.ritualStep ? `${product.ritualStep} Ritual` : "Botanical hair care"}
+          {product.careAreas?.length ? product.careAreas.join(" + ") : isCombo ? "Botanical combo" : product.ritualStep ? `${product.ritualStep} Ritual` : "Botanical care"}
         </p>
 
         <CardDestination

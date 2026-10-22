@@ -218,3 +218,44 @@ test("explicit pairing links take precedence over names and never attach to anot
   assert.equal(entries[1].combo.listingProduct.compareAtPricePaise, null);
   assert.equal(entries[1].combo.purchase.total, 34500);
 });
+
+test("care filters distinguish dual-use powders, hair cleansers and colour without inferring missing uses", () => {
+  const jars = [
+    product(1, { name: "Amla", careAreas: ["Hair Care", "Skin Care"] }),
+    product(2, { name: "Hibiscus", careAreas: ["Hair Care", "Skin Care"] }),
+    product(3, { name: "Reetha", careAreas: ["Hair Care"] }),
+    product(4, { name: "Indigo", careAreas: ["Hair Colour"] }),
+    product(5, { name: "Amla without confirmed uses" }),
+  ];
+  const entries = buildCollectionCatalog(jars, [], "shopify");
+  assert.deepEqual(labels(filter(entries, { care: "hair" })), ["jar-1", "jar-2", "jar-3"]);
+  assert.deepEqual(labels(filter(entries, { care: "skin" })), ["jar-1", "jar-2"]);
+  assert.deepEqual(labels(filter(entries, { care: "both" })), ["jar-1", "jar-2"]);
+  assert.deepEqual(labels(filter(entries, { care: "colour" })), ["jar-4"]);
+  assert.equal(filter(entries, { care: "all" }).length, 5);
+  assert.deepEqual(labels(filter(entries, { query: "skin care" })), ["jar-1", "jar-2"]);
+});
+
+test("skin and dual-use filters require every jar in a complete combo to qualify", () => {
+  const amla = product(1, { careAreas: ["Hair Care", "Skin Care"] });
+  const hibiscus = product(2, { careAreas: ["Hair Care", "Skin Care"] });
+  const reetha = product(3, { careAreas: ["Hair Care"], ritualStep: "Cleanse" });
+  const indigo = product(4, { careAreas: ["Hair Colour"], ritualStep: "Colour" });
+  const misleadingListing = product(5, { tags: ["combo:mixed"], careAreas: ["Skin Care"] });
+  const pairings = [combo("dual", [amla, hibiscus]), combo("mixed", [amla, reetha]), combo("colour", [amla, indigo]), combo("incomplete", [amla, product(99)])];
+  const entries = buildCollectionCatalog([amla, hibiscus, reetha, indigo, misleadingListing], pairings, "shopify");
+  for (const care of ["skin", "both"]) assert.deepEqual(labels(filter(entries, { care, kind: "combos" })), ["dual"]);
+  assert.deepEqual(filter(entries, { care: "skin", step: "Cleanse" }), []);
+  assert.deepEqual(labels(filter(entries, { care: "colour", kind: "combos" })), ["colour"]);
+  const unidentified = buildCollectionCatalog([product(6, { tags: ["combo"], careAreas: ["Skin Care"] })], [], "shopify");
+  assert.deepEqual(filter(unidentified, { care: "skin" }), []);
+});
+
+test("Pack filters select traditional hair packs without classifying them as skin care", () => {
+  const pack = product(1, { ritualStep: "Pack", careAreas: ["Hair Care"], concerns: ["Hair Packs"] });
+  const wash = product(2, { ritualStep: "Cleanse", careAreas: ["Hair Care"] });
+  const entries = buildCollectionCatalog([pack, wash], [], "shopify");
+  assert.deepEqual(labels(filter(entries, { care: "hair", goal: "Hair Packs", step: "Pack" })), ["jar-1"]);
+  for (const care of ["skin", "both"]) assert.deepEqual(filter(entries, { care }), []);
+  assert.deepEqual(filter(entries, { goal: "Skin Care" }), []);
+});

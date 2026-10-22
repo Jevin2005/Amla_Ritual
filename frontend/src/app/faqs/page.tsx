@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FaqsPage } from "@/features/faqs/faqs-page";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | NatureMist",
+  title: "Frequently Asked Questions",
   description:
-    "Explore answers about pure botanical hair preparation, mixer recipes, scalp suitability, third-party lab testing, and secure checkout.",
+    "Find answers about NatureMist 200 g botanical powders, hair-pack and wash routines, colour preparation, evidence limits and orders.",
   alternates: { canonical: "/faqs" },
 };
 

@@ -72,13 +72,13 @@ export function HomePage() {
               className="m-0 scroll-mt-[calc(var(--header-height)+24px)] text-[clamp(2.6rem,4vw,4.5rem)] leading-[0.96] font-normal tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.6rem,7.5vw,2.1rem)]"
               id="collection-title"
             >
-              Shop the herbal collection.
+              Botanical care, your way.
             </CollectionHeading>
           </div>
           <div className="flex flex-col justify-end gap-3 max-[680px]:gap-2">
             <p className="m-0 text-[0.84rem] leading-[1.65] text-[var(--muted)] max-[680px]:hidden">
-              Your favourite botanicals, one jar at a time.
-              Find the single powder for your everyday ritual.
+              Six botanicals in 200 g packs for traditional hair packs,
+              herbal washes and plant-based colour.
             </p>
             <MagneticLink
               className={`${textLinkClass} max-[680px]:text-[0.6rem] max-[680px]:min-h-[34px]`}
@@ -89,6 +89,17 @@ export function HomePage() {
           </div>
         </div>
 
+        <nav aria-label="Shop by care" className="mb-7 flex flex-wrap gap-2.5 max-[680px]:mb-5">
+          {[
+            { href: "/shop?care=hair", title: "Hair care" },
+            { href: "/shop?goal=Cleanse", title: "Herbal hair washes" },
+            { href: "/shop?care=colour", title: "Hair colour" },
+          ].map((category) => (
+            <Link key={category.href} href={category.href} className="inline-flex min-h-11 items-center rounded-full border border-[var(--forest)]/25 bg-[var(--paper)] px-5 py-2.5 text-[0.76rem] font-bold tracking-[0.04em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-[var(--paper)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]">
+              {category.title} <span className="ml-3" aria-hidden="true">&rarr;</span>
+            </Link>
+          ))}
+        </nav>
         <p className="sr-only" role="status" aria-live="polite">{individualEntries.length} single products in the collection</p>
         {individualEntries.length ? <CollectionGrid entries={individualEntries} eagerImages={!hasHero} /> : <p className="text-[var(--muted)]">Single botanical powders are coming soon.</p>}
       </section>
@@ -110,7 +121,7 @@ export function HomePage() {
             </h2>
           </div>
           <p className="max-w-[460px] pb-1 leading-[1.75] text-[var(--muted)] max-[900px]:p-0 max-[680px]:hidden">
-            Every powder has its own directions. The rhythm, however, stays beautifully simple.
+            Choose a powder for its intended use. Hair packs, herbal washes and colour rituals each have their own directions.
           </p>
         </div>
 
@@ -144,7 +155,7 @@ export function HomePage() {
                 Scoop
               </h3>
               <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
-                Begin with enough botanical powder for your hair length.
+                Measure the amount directed for your hair pack, wash or colour step.
               </p>
             </div>
           </article>
@@ -177,7 +188,7 @@ export function HomePage() {
                 Mix
               </h3>
               <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
-                Add water gradually until the texture is smooth and spreadable.
+                Follow the product directions to make a fresh, smooth paste.
               </p>
             </div>
           </article>
@@ -212,7 +223,7 @@ export function HomePage() {
                 Apply
               </h3>
               <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
-                Follow the botanical directions, then rinse thoroughly.
+                Apply only to the intended area. Follow the timing, then rinse thoroughly.
               </p>
             </div>
           </article>

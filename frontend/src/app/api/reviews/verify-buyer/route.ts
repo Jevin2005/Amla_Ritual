@@ -21,6 +21,7 @@ const GENERIC_WORDS = new Set([
   "gram",
   "grams",
   "250g",
+  "200g",
   "100g",
   "500g",
   "certified",
@@ -34,6 +35,8 @@ const GENERIC_WORDS = new Set([
   "and",
   "with",
   "for",
+  "pack", "packs", "wash", "washes", "washing", "fruit", "flower", "leaf", "leaves", "pod", "pods",
+  "cleansing", "traditional", "botanical", "colour", "color", "skin", "ingredient", "ingredients",
 ]);
 
 function extractDistinctiveTokens(str: string): string[] {
@@ -41,7 +44,7 @@ function extractDistinctiveTokens(str: string): string[] {
     .toLowerCase()
     .replace(/[^a-z0-9]/g, " ")
     .split(/\s+/)
-    .filter((w) => w.length >= 3 && !GENERIC_WORDS.has(w));
+    .filter((w) => w.length >= 3 && !GENERIC_WORDS.has(w) && !/^\d+(?:g|kg)?$/.test(w));
 }
 
 // Check if an order's line item matches the target product (supports any new or updated listing)
@@ -59,9 +62,7 @@ function matchesProduct(
   if (productId && item.product_id) {
     const rawNumericId = String(productId).replace(/\D/g, "");
     const itemNumericId = String(item.product_id).replace(/\D/g, "");
-    if (rawNumericId && itemNumericId && rawNumericId === itemNumericId) {
-      return true;
-    }
+    if (rawNumericId && itemNumericId) return rawNumericId === itemNumericId;
   }
 
   // 2. Line item custom properties check (e.g. "Botanical Handle", "slug", "handle")
@@ -75,11 +76,11 @@ function matchesProduct(
     if (handleProp?.value) {
       const propVal = handleProp.value.toLowerCase().trim();
       const targetSlug = productSlug.toLowerCase().trim();
-      if (
+      if (propVal && targetSlug && (
         propVal === targetSlug ||
         propVal.includes(targetSlug) ||
         targetSlug.includes(propVal)
-      ) {
+      )) {
         return true;
       }
     }
@@ -91,7 +92,8 @@ function matchesProduct(
     const nameNorm = productName.toLowerCase().replace(/[^a-z0-9]/g, " ");
 
     // Full title substring match
-    if (titleNorm.includes(nameNorm) || nameNorm.includes(titleNorm)) {
+    if (extractDistinctiveTokens(item.title).length && extractDistinctiveTokens(productName).length
+      && (titleNorm.includes(nameNorm) || nameNorm.includes(titleNorm))) {
       return true;
     }
 
@@ -104,7 +106,7 @@ function matchesProduct(
 
     if (
       targetTokens.some(
-        (token) => itemTokens.has(token) || titleNorm.includes(token)
+        (token) => itemTokens.has(token)
       )
     ) {
       return true;

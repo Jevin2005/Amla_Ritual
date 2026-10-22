@@ -55,7 +55,7 @@ const themes: Record<Exclude<HeroThemeKey, "default">, HeroTheme> = {
   bhringraj: {
     key: "bhringraj",
     name: "Bhringraj",
-    tagline: "Your botanical ritual.",
+    tagline: "Your hair and scalp pack.",
     heading: "#F5F1DD",
     body: "#DFE7D8",
     accent: "#DED3A0",
@@ -67,7 +67,7 @@ const themes: Record<Exclude<HeroThemeKey, "default">, HeroTheme> = {
   hibiscus: {
     key: "hibiscus",
     name: "Hibiscus",
-    tagline: "Your floral hair ritual.",
+    tagline: "Your floral hair-pack ritual.",
     heading: "#FFF0E7",
     body: "#F0DCE0",
     accent: "#EDB3AD",

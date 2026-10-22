@@ -6,6 +6,13 @@
   color: var(--forest);
 }
 
+.careCategories { margin: 0; padding: 0; border: 0; min-width: 0; }
+.careCategories legend { margin-bottom: 12px; padding: 0; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.careCategories > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.careCategories button { min-height: 44px; padding: 11px 18px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--paper); color: var(--forest); font: inherit; font-size: 14px; cursor: pointer; }
+.careCategories button[aria-pressed="true"] { background: var(--forest); border-color: var(--forest); color: var(--paper); }
+.careDescription { max-width: 78ch; margin: 14px 0 24px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
 .toolbar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);

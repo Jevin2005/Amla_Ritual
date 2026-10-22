@@ -36,7 +36,7 @@ export const defaultBotanicalCombos: BotanicalCombosContent = {
   eyebrow: "Botanical combos",
   heading: "Your ritual.",
   headingEnding: "Better together.",
-  description: "Discover thoughtfully paired botanical powders.",
+  description: "Choose a herbal wash duo, a traditional hair-pack pairing or a set with separate wash and pack steps. Each jar contains 200 g and has its own directions.",
   buttonLabel: "View combo",
   pageTurnEnabled: true,
   pageTurnDuration: 1.25,

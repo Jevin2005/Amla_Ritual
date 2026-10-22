@@ -68,7 +68,7 @@ const chapters = [
     number: "Chapter 03",
     title: "Prepared with Care",
     headline: "The texture must serve the ritual, not the shelf.",
-    copy: "A beautiful powder is not merely decorative—it must dissolve cleanly into water, mix smoothly in a bowl, spread evenly through hair. Our preparation standard holds each botanical to a consistent texture goal: fine, even, practical. Raw botanicals are sorted, cleaned and milled with care appropriate to the ingredient. The goal at every step is the same—preserve the plant's natural character.",
+    copy: "Each botanical has a distinct role. Amla, Hibiscus and Bhringraj belong in traditional hair-pack routines; Reetha and Shikakai are hair-wash ingredients; Indigo is for botanical hair colour. Every jar contains 200 g, and each product needs its own preparation and application directions. Possible skin-care extensions require separate assessment before they become product uses.",
     accent: "#c4b5d4",
     imageSide: "right" as const,
     stat: "Finely milled · clean starting material",
@@ -85,7 +85,7 @@ const standards = [
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   title: "Our Story — NatureMist",
-  description: "Follow the NatureMist journey from clearly identified beauty botanicals to considered powders, careful guidance and modern rituals.",
+  description: "Explore NatureMist's six 200 g botanical powders for hair packs, herbal washing and plant-based hair colour, with traditional context and clear evidence limits.",
   alternates: { canonical: "/our-story" },
 };
 
@@ -133,7 +133,7 @@ export default async function OurStoryPage() {
 
             {/* Sub-copy */}
             <p className="mb-0 mt-8 max-w-[580px] text-[1.05rem] leading-[1.76] text-white/75 max-[680px]:mt-5 max-[680px]:max-w-full max-[680px]:text-[0.88rem] max-[680px]:leading-[1.65]">
-              Beauty botanicals carry generations of ritual knowledge. NatureMist brings them forward through a considered path—from plant identity and careful preparation to the powder ready in your bowl.
+              Beauty botanicals carry generations of ritual knowledge. NatureMist brings that tradition to hair packs, herbal washing and plant-based colour, with a clear role for every 200 g jar.
             </p>
 
             {/* CTAs */}
@@ -535,6 +535,20 @@ export default async function OurStoryPage() {
               </article>
             ))}
           </div>
+          <aside id="ingredient-evidence" aria-labelledby="ingredient-evidence-title" className="mt-8 rounded-[var(--radius-md)] border border-white/20 bg-white/5 p-[clamp(22px,3vw,38px)] max-[680px]:mt-5">
+            <h3 id="ingredient-evidence-title" className="m-0 font-serif text-[clamp(1.6rem,2.5vw,2.4rem)] font-normal leading-[1.15] text-[var(--paper)]">
+              Tradition, with evidence in context.
+            </h3>
+            <p className="mb-0 mt-4 max-w-[1060px] text-[0.95rem] leading-[1.75] text-white/80 max-[680px]:text-[0.85rem]">
+              Research must match the plant part, preparation and intended use. A{" "}
+              <a href="https://pubmed.ncbi.nlm.nih.gov/37487962/" target="_blank" rel="noopener noreferrer" className="text-[#d5e6a2] underline underline-offset-4 hover:text-white">human Amla study examined oral syrup</a>, while{" "}
+              <a href="https://pubmed.ncbi.nlm.nih.gov/12963149/" target="_blank" rel="noopener noreferrer" className="text-[#d5e6a2] underline underline-offset-4 hover:text-white">Hibiscus hair-growth research tested extracts in preclinical settings</a>.
+              These studies do not establish hair regrowth or conditioning results from a NatureMist powder.
+            </p>
+            <p className="mb-0 mt-3 max-w-[1060px] text-[0.9rem] leading-[1.75] text-white/70 max-[680px]:text-[0.82rem]">
+              Traditional Ayurvedic use describes a heritage of care. Claims about softness, shine, slip or reduced breakage need relevant finished-product tests. Amla and Hibiscus face or body packs remain development options pending ingredient, tolerance and product assessment; they are not current skin-use recommendations for this range.
+            </p>
+          </aside>
         </div>
       </section>
 

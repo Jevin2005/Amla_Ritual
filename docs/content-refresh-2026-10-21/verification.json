@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-21",
+  "scope": "Website content and live Shopify listings; listing photos unchanged",
+  "products": [
+    {
+      "title": "NatureMist Amla Powder",
+      "metafieldsMatch": true,
+      "seoMatches": true
+    },
+    {
+      "title": "NatureMist Reetha Powder",
+      "metafieldsMatch": true,
+      "seoMatches": true
+    },
+    {
+      "title": "NatureMist Shikakai Powder",
+      "metafieldsMatch": true,
+      "seoMatches": true
+    },
+    {
+      "title": "NatureMist Bhringraj Powder",
+      "metafieldsMatch": true,
+      "seoMatches": true
+    },
+    {
+      "title": "NatureMist Hibiscus Powder",
+      "metafieldsMatch": true,
+      "seoMatches": true
+    },
+    {
+      "title": "NatureMist Indigo Powder",
+      "metafieldsMatch": true,
+      "seoMatches": true
+    }
+  ],
+  "preserved": [
+    {
+      "title": "NatureMist Amla Powder",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Reetha Powder",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Indigo Powder",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Bhringraj Powder",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Hibiscus Powder",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Shikakai Powder",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Classic Trio",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Amla Reetha Duo",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Amla Shikakai Duo",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Cleansing Duo",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Botanical Mask Trio",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Botanical Duo",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Floral Duo",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    },
+    {
+      "title": "NatureMist Bhringraj Hibiscus Duo",
+      "imagesUnchanged": true,
+      "variantsUnchanged": true,
+      "inventoryUnchanged": true,
+      "statusUnchanged": true
+    }
+  ],
+  "validation": {
+    "relevantTests": 192,
+    "typecheck": "passed",
+    "nextBuild": "passed; sandbox network prevented Shopify prerender fetch; live browser separately verified",
+    "vinextBuild": "passed; existing large-chunk warning",
+    "changedFilesLint": "passed",
+    "fullLint": "2 existing no-assign-module-variable errors in unchanged shopify-admin-auth and shopify-order-failure tests"
+  },
+  "browser": {
+    "skinCare": "Amla, Hibiscus, Floral Duo; 3 items",
+    "hairColour": "Indigo only; 1 item",
+    "hibiscus": "Hair and Skin labels, correct botanical name, separate directions, benefits and safety verified",
+    "skinQuiz": "Skin care -> no irritation -> compare both -> not yet patch-tested: returns only Hibiscus and Amla with patch-test guidance; no hair-history questions"
+  },
+  "publication": {
+    "shopify": "All 14 listings saved and read back",
+    "website": "Code ready locally; Vercel production publication awaits user preference because pre-existing local combo-layout commit would also publish",
+    "productionHost": "Vercel jevin2005s-projects/amla-ritual-frontend",
+    "separateSitesProject": "Not changed; not the naturemist.shop host"
+  }
+}

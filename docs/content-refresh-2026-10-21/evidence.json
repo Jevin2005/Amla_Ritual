@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-21",
+  "classification": {
+    "Amla": [
+      "Hair Care",
+      "Skin Care"
+    ],
+    "Hibiscus": [
+      "Hair Care",
+      "Skin Care"
+    ],
+    "Reetha": [
+      "Hair Care"
+    ],
+    "Shikakai": [
+      "Hair Care"
+    ],
+    "Bhringraj": [
+      "Hair Care"
+    ],
+    "Indigo": [
+      "Hair Colour"
+    ]
+  },
+  "scope": "Cosmetic positioning informed by ingredient function and traditional use. This is not certification or clinical proof of the finished NatureMist powders.",
+  "sources": [
+    {
+      "product": "Hibiscus",
+      "url": "https://cosmileeurope.eu/inci/detail/6470/hibiscus-rosa-sinensis-flower-powder/",
+      "supports": "Flower powder cosmetic skin conditioning function."
+    },
+    {
+      "product": "Amla",
+      "url": "https://cosmileeurope.eu/inci/detail/5227/emblica-officinalis-fruit-powder/",
+      "supports": "Fruit powder hair conditioning function."
+    },
+    {
+      "product": "Amla",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34522633/",
+      "limitation": "Skin trial used branch-extract gel, not fruit powder. Do not transfer anti-ageing claims."
+    },
+    {
+      "product": "Bhringraj",
+      "url": "https://www.portal.pcimh.gov.in/product_details/995c404b-1565-4ac6-b85a-d8ac756c8eb1",
+      "supports": "Ayurvedic ingredient recognition, not brand certification."
+    },
+    {
+      "product": "Reetha",
+      "url": "https://www.sciencedirect.com/science/article/pii/S1876107017303103",
+      "supports": "Extracted saponins show surface activity; not a finished-powder clinical trial."
+    },
+    {
+      "product": "Shikakai",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16979128/",
+      "supports": "Pod saponin surface activity."
+    },
+    {
+      "product": "Indigo",
+      "url": "https://health.ec.europa.eu/publications/hair-dye-indigofera-tinctoria-c170-cas-84775-63-3-submission-iii_en",
+      "supports": "Hair dye function; sensitisation remains possible."
+    }
+  ],
+  "excludedClaims": [
+    "clinically or pharmacy proven",
+    "hair regrowth",
+    "reverses grey hair",
+    "treats acne/dandruff/eczema",
+    "pigmentation removal",
+    "safe for all skin types",
+    "independent batch testing without records"
+  ],
+  "media": "Listing photographs and all image/model references are preserved."
+}

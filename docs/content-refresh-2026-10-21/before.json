@@ -1,0 +1,2193 @@
+{
+  "products": [
+    {
+      "id": "gid://shopify/Product/8494763311290",
+      "title": "NatureMist Amla Powder",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Botanical Powder",
+      "descriptionHtml": "<h2 dir=\"auto\" class=\"PDq2pG_selectionAnchorContainer\">NatureMist Amla Powder<span class=\"PDq2pG_selectionAnchor\"></span>\n</h2>\n<p dir=\"auto\"><em>Your botanical hair-care ritual, made simple.</em></p>\n<p dir=\"auto\">Make wash day a moment of care with <strong>NatureMist Amla Powder</strong>. Prepare a fresh, mix-at-home hair mask and bring a botanical touch to your pre-wash routine.</p>\n<p dir=\"auto\">From mixing your mask to taking a quiet moment before rinsing, this is an invitation to slow down and give your hair-care routine a little more attention. Add water gradually to create a paste with a consistency that works for you, preparing only what you need for each application.</p>\n<h3 dir=\"auto\">A simple addition to your routine</h3>\n<ul>\n<li>\n<strong>Mix fresh each time:</strong> Prepare your hair mask when you are ready to use it.</li>\n<li>\n<strong>Adjust the consistency:</strong> Add water gradually for a smooth, spreadable paste.</li>\n<li>\n<strong>Make it your ritual:</strong> Include it as the mask step in your pre-wash hair-care routine.</li>\n</ul>\n<h3 dir=\"auto\">How to use</h3>\n<p dir=\"auto\">Mix the powder with water in a clean bowl to make a smooth paste. Apply according to the directions on your product label, avoiding the eyes. Follow the label’s recommended application time, then rinse thoroughly. Prepare a fresh mixture for each use and discard any leftover wet paste.</p>\n<h3 dir=\"auto\">Care and storage</h3>\n<p dir=\"auto\">Keep the container tightly closed in a cool, dry place, away from moisture and direct sunlight. Use a clean, dry spoon to scoop out the powder.</p>\n<p dir=\"auto\"><strong>For external use only.</strong> Patch test before first use. Avoid inhaling the powder or applying it to irritated or broken skin. Discontinue use if irritation occurs. Keep out of reach of children.</p>\n<p dir=\"auto\"><strong>NatureMist — Make time for your botanical ritual.</strong></p>",
+      "tags": [
+        "Amla",
+        "Botanical Powder"
+      ],
+      "totalInventory": 1000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+          "altText": "NatureMist Amla Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531573946"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Care_Guide.png?v=1789634129",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34402531606714"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Benefits_Graphic.png?v=1789634129",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34402531639482"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46431988940986",
+          "title": "Default Title",
+          "sku": null,
+          "price": "234.00",
+          "inventoryQuantity": 1000
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/8498815107258",
+      "title": "NatureMist Reetha Powder",
+      "vendor": "My Store",
+      "status": "ACTIVE",
+      "productType": "",
+      "descriptionHtml": "<p dir=\"auto\" class=\"PDq2pG_selectionAnchorContainer\"><strong>NatureMist Reetha Powder</strong> brings a traditional botanical cleansing step to your hair-care routine. Made in an easy-to-mix powder format, it can be prepared fresh with water and used as part of your wash-day ritual.<span class=\"PDq2pG_selectionAnchor\"></span></p>\n<p dir=\"auto\">Reetha is widely used in traditional hair care for cleansing the scalp and hair while helping remove everyday oil and buildup. Its simple powder format lets you prepare only the amount you need for each use.</p>\n<h3 dir=\"auto\">Why choose NatureMist Reetha Powder?</h3>\n<ul>\n<li>Traditional botanical hair and scalp cleansing powder</li>\n<li>Helps remove oil and everyday buildup</li>\n<li>Supports a refreshed scalp feel</li>\n<li>Freshly prepared for each use</li>\n<li>Easy addition to your wash-day ritual</li>\n</ul>\n<h3 dir=\"auto\">How to use</h3>\n<p dir=\"auto\">Mix the required amount of powder with water to make a smooth paste. Apply to wet hair and scalp, massage gently, and rinse thoroughly with water. Avoid contact with eyes.</p>\n<h3 dir=\"auto\">Care instructions</h3>\n<p dir=\"auto\">Store in a cool, dry place away from moisture. Keep the lid tightly closed after use.</p>\n<p dir=\"auto\"><strong>Net Quantity: 250 g</strong></p>",
+      "tags": [],
+      "totalInventory": 99,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethaPowderinWarmLight.png?v=1789634963",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethaPowderinWarmLight.png?v=1789634963",
+          "altText": "NatureMist Reetha Powder",
+          "mediaId": "gid://shopify/MediaImage/34403223011514"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethawash-dayritualtips.png?v=1789634963",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34403223077050"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethabotanicalbenefits.png?v=1789634963",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34403222978746"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethauseguide.png?v=1789634963",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34403223044282"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46462270603450",
+          "title": "Default Title",
+          "sku": null,
+          "price": "325.00",
+          "inventoryQuantity": 99
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/8531585368250",
+      "title": "NatureMist Indigo Powder",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Botanical Hair Powder",
+      "descriptionHtml": "<p dir=\"auto\" class=\"PDq2pG_selectionAnchorContainer\"><strong>A Traditional Botanical Hair-Colour Ritual</strong><span class=\"PDq2pG_selectionAnchor\"></span></p>\n<p dir=\"auto\">Discover a traditional approach to hair colouring with <strong>NatureMist Indigo Powder</strong>, made from finely powdered <em>Indigofera tinctoria</em> leaves.</p>\n<p dir=\"auto\">Indigo is valued in botanical colour routines for adding cool, deep tones to hair. It is especially suited to two-step henna-and-indigo rituals where henna provides the warm base and Indigo is applied afterward to develop deeper brown-to-black-looking shades.</p>\n<p dir=\"auto\">Unlike a cleansing or conditioning powder, Indigo should be treated as a <strong>colour ritual</strong>. The final shade depends on your starting hair colour, previous treatments, henna base, mixture, application time and individual hair.</p>\n<p dir=\"auto\"><strong>Why choose NatureMist Indigo Powder?</strong></p>\n<ul>\n<li>Creates cool, deeper-looking botanical colour tones</li>\n<li>Helps deepen the appearance of henna-coloured hair</li>\n<li>Suitable for brown-to-dark botanical colour routines</li>\n<li>Made from powdered Indigo leaves</li>\n<li>Freshly mixed before every application</li>\n<li>Allows colour intensity to be adjusted through your individual ritual</li>\n</ul>\n<p dir=\"auto\"><strong>How to use</strong></p>\n<p dir=\"auto\">For deeper brown-to-black botanical colour routines, Indigo is commonly used after a henna application.</p>\n<p dir=\"auto\">Mix the required quantity of Indigo Powder with lukewarm water until you get a smooth, spreadable paste. Prepare the mixture immediately before application. Apply evenly to clean, henna-prepared or appropriately prepared hair, covering the desired areas thoroughly.</p>\n<p dir=\"auto\" class=\"\">Leave according to your strand-test result and desired depth of colour, then rinse thoroughly with plain water.</p>\n<p dir=\"auto\">Allow the final shade time to settle after rinsing.</p>\n<p dir=\"auto\" class=\"\"><strong>Important:</strong> Always perform a patch test and strand test before full application. Botanical colour results vary by starting hair colour and previous treatments. Pure Indigo used directly on very light or grey hair can produce unexpected cool or blue-green tones, so a henna-first routine is commonly preferred when a darker result is desired.</p>\n<p dir=\"auto\">For external use only. Avoid contact with eyes, eyebrows and eyelashes.</p>",
+      "tags": [
+        "Cleansing Ritual",
+        "Hair Care",
+        "Hair Powder",
+        "listing-details-pending",
+        "price-required",
+        "Reetha"
+      ],
+      "totalInventory": 100,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistIndigopowderhero.png?v=1789636168",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistIndigopowderhero.png?v=1789636168",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34403915923642"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistIndigoBenefitsGuide.png?v=1789636168",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34403915858106"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistindigocolourritualguide.png?v=1789636168",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34403915890874"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistIndigo_mix_apply_rinse.png?v=1789636168",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34403915956410"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400329402",
+          "title": "Default Title",
+          "sku": null,
+          "price": "350.00",
+          "inventoryQuantity": 100
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/8531585433786",
+      "title": "NatureMist Bhringraj Powder",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Botanical Hair Powder",
+      "descriptionHtml": "<p dir=\"auto\" class=\"PDq2pG_selectionAnchorContainer\"><strong>A Traditional Botanical Ritual for Hair Care</strong><span class=\"PDq2pG_selectionAnchor\"></span></p>\n<p dir=\"auto\">Bring a thoughtful botanical step to wash day with <strong>NatureMist Bhringraj Powder</strong>. Its fine powder format is designed to be freshly prepared as a hair and scalp mask whenever your routine needs extra conditioning care.</p>\n<p dir=\"auto\">Bhringraj has a long history of use in traditional Indian hair-care rituals. NatureMist keeps the experience simple: mix, apply, leave on and rinse.</p>\n<p dir=\"auto\"><strong>Why choose NatureMist Bhringraj Powder?</strong></p>\n<ul>\n<li>Helps condition hair and scalp</li>\n<li>Supports softer-feeling hair</li>\n<li>Helps improve manageability</li>\n<li>Complements pre-wash hair-mask routines</li>\n<li>Freshly prepared before every application</li>\n<li>Simple botanical powder format</li>\n</ul>\n<p dir=\"auto\"><strong>How to use:</strong> Mix the required amount with water to create a smooth, spreadable paste. Apply evenly to damp scalp and hair. Leave for approximately 15–20 minutes, then rinse thoroughly.</p>\n<p dir=\"auto\">For external use only. Patch test before first use. Avoid contact with eyes and discontinue use if irritation occurs.</p>\n<p dir=\"auto\"><strong>Net Quantity: 250 g</strong></p>",
+      "tags": [
+        "Bhringraj",
+        "Conditioning Ritual",
+        "Hair Care",
+        "Hair Powder",
+        "listing-details-pending",
+        "price-required"
+      ],
+      "totalInventory": 100,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png?v=1789639509",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png?v=1789639509",
+          "altText": "NatureMist Bhringraj Powder",
+          "mediaId": "gid://shopify/MediaImage/34405092163770"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/Bhringraj_ritual__mix_apply_rinse_7532af66-1821-421e-8815-d9db5ff5ff62.png?v=1789639509",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34405092065466"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Benefits_Graphic_8bf7cb24-a277-4c7b-afe7-91612a1bb946.png?v=1789639509",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34405092098234"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Care_Guide_a706b9d3-5779-4ae2-a915-7b9bd9ac33a4.png?v=1789639509",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34405092131002"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400558778",
+          "title": "Default Title",
+          "sku": null,
+          "price": "400.00",
+          "inventoryQuantity": 100
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/8531585499322",
+      "title": "NatureMist Hibiscus Powder",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Botanical Hair Powder",
+      "descriptionHtml": "<p dir=\"auto\" class=\"PDq2pG_selectionAnchorContainer\"><strong>A Floral Botanical Ritual for Softer-Looking Hair</strong><span class=\"PDq2pG_selectionAnchor\"></span></p>\n<p dir=\"auto\">Bring a vibrant botanical touch to wash day with <strong>NatureMist Hibiscus Powder</strong>. Made for conditioning-focused hair care, its fine powder format can be freshly mixed into a smooth pre-wash mask whenever your hair routine needs extra softness and care.</p>\n<p dir=\"auto\">Hibiscus has a long tradition of use in botanical hair-care rituals. Its naturally rich floral character makes it especially suited to masks intended to leave hair feeling conditioned, smooth and refreshed.</p>\n<p dir=\"auto\"><strong>Why choose NatureMist Hibiscus Powder?</strong></p>\n<ul>\n<li>Helps condition dry-feeling hair</li>\n<li>Supports softer, smoother-feeling lengths</li>\n<li>Helps improve everyday manageability</li>\n<li>Enhances natural-looking shine</li>\n<li>Ideal for a pre-wash botanical hair mask</li>\n<li>Freshly mixed before each application</li>\n</ul>\n<p dir=\"auto\"><strong>How to use:</strong> Mix the required amount with water to make a smooth, spreadable paste. Apply evenly to damp scalp and hair, working through the lengths. Leave for approximately 15–20 minutes, then rinse thoroughly.</p>\n<p dir=\"auto\">For external use only. Patch test before first use. Avoid contact with eyes. Because Hibiscus naturally contains colour pigments, strand test before use on very light, bleached or highly porous hair, and avoid contact with light fabrics or surfaces.</p>\n<p dir=\"auto\"><strong>Net Quantity: 250 g</strong></p>",
+      "tags": [
+        "Conditioning Ritual",
+        "Hair Care",
+        "Hair Powder",
+        "Hibiscus",
+        "listing-details-pending",
+        "price-required"
+      ],
+      "totalInventory": 100,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062",
+          "altText": "NatureMist Hibiscus Powder",
+          "mediaId": "gid://shopify/MediaImage/34405135483066"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusBenefitsGuide.png?v=1789640062",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34405135384762"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/HibiscusRitual_Mix_Apply_Rinse.png?v=1789640062",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34405135417530"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusCareGuide.png?v=1789640062",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34405135450298"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400722618",
+          "title": "Default Title",
+          "sku": null,
+          "price": "450.00",
+          "inventoryQuantity": 100
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/8531585597626",
+      "title": "NatureMist Shikakai Powder",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Botanical Hair Colour Powder",
+      "descriptionHtml": "<p dir=\"auto\" class=\"PDq2pG_selectionAnchorContainer\"><strong>A Traditional Botanical Cleansing Ritual</strong><span class=\"PDq2pG_selectionAnchor\"></span></p>\n<p dir=\"auto\">Bring a time-honoured botanical step to wash day with <strong>NatureMist Shikakai Powder</strong>. Made from finely powdered Shikakai pods, it is traditionally used for cleansing hair and scalp.</p>\n<p dir=\"auto\">Its naturally occurring cleansing compounds make Shikakai especially suited to powder-based wash routines. Simply mix the required amount with water, prepare a fresh paste, apply to wet hair and scalp, massage gently and rinse thoroughly.</p>\n<p dir=\"auto\"><strong>Why choose NatureMist Shikakai Powder?</strong></p>\n<ul>\n<li>Helps cleanse hair and scalp</li>\n<li>Helps remove excess oil and everyday buildup</li>\n<li>Leaves hair feeling fresh and clean</li>\n<li>Supports softer, more manageable-feeling hair</li>\n<li>Suitable for botanical wash-day routines</li>\n<li>Freshly mixed before every use</li>\n</ul>\n<p dir=\"auto\"><strong>How to use:</strong> Mix the required quantity with water into a smooth, spreadable paste. Apply to wet scalp and hair, massage gently through the roots and lengths, then rinse thoroughly with water.</p>\n<p dir=\"auto\">For external use only. Avoid contact with eyes. Patch test before first use and discontinue if irritation occurs.</p>\n<p dir=\"auto\"><strong>Net Quantity: 250 g</strong></p>",
+      "tags": [
+        "Colour Ritual",
+        "Hair Care",
+        "Hair Colour",
+        "Hair Powder",
+        "Indigo",
+        "listing-details-pending",
+        "price-required"
+      ],
+      "totalInventory": 100,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Shikakai_Powder_Hero.png?v=1789634129",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Shikakai_Powder_Hero.png?v=1789634129",
+          "altText": "NatureMist Shikakai Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531967162"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Shikakai_Benefits_Graphic.png?v=1789634129",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34402532393146"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/Shikakai_ritual__mix_cleanse_rinse.png?v=1789634129",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34402531836090"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Shikakai_Gentle_Wash_Day_Tips.png?v=1789634129",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/34402531901626"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/46623400853690",
+          "title": "Default Title",
+          "sku": null,
+          "price": "400.00",
+          "inventoryQuantity": 100
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392444928186",
+      "title": "NatureMist Classic Trio",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>Three botanicals. One classic hair-care ritual.</h2><p>NatureMist Classic Trio brings together Amla, Reetha and Shikakai in three separate jars. An Ayurveda-inspired collection for customers who enjoy preparing their own botanical hair-care routine.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Amla Powder</li>\n<li>1 jar of NatureMist Reetha Powder</li>\n<li>1 jar of NatureMist Shikakai Powder</li>\n</ul><h3>Why choose this collection?</h3><p>Three familiar botanicals in one convenient set, with each powder packed separately so you can follow its individual preparation and usage instructions. One combo purchase includes all three jars.</p><h3>How to use</h3><p>Follow the directions on each jar. This collection contains separate products and is not a premixed formula. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Keep the powders dry, use a clean dry spoon, and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "Amla",
+        "combo",
+        "combo-count:3",
+        "combo:gid://shopify/Metaobject/431929196730",
+        "Reetha",
+        "Shikakai"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ca688b08-2fcf-4df4-8999-4749cf7b9bbd.png?v=1792489403",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ca688b08-2fcf-4df4-8999-4749cf7b9bbd.png?v=1792489403",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/46936007147706"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/0fd8239b-d8e9-4df3-b98f-cd456fb9d998.png?v=1792489812",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/46936174821562"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/9a647ff5-b989-402f-bd5d-fa33ef6810f6.png?v=1792489827",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/46936177246394"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/6314dfff-e44f-42c9-bcf0-8298f747b098.png?v=1792489835",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/46936178360506"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50792368308410",
+          "title": "Default Title",
+          "sku": "NM-CLASSIC-TRIO",
+          "price": "849.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392838209722",
+      "title": "NatureMist Amla Reetha Duo",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>Amla and Reetha, paired for your botanical wash-day routine.</h2><p>NatureMist Amla Reetha Duo brings together Amla and Reetha in two separate jars. Bring together an Amla hair-mask step and a Reetha cleansing step in one convenient two-jar collection.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Amla Powder</li>\n<li>1 jar of NatureMist Reetha Powder</li>\n</ul><h3>A complete set, one combo price</h3><p>One purchase includes all two jars. Each powder remains separately packed so you can follow its own preparation and usage instructions. This collection is not a premixed formula.</p><h3>How to use</h3><p>Follow the directions on each jar. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Use a clean, dry spoon, keep the powders dry and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "Amla",
+        "combo",
+        "combo-count:2",
+        "combo:gid://shopify/Metaobject/440397365434",
+        "Reetha"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/bc23ec23-3c47-4c83-8b71-f7b858b5be92.png?v=1792580172",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/bc23ec23-3c47-4c83-8b71-f7b858b5be92.png?v=1792580172",
+          "altText": "",
+          "mediaId": "gid://shopify/MediaImage/46962149163194"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+          "altText": "NatureMist Amla Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531573946"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethaPowderinWarmLight.png?v=1789634963",
+          "altText": "NatureMist Reetha Powder",
+          "mediaId": "gid://shopify/MediaImage/34403223011514"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50793515450554",
+          "title": "Default Title",
+          "sku": "NM-AMLA-REETHA-DUO",
+          "price": "499.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392838308026",
+      "title": "NatureMist Amla Shikakai Duo",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>Two familiar botanicals for a thoughtful wash-day ritual.</h2><p>NatureMist Amla Shikakai Duo brings together Amla and Shikakai in two separate jars. Pair your Amla hair-mask routine with Shikakai cleansing. Each powder is supplied separately, with its own preparation and usage directions.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Amla Powder</li>\n<li>1 jar of NatureMist Shikakai Powder</li>\n</ul><h3>A complete set, one combo price</h3><p>One purchase includes all two jars. Each powder remains separately packed so you can follow its own preparation and usage instructions. This collection is not a premixed formula.</p><h3>How to use</h3><p>Follow the directions on each jar. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Use a clean, dry spoon, keep the powders dry and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "Amla",
+        "combo",
+        "combo-count:2",
+        "combo:gid://shopify/Metaobject/440397660346",
+        "Shikakai"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+          "altText": "NatureMist Amla Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531573946"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Shikakai_Powder_Hero.png?v=1789634129",
+          "altText": "NatureMist Shikakai Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531967162"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50793515811002",
+          "title": "Default Title",
+          "sku": "NM-AMLA-SHIKAKAI-DUO",
+          "price": "549.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392838406330",
+      "title": "NatureMist Cleansing Duo",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>A simple botanical cleansing collection.</h2><p>NatureMist Cleansing Duo brings together Reetha and Shikakai in two separate jars. Explore Reetha and Shikakai in two separate jars for your traditional powder-based wash routine.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Reetha Powder</li>\n<li>1 jar of NatureMist Shikakai Powder</li>\n</ul><h3>A complete set, one combo price</h3><p>One purchase includes all two jars. Each powder remains separately packed so you can follow its own preparation and usage instructions. This collection is not a premixed formula.</p><h3>How to use</h3><p>Follow the directions on each jar. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Use a clean, dry spoon, keep the powders dry and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "combo",
+        "combo-count:2",
+        "combo:gid://shopify/Metaobject/440397791418",
+        "Reetha",
+        "Shikakai"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethaPowderinWarmLight.png?v=1789634963",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethaPowderinWarmLight.png?v=1789634963",
+          "altText": "NatureMist Reetha Powder",
+          "mediaId": "gid://shopify/MediaImage/34403223011514"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Shikakai_Powder_Hero.png?v=1789634129",
+          "altText": "NatureMist Shikakai Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531967162"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50793515909306",
+          "title": "Default Title",
+          "sku": "NM-CLEANSING-DUO",
+          "price": "649.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392838766778",
+      "title": "NatureMist Botanical Mask Trio",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>Three botanicals for your hair-mask ritual.</h2><p>NatureMist Botanical Mask Trio brings together Amla and Bhringraj and Hibiscus in three separate jars. Explore Amla, Bhringraj and Hibiscus in a three-jar collection for customers who enjoy freshly prepared botanical hair-care routines.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Amla Powder</li>\n<li>1 jar of NatureMist Bhringraj Powder</li>\n<li>1 jar of NatureMist Hibiscus Powder</li>\n</ul><h3>A complete set, one combo price</h3><p>One purchase includes all three jars. Each powder remains separately packed so you can follow its own preparation and usage instructions. This collection is not a premixed formula.</p><h3>How to use</h3><p>Follow the directions on each jar. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Use a clean, dry spoon, keep the powders dry and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "Amla",
+        "Bhringraj",
+        "combo",
+        "combo-count:3",
+        "combo:gid://shopify/Metaobject/440397889722",
+        "Hibiscus"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+          "altText": "NatureMist Amla Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531573946"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png?v=1789639509",
+          "altText": "NatureMist Bhringraj Powder",
+          "mediaId": "gid://shopify/MediaImage/34405092163770"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062",
+          "altText": "NatureMist Hibiscus Powder",
+          "mediaId": "gid://shopify/MediaImage/34405135483066"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50793516269754",
+          "title": "Default Title",
+          "sku": "NM-BOTANICAL-MASK-TRIO",
+          "price": "949.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392838963386",
+      "title": "NatureMist Botanical Duo",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>Amla and Bhringraj, thoughtfully paired.</h2><p>NatureMist Botanical Duo brings together Amla and Bhringraj in two separate jars. Discover two familiar botanicals in an Ayurveda-inspired hair-care collection. Separate jars let you follow each powder's individual directions.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Amla Powder</li>\n<li>1 jar of NatureMist Bhringraj Powder</li>\n</ul><h3>A complete set, one combo price</h3><p>One purchase includes all two jars. Each powder remains separately packed so you can follow its own preparation and usage instructions. This collection is not a premixed formula.</p><h3>How to use</h3><p>Follow the directions on each jar. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Use a clean, dry spoon, keep the powders dry and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "Amla",
+        "Bhringraj",
+        "combo",
+        "combo-count:2",
+        "combo:gid://shopify/Metaobject/431929229498"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-combo-botanical-duo.webp?v=1791606503",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-combo-botanical-duo.webp?v=1791606503",
+          "altText": "NatureMist Amla and Bhringraj jars with green amla fruit and delicate white flowers",
+          "mediaId": "gid://shopify/MediaImage/46690534490298"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+          "altText": "NatureMist Amla Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531573946"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png?v=1789639509",
+          "altText": "NatureMist Bhringraj Powder",
+          "mediaId": "gid://shopify/MediaImage/34405092163770"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50793516466362",
+          "title": "Default Title",
+          "sku": "NM-BOTANICAL-DUO",
+          "price": "549.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392839028922",
+      "title": "NatureMist Floral Duo",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>A floral touch for your botanical hair-care ritual.</h2><p>NatureMist Floral Duo brings together Hibiscus and Amla in two separate jars. Bring Hibiscus and Amla into your hair-mask collection, with each powder packed separately for fresh preparation.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Hibiscus Powder</li>\n<li>1 jar of NatureMist Amla Powder</li>\n</ul><h3>A complete set, one combo price</h3><p>One purchase includes all two jars. Each powder remains separately packed so you can follow its own preparation and usage instructions. This collection is not a premixed formula.</p><h3>How to use</h3><p>Follow the directions on each jar. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Use a clean, dry spoon, keep the powders dry and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "Amla",
+        "combo",
+        "combo-count:2",
+        "combo:gid://shopify/Metaobject/431929262266",
+        "Hibiscus"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-combo-floral-duo.webp?v=1791606513",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/naturemist-combo-floral-duo.webp?v=1791606513",
+          "altText": "NatureMist Hibiscus and Amla jars with red hibiscus flowers and fresh amla fruit",
+          "mediaId": "gid://shopify/MediaImage/46690536915130"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062",
+          "altText": "NatureMist Hibiscus Powder",
+          "mediaId": "gid://shopify/MediaImage/34405135483066"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129",
+          "altText": "NatureMist Amla Powder",
+          "mediaId": "gid://shopify/MediaImage/34402531573946"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50793516531898",
+          "title": "Default Title",
+          "sku": "NM-FLORAL-DUO",
+          "price": "599.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    },
+    {
+      "id": "gid://shopify/Product/10392839127226",
+      "title": "NatureMist Bhringraj Hibiscus Duo",
+      "vendor": "NatureMist",
+      "status": "ACTIVE",
+      "productType": "Combo",
+      "descriptionHtml": "<h2>A botanical and floral pairing for your hair-care collection.</h2><p>NatureMist Bhringraj Hibiscus Duo brings together Bhringraj and Hibiscus in two separate jars. Explore Bhringraj and Hibiscus in a two-jar collection for your mix-at-home hair-care routine.</p><h3>What's inside</h3><ul>\n<li>1 jar of NatureMist Bhringraj Powder</li>\n<li>1 jar of NatureMist Hibiscus Powder</li>\n</ul><h3>A complete set, one combo price</h3><p>One purchase includes all two jars. Each powder remains separately packed so you can follow its own preparation and usage instructions. This collection is not a premixed formula.</p><h3>How to use</h3><p>Follow the directions on each jar. Prepare a fresh mixture for each use and discard any leftover wet paste.</p><h3>Care and storage</h3><p>For external use only. Patch test before first use. Avoid contact with eyes, inhaling the powder, or applying it to irritated or broken skin. Stop use if irritation occurs. Use a clean, dry spoon, keep the powders dry and close each jar securely after use. Keep out of reach of children.</p><p>This is a cosmetic hair-care collection, not a treatment for hair loss or scalp disease.</p>",
+      "tags": [
+        "Bhringraj",
+        "combo",
+        "combo-count:2",
+        "combo:gid://shopify/Metaobject/440398053562",
+        "Hibiscus"
+      ],
+      "totalInventory": 999,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png?v=1789639509",
+      "images": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png?v=1789639509",
+          "altText": "NatureMist Bhringraj Powder",
+          "mediaId": "gid://shopify/MediaImage/34405092163770"
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062",
+          "altText": "NatureMist Hibiscus Powder",
+          "mediaId": "gid://shopify/MediaImage/34405135483066"
+        }
+      ],
+      "totalVariants": 1,
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50793517187258",
+          "title": "Default Title",
+          "sku": "NM-BHRINGRAJ-HIBISCUS-DUO",
+          "price": "749.00",
+          "inventoryQuantity": 999
+        }
+      ],
+      "currencyCode": "INR"
+    }
+  ],
+  "metafields": [
+    {
+      "id": "gid://shopify/Product/8494763311290",
+      "title": "NatureMist Amla Powder",
+      "handle": "amla",
+      "seo": {
+        "title": "Amla Powder | NatureMist",
+        "description": "Explore NatureMist Amla Powder. View the product details, current price and purchase options in the NatureMist botanical care collection."
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "namespace": "custom",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Botanical Hair Mask for Softness & Shine",
+            "compareDigest": "81d94ee13d2b4fd854c15b84f221bf9301750507c6ed858b70f5f7a968504735"
+          },
+          {
+            "namespace": "custom",
+            "key": "ingredient",
+            "type": "multi_line_text_field",
+            "value": "Amla Fruit Powder (Indian Gooseberry)",
+            "compareDigest": "e9a5718d826cadf340a20d2396f61681d6dcd37f3dd246e72cae6b4decfeb784"
+          },
+          {
+            "namespace": "custom",
+            "key": "how_to_use",
+            "type": "list.single_line_text_field",
+            "value": "[\" Mix 1–2 scoops with warm water to make a smooth paste.\",\"Apply evenly to damp hair and scalp.\",\"Leave on for 15–20 minutes, then rinse thoroughly.\"]",
+            "compareDigest": "576b6a08ac4af34ffe4e952188ea56be6e050f2e1dcb53e06d5946a32e8d0bec"
+          },
+          {
+            "namespace": "custom",
+            "key": "benefits",
+            "type": "list.single_line_text_field",
+            "value": "[\"Helps condition hair.\",\"Supports softer, smoother-feeling lengths.\",\"Enhances natural-looking shine.\"]",
+            "compareDigest": "7b9fed0734ac781cf5d11a793d411c191415ac53b2fe2f70faf0193125393b0a"
+          },
+          {
+            "namespace": "custom",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Condition",
+            "compareDigest": "e91a24ce8179a69960391134e0042048586de4ae89c10975a49923f81a6da038"
+          },
+          {
+            "namespace": "custom",
+            "key": "formulation",
+            "type": "single_line_text_field",
+            "value": "Fine Amla Fruit Powder",
+            "compareDigest": "8f63f022f7442820e32057311eb52a8c72b86cd88e1d9fb8e29077155a7222fe"
+          },
+          {
+            "namespace": "custom",
+            "key": "net_quantity",
+            "type": "single_line_text_field",
+            "value": "250 g",
+            "compareDigest": "ee648259deca27df5c4ac47f568338ba5067f0f33c6fa93410ac9a227aeb1ef0"
+          },
+          {
+            "namespace": "custom",
+            "key": "plant_part",
+            "type": "single_line_text_field",
+            "value": "Fruit Pulp",
+            "compareDigest": "326d00b4dfdb770e9a3fc2f9515e9447f51eaeaa537a4e177f0804a8e3515320"
+          },
+          {
+            "namespace": "custom",
+            "key": "botanical_name",
+            "type": "single_line_text_field",
+            "value": "Phyllanthus emblica L.",
+            "compareDigest": "972ae806d5c5e5f6e5e8808a2f95011c5311640c9111f5531f0197d07c6c4a35"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_subtitle",
+            "type": "single_line_text_field",
+            "value": "250 g · Amla Fruit Powder",
+            "compareDigest": "22c08e0fee050a1f4e7072eb77f7285ef5d3230b3e177ee02cfc6c0973454d5a"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_text",
+            "type": "single_line_text_field",
+            "value": "NatureMist Amla Powder",
+            "compareDigest": "174de578df143ea3b86ef703f00e87bc9c385075b7e128dae2d592b13ce46374"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_description",
+            "type": "multi_line_text_field",
+            "value": "Turn wash day into a moment of care with NatureMist Amla Powder. Mix into a pre-wash hair mask and make botanical conditioning part of your hair-care ritual.",
+            "compareDigest": "2f0177996427ac1cde89d8d7a6feb0afe7aa4690f98ff4c01f8a16fc51c411a5"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_italic",
+            "type": "single_line_text_field",
+            "value": "A moment of care.",
+            "compareDigest": "85141121afb4a552ae4d36dfa9ca4143ddddb2ece73d4475d18ad98eba02af37"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_middle",
+            "type": "single_line_text_field",
+            "value": "Hair Ritual",
+            "compareDigest": "83bd24d88c15352fba54f9dd1af2ae15b7943248c358084bf6fa39a1c86b5f91"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_first",
+            "type": "single_line_text_field",
+            "value": "The Amla",
+            "compareDigest": "46139c3d4074b1ca155e4658260bb0487b27756a1ca63e2030cc591cef7c58a8"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_eyebrow",
+            "type": "single_line_text_field",
+            "value": "NATUREMIST · BOTANICAL HAIR CARE",
+            "compareDigest": "0542ae5f63f007b835110cb38731f3f086398419616ffa2f621dff419a229bac"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_duration",
+            "type": "number_integer",
+            "value": "3",
+            "compareDigest": "58d6fd3dc609068615d66b6a2616cce521e6bd49bbcd7854e3f2573b142c6637"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_order",
+            "type": "number_integer",
+            "value": "1",
+            "compareDigest": "d63bd9a826af91c1fea371965a64e11ee20f13e46b5f52c59901136605b3a487"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_enabled",
+            "type": "boolean",
+            "value": "true",
+            "compareDigest": "acc8a7699a2bf4cbd05f69678eac4fc236572041c28dfd0ab558e5fcf2ab6540"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_background",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34152862548154",
+            "compareDigest": "d18b337183a37fd70be610d87e82b58e0764a6c35b99faa5b26f00ee8463a4a0"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_model",
+            "type": "file_reference",
+            "value": "gid://shopify/Model3d/46437835669690",
+            "compareDigest": "8d9fee8b86d42490750df41ea98ccfd1bd09f2168b67b03b252a90e4cda61ef9"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_poster",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34371291513018",
+            "compareDigest": "f1bf571c13381fa3a81702bf35a3e3ad8dada63b039eb4241627f97dd98ad199"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2Mzg1NTIzNjY0NTA1MCwibGFzdF92YWx1ZSI6IjYzODU1MjM2NjQ1MDUwIn0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/8498815107258",
+      "title": "NatureMist Reetha Powder",
+      "handle": "wildcrafted-amla-powder",
+      "seo": {
+        "title": null,
+        "description": null
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "namespace": "custom",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Botanical Hair & Scalp Cleanser",
+            "compareDigest": "6402b1c0aaf1a7b4cfd23169c9ead4772295315e1502585f01c67f92178f02e4"
+          },
+          {
+            "namespace": "custom",
+            "key": "ingredient",
+            "type": "multi_line_text_field",
+            "value": "100% Pure Reetha Fruit Powder",
+            "compareDigest": "2492b684ffa2d271fea9ead7f73022aac97335f7f1918c563f94bcc38242be0c"
+          },
+          {
+            "namespace": "custom",
+            "key": "how_to_use",
+            "type": "list.single_line_text_field",
+            "value": "[\"Mix 1–2 scoops with water into a smooth paste.\",\"Apply evenly to wet hair and scalp.\",\"Massage gently through scalp and hair lengths.\",\"Rinse thoroughly with water.\"]",
+            "compareDigest": "d7183a0b7e5a04e014d667c9318c0d2f0924a3a9dae537e7998dbecacda2f0c3"
+          },
+          {
+            "namespace": "custom",
+            "key": "benefits",
+            "type": "list.single_line_text_field",
+            "value": "[\"Helps cleanse hair and scalp\",\"Helps remove oil and everyday buildup\",\"Leaves scalp feeling refreshed\",\"Supports a botanical wash-day ritual\"]",
+            "compareDigest": "de28a369a66b265f9c4e229927a091cea9bcf4c1f537495b333bbe806663269a"
+          },
+          {
+            "namespace": "custom",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Cleanse",
+            "compareDigest": "585917a8b77b5226117352e0676b970045ce976e5d2c3fc7b3f3a6d5832aefa3"
+          },
+          {
+            "namespace": "custom",
+            "key": "formulation",
+            "type": "single_line_text_field",
+            "value": "Fine Botanical Powder",
+            "compareDigest": "1f102767a1d64cfed017fbed7d29c203e91fe87d50a74acffa8f3220a44069e2"
+          },
+          {
+            "namespace": "custom",
+            "key": "net_quantity",
+            "type": "single_line_text_field",
+            "value": "250g Jar",
+            "compareDigest": "6e66c40596625a29675305f935eb019cc6e5cccd76d0d38b3077ab37456ae464"
+          },
+          {
+            "namespace": "custom",
+            "key": "plant_part",
+            "type": "single_line_text_field",
+            "value": "Fruit Shell",
+            "compareDigest": "2b4ef976cb89c5bdc5bd79ccd1dc069f10021364513f58d8c76dcb02acb97f60"
+          },
+          {
+            "namespace": "custom",
+            "key": "botanical_name",
+            "type": "single_line_text_field",
+            "value": "Sapindus mukorossi",
+            "compareDigest": "7268ad97d89fa8cb9dc7458e836d6c3000f831de2c0740484a5d272f7b7f2d2f"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_poster",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403657449658",
+            "compareDigest": "9b70538ff46b5c5fb9ee18b1689a87bc81191f3760007415fe0c45a1bc655b41"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_subtitle",
+            "type": "single_line_text_field",
+            "value": "200 g · Herbal hair care",
+            "compareDigest": "6ee1952c2f73930aece492f28573fcbcd39c7f7ec5bbf4f71fa1fe17b6d1d077"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_text",
+            "type": "single_line_text_field",
+            "value": "Shikakai PowderReetha Powder",
+            "compareDigest": "776e7a8da29156f88f58d5e38005b99ee7c3cfd7a7af65ac1d2d6717f4349eeb"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_description",
+            "type": "multi_line_text_field",
+            "value": "Refresh your wash-day routine with NatureMist Reetha Powder, a traditional botanical cleanser for hair and scalp care.",
+            "compareDigest": "13f9b3a626b9b58b3321265e5c19164cfa0d83106666d9acef6ba4e9581d108e"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_italic",
+            "type": "single_line_text_field",
+            "value": "Refresh your ritual.",
+            "compareDigest": "3d4faf732cbffa60976732260a47149241e8790795ca4c44c39d86d1b08b9e99"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_middle",
+            "type": "single_line_text_field",
+            "value": "Reetha",
+            "compareDigest": "9c41dcc679a5fbc2f897463a73b696622908485d0e76c5b1fee395b2b296bccf"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_first",
+            "type": "single_line_text_field",
+            "value": "Discover",
+            "compareDigest": "2ef7349be31f491ea3bd5b054660bcdd592081e84a762c2eceb00c25acc40d39"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_eyebrow",
+            "type": "single_line_text_field",
+            "value": "NatureMist Hair Care",
+            "compareDigest": "6287238d4b42284590c54d21440bdc09149facd3bd9db558e6b3437f61723adb"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_duration",
+            "type": "number_integer",
+            "value": "3",
+            "compareDigest": "58d6fd3dc609068615d66b6a2616cce521e6bd49bbcd7854e3f2573b142c6637"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_order",
+            "type": "number_integer",
+            "value": "2",
+            "compareDigest": "813e9b729141e7f385afa0a2d0df3e6c3789e427ffe4aeef566a565bc8f2fe3d"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_enabled",
+            "type": "boolean",
+            "value": "true",
+            "compareDigest": "acc8a7699a2bf4cbd05f69678eac4fc236572041c28dfd0ab558e5fcf2ab6540"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_model",
+            "type": "file_reference",
+            "value": "gid://shopify/Model3d/46437835571386",
+            "compareDigest": "b2aa1764e44e4c861466edac4eb1330df4fa2495978d3da409d247416e407652"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_background",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403591323834",
+            "compareDigest": "1bc6f5d9651ccb767e974d93a657ef920730ca0598d1de9bdb370c5e9ba029b2"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2Mzg1ODIyNTg0MDMxNCwibGFzdF92YWx1ZSI6IjYzODU4MjI1ODQwMzE0In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/8531585368250",
+      "title": "NatureMist Indigo Powder",
+      "handle": "reetha-powder",
+      "seo": {
+        "title": "Reetha Powder for Hair-Cleansing Rituals | NatureMist",
+        "description": "Explore NatureMist Reetha Powder for a hair-cleansing ritual. Review the ingredients, pack details and preparation instructions before use."
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "namespace": "custom",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Traditional Botanical Hair Colour",
+            "compareDigest": "8021c08bc207cfa45595b73c38a3f730548e861398fdf03d8240c124088fe5a3"
+          },
+          {
+            "namespace": "custom",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Colour",
+            "compareDigest": "9bae994820c57ed81c1505ddb4949236f091b696470e1c8d4c9fe3589b777834"
+          },
+          {
+            "namespace": "custom",
+            "key": "ingredient",
+            "type": "multi_line_text_field",
+            "value": "100% Pure Indigo Leaf Powder",
+            "compareDigest": "b555f44fac446dad9952d66bf6d33511862b920f8db0dcf012bd5c42d260d7fb"
+          },
+          {
+            "namespace": "custom",
+            "key": "how_to_use",
+            "type": "list.single_line_text_field",
+            "value": "[\"Prepare your henna base first when following a two-step dark-colour ritual.\",\"Mix Indigo Powder with lukewarm water into a smooth, spreadable paste.\",\"Use the freshly prepared Indigo paste promptly and apply evenly to prepared hair.\"]",
+            "compareDigest": "0618b3685cb1aacc022cf67fc0f700e88cb1fa7f4e11bf04cd7c472d8b4aa239"
+          },
+          {
+            "namespace": "custom",
+            "key": "benefits",
+            "type": "list.single_line_text_field",
+            "value": "[\"Creates deeper, cooler-looking botanical hair tones\",\"Suitable for traditional henna-and-indigo colour rituals\",\"Helps transform warm henna tones toward brown-to-dark shades\"]",
+            "compareDigest": "7639fcf3f00b9d4f3417ae41b8c3400f928cc9aadee9cb8c719220aa618cd3a1"
+          },
+          {
+            "namespace": "custom",
+            "key": "formulation",
+            "type": "single_line_text_field",
+            "value": "Fine Indigo Leaf Powder",
+            "compareDigest": "fb7f666b1264e5bc020b42dba5733fe77dab933ad1f700235f177210dec7e69d"
+          },
+          {
+            "namespace": "custom",
+            "key": "net_quantity",
+            "type": "single_line_text_field",
+            "value": "250g",
+            "compareDigest": "e6fda2a6ae6d007d828821b3ed18a93727a96f3299eae9d70febbc18650aa31d"
+          },
+          {
+            "namespace": "custom",
+            "key": "plant_part",
+            "type": "single_line_text_field",
+            "value": "Leaves",
+            "compareDigest": "e96a7675bc4684cdfbda14b4faec160635b98f3a9495fd847f161292f3ecf162"
+          },
+          {
+            "namespace": "custom",
+            "key": "botanical_name",
+            "type": "single_line_text_field",
+            "value": "Indigofera tinctoria L.",
+            "compareDigest": "8f72357ddec5e85eee62605b55b66357ba8080240be4c3d9f7bd6f7394534638"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_subtitle",
+            "type": "single_line_text_field",
+            "value": "250 g · Botanical Hair Colour",
+            "compareDigest": "c25c7c61970d9ec4ce7a82499a0a30bed4480ac0f5a347a7d3bdfd39cb49bb0f"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_text",
+            "type": "single_line_text_field",
+            "value": "Indigo Powder",
+            "compareDigest": "1c47295dd1d8e9342dd835760e4436c058fa9964f874073a988bf981e21ed490"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_description",
+            "type": "multi_line_text_field",
+            "value": "Discover the art of botanical hair colour with NatureMist Indigo Powder, crafted for traditional henna-and-indigo colour rituals.",
+            "compareDigest": "9eab55d6a2de4ed1c604be06bf243c7e97ea48bdc34b50085f34269f6717eb04"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_italic",
+            "type": "single_line_text_field",
+            "value": "Colour, the botanical way.",
+            "compareDigest": "0c1a29a290cf45c8a51f0570ab7ee535593f56f5edbffd7f693de3f4cde1aea2"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_middle",
+            "type": "single_line_text_field",
+            "value": "Indigo",
+            "compareDigest": "e015c530f4f6f5f096dc3e8ccabe09d70da95c54429491a93678987aee89ef30"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_first",
+            "type": "single_line_text_field",
+            "value": "Discover",
+            "compareDigest": "2ef7349be31f491ea3bd5b054660bcdd592081e84a762c2eceb00c25acc40d39"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_eyebrow",
+            "type": "single_line_text_field",
+            "value": "NatureMist Botanical Colour",
+            "compareDigest": "4634d9180b10c45e0362f5f731b4b876fbea98047db4926f25c169d515f33cf9"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_duration",
+            "type": "number_integer",
+            "value": "3",
+            "compareDigest": "58d6fd3dc609068615d66b6a2616cce521e6bd49bbcd7854e3f2573b142c6637"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_order",
+            "type": "number_integer",
+            "value": "3",
+            "compareDigest": "58d6fd3dc609068615d66b6a2616cce521e6bd49bbcd7854e3f2573b142c6637"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_enabled",
+            "type": "boolean",
+            "value": "true",
+            "compareDigest": "acc8a7699a2bf4cbd05f69678eac4fc236572041c28dfd0ab558e5fcf2ab6540"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_background",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403591159994",
+            "compareDigest": "e72ce44b136f743c5ce33074f509b33fb9859d7b5e04f387a012f164f39f7e2e"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_model",
+            "type": "file_reference",
+            "value": "gid://shopify/Model3d/46437835702458",
+            "compareDigest": "8de6400fdb07a127aac7d041529a4aa539ef58fe2303245f888c0bb4a09e781b"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_poster",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403657646266",
+            "compareDigest": "344530d3d6b2e30db3521778ba381c257b027b2c8f8b36a8ba17ac3ab8121c4b"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2Mzg1ODIyNTM4MTU2MiwibGFzdF92YWx1ZSI6IjYzODU4MjI1MzgxNTYyIn0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/8531585433786",
+      "title": "NatureMist Bhringraj Powder",
+      "handle": "bhringraj-powder",
+      "seo": {
+        "title": "Bhringraj Powder for Hair Rituals | NatureMist",
+        "description": "Explore NatureMist Bhringraj Powder for a conditioning-focused hair ritual. Read ingredients, preparation guidance and pack details before choosing."
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "namespace": "custom",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Botanical Conditioning Hair Powder",
+            "compareDigest": "23ffb90b0aca78f927e45e66160386d2312ff1f98619066a1f8cf138546780f7"
+          },
+          {
+            "namespace": "custom",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Condition",
+            "compareDigest": "e91a24ce8179a69960391134e0042048586de4ae89c10975a49923f81a6da038"
+          },
+          {
+            "namespace": "custom",
+            "key": "ingredient",
+            "type": "multi_line_text_field",
+            "value": "100% Pure Bhringraj Powder",
+            "compareDigest": "adb4705a83a014409bb8ee23a880794a783c0ab391665a89197f61d4c3cf36c3"
+          },
+          {
+            "namespace": "custom",
+            "key": "how_to_use",
+            "type": "list.single_line_text_field",
+            "value": "[\"ConditionMix 1–2 scoops with water into a smooth paste.\",\"Apply evenly to damp scalp and hair.\",\"Massage gently and spread through the hair lengths.\",\"Leave for approximately 15–20 minutes.\",\"Rinse thoroughly with water.\"]",
+            "compareDigest": "3ff576b50c867217f7a934b4eb73d643c95d1fcd7cf29810b294544cd4e98376"
+          },
+          {
+            "namespace": "custom",
+            "key": "benefits",
+            "type": "list.single_line_text_field",
+            "value": "[\"Helps condition hair and scalp\",\"Supports softer, smoother-feeling hair\",\"Helps improve everyday manageability\",\"Ideal for a pre-wash botanical hair mask\",\"Freshly mixed for every hair-care ritual\"]",
+            "compareDigest": "8aa2facbeb61383b4e64a928208109fea49cc3404edcde657b40d374d28b460c"
+          },
+          {
+            "namespace": "custom",
+            "key": "formulation",
+            "type": "single_line_text_field",
+            "value": "Fine Botanical Powder",
+            "compareDigest": "1f102767a1d64cfed017fbed7d29c203e91fe87d50a74acffa8f3220a44069e2"
+          },
+          {
+            "namespace": "custom",
+            "key": "net_quantity",
+            "type": "single_line_text_field",
+            "value": "250 g Jar",
+            "compareDigest": "6d36cdd5d77981bf7a10d54227af1b57e65b7725c5da2fbd3c023052e29c3f6d"
+          },
+          {
+            "namespace": "custom",
+            "key": "plant_part",
+            "type": "single_line_text_field",
+            "value": "Leaves & Aerial Parts",
+            "compareDigest": "65115cdc5f521cefe9bddf3f118f1982ed22164727fb32876a4a1a0dc0cd095d"
+          },
+          {
+            "namespace": "custom",
+            "key": "botanical_name",
+            "type": "single_line_text_field",
+            "value": "Eclipta prostrata",
+            "compareDigest": "63e8a8297bc904314141a837a6e768a3fcdd5db2e0165551942fc5fa8be7ae6a"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_subtitle",
+            "type": "single_line_text_field",
+            "value": "250 g · Botanical Hair Care",
+            "compareDigest": "a9cfc485b5742beaff84041a23e9b52266367fd117be618199481b4d05a61dcb"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_text",
+            "type": "single_line_text_field",
+            "value": "Bhringraj Powder",
+            "compareDigest": "efcaf29202f34fd53c1910565938e21a895786be2b352232a90f53707a87047b"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_description",
+            "type": "multi_line_text_field",
+            "value": "Bring a traditional conditioning step into your wash-day ritual with NatureMist Bhringraj Powder.",
+            "compareDigest": "013c34128738e9c21794dd3651e134756f1368f6a51d0e5d3d20748ae704b34a"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_italic",
+            "type": "single_line_text_field",
+            "value": "Care rooted in tradition.",
+            "compareDigest": "743f27312af8b13d1a651bf4aa3f827def6ab721c32b4dd42487f2df3c337ba8"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_middle",
+            "type": "single_line_text_field",
+            "value": "Bhringraj",
+            "compareDigest": "a0ca4fbe096a1d0014bfdc09ac7fe8de6d5a5b99adacacd76bc52a62a1b73386"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_first",
+            "type": "single_line_text_field",
+            "value": "Discover",
+            "compareDigest": "2ef7349be31f491ea3bd5b054660bcdd592081e84a762c2eceb00c25acc40d39"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_eyebrow",
+            "type": "single_line_text_field",
+            "value": "NatureMist Botanical Hair Care",
+            "compareDigest": "395a133f001f4c4fa8c829c385639496e6433f9db31f82af5ce4260b890ddcbb"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_duration",
+            "type": "number_integer",
+            "value": "3",
+            "compareDigest": "58d6fd3dc609068615d66b6a2616cce521e6bd49bbcd7854e3f2573b142c6637"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_order",
+            "type": "number_integer",
+            "value": "4",
+            "compareDigest": "e67a9c4536256f1ec7495a146b5442fa7c0ed99e258a08260a4a244fa31c7c61"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_enabled",
+            "type": "boolean",
+            "value": "true",
+            "compareDigest": "acc8a7699a2bf4cbd05f69678eac4fc236572041c28dfd0ab558e5fcf2ab6540"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_background",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403591127226",
+            "compareDigest": "b37493451a09d504a3aa1e8adad64b7958c7870862a129eb839dcd19002a977e"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_model",
+            "type": "file_reference",
+            "value": "gid://shopify/Model3d/46437835440314",
+            "compareDigest": "7e00ab98f4286856a2959d7f87ddc3e36665f7702f201e7f32bbddef205ded37"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_poster",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403657613498",
+            "compareDigest": "bdcecef440b6779fbb0c04682911f5281dead306f5d8b9396839fdf45fb99769"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2Mzg1ODIyNTYxMDkzOCwibGFzdF92YWx1ZSI6IjYzODU4MjI1NjEwOTM4In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/8531585499322",
+      "title": "NatureMist Hibiscus Powder",
+      "handle": "hibiscus-powder",
+      "seo": {
+        "title": "Hibiscus Powder for Hair Rituals | NatureMist",
+        "description": "Discover NatureMist Hibiscus Powder for a conditioning-focused hair ritual. Explore ingredient information, preparation guidance and pack details."
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "namespace": "custom",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Floral Botanical Conditioning Powder",
+            "compareDigest": "2d2d2f34e4b08ba7c47b6a11306d74c7cbbb75a26f94f9f924c6d9b9d6438e9e"
+          },
+          {
+            "namespace": "custom",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Condition",
+            "compareDigest": "e91a24ce8179a69960391134e0042048586de4ae89c10975a49923f81a6da038"
+          },
+          {
+            "namespace": "custom",
+            "key": "ingredient",
+            "type": "multi_line_text_field",
+            "value": "100% Pure Hibiscus Flower Powder*",
+            "compareDigest": "c751a3eda46649155ab4088ee4309d95e0eaba6013406ee69b990227b19a4e3b"
+          },
+          {
+            "namespace": "custom",
+            "key": "how_to_use",
+            "type": "list.single_line_text_field",
+            "value": "[\"Mix 1–2 scoops with water into a smooth, creamy paste.\",\"Apply evenly to damp scalp and hair.\",\"Spread the mask gently through the hair lengths.\",\"Leave for approximately 15–20 minutes.\",\"Rinse thoroughly with water.\"]",
+            "compareDigest": "93886b6f35cfb2f5ba45e0452bc6fa6ac0eda882d627c400e744cbe3f672da12"
+          },
+          {
+            "namespace": "custom",
+            "key": "benefits",
+            "type": "list.single_line_text_field",
+            "value": "[\"Helps condition dry-feeling hair\",\"Supports softer and smoother-feeling lengths\",\"Helps improve hair manageability\",\"Enhances natural-looking shine\",\"Ideal for a fresh pre-wash hair mask\"]",
+            "compareDigest": "b2f086c2e95d94858803365b0615b498c51d5c7ef2b2983a9deda93acbe6d834"
+          },
+          {
+            "namespace": "custom",
+            "key": "formulation",
+            "type": "single_line_text_field",
+            "value": "Fine Floral Botanical Powder",
+            "compareDigest": "7760b89c4017e94cb02547c1ffcc2588d367022b00e2c8e3c5bfcc74dc6bda3f"
+          },
+          {
+            "namespace": "custom",
+            "key": "net_quantity",
+            "type": "single_line_text_field",
+            "value": "250 g Jar",
+            "compareDigest": "6d36cdd5d77981bf7a10d54227af1b57e65b7725c5da2fbd3c023052e29c3f6d"
+          },
+          {
+            "namespace": "custom",
+            "key": "plant_part",
+            "type": "single_line_text_field",
+            "value": "Flowers",
+            "compareDigest": "ca48e7c6b4dd60a87a45c13d26d8d4240a638c01faaef8a866ec8bfcbf7040e1"
+          },
+          {
+            "namespace": "custom",
+            "key": "botanical_name",
+            "type": "single_line_text_field",
+            "value": "ame Hibiscus rosa-sinensis L.",
+            "compareDigest": "012129159fe6ae6d1dad3edea2ab8241b86dcaae105e4ce4412a6bc0e2236812"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_subtitle",
+            "type": "single_line_text_field",
+            "value": "250 g · Floral Hair Care",
+            "compareDigest": "69fd771ee9bd78e8e479769826a35ba1499d135cf49e2fa8e10e16dbf6f2501d"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_text",
+            "type": "single_line_text_field",
+            "value": "Hibiscus Powder",
+            "compareDigest": "bcadff021586907df01fec38dd690a1918d09b3efc6ee2a9a44ee400c034223b"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_description",
+            "type": "multi_line_text_field",
+            "value": "Turn wash day into a floral conditioning ritual with NatureMist Hibiscus Powder.",
+            "compareDigest": "fe1cac9003fafdf7779e130ef480c69828b5ae13bc288a491ff4e7a82c0676e5"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_italic",
+            "type": "single_line_text_field",
+            "value": "A floral moment for your hair.",
+            "compareDigest": "aff8232f674f2490344e9ecf8630040e6d6f343abb7e272be87db7c292268630"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_middle",
+            "type": "single_line_text_field",
+            "value": "Hibiscus",
+            "compareDigest": "16cb8f60335dd6f13e28fa57d2f52ce669cc68068a778320bbd17fdc67e3b919"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_first",
+            "type": "single_line_text_field",
+            "value": "Discover",
+            "compareDigest": "2ef7349be31f491ea3bd5b054660bcdd592081e84a762c2eceb00c25acc40d39"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_eyebrow",
+            "type": "single_line_text_field",
+            "value": "NatureMist Botanical Hair Care",
+            "compareDigest": "395a133f001f4c4fa8c829c385639496e6433f9db31f82af5ce4260b890ddcbb"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_duration",
+            "type": "number_integer",
+            "value": "3",
+            "compareDigest": "58d6fd3dc609068615d66b6a2616cce521e6bd49bbcd7854e3f2573b142c6637"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_order",
+            "type": "number_integer",
+            "value": "5",
+            "compareDigest": "b3372b584dc0df6ce757fa43f459ca1f0c4180a08762cbfa41d022ca24f63d9f"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_enabled",
+            "type": "boolean",
+            "value": "true",
+            "compareDigest": "acc8a7699a2bf4cbd05f69678eac4fc236572041c28dfd0ab558e5fcf2ab6540"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_background",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403591094458",
+            "compareDigest": "3bc2bcdaddfae6fef7508a86321571fd18d218907135a2687770c77f9e8b7dd7"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_model",
+            "type": "file_reference",
+            "value": "gid://shopify/Model3d/46437835407546",
+            "compareDigest": "e96f0f399ad8f3503fd7efdfb6abdf1629a42aba9754246f50142be3fb197ccf"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_poster",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403657547962",
+            "compareDigest": "9327118a5cf09d1e89bbdd750083b7beafaa30c016f03da05e2c464be1717cc0"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2Mzg1ODIyNjA2OTY5MCwibGFzdF92YWx1ZSI6IjYzODU4MjI2MDY5NjkwIn0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/8531585597626",
+      "title": "NatureMist Shikakai Powder",
+      "handle": "indigo-powder",
+      "seo": {
+        "title": "Indigo Powder for Hair-Colour Rituals | NatureMist",
+        "description": "Explore NatureMist Indigo Powder for a hair-colour ritual. Review the complete colour-use directions, testing guidance and pack details before use."
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "namespace": "custom",
+            "key": "subtitle",
+            "type": "single_line_text_field",
+            "value": "Hair-colour ritualTraditional Botanical Hair Cleanser",
+            "compareDigest": "ad76518d2e45113cae23c9a706b9aa6b3ec78a38450907610e5afec57962a91e"
+          },
+          {
+            "namespace": "custom",
+            "key": "ritual_step",
+            "type": "single_line_text_field",
+            "value": "Colour",
+            "compareDigest": "9bae994820c57ed81c1505ddb4949236f091b696470e1c8d4c9fe3589b777834"
+          },
+          {
+            "namespace": "custom",
+            "key": "ingredient",
+            "type": "multi_line_text_field",
+            "value": "100% Pure Shikakai Powder",
+            "compareDigest": "95527f9f612a0870b7d6fe41a364b03654646e2e4c2e3627ab32847f087bcc08"
+          },
+          {
+            "namespace": "custom",
+            "key": "how_to_use",
+            "type": "list.single_line_text_field",
+            "value": "[\"Mix 1–2 scoops with water into a smooth cleansing paste.\",\"Wet hair and scalp before application.\",\"Apply the paste evenly to scalp and hair.\",\"Massage gently through the roots and lengths.\",\"Rinse thoroughly with water, avoiding contact with the eyes.\"]",
+            "compareDigest": "c37072693fc4e3235e011eb7af47407897e2a429c26fea21e5f46abc6ab6a953"
+          },
+          {
+            "namespace": "custom",
+            "key": "benefits",
+            "type": "list.single_line_text_field",
+            "value": "[\"Helps cleanse hair and scalp\",\"Helps remove excess oil and everyday buildup\",\"Leaves hair feeling fresh and clean\",\"Supports softer, more manageable-feeling hair\",\"Ideal for traditional botanical wash-day rituals\"]",
+            "compareDigest": "49fe24a96794addd5a1d3713d1da2b695a92fb8788e8673db2c8a9c220346ea4"
+          },
+          {
+            "namespace": "custom",
+            "key": "formulation",
+            "type": "single_line_text_field",
+            "value": "Fine Botanical Cleansing Powder",
+            "compareDigest": "2413059a0d210f1eb01f089fee96aacd98714dad4dedac1a81f2f0463a5564ce"
+          },
+          {
+            "namespace": "custom",
+            "key": "net_quantity",
+            "type": "single_line_text_field",
+            "value": "250 g Jar",
+            "compareDigest": "6d36cdd5d77981bf7a10d54227af1b57e65b7725c5da2fbd3c023052e29c3f6d"
+          },
+          {
+            "namespace": "custom",
+            "key": "plant_part",
+            "type": "single_line_text_field",
+            "value": "Fruit Pods",
+            "compareDigest": "796513456c5390c35c4eb595bcee91ac2338b1afd04cb61b9ca0c4f0a2375fdc"
+          },
+          {
+            "namespace": "custom",
+            "key": "botanical_name",
+            "type": "single_line_text_field",
+            "value": "Acacia concinna",
+            "compareDigest": "b7932237b532822b0f996bd15c5dbb9734f20e33800eb7f6356d00cf1257c290"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_subtitle",
+            "type": "single_line_text_field",
+            "value": "250 g · Botanical Hair Cleanser",
+            "compareDigest": "959eaac8d807e23ac3053aca64e07f4ba72df050d40e1ef26d05df14717f8143"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_badge_text",
+            "type": "single_line_text_field",
+            "value": "Shikakai Powder",
+            "compareDigest": "efe4d07eef2b89b5c068f8fb3347d4175ae41f32cdd8e74bdca7f2d42bdc4783"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_description",
+            "type": "multi_line_text_field",
+            "value": "Refresh wash day with NatureMist Shikakai Powder, a traditional botanical cleanser for hair and scalp.",
+            "compareDigest": "05f0d5885bbae7fb1061b3dc55684f28bfe5b5c4cd419efd2f38388fe5298186"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_italic",
+            "type": "single_line_text_field",
+            "value": "Return to a simpler wash day.",
+            "compareDigest": "195b9586620f2520511dc1cac32b9fe3271024ff663a47399638e9f07b53c392"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_middle",
+            "type": "single_line_text_field",
+            "value": "Shikakai",
+            "compareDigest": "4b726e0dff94d2bf1fbd8edf0890a03f1ff4c46f10254505486e39a9f18078f5"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_headline_first",
+            "type": "single_line_text_field",
+            "value": "Discover",
+            "compareDigest": "2ef7349be31f491ea3bd5b054660bcdd592081e84a762c2eceb00c25acc40d39"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_eyebrow",
+            "type": "single_line_text_field",
+            "value": "NatureMist Botanical Cleansing",
+            "compareDigest": "bc3595928085c201aef6cdcd21fc566392c26c78c65c3eb6e2ffc2707212e3ad"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_duration",
+            "type": "number_integer",
+            "value": "3",
+            "compareDigest": "58d6fd3dc609068615d66b6a2616cce521e6bd49bbcd7854e3f2573b142c6637"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_order",
+            "type": "number_integer",
+            "value": "6",
+            "compareDigest": "b748b4ebf53795686930b718fd46066df65694e910c9e647cd56c2b081b95732"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_enabled",
+            "type": "boolean",
+            "value": "true",
+            "compareDigest": "acc8a7699a2bf4cbd05f69678eac4fc236572041c28dfd0ab558e5fcf2ab6540"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_background",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34405251154106",
+            "compareDigest": "5ebb329e51f6ee07743a355a8f7dfe4c2bab286b75847db72d50be8a5a84de3b"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_model",
+            "type": "file_reference",
+            "value": "gid://shopify/Model3d/46437835604154",
+            "compareDigest": "72ce1f9b78b21445791b5350341909b28e1c70f557712691db9c64ad49263a3d"
+          },
+          {
+            "namespace": "custom",
+            "key": "hero_poster",
+            "type": "file_reference",
+            "value": "gid://shopify/MediaImage/34403657482426",
+            "compareDigest": "31a04d5128c634fa7181a39dcbe2a65473ecb8160c0298b3ed11d4194c1afb15"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2Mzg1ODIyNjMzMTgzNCwibGFzdF92YWx1ZSI6IjYzODU4MjI2MzMxODM0In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392444928186",
+      "title": "NatureMist Classic Trio",
+      "handle": "classic-trio",
+      "seo": {
+        "title": "Amla, Reetha & Shikakai Combo – Classic Trio | NatureMist",
+        "description": "Explore NatureMist Classic Trio: Amla, Reetha and Shikakai powders in three separate jars for a traditional botanical hair-care ritual."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczMTI1NjI5MTUxNCwibGFzdF92YWx1ZSI6IjY0NzMxMjU2MjkxNTE0In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392838209722",
+      "title": "NatureMist Amla Reetha Duo",
+      "handle": "amla-reetha-duo",
+      "seo": {
+        "title": "Amla, Reetha Combo | NatureMist Duo",
+        "description": "Shop NatureMist Amla Reetha Duo: Amla, Reetha powders in 2 separate jars for your botanical hair-care routine."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczNTY4NzYwNjQ1OCwibGFzdF92YWx1ZSI6IjY0NzM1Njg3NjA2NDU4In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392838308026",
+      "title": "NatureMist Amla Shikakai Duo",
+      "handle": "amla-shikakai-duo",
+      "seo": {
+        "title": "Amla, Shikakai Combo | NatureMist Duo",
+        "description": "Shop NatureMist Amla Shikakai Duo: Amla, Shikakai powders in 2 separate jars for your botanical hair-care routine."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczNTY4NzcwNDc2MiwibGFzdF92YWx1ZSI6IjY0NzM1Njg3NzA0NzYyIn0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392838406330",
+      "title": "NatureMist Cleansing Duo",
+      "handle": "cleansing-duo",
+      "seo": {
+        "title": "Reetha, Shikakai Combo | NatureMist Duo",
+        "description": "Shop NatureMist Cleansing Duo: Reetha, Shikakai powders in 2 separate jars for your botanical hair-care routine."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczNTY4NzgwMzA2NiwibGFzdF92YWx1ZSI6IjY0NzM1Njg3ODAzMDY2In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392838766778",
+      "title": "NatureMist Botanical Mask Trio",
+      "handle": "botanical-mask-trio",
+      "seo": {
+        "title": "Amla, Bhringraj, Hibiscus Combo | NatureMist Trio",
+        "description": "Shop NatureMist Botanical Mask Trio: Amla, Bhringraj, Hibiscus powders in 3 separate jars for your botanical hair-care routine."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczNTY4Nzg2ODYwMiwibGFzdF92YWx1ZSI6IjY0NzM1Njg3ODY4NjAyIn0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392838963386",
+      "title": "NatureMist Botanical Duo",
+      "handle": "botanical-duo",
+      "seo": {
+        "title": "Amla, Bhringraj Combo | NatureMist Duo",
+        "description": "Shop NatureMist Botanical Duo: Amla, Bhringraj powders in 2 separate jars for your botanical hair-care routine."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczNTY4ODEzMDc0NiwibGFzdF92YWx1ZSI6IjY0NzM1Njg4MTMwNzQ2In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392839028922",
+      "title": "NatureMist Floral Duo",
+      "handle": "floral-duo",
+      "seo": {
+        "title": "Hibiscus, Amla Combo | NatureMist Duo",
+        "description": "Shop NatureMist Floral Duo: Hibiscus, Amla powders in 2 separate jars for your botanical hair-care routine."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczNTY4ODU4OTQ5OCwibGFzdF92YWx1ZSI6IjY0NzM1Njg4NTg5NDk4In0="
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Product/10392839127226",
+      "title": "NatureMist Bhringraj Hibiscus Duo",
+      "handle": "bhringraj-hibiscus-duo",
+      "seo": {
+        "title": "Bhringraj, Hibiscus Combo | NatureMist Duo",
+        "description": "Shop NatureMist Bhringraj Hibiscus Duo: Bhringraj, Hibiscus powders in 2 separate jars for your botanical hair-care routine."
+      },
+      "metafields": {
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo2NDczNTY4OTA0ODI1MCwibGFzdF92YWx1ZSI6IjY0NzM1Njg5MDQ4MjUwIn0="
+        }
+      }
+    }
+  ],
+  "metaobjects": {
+    "data": {
+      "content": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Metaobject/264593866938",
+            "handle": "main",
+            "type": "storefront_content",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Homepage settings"
+              },
+              {
+                "key": "hero_autoplay",
+                "value": "true"
+              },
+              {
+                "key": "hero_interval",
+                "value": "8"
+              },
+              {
+                "key": "hero_auto_rotate",
+                "value": "true"
+              },
+              {
+                "key": "hero_rotation_speed",
+                "value": "20"
+              },
+              {
+                "key": "hero_cursor_motion",
+                "value": "true"
+              },
+              {
+                "key": "hero_transition",
+                "value": "fade"
+              },
+              {
+                "key": "motion_enabled",
+                "value": "true"
+              },
+              {
+                "key": "motion_cursor",
+                "value": "true"
+              },
+              {
+                "key": "motion_duration",
+                "value": "1.0"
+              },
+              {
+                "key": "motion_intensity",
+                "value": "1.0"
+              },
+              {
+                "key": "ritual_posters",
+                "value": "[\"gid://shopify/MediaImage/34191091466426\",\"gid://shopify/MediaImage/33856343113914\"]"
+              },
+              {
+                "key": "ritual_poster_gooey",
+                "value": "true"
+              },
+              {
+                "key": "ritual_poster_autoplay",
+                "value": "true"
+              },
+              {
+                "key": "ritual_poster_interval",
+                "value": "6"
+              },
+              {
+                "key": "ritual_poster_strength",
+                "value": "1.0"
+              },
+              {
+                "key": "ritual_poster_config",
+                "value": "{}"
+              },
+              {
+                "key": "ingredient_plant_images",
+                "value": "[\"gid://shopify/MediaImage/46633930031290\",\"gid://shopify/MediaImage/33856343113914\"]"
+              },
+              {
+                "key": "ingredient_preparation_images",
+                "value": "[\"gid://shopify/MediaImage/34191091466426\",\"gid://shopify/MediaImage/46666249044154\"]"
+              },
+              {
+                "key": "ingredient_lifestyle_images",
+                "value": "[\"gid://shopify/MediaImage/46633934782650\",\"gid://shopify/MediaImage/34403657515194\"]"
+              },
+              {
+                "key": "ingredient_background",
+                "value": "gid://shopify/MediaImage/46634207674554"
+              },
+              {
+                "key": "ingredient_mobile_background",
+                "value": "gid://shopify/MediaImage/46634207674554"
+              },
+              {
+                "key": "ingredient_botanical",
+                "value": "gid://shopify/MediaImage/46633948938426"
+              }
+            ]
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjoyNjQ1OTM4NjY5MzgsImxhc3RfdmFsdWUiOiIyNjQ1OTM4NjY5MzgiLCJiYWNrZW5kIjoiZWxhc3RpY3NlYXJjaCJ9"
+        }
+      },
+      "combos": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Metaobject/431929196730",
+            "handle": "classic-trio",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Classic Trio"
+              },
+              {
+                "key": "ingredients",
+                "value": "Amla + Reetha + Shikakai"
+              },
+              {
+                "key": "caption",
+                "value": "Amla · Reetha · Shikakai"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/46690532884666"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8498815107258\",\"gid://shopify/Product/8531585597626\"]"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/Metaobject/431929229498",
+            "handle": "botanical-duo",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Botanical Duo"
+              },
+              {
+                "key": "ingredients",
+                "value": "Amla + Bhringraj"
+              },
+              {
+                "key": "caption",
+                "value": "Amla · Bhringraj"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/46690534490298"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8531585433786\"]"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/Metaobject/431929262266",
+            "handle": "floral-duo",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Floral Duo"
+              },
+              {
+                "key": "ingredients",
+                "value": "Hibiscus + Amla"
+              },
+              {
+                "key": "caption",
+                "value": "Hibiscus · Amla"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/46690536915130"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8531585499322\",\"gid://shopify/Product/8494763311290\"]"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/Metaobject/440397365434",
+            "handle": "amla-reetha-duo",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Amla Reetha Duo"
+              },
+              {
+                "key": "ingredients",
+                "value": "Amla + Reetha"
+              },
+              {
+                "key": "caption",
+                "value": "Amla · Reetha"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/34402531573946"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8498815107258\"]"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/Metaobject/440397660346",
+            "handle": "amla-shikakai-duo",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Amla Shikakai Duo"
+              },
+              {
+                "key": "ingredients",
+                "value": "Amla + Shikakai"
+              },
+              {
+                "key": "caption",
+                "value": "Amla · Shikakai"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/34402531573946"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8531585597626\"]"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/Metaobject/440397791418",
+            "handle": "cleansing-duo",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Cleansing Duo"
+              },
+              {
+                "key": "ingredients",
+                "value": "Reetha + Shikakai"
+              },
+              {
+                "key": "caption",
+                "value": "Reetha · Shikakai"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/34403223011514"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8498815107258\",\"gid://shopify/Product/8531585597626\"]"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/Metaobject/440397889722",
+            "handle": "botanical-mask-trio",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Botanical Mask Trio"
+              },
+              {
+                "key": "ingredients",
+                "value": "Amla + Bhringraj + Hibiscus"
+              },
+              {
+                "key": "caption",
+                "value": "Amla · Bhringraj · Hibiscus"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/34402531573946"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8531585433786\",\"gid://shopify/Product/8531585499322\"]"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/Metaobject/440398053562",
+            "handle": "bhringraj-hibiscus-duo",
+            "type": "botanical_combo",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Bhringraj Hibiscus Duo"
+              },
+              {
+                "key": "ingredients",
+                "value": "Bhringraj + Hibiscus"
+              },
+              {
+                "key": "caption",
+                "value": "Bhringraj · Hibiscus"
+              },
+              {
+                "key": "photo",
+                "value": "gid://shopify/MediaImage/34405092163770"
+              },
+              {
+                "key": "products",
+                "value": "[\"gid://shopify/Product/8531585433786\",\"gid://shopify/Product/8531585499322\"]"
+              }
+            ]
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo0NDAzOTgwNTM1NjIsImxhc3RfdmFsdWUiOiI0NDAzOTgwNTM1NjIiLCJiYWNrZW5kIjoiZWxhc3RpY3NlYXJjaCJ9"
+        }
+      },
+      "comboSection": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Metaobject/431929295034",
+            "handle": "main",
+            "type": "botanical_combos",
+            "fields": [
+              {
+                "key": "name",
+                "value": "Homepage botanical book"
+              },
+              {
+                "key": "enabled",
+                "value": "true"
+              },
+              {
+                "key": "eyebrow",
+                "value": "Botanical combos"
+              },
+              {
+                "key": "heading",
+                "value": "Your ritual."
+              },
+              {
+                "key": "heading_ending",
+                "value": "Better together."
+              },
+              {
+                "key": "description",
+                "value": "Discover thoughtfully paired botanical powders."
+              },
+              {
+                "key": "button_label",
+                "value": "View combo"
+              },
+              {
+                "key": "page_turn_enabled",
+                "value": "true"
+              },
+              {
+                "key": "page_turn_duration",
+                "value": "1.25"
+              },
+              {
+                "key": "combos",
+                "value": "[\"gid://shopify/Metaobject/431929196730\",\"gid://shopify/Metaobject/431929229498\",\"gid://shopify/Metaobject/431929262266\",\"gid://shopify/Metaobject/440397365434\",\"gid://shopify/Metaobject/440397660346\",\"gid://shopify/Metaobject/440397791418\",\"gid://shopify/Metaobject/440397889722\",\"gid://shopify/Metaobject/440398053562\"]"
+              }
+            ]
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "eyJsYXN0X2lkIjo0MzE5MjkyOTUwMzQsImxhc3RfdmFsdWUiOiI0MzE5MjkyOTUwMzQiLCJiYWNrZW5kIjoiZWxhc3RpY3NlYXJjaCJ9"
+        }
+      }
+    }
+  }
+}

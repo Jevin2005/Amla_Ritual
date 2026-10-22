@@ -1,0 +1,2152 @@
+[
+  {
+    "sheet": "Product guide",
+    "rows": [
+      {
+        "row": 2,
+        "cells": [
+          {
+            "cell": "B2",
+            "value": "NatureMist | Six powders: benefits and sales positioning",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "cell": "B3",
+            "value": "Start here for product roles and candidate wording. The evidence table separates tradition, human trials, laboratory studies and ideas to test.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "cell": "B4",
+            "value": "Working identities; external-use range assumed. Confirm supplier specifications and product directions. Reviewed 21 October 2026.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "cell": "B6",
+            "value": "Product",
+            "link": null
+          },
+          {
+            "cell": "C6",
+            "value": "Identity to confirm",
+            "link": null
+          },
+          {
+            "cell": "D6",
+            "value": "Best product role",
+            "link": null
+          },
+          {
+            "cell": "E6",
+            "value": "Beyond hair",
+            "link": null
+          },
+          {
+            "cell": "F6",
+            "value": "Candidate title and short description",
+            "link": null
+          },
+          {
+            "cell": "G6",
+            "value": "Next step before stronger claims",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "cell": "B7",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C7",
+            "value": "Working identity: Phyllanthus emblica fruit. Confirm species, part and intended use.",
+            "link": null
+          },
+          {
+            "cell": "D7",
+            "value": "Herbal hair packs; possible conditioning benefits to test.",
+            "link": null
+          },
+          {
+            "cell": "E7",
+            "value": "Face/body packs are a development option. Oil-control research used a toner extract.",
+            "link": null
+          },
+          {
+            "cell": "F7",
+            "value": "Amla Fruit Powder for Herbal Hair Packs\nA botanical ingredient for a traditional hair-care routine.",
+            "link": null
+          },
+          {
+            "cell": "G7",
+            "value": "Verify fruit identity and hair-pack directions. Test softness, manageability and facial tolerance before adding those claims.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "cell": "B8",
+            "value": "Reetha",
+            "link": null
+          },
+          {
+            "cell": "C8",
+            "value": "Working identity: Sapindus mukorossi fruit pericarp. Confirm supplier specification.",
+            "link": null
+          },
+          {
+            "cell": "D8",
+            "value": "Plant-based cleansing for herbal hair-wash routines.",
+            "link": null
+          },
+          {
+            "cell": "E8",
+            "value": "Potential body-wash or household-cleaning ingredient after separate formulation and performance assessment.",
+            "link": null
+          },
+          {
+            "cell": "F8",
+            "value": "Reetha Cleansing Powder for Herbal Hair Washes\nA soapnut ingredient for a botanical wash routine.",
+            "link": null
+          },
+          {
+            "cell": "G8",
+            "value": "Verify cleansing performance and directions. Natural foaming does not establish sensitive-skin suitability.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "cell": "B9",
+            "value": "Shikakai",
+            "link": null
+          },
+          {
+            "cell": "C9",
+            "value": "Working identity: Acacia concinna / Senegalia rugata pods. Confirm species and part.",
+            "link": null
+          },
+          {
+            "cell": "D9",
+            "value": "Traditional hair washing; cleansing and scalp-care routines.",
+            "link": null
+          },
+          {
+            "cell": "E9",
+            "value": "A possible ingredient in a formulated body cleanser; raw-powder skin benefits are unestablished.",
+            "link": null
+          },
+          {
+            "cell": "F9",
+            "value": "Shikakai Pod Powder for Traditional Hair Washing\nA botanical ingredient for a herbal cleansing routine.",
+            "link": null
+          },
+          {
+            "cell": "G9",
+            "value": "Confirm pods and preparation method. Check cleansing, rinse-out and tolerance; avoid dandruff-treatment claims.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "cell": "B10",
+            "value": "Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "C10",
+            "value": "Working identity: Hibiscus rosa-sinensis flowers. Confirm exact species and part.",
+            "link": null
+          },
+          {
+            "cell": "D10",
+            "value": "Herbal hair packs; softness, shine and slip are benefits to test.",
+            "link": null
+          },
+          {
+            "cell": "E10",
+            "value": "Face/body pack possibility after tolerance assessment. Leaf-mucilage and tea studies do not prove flower-powder results.",
+            "link": null
+          },
+          {
+            "cell": "F10",
+            "value": "Hibiscus Flower Powder for Herbal Hair Packs\nA floral ingredient for a botanical hair-pack routine.",
+            "link": null
+          },
+          {
+            "cell": "G10",
+            "value": "Verify flower identity. Test conditioning and any facial use. H. sabdariffa tea evidence is a different product.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "cell": "B11",
+            "value": "Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "C11",
+            "value": "Working identity: Eclipta prostrata / E. alba. Confirm whole plant versus leaves/aerial parts.",
+            "link": null
+          },
+          {
+            "cell": "D11",
+            "value": "Traditional hair and scalp packs.",
+            "link": null
+          },
+          {
+            "cell": "E11",
+            "value": "Ayurvedic skin-care association exists; modern clinical evidence for the powder is limited.",
+            "link": null
+          },
+          {
+            "cell": "F11",
+            "value": "Bhringraj Powder for Traditional Hair & Scalp Packs\nA botanical ingredient with an Ayurvedic hair-care heritage.",
+            "link": null
+          },
+          {
+            "cell": "G11",
+            "value": "State the supplied plant part accurately. Validate any skin use or measurable conditioning claim.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "cell": "B12",
+            "value": "Indigo",
+            "link": null
+          },
+          {
+            "cell": "C12",
+            "value": "Working identity: Indigofera tinctoria leaves. Confirm formula and any added dyes.",
+            "link": null
+          },
+          {
+            "cell": "D12",
+            "value": "Botanical hair colouring; grey coverage depends on the colouring process.",
+            "link": null
+          },
+          {
+            "cell": "E12",
+            "value": "Keep the main role as hair colour. Medicinal indigo naturalis is a different preparation.",
+            "link": null
+          },
+          {
+            "cell": "F12",
+            "value": "Indigo Leaf Powder for Botanical Hair Colour\nFor a strand-tested botanical colouring routine.",
+            "link": null
+          },
+          {
+            "cell": "G12",
+            "value": "Give tested colour instructions and realistic shade examples. Henna is outside these six products; do not imply amla replaces it.",
+            "link": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sheet": "Benefits and evidence",
+    "rows": [
+      {
+        "row": 2,
+        "cells": [
+          {
+            "cell": "B2",
+            "value": "Benefits and evidence | What each source actually supports",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "cell": "B3",
+            "value": "Use the filters to select a product or evidence type. Ingredient research does not certify the finished product; oral studies are background only.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "cell": "B4",
+            "value": "Working identities; external-use range assumed. Confirm supplier specifications and product directions. Reviewed 21 October 2026.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "cell": "B6",
+            "value": "Product",
+            "link": null
+          },
+          {
+            "cell": "C6",
+            "value": "Benefit or use",
+            "link": null
+          },
+          {
+            "cell": "D6",
+            "value": "Evidence type",
+            "link": null
+          },
+          {
+            "cell": "E6",
+            "value": "Studied material / setting",
+            "link": null
+          },
+          {
+            "cell": "F6",
+            "value": "Finding and practical limit",
+            "link": null
+          },
+          {
+            "cell": "G6",
+            "value": "Suggested wording or action",
+            "link": null
+          },
+          {
+            "cell": "H6",
+            "value": "Source / evidence record",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "cell": "B7",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C7",
+            "value": "Traditional rejuvenative use",
+            "link": null
+          },
+          {
+            "cell": "D7",
+            "value": "Ayurvedic tradition",
+            "link": null
+          },
+          {
+            "cell": "E7",
+            "value": "Dried fruit pericarp in API",
+            "link": null
+          },
+          {
+            "cell": "F7",
+            "value": "Classed as Rasayana; this is historical use, not proof of modern clinical outcomes.",
+            "link": null
+          },
+          {
+            "cell": "G7",
+            "value": "Educational wording: traditionally valued in Ayurveda as a Rasayana. Do not turn this into an anti-ageing or immunity promise.",
+            "link": null
+          },
+          {
+            "cell": "H7",
+            "value": "https://www.ayurveda.hu/api/API-Vol-1.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "cell": "B8",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C8",
+            "value": "Hair-fibre strength / reduced breakage potential",
+            "link": null
+          },
+          {
+            "cell": "D8",
+            "value": "Laboratory hair-fibre study",
+            "link": null
+          },
+          {
+            "cell": "E8",
+            "value": "3%, 6% and 9% extracts on collected untreated or bleached hair",
+            "link": null
+          },
+          {
+            "cell": "F8",
+            "value": "Some strength/extensibility changes depended on concentration and hair damage. No consumer powder trial.",
+            "link": null
+          },
+          {
+            "cell": "G8",
+            "value": "Candidate claim after finished-product testing: helps reduce breakage during grooming.",
+            "link": null
+          },
+          {
+            "cell": "H8",
+            "value": "https://pdfs.semanticscholar.org/5e7d/8f056e4394bd66f46de5faa8b2a6647eb02d.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "cell": "B9",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C9",
+            "value": "Hair growth research",
+            "link": null
+          },
+          {
+            "cell": "D9",
+            "value": "Small human study; oral route",
+            "link": null
+          },
+          {
+            "cell": "E9",
+            "value": "Oral syrup; 12 weeks; 60 enrolled, 52 completed",
+            "link": null
+          },
+          {
+            "cell": "F9",
+            "value": "A growing/resting hair-ratio improvement was reported. Swallowed syrup is different from a topical hair pack.",
+            "link": null
+          },
+          {
+            "cell": "G9",
+            "value": "Background research only for this cosmetic range. Do not claim topical regrowth.",
+            "link": null
+          },
+          {
+            "cell": "H9",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/37487962/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "cell": "B10",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C10",
+            "value": "Facial oil-control potential",
+            "link": null
+          },
+          {
+            "cell": "D10",
+            "value": "Small human formulation study",
+            "link": null
+          },
+          {
+            "cell": "E10",
+            "value": "3% fruit-extract toner; 30 volunteers; short-term assessment",
+            "link": null
+          },
+          {
+            "cell": "F10",
+            "value": "Lower skin sebum was reported for the tested toner. This does not validate fruit powder as a facial mask.",
+            "link": null
+          },
+          {
+            "cell": "G10",
+            "value": "Face-pack development option; test the actual product before oil-control wording.",
+            "link": null
+          },
+          {
+            "cell": "H10",
+            "value": "https://pdfs.semanticscholar.org/c718/bc660c42efb0e03e51553919d56221d1588e.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "cell": "B11",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C11",
+            "value": "Skin hydration / wrinkle research",
+            "link": null
+          },
+          {
+            "cell": "D11",
+            "value": "Small human formulation study; different plant part",
+            "link": null
+          },
+          {
+            "cell": "E11",
+            "value": "0.1% branch-extract gel; 20 volunteers; 84 days",
+            "link": null
+          },
+          {
+            "cell": "F11",
+            "value": "Skin measures improved in the tested branch-extract formulation. Fruit powder is a different ingredient.",
+            "link": null
+          },
+          {
+            "cell": "G11",
+            "value": "Do not borrow branch-gel hydration, wrinkle or pigmentation claims for fruit powder.",
+            "link": null
+          },
+          {
+            "cell": "H11",
+            "value": "https://www.researchgate.net/publication/349192566_Phyllanthus_emblica_L_amla_branch_A_safe_and_effective_ingredient_against_skin_aging",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "cell": "B12",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C12",
+            "value": "Antioxidant compounds / vitamin C content",
+            "link": null
+          },
+          {
+            "cell": "D12",
+            "value": "Composition and laboratory research",
+            "link": null
+          },
+          {
+            "cell": "E12",
+            "value": "Fruit processed with different drying methods",
+            "link": null
+          },
+          {
+            "cell": "F12",
+            "value": "Measured constituents vary with cultivar and processing. Laboratory antioxidant results are not clinical skin protection.",
+            "link": null
+          },
+          {
+            "cell": "G12",
+            "value": "A composition claim needs relevant testing. Do not assume a fixed vitamin C content in dried powder.",
+            "link": null
+          },
+          {
+            "cell": "H12",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/32123419/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 13,
+        "cells": [
+          {
+            "cell": "B13",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C13",
+            "value": "Cholesterol and triglyceride research",
+            "link": null
+          },
+          {
+            "cell": "D13",
+            "value": "Human randomized trial; oral extract",
+            "link": null
+          },
+          {
+            "cell": "E13",
+            "value": "Standardized oral extract; 98 participants; 12 weeks",
+            "link": null
+          },
+          {
+            "cell": "F13",
+            "value": "Lipid-marker improvements were reported. This does not establish cardiovascular-event prevention.",
+            "link": null
+          },
+          {
+            "cell": "G13",
+            "value": "Educational context for a correctly specified oral product only; not a cosmetic label claim.",
+            "link": null
+          },
+          {
+            "cell": "H13",
+            "value": "https://link.springer.com/article/10.1186/s12906-019-2430-y",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 14,
+        "cells": [
+          {
+            "cell": "B14",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C14",
+            "value": "Reflux symptom research",
+            "link": null
+          },
+          {
+            "cell": "D14",
+            "value": "Human randomized trial; oral tablets",
+            "link": null
+          },
+          {
+            "cell": "E14",
+            "value": "68 patients; 4 weeks",
+            "link": null
+          },
+          {
+            "cell": "F14",
+            "value": "Symptom improvements were reported for the studied oral preparation.",
+            "link": null
+          },
+          {
+            "cell": "G14",
+            "value": "Do not advertise a hair/skin powder as a reflux treatment.",
+            "link": null
+          },
+          {
+            "cell": "H14",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/29526236/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 15,
+        "cells": [
+          {
+            "cell": "B15",
+            "value": "Amla",
+            "link": null
+          },
+          {
+            "cell": "C15",
+            "value": "Vitamin C nutritional functions",
+            "link": null
+          },
+          {
+            "cell": "D15",
+            "value": "Established nutrient functions; conditional relevance",
+            "link": null
+          },
+          {
+            "cell": "E15",
+            "value": "Edible product with verified vitamin C per serving",
+            "link": null
+          },
+          {
+            "cell": "F15",
+            "value": "Vitamin C supports normal collagen formation and immune function and increases non-haem iron absorption.",
+            "link": null
+          },
+          {
+            "cell": "G15",
+            "value": "Only relevant if oral use is intended and content is verified. It does not establish topical collagen boosting.",
+            "link": null
+          },
+          {
+            "cell": "H15",
+            "value": "https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 16,
+        "cells": [
+          {
+            "cell": "B16",
+            "value": "Reetha",
+            "link": null
+          },
+          {
+            "cell": "C16",
+            "value": "Hair cleansing / removal of surface oil",
+            "link": null
+          },
+          {
+            "cell": "D16",
+            "value": "Laboratory detergency research",
+            "link": null
+          },
+          {
+            "cell": "E16",
+            "value": "Crude saponin extract from fruit pericarp",
+            "link": null
+          },
+          {
+            "cell": "F16",
+            "value": "Foaming, wetting and moderate artificial-sebum removal were demonstrated.",
+            "link": null
+          },
+          {
+            "cell": "G16",
+            "value": "Use description after identity and directions are confirmed: plant-based cleansing powder for herbal hair washes.",
+            "link": null
+          },
+          {
+            "cell": "H16",
+            "value": "https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 17,
+        "cells": [
+          {
+            "cell": "B17",
+            "value": "Reetha",
+            "link": null
+          },
+          {
+            "cell": "C17",
+            "value": "Natural foaming and wetting",
+            "link": null
+          },
+          {
+            "cell": "D17",
+            "value": "Laboratory functional research",
+            "link": null
+          },
+          {
+            "cell": "E17",
+            "value": "Aqueous preparations of commercial soapnut fruits",
+            "link": null
+          },
+          {
+            "cell": "F17",
+            "value": "Surface-tension and oil-emulsification properties support a washing role.",
+            "link": null
+          },
+          {
+            "cell": "G17",
+            "value": "Say naturally occurring cleansing saponins only after ingredient identity is confirmed; foam alone does not prove mildness.",
+            "link": null
+          },
+          {
+            "cell": "H17",
+            "value": "https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 18,
+        "cells": [
+          {
+            "cell": "B18",
+            "value": "Reetha",
+            "link": null
+          },
+          {
+            "cell": "C18",
+            "value": "Body-wash ingredient possibility",
+            "link": null
+          },
+          {
+            "cell": "D18",
+            "value": "Formulation inference; not a skin efficacy trial",
+            "link": null
+          },
+          {
+            "cell": "E18",
+            "value": "Detergency evidence transferred only as a development hypothesis",
+            "link": null
+          },
+          {
+            "cell": "F18",
+            "value": "The washing mechanism suggests a potential cleanser ingredient. Skin tolerance is not established by foam tests.",
+            "link": null
+          },
+          {
+            "cell": "G18",
+            "value": "Assess an appropriate body-cleanser formulation and directions before adding face/body use.",
+            "link": null
+          },
+          {
+            "cell": "H18",
+            "value": "https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 19,
+        "cells": [
+          {
+            "cell": "B19",
+            "value": "Reetha",
+            "link": null
+          },
+          {
+            "cell": "C19",
+            "value": "Household washing / laundry development",
+            "link": null
+          },
+          {
+            "cell": "D19",
+            "value": "Functional inference from surfactant research",
+            "link": null
+          },
+          {
+            "cell": "E19",
+            "value": "Soapnut aqueous preparations",
+            "link": null
+          },
+          {
+            "cell": "F19",
+            "value": "Detergent properties may be useful beyond personal care. The current cosmetic jar has not been tested as a laundry product.",
+            "link": null
+          },
+          {
+            "cell": "G19",
+            "value": "Explore a separate household-cleaning use only after material, stain-removal and packaging checks.",
+            "link": null
+          },
+          {
+            "cell": "H19",
+            "value": "https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 20,
+        "cells": [
+          {
+            "cell": "B20",
+            "value": "Reetha",
+            "link": null
+          },
+          {
+            "cell": "C20",
+            "value": "Antimicrobial or preservative research",
+            "link": null
+          },
+          {
+            "cell": "D20",
+            "value": "Laboratory evidence only",
+            "link": null
+          },
+          {
+            "cell": "E20",
+            "value": "Extract tested against microorganisms",
+            "link": null
+          },
+          {
+            "cell": "F20",
+            "value": "Laboratory activity does not establish acne, fungal-infection or dandruff treatment, or reliable preservation of a wet mixture.",
+            "link": null
+          },
+          {
+            "cell": "G20",
+            "value": "Keep medical antimicrobial and self-preserving claims off current product copy.",
+            "link": null
+          },
+          {
+            "cell": "H20",
+            "value": "https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 21,
+        "cells": [
+          {
+            "cell": "B21",
+            "value": "Shikakai",
+            "link": null
+          },
+          {
+            "cell": "C21",
+            "value": "Traditional hair cleansing",
+            "link": null
+          },
+          {
+            "cell": "D21",
+            "value": "Use history and human wash studies",
+            "link": null
+          },
+          {
+            "cell": "E21",
+            "value": "Pod-based wash preparations",
+            "link": null
+          },
+          {
+            "cell": "F21",
+            "value": "Shikakai is used in hair-washing preparations; cleansing is the most defensible product role.",
+            "link": null
+          },
+          {
+            "cell": "G21",
+            "value": "Suggested use description: shikakai pod powder for traditional hair washing.",
+            "link": null
+          },
+          {
+            "cell": "H21",
+            "value": "https://jahm.co.in/index.php/jahm/article/view/200",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 22,
+        "cells": [
+          {
+            "cell": "B22",
+            "value": "Shikakai",
+            "link": null
+          },
+          {
+            "cell": "C22",
+            "value": "Scalp flaking / itching research",
+            "link": null
+          },
+          {
+            "cell": "D22",
+            "value": "Small human comparative study; limited reporting",
+            "link": null
+          },
+          {
+            "cell": "E22",
+            "value": "Powdered-pod wash; 70 people; 28 days",
+            "link": null
+          },
+          {
+            "cell": "F22",
+            "value": "Improvement was reported in scalp symptoms, but design and reporting limit certainty.",
+            "link": null
+          },
+          {
+            "cell": "G22",
+            "value": "Educational research context; test the finished product and avoid a dandruff-cure claim.",
+            "link": null
+          },
+          {
+            "cell": "H22",
+            "value": "https://jahm.co.in/index.php/jahm/article/view/200",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 23,
+        "cells": [
+          {
+            "cell": "B23",
+            "value": "Shikakai",
+            "link": null
+          },
+          {
+            "cell": "C23",
+            "value": "Dandruff shampoo research",
+            "link": null
+          },
+          {
+            "cell": "D23",
+            "value": "Controlled human crossover study; mixed findings",
+            "link": null
+          },
+          {
+            "cell": "E23",
+            "value": "Acacia concinna shampoo; 74 analyzed; two 4-week periods",
+            "link": null
+          },
+          {
+            "cell": "F23",
+            "value": "Some redness/extent measures improved; dandruff severity and desquamation were not significantly improved.",
+            "link": null
+          },
+          {
+            "cell": "G23",
+            "value": "Do not present the evidence as proven anti-dandruff efficacy for raw powder.",
+            "link": null
+          },
+          {
+            "cell": "H23",
+            "value": "https://he02.tci-thaijo.org/index.php/TJD/article/view/282743",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 24,
+        "cells": [
+          {
+            "cell": "B24",
+            "value": "Shikakai",
+            "link": null
+          },
+          {
+            "cell": "C24",
+            "value": "Body-cleansing / barrier research",
+            "link": null
+          },
+          {
+            "cell": "D24",
+            "value": "Small human study; multi-ingredient formula",
+            "link": null
+          },
+          {
+            "cell": "E24",
+            "value": "30 patients; 2 weeks; cleanser with shikakai and other ingredients",
+            "link": null
+          },
+          {
+            "cell": "F24",
+            "value": "Transepidermal water loss improved; hydration, pH and roughness did not significantly improve. Effects cannot be assigned to shikakai alone.",
+            "link": null
+          },
+          {
+            "cell": "G24",
+            "value": "Body-cleanser development option; no eczema-treatment or proven-moisturising claim for powder.",
+            "link": null
+          },
+          {
+            "cell": "H24",
+            "value": "https://apjai-journal.org/original-article/ap-050519-0554/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 25,
+        "cells": [
+          {
+            "cell": "B25",
+            "value": "Shikakai",
+            "link": null
+          },
+          {
+            "cell": "C25",
+            "value": "Softness / detangling / mildness",
+            "link": null
+          },
+          {
+            "cell": "D25",
+            "value": "Finished-product evidence needed",
+            "link": null
+          },
+          {
+            "cell": "E25",
+            "value": "NatureMist powder or proposed blend has not been assessed here",
+            "link": null
+          },
+          {
+            "cell": "F25",
+            "value": "These are useful customer outcomes to measure, not conclusions from saponin content.",
+            "link": null
+          },
+          {
+            "cell": "G25",
+            "value": "Test combing, after-feel, rinse-out and tolerance before adding these benefits.",
+            "link": null
+          },
+          {
+            "cell": "H25",
+            "value": "NatureMist product test results were not supplied.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 26,
+        "cells": [
+          {
+            "cell": "B26",
+            "value": "Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "C26",
+            "value": "Herbal hair-pack use",
+            "link": null
+          },
+          {
+            "cell": "D26",
+            "value": "Traditional cosmetic use",
+            "link": null
+          },
+          {
+            "cell": "E26",
+            "value": "Assumed H. rosa-sinensis flowers; verify identity",
+            "link": null
+          },
+          {
+            "cell": "F26",
+            "value": "Hair-pack positioning is consistent with traditional use. Specific results depend on preparation.",
+            "link": null
+          },
+          {
+            "cell": "G26",
+            "value": "Suggested use description: hibiscus flower powder for herbal hair packs.",
+            "link": null
+          },
+          {
+            "cell": "H26",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/12963149/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 27,
+        "cells": [
+          {
+            "cell": "B27",
+            "value": "Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "C27",
+            "value": "Hair-growth research",
+            "link": null
+          },
+          {
+            "cell": "D27",
+            "value": "Animal and isolated-follicle research",
+            "link": null
+          },
+          {
+            "cell": "E27",
+            "value": "Petroleum-ether leaf and flower extracts",
+            "link": null
+          },
+          {
+            "cell": "F27",
+            "value": "Hair-growth findings were preclinical; leaves performed better than flowers.",
+            "link": null
+          },
+          {
+            "cell": "G27",
+            "value": "Do not claim human hair regrowth or transfer leaf-extract effects to flower powder.",
+            "link": null
+          },
+          {
+            "cell": "H27",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/12963149/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 28,
+        "cells": [
+          {
+            "cell": "B28",
+            "value": "Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "C28",
+            "value": "Hydration / mucilage research",
+            "link": null
+          },
+          {
+            "cell": "D28",
+            "value": "Laboratory skin-model study",
+            "link": null
+          },
+          {
+            "cell": "E28",
+            "value": "Isolated leaf mucilage tested on pig skin",
+            "link": null
+          },
+          {
+            "cell": "F28",
+            "value": "The study concerns leaves and a model system, not flower powder tested on people.",
+            "link": null
+          },
+          {
+            "cell": "G28",
+            "value": "Leaf-mucilage evidence does not substantiate hydration or wrinkle benefits for this jar.",
+            "link": null
+          },
+          {
+            "cell": "H28",
+            "value": "https://journals.innovareacademics.in/index.php/ijpps/article/view/3319",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 29,
+        "cells": [
+          {
+            "cell": "B29",
+            "value": "Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "C29",
+            "value": "Plant compounds / antioxidant research",
+            "link": null
+          },
+          {
+            "cell": "D29",
+            "value": "Laboratory extract research",
+            "link": null
+          },
+          {
+            "cell": "E29",
+            "value": "H. rosa-sinensis flower extracts",
+            "link": null
+          },
+          {
+            "cell": "F29",
+            "value": "Phenolic compounds and antioxidant activity were measured in extracts.",
+            "link": null
+          },
+          {
+            "cell": "G29",
+            "value": "Research background only. A clinical skin-protection or anti-ageing claim needs relevant product evidence.",
+            "link": null
+          },
+          {
+            "cell": "H29",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/24811803/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 30,
+        "cells": [
+          {
+            "cell": "B30",
+            "value": "Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "C30",
+            "value": "Face/body packs; softness, shine and slip",
+            "link": null
+          },
+          {
+            "cell": "D30",
+            "value": "Product-development options",
+            "link": null
+          },
+          {
+            "cell": "E30",
+            "value": "Actual flower powder or finished blend",
+            "link": null
+          },
+          {
+            "cell": "F30",
+            "value": "These are possible uses and sensory outcomes to assess; suitable human evidence for this product was not supplied.",
+            "link": null
+          },
+          {
+            "cell": "G30",
+            "value": "Confirm cosmetic suitability, tolerance and real-use results before adding face/body or conditioning benefits.",
+            "link": null
+          },
+          {
+            "cell": "H30",
+            "value": "NatureMist product test results were not supplied.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 31,
+        "cells": [
+          {
+            "cell": "B31",
+            "value": "Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "C31",
+            "value": "Blood-pressure / tea benefits",
+            "link": null
+          },
+          {
+            "cell": "D31",
+            "value": "Human trial; different species and oral preparation",
+            "link": null
+          },
+          {
+            "cell": "E31",
+            "value": "H. sabdariffa calyx tea; 65 adults; 6 weeks",
+            "link": null
+          },
+          {
+            "cell": "F31",
+            "value": "A blood-pressure effect was studied for roselle tea. It does not apply to H. rosa-sinensis flower powder.",
+            "link": null
+          },
+          {
+            "cell": "G31",
+            "value": "Do not use roselle-tea health claims for the assumed cosmetic flower product.",
+            "link": null
+          },
+          {
+            "cell": "H31",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/20018807/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 32,
+        "cells": [
+          {
+            "cell": "B32",
+            "value": "Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "C32",
+            "value": "Traditional hair care",
+            "link": null
+          },
+          {
+            "cell": "D32",
+            "value": "Ayurvedic tradition",
+            "link": null
+          },
+          {
+            "cell": "E32",
+            "value": "API whole-plant Eclipta alba monograph",
+            "link": null
+          },
+          {
+            "cell": "F32",
+            "value": "Keshya denotes a traditional association with hair care; it is not a clinical growth result.",
+            "link": null
+          },
+          {
+            "cell": "G32",
+            "value": "Use educational wording: traditionally valued in Ayurvedic hair care. Confirm the plant part supplied.",
+            "link": null
+          },
+          {
+            "cell": "H32",
+            "value": "https://www.ayurveda.hu/api/API-Vol-2.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 33,
+        "cells": [
+          {
+            "cell": "B33",
+            "value": "Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "C33",
+            "value": "Traditional skin care",
+            "link": null
+          },
+          {
+            "cell": "D33",
+            "value": "Ayurvedic tradition",
+            "link": null
+          },
+          {
+            "cell": "E33",
+            "value": "API whole-plant monograph",
+            "link": null
+          },
+          {
+            "cell": "F33",
+            "value": "Tvacya records a traditional skin-care association.",
+            "link": null
+          },
+          {
+            "cell": "G33",
+            "value": "Discuss as traditional use; validate any face/body-pack directions for the actual product.",
+            "link": null
+          },
+          {
+            "cell": "H33",
+            "value": "https://www.ayurveda.hu/api/API-Vol-2.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 34,
+        "cells": [
+          {
+            "cell": "B34",
+            "value": "Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "C34",
+            "value": "Traditional rejuvenative / liver uses",
+            "link": null
+          },
+          {
+            "cell": "D34",
+            "value": "Ayurvedic tradition; not a modern outcome trial",
+            "link": null
+          },
+          {
+            "cell": "E34",
+            "value": "Whole-plant medicinal context",
+            "link": null
+          },
+          {
+            "cell": "F34",
+            "value": "Rasayana and liver-related traditional uses are historical classifications. The monograph describes Ushna, not cooling.",
+            "link": null
+          },
+          {
+            "cell": "G34",
+            "value": "No liver-detox, sleep, stress-relief or systemic-health promise for a cosmetic powder.",
+            "link": null
+          },
+          {
+            "cell": "H34",
+            "value": "https://www.ayurveda.hu/api/API-Vol-2.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 35,
+        "cells": [
+          {
+            "cell": "B35",
+            "value": "Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "C35",
+            "value": "Hair-growth research",
+            "link": null
+          },
+          {
+            "cell": "D35",
+            "value": "Animal study",
+            "link": null
+          },
+          {
+            "cell": "E35",
+            "value": "Extracts in cream formulations tested on rats",
+            "link": null
+          },
+          {
+            "cell": "F35",
+            "value": "Hair-growth findings are preclinical; preparation and dose differ from raw powder.",
+            "link": null
+          },
+          {
+            "cell": "G35",
+            "value": "Do not claim clinically proven regrowth, baldness treatment or superiority to medicines.",
+            "link": null
+          },
+          {
+            "cell": "H35",
+            "value": "https://pubmed.ncbi.nlm.nih.gov/18478241/",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 36,
+        "cells": [
+          {
+            "cell": "B36",
+            "value": "Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "C36",
+            "value": "Skin anti-inflammatory research",
+            "link": null
+          },
+          {
+            "cell": "D36",
+            "value": "Cell-based laboratory research",
+            "link": null
+          },
+          {
+            "cell": "E36",
+            "value": "Ultrasonically prepared ethanolic extract",
+            "link": null
+          },
+          {
+            "cell": "F36",
+            "value": "Activity was studied in cell models; this is not a human trial of a skin pack.",
+            "link": null
+          },
+          {
+            "cell": "G36",
+            "value": "Keep anti-inflammatory, acne, eczema and wound-healing treatment claims out of current copy.",
+            "link": null
+          },
+          {
+            "cell": "H36",
+            "value": "https://www.researchgate.net/publication/321354930_Enhancement_of_Skin_Anti-Inflammatory_Activities_of_Eclipta_prostrata_L_from_the_Ultrasonic_Extraction_Process",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 37,
+        "cells": [
+          {
+            "cell": "B37",
+            "value": "Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "C37",
+            "value": "Hair softness / scalp comfort",
+            "link": null
+          },
+          {
+            "cell": "D37",
+            "value": "Finished-product evidence needed",
+            "link": null
+          },
+          {
+            "cell": "E37",
+            "value": "Actual NatureMist hair/scalp pack",
+            "link": null
+          },
+          {
+            "cell": "F37",
+            "value": "Useful customer outcomes for a product test; no relevant finished-product results supplied.",
+            "link": null
+          },
+          {
+            "cell": "G37",
+            "value": "Use hair/scalp-pack positioning now after checking intended use; add measured benefits after assessment.",
+            "link": null
+          },
+          {
+            "cell": "H37",
+            "value": "NatureMist product test results were not supplied.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 38,
+        "cells": [
+          {
+            "cell": "B38",
+            "value": "Indigo",
+            "link": null
+          },
+          {
+            "cell": "C38",
+            "value": "Botanical hair colour",
+            "link": null
+          },
+          {
+            "cell": "D38",
+            "value": "Established cosmetic function; official safety assessment",
+            "link": null
+          },
+          {
+            "cell": "E38",
+            "value": "Dried, crushed I. tinctoria leaf powder in assessed hair-colour use",
+            "link": null
+          },
+          {
+            "cell": "F38",
+            "value": "Indigo is used for non-oxidative hair colouring. An ingredient assessment is not approval of NatureMist.",
+            "link": null
+          },
+          {
+            "cell": "G38",
+            "value": "Suggested use description: indigo leaf powder for botanical hair colour; confirm composition and directions.",
+            "link": null
+          },
+          {
+            "cell": "H38",
+            "value": "https://health.ec.europa.eu/document/download/22957d7f-574c-4956-a2d4-fb18ee00ac65_en?filename=sccs_o_237.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 39,
+        "cells": [
+          {
+            "cell": "B39",
+            "value": "Indigo",
+            "link": null
+          },
+          {
+            "cell": "C39",
+            "value": "Darker shades / grey coverage",
+            "link": null
+          },
+          {
+            "cell": "D39",
+            "value": "Colour-performance evidence; process dependent",
+            "link": null
+          },
+          {
+            "cell": "E39",
+            "value": "Plant-dye mixtures tested on human hair tresses",
+            "link": null
+          },
+          {
+            "cell": "F39",
+            "value": "Colour deposition depends on the mixture, starting hair and colouring procedure. Coverage must be demonstrated.",
+            "link": null
+          },
+          {
+            "cell": "G39",
+            "value": "Publish actual strand results and a shade guide. Avoid guaranteed jet black or permanent grey reversal.",
+            "link": null
+          },
+          {
+            "cell": "H39",
+            "value": "https://www.researchgate.net/publication/390791643_Functional_Performance_and_Safety_Evaluation_of_Optimized_Plant-Based_Dye_Mixtures_for_Intense_Hair_Coloration",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 40,
+        "cells": [
+          {
+            "cell": "B40",
+            "value": "Indigo",
+            "link": null
+          },
+          {
+            "cell": "C40",
+            "value": "Henna-plus-indigo colouring",
+            "link": null
+          },
+          {
+            "cell": "D40",
+            "value": "Formulation and process dependent",
+            "link": null
+          },
+          {
+            "cell": "E40",
+            "value": "Henna/indigo-containing dye blends; not amla as a henna substitute",
+            "link": null
+          },
+          {
+            "cell": "F40",
+            "value": "Darker botanical colour can use a suitable henna/indigo process; the cited blend is not NatureMist.",
+            "link": null
+          },
+          {
+            "cell": "G40",
+            "value": "Henna is outside the current six products. Do not present indigo plus amla as a complete black-colour system.",
+            "link": null
+          },
+          {
+            "cell": "H40",
+            "value": "https://www.researchgate.net/publication/390791643_Functional_Performance_and_Safety_Evaluation_of_Optimized_Plant-Based_Dye_Mixtures_for_Intense_Hair_Coloration",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 41,
+        "cells": [
+          {
+            "cell": "B41",
+            "value": "Indigo",
+            "link": null
+          },
+          {
+            "cell": "C41",
+            "value": "Colour without a peroxide developer",
+            "link": null
+          },
+          {
+            "cell": "D41",
+            "value": "Conditional formula / process attribute",
+            "link": null
+          },
+          {
+            "cell": "E41",
+            "value": "A verified non-oxidative botanical colour formula",
+            "link": null
+          },
+          {
+            "cell": "F41",
+            "value": "Non-oxidative use is documented. Absence of PPD, ammonia or additives requires actual composition verification.",
+            "link": null
+          },
+          {
+            "cell": "G41",
+            "value": "Mention no peroxide developer only when true of the complete directions; verify every ingredient-free claim.",
+            "link": null
+          },
+          {
+            "cell": "H41",
+            "value": "https://health.ec.europa.eu/document/download/22957d7f-574c-4956-a2d4-fb18ee00ac65_en?filename=sccs_o_237.pdf",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 42,
+        "cells": [
+          {
+            "cell": "B42",
+            "value": "Indigo",
+            "link": null
+          },
+          {
+            "cell": "C42",
+            "value": "Skin-disease research does not transfer",
+            "link": null
+          },
+          {
+            "cell": "D42",
+            "value": "Human study of a different medicinal material",
+            "link": null
+          },
+          {
+            "cell": "E42",
+            "value": "Indigo naturalis from Strobilanthes formosanus in a formulated ointment",
+            "link": null
+          },
+          {
+            "cell": "F42",
+            "value": "The psoriasis research does not establish benefits for I. tinctoria leaf powder.",
+            "link": null
+          },
+          {
+            "cell": "G42",
+            "value": "Do not market the hair-colour powder as an acne, eczema or psoriasis treatment.",
+            "link": null
+          },
+          {
+            "cell": "H42",
+            "value": "https://jamanetwork.com/journals/jamadermatology/fullarticle/420128",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 43,
+        "cells": [
+          {
+            "cell": "B43",
+            "value": "Indigo",
+            "link": null
+          },
+          {
+            "cell": "C43",
+            "value": "Tolerance and colour testing",
+            "link": null
+          },
+          {
+            "cell": "D43",
+            "value": "Official safety assessment; product-specific check needed",
+            "link": null
+          },
+          {
+            "cell": "E43",
+            "value": "Assessed leaf powder and use conditions",
+            "link": null
+          },
+          {
+            "cell": "F43",
+            "value": "Weak sensitisation was not excluded in the SCCS assessment; natural origin does not establish universal tolerance.",
+            "link": null
+          },
+          {
+            "cell": "G43",
+            "value": "Provide appropriate allergy and strand-test directions. Do not claim allergy-free or safe for everyone.",
+            "link": null
+          },
+          {
+            "cell": "H43",
+            "value": "https://health.ec.europa.eu/document/download/22957d7f-574c-4956-a2d4-fb18ee00ac65_en?filename=sccs_o_237.pdf",
+            "link": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sheet": "Combos",
+    "rows": [
+      {
+        "row": 2,
+        "cells": [
+          {
+            "cell": "B2",
+            "value": "Combos | Match products to a useful routine",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "cell": "B3",
+            "value": "These are merchandising recommendations, not tested formulas or evidence of clinical synergy. Keep singles and combos in the same catalogue.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "cell": "B4",
+            "value": "Working identities; external-use range assumed. Confirm supplier specifications and product directions. Reviewed 21 October 2026.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "cell": "B6",
+            "value": "Bundle idea",
+            "link": null
+          },
+          {
+            "cell": "C6",
+            "value": "Products",
+            "link": null
+          },
+          {
+            "cell": "D6",
+            "value": "Customer goal",
+            "link": null
+          },
+          {
+            "cell": "E6",
+            "value": "Sales angle",
+            "link": null
+          },
+          {
+            "cell": "F6",
+            "value": "Conditions before publishing",
+            "link": null
+          },
+          {
+            "cell": "G6",
+            "value": "Product-page guidance",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "cell": "B7",
+            "value": "Herbal Hair Wash Duo",
+            "link": null
+          },
+          {
+            "cell": "C7",
+            "value": "Reetha + Shikakai",
+            "link": null
+          },
+          {
+            "cell": "D7",
+            "value": "Customers choosing a botanical wash routine",
+            "link": null
+          },
+          {
+            "cell": "E7",
+            "value": "Two cleansing botanicals in one routine; ingredients remain identifiable.",
+            "link": null
+          },
+          {
+            "cell": "F7",
+            "value": "Show how to prepare and rinse using tested directions. Validate any cleansing, mildness or after-feel claims.",
+            "link": null
+          },
+          {
+            "cell": "G7",
+            "value": "Use the clearest cleansing comparison on the product page; evidence is ingredient-level, not proof of synergy.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "cell": "B8",
+            "value": "Botanical Hair Pack Duo",
+            "link": null
+          },
+          {
+            "cell": "C8",
+            "value": "Amla + Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "D8",
+            "value": "Customers interested in a weekly hair-pack routine",
+            "link": null
+          },
+          {
+            "cell": "E8",
+            "value": "A fruit-and-flower pairing for a botanical hair pack.",
+            "link": null
+          },
+          {
+            "cell": "F8",
+            "value": "Test the blend before promising softness, shine, detangling or reduced breakage.",
+            "link": null
+          },
+          {
+            "cell": "G8",
+            "value": "Show texture and application. Customer descriptions should reflect actual experience.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "cell": "B9",
+            "value": "Traditional Hair & Scalp Duo",
+            "link": null
+          },
+          {
+            "cell": "C9",
+            "value": "Amla + Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "D9",
+            "value": "Customers interested in Ayurvedic hair-care traditions",
+            "link": null
+          },
+          {
+            "cell": "E9",
+            "value": "Two botanicals associated with traditional hair-care routines.",
+            "link": null
+          },
+          {
+            "cell": "F9",
+            "value": "Use tradition language accurately. Avoid hair-regrowth, guaranteed hair-fall reduction and grey-reversal promises.",
+            "link": null
+          },
+          {
+            "cell": "G9",
+            "value": "Explain ingredient roles in plain language and confirm directions for the blend.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "cell": "B10",
+            "value": "Wash & Pack Trio",
+            "link": null
+          },
+          {
+            "cell": "C10",
+            "value": "Reetha + Shikakai + Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "D10",
+            "value": "Customers wanting a wash step and a separate pack step",
+            "link": null
+          },
+          {
+            "cell": "E10",
+            "value": "A complete routine concept with clearly labelled steps.",
+            "link": null
+          },
+          {
+            "cell": "F10",
+            "value": "Do not imply all powders must be mixed together. Assess each step and avoid medical scalp claims.",
+            "link": null
+          },
+          {
+            "cell": "G10",
+            "value": "Show which products wash and which are used as a pack; sell singles alongside the trio.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "cell": "B11",
+            "value": "Hair-Pack Collection",
+            "link": null
+          },
+          {
+            "cell": "C11",
+            "value": "Amla + Hibiscus + Bhringraj",
+            "link": null
+          },
+          {
+            "cell": "D11",
+            "value": "Customers who want a choice of pack ingredients",
+            "link": null
+          },
+          {
+            "cell": "E11",
+            "value": "A collection for different traditional hair-pack preferences.",
+            "link": null
+          },
+          {
+            "cell": "F11",
+            "value": "Do not state that combining three products makes them clinically stronger. Confirm each intended use.",
+            "link": null
+          },
+          {
+            "cell": "G11",
+            "value": "Explain the difference between the three ingredients so the bundle adds choice, not confusion.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "cell": "B12",
+            "value": "Face & Body Pack Duo — development option",
+            "link": null
+          },
+          {
+            "cell": "C12",
+            "value": "Amla + Hibiscus",
+            "link": null
+          },
+          {
+            "cell": "D12",
+            "value": "Future customers seeking a botanical skin-pack routine",
+            "link": null
+          },
+          {
+            "cell": "E12",
+            "value": "Possible skin-care extension after ingredient and product assessment.",
+            "link": null
+          },
+          {
+            "cell": "F12",
+            "value": "Confirm exact species, plant part, particle size, tolerance and instructions. No brightening, acne or wrinkle promise yet.",
+            "link": null
+          },
+          {
+            "cell": "G12",
+            "value": "Keep this as a development option until skin suitability is confirmed; do not publish as a proven skin bundle.",
+            "link": null
+          }
+        ]
+      },
+      {
+        "row": 13,
+        "cells": [
+          {
+            "cell": "B13",
+            "value": "Botanical Colour + Care Routine",
+            "link": null
+          },
+          {
+            "cell": "C13",
+            "value": "Indigo plus a separately used Amla or Hibiscus pack",
+            "link": null
+          },
+          {
+            "cell": "D13",
+            "value": "Customers who already follow a suitable botanical colouring process",
+            "link": null
+          },
+          {
+            "cell": "E13",
+            "value": "Separate colouring and hair-pack steps, with realistic shade expectations.",
+            "link": null
+          },
+          {
+            "cell": "F13",
+            "value": "Check colour compatibility. Henna may be needed for the intended result and is not in this six-product range.",
+            "link": null
+          },
+          {
+            "cell": "G13",
+            "value": "Offer Indigo with a clear colour guide. Do not imply a care powder supplies the missing henna step.",
+            "link": null
+          }
+        ]
+      }
+    ]
+  }
+]

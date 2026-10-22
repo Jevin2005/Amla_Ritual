@@ -1,59 +1,59 @@
 export const ritualCards = [
   {
     number: "01",
-    title: "Cleanse",
-    copy: "Low-lather botanicals for a considered wash-day reset.",
-    href: "/shop?goal=Cleanse",
+    title: "Hair care",
+    copy: "Traditional botanical ingredients for hair packs and herbal washing.",
+    href: "/shop?care=hair",
   },
   {
     number: "02",
-    title: "Nourish",
-    copy: "Grounding masks for cared-for scalp and lengths.",
-    href: "/shop?goal=Scalp+Ritual",
+    title: "Herbal washes",
+    copy: "Reetha and Shikakai for a botanical hair-wash routine.",
+    href: "/shop?goal=Cleanse",
   },
   {
     number: "03",
-    title: "Softness + shine",
-    copy: "Conditioning powders for smooth, luminous-looking hair.",
-    href: "/shop?goal=Softness+%2B+Shine",
+    title: "Hair packs",
+    copy: "Amla, Hibiscus and Bhringraj for traditional hair-pack preferences.",
+    href: "/shop?care=hair",
   },
   {
     number: "04",
-    title: "Botanical colour",
-    copy: "Carefully explained leaf colour, with safety first.",
-    href: "/shop?goal=Botanical+Colour",
+    title: "Hair colour",
+    copy: "Indigo for a carefully planned, plant-based colour routine.",
+    href: "/shop?care=colour",
   },
 ] as const;
 
 export const homeFaqs = [
   {
-    question: "What does single-botanical mean?",
+    question: "Which powder belongs in my routine?",
     answer:
-      "Each jar is designed around one clearly named plant powder. Final pack labels will confirm the botanical identity, plant part, net weight and batch information before launch.",
+      "Choose Amla, Hibiscus or Bhringraj for a traditional hair pack; Reetha or Shikakai for herbal hair washing; and Indigo for a suitable botanical colour process. Each single powder contains 200 g. Follow the directions for the product and intended step.",
   },
   {
-    question: "Which powder is best for a beginner?",
+    question: "Can I use Amla or Hibiscus on my face or body?",
     answer:
-      "Amla or Shikakai can be approachable starting points. Choose by ritual goal, introduce one botanical at a time, and always follow the final pack directions.",
+      "Face and body packs are possible development options for Amla and Hibiscus. The actual powders need assessment of identity, particle size, skin tolerance and directions before skin use is offered. Our current range is positioned for hair care and hair colour, not facial or body application.",
   },
   {
-    question: "Can I combine NatureMist powders?",
+    question: "Does buying a combo mean I should mix all the powders?",
     answer:
-      "Yes, many traditional rituals use complementary powders. Start simply, keep notes on how your hair feels and follow the safety guidance for every ingredient in the blend.",
+      "No. A combo gives you a choice of separate 200 g jars. A wash and a hair pack can be separate steps. Follow each product's directions; a pairing is not a tested formula or evidence that a mixture works better.",
   },
   {
-    question: "Can I use the powders on colour-treated or very light hair?",
+    question: "Are Ayurvedic traditions the same as clinically proven benefits?",
     answer:
-      "Natural pigments can interact with grey, blonde, bleached, porous or chemically coloured hair. Patch and strand test first, particularly with Amla, Hibiscus and Indigo.",
+      "No. Traditional use and research on extracts, animal models or oral preparations do not prove results from a NatureMist powder. Softness, shine, detangling and reduced breakage need relevant product testing. We do not claim proven regrowth, skin treatment or guaranteed colour results.",
   },
   {
     question: "Will Indigo make hair black?",
     answer:
-      "Indigo alone does not guarantee black hair and may appear blue or green on light or grey hair. Darker tones commonly require a properly designed henna-led or two-step ritual.",
+      "Indigo alone does not guarantee black hair and may appear blue or green on light or grey hair. Darker results commonly involve a suitable henna-first method. Follow the complete colour method and patch- and strand-test as directed; henna is not one of our six powders.",
   },
   {
     question: "How should I store an opened jar?",
     answer:
-      "Keep it tightly closed in a cool, dry place away from direct light. Always use a clean, dry spoon and never introduce water into the jar.",
+      "Keep it tightly closed in a cool, dry place away from direct light. Always use a clean, dry spoon, keep water out of the jar and follow the expiry information on the pack. Prepare paste fresh and discard leftovers.",
   },
 ] as const;

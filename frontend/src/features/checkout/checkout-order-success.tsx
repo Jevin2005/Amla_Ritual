@@ -410,10 +410,10 @@ export function CheckoutOrderSuccess({ order }: CheckoutOrderSuccessProps) {
           </div>
         </div>
 
-        {/* Footer Guarantee Note */}
+        {/* Product-use note */}
         <div className="mt-8 border-t border-neutral-300 pt-3 text-center text-[7.5pt] text-neutral-500">
           <p className="font-semibold text-neutral-700">
-            🌿 100% Certified Organic & Single-Origin Wildcrafted Botanicals · Food-Grade UV Glass Sealed
+            Traditional botanical hair rituals · Follow each product’s preparation and use directions
           </p>
           <p className="mt-0.5">
             This is a computer-generated tax receipt and does not require a physical signature. For support, contact <SupportContactLinks />.

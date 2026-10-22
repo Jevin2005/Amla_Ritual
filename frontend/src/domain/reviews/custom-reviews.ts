@@ -1,4 +1,7 @@
 export const reviewTags = [
+  "Hair Packs",
+  "Hair Washing",
+  "Hair Colour",
   "Hair Fall",
   "Scalp Health",
   "Shine & Softness",

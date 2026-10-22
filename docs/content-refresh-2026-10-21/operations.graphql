@@ -1,0 +1,4 @@
+mutation UpdateProductCopy($product:ProductUpdateInput!) { productUpdate(product:$product) { product { id title productType tags seo { title description } } userErrors { field message } } }
+mutation UpdateProductGuidance($metafields:[MetafieldsSetInput!]!) { metafieldsSet(metafields:$metafields) { metafields { namespace key value } userErrors { field message code } } }
+mutation DefineProductGuidance($definition:MetafieldDefinitionInput!) { metafieldDefinitionCreate(definition:$definition) { createdDefinition { id key } userErrors { field message code } } }
+mutation UpdateSectionCopy($handle:MetaobjectHandleInput!,$metaobject:MetaobjectUpsertInput!) { metaobjectUpsert(handle:$handle,metaobject:$metaobject) { metaobject { id handle fields {key value} } userErrors {field message code} } }

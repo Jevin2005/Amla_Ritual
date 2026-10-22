@@ -51,7 +51,7 @@ export default async function ShippingReturnsPage() {
           </p>
           <h2>4. Returns & Replacements</h2>
           <p>
-            Due to hygiene and purity standards for organic botanicals, we accept returns on unopened, sealed products within 14 days of delivery. If an item arrives damaged or incorrect, contact <SupportContactLinks /> for an immediate replacement.
+            For hygiene reasons, we accept returns on unopened, sealed botanical products within 14 days of delivery. If an item arrives damaged or incorrect, contact <SupportContactLinks /> for help arranging a replacement.
           </p>
         </PolicyContent>
       )}
