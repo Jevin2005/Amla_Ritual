@@ -72,29 +72,6 @@ export function getHeroHandoffMetrics(height: number, count: number) {
   };
 }
 
-/** Discard a fast gesture's overshoot until the incoming hero has been visible
- * for one second. No timer scrolls the page later; continued input releases it.
- * Explicit navigation and restored scroll positions can bypass this guard.
- */
-export function createHeroArrivalGuard() {
-  let armed = false;
-  let arrivedAt: number | null = null;
-  let released = false;
-  const reset = () => { armed = false; arrivedAt = null; released = false; };
-  return {
-    reset,
-    arm() { armed = true; },
-    limit(offset: number, time: number, metrics: ReturnType<typeof getHeroHandoffMetrics>) {
-      if (offset < metrics.start) { arrivedAt = null; released = false; }
-      if (!armed || released) return offset;
-      if (offset < metrics.revealEnd) { arrivedAt = null; return offset; }
-      arrivedAt ??= time;
-      if (time - arrivedAt >= 1000) { released = true; return offset; }
-      return Math.min(offset, metrics.end - metrics.hold);
-    },
-  };
-}
-
 export type JarPose = {
   x: number;
   y: number;

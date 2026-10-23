@@ -165,6 +165,7 @@ function element(extra = {}) {
   const properties = new Map();
   return eventTarget({ style: {
     setProperty: (key, value) => properties.set(key, value),
+    getPropertyValue: (key) => properties.get(key) ?? "",
     removeProperty: (key) => { const value = properties.get(key) ?? ""; properties.delete(key); return value; },
   }, properties, dataset: {}, ...extra });
 }
@@ -231,7 +232,9 @@ async function mountHero(options = {}) {
       section.emit(type, event);
       return event;
     },
-    snapshot() { return links.map((link) => ({ ...jarStyle(link), tabIndex: link.tabIndex })); },
+    snapshot() { return links.map((link) => link.style.visibility === "hidden"
+      ? { visibility: "hidden", opacity: "0", tabIndex: link.tabIndex }
+      : { ...jarStyle(link), tabIndex: link.tabIndex }); },
     settle() {
       for (let count = 0; count < 150 && env.frames.size; count += 1) env.flush();
       assert.equal(env.frames.size, 0, "the idle hero must stop scheduling frames");
@@ -270,7 +273,7 @@ test("the hero uses each of the six label-based jars once and preserves the matc
     const jar = all(link).find((node) => node.type === "img");
     assert.equal(link.props["aria-label"], `Discover ${sixProducts[index].name}`);
     assert.equal(jar.props.src, `/images/hero/naturemist-${sixProducts[index].id}-200g.png`);
-    assert.equal(jar.props.preload, true);
+    assert.equal(jar.props.preload, index === 0);
     assert.equal(link.props.draggable, false);
     assert.equal(jar.props.draggable, false);
     return jar.props.src;
@@ -487,7 +490,7 @@ test("all six jars remain reachable by keyboard, including reduced and disabled 
       assert.ok(Math.abs(parseFloat(jarStyle(env.links[index + 1]).left) - 50) < 0.01);
       if (reduced) for (const link of env.links) {
         assert.equal(link.properties.get("--jar-blur"), undefined);
-        assert.equal(link.properties.get("--jar-brightness"), "1");
+        assert.equal(link.properties.get("--jar-brightness"), undefined);
       }
     }
     assert.equal(env.counter.textContent, "06 / 06");
@@ -539,8 +542,10 @@ test("fine vertical scroll increments reset manual browsing and return to the fi
   }
   manual.settle(); reference.settle();
   manual.links.forEach((link, index) => {
-    for (const property of ["left", "top", "height", "width", "transform", "opacity", "visibility"]) assert.equal(link.style[property], reference.links[index].style[property], `${property} follows normal scroll for jar ${index}`);
+    assert.equal(link.style.visibility, reference.links[index].style.visibility);
     assert.equal(link.tabIndex, reference.links[index].tabIndex);
+    if (link.style.visibility === "hidden") return;
+    for (const property of ["left", "top", "height", "width", "transform", "opacity", "visibility"]) assert.equal(link.style[property], reference.links[index].style[property], `${property} follows normal scroll for jar ${index}`);
   });
   assert.equal(manual.counter.textContent, reference.counter.textContent);
   assert.equal(manual.surface.style.opacity, reference.surface.style.opacity);
@@ -627,7 +632,7 @@ test("scrolling to the end exits every jar and holds the completed scene without
   env.scrollTo(1);
   const ending = env.snapshot();
   ending.forEach((style, index) => {
-    assert.ok(parseFloat(style.top) + parseFloat(style.height) / 2 < 0);
+    assert.equal(style.visibility, "hidden", "culled jars need no further transform writes");
     assert.equal(style.opacity, "0");
     assert.equal(env.links[index].tabIndex, -1);
     assert.equal(env.links[index].style.visibility, "hidden");
@@ -708,6 +713,7 @@ test("cursor movement over empty space and the fixed header gently follows acros
   assert.ok(parseFloat(left[0].left) < parseFloat(opening[0].left));
   assert.ok(parseFloat(left[0].top) < parseFloat(opening[0].top));
   left.forEach((style, index) => {
+    if (style.visibility === "hidden" || right[index].visibility === "hidden") return;
     const horizontalPixels = (parseFloat(right[index].left) - parseFloat(style.left)) / 100 * env.section.clientWidth;
     const verticalPixels = (parseFloat(right[index].top) - parseFloat(style.top)) / 100 * env.surface.clientHeight;
     assert.ok(horizontalPixels > 0 && horizontalPixels <= 64.000001);
@@ -769,7 +775,7 @@ test("cursor tracking pauses offscreen and while hidden, clears on blur, and rem
   assert.deepEqual(env.snapshot(), opening);
   move(); env.flush();
   env.context.scrollY = env.section.offsetHeight + 1;
-  env.intersect(env.section, false);
+  env.intersect(env.section, false); env.flush();
   assert.equal(env.frames.size, 0);
   assert.ok(env.snapshot().every((style) => style.opacity === "0"), "offscreen settling completes the finite outgoing story");
   move();
@@ -976,7 +982,7 @@ test("the header backdrop appears during the green expansion before the next her
   env.dispose();
 });
 
-test("a fast jump past the hero releases header overrides before a pending frame and restores them on reentry", async () => {
+test("a fast jump past the hero completes in one frame and restores header overrides on reentry", async () => {
   const env = await mountHero();
   assert.equal(env.header.properties.get("--hero-header-progress"), "0");
   env.setScrollPhase(0.85);
@@ -984,8 +990,10 @@ test("a fast jump past the hero releases header overrides before a pending frame
   assert.equal(env.frames.size, 1);
   env.context.scrollY = env.section.offsetHeight + env.surface.clientHeight;
   env.context.emit("scroll");
-  assert.equal(env.frames.size, 0, "a jump past the hero cancels a pending scrub frame before the observer catches up");
-  env.intersect(env.section, false);
+  assert.equal(env.frames.size, 1, "scroll bursts share one final scrub frame");
+  env.flush();
+  assert.equal(env.frames.size, 0);
+  env.intersect(env.section, false); env.flush();
   assert.equal(env.frames.size, 0);
   assert.equal(env.header.properties.has("--hero-header-progress"), false, "the compact header fallback cannot remain overridden by stale opening progress");
   assert.equal(env.header.properties.has("--hero-header-surface"), false);
@@ -1021,7 +1029,7 @@ test("returning through the full page restores the opening jars even before a de
     const opening = env.snapshot();
     env.scrollTo(1);
     env.context.scrollY = env.section.offsetHeight + 8000;
-    env.context.emit("scroll"); env.intersect(env.section, false); env.settle();
+    env.context.emit("scroll"); env.intersect(env.section, false); env.flush(); env.settle();
     for (const distance of [6000, 3000, 1000]) {
       env.context.scrollY = env.section.offsetHeight + distance;
       env.context.emit("scroll"); env.flush();
@@ -1059,8 +1067,9 @@ test("a long-running page can leave the hero and return without poisoning jar po
     env.scrollTo(0.8);
     assert.ok(Number(env.surface.style.opacity) > 0 && Number(env.surface.style.opacity) < 1);
     env.context.scrollY = env.section.offsetHeight + 8000;
-    env.context.emit("scroll"); env.intersect(env.section, false);
+    env.context.emit("scroll"); env.intersect(env.section, false); env.flush();
     for (const style of env.snapshot()) {
+      if (style.visibility === "hidden") continue;
       for (const property of ["left", "top", "transform", "height", "width", "opacity"]) {
         assert.doesNotMatch(style[property], /NaN|Infinity/, `${property} must stay finite when a late animation frame settles without a timestamp`);
       }
@@ -1094,7 +1103,7 @@ test("the curved motto stays attached to the cover throughout scroll and its rev
   const env = await mountHero({ products: sixProducts });
   for (const phase of [0, 0.2, 0.4, 0.56, 0.7, 0.85, 1, 0.7, 0.4, 0]) {
     env.scrollTo(phase);
-    assert.equal(env.arc.style.transform, env.seal.style.transform);
+    if (Number(env.arc.style.opacity) > 0) assert.equal(env.arc.style.transform, env.seal.style.transform);
     assert.ok(Number(env.arc.style.opacity) >= 0 && Number(env.arc.style.opacity) <= 1);
   }
   assert.equal(env.arc.style.opacity, "1");
@@ -1128,7 +1137,7 @@ test("restoring a hidden tab at the top restarts an offscreen hero and restores 
   const env = await mountHero({ products: sixProducts });
   const opening = env.snapshot();
   env.context.scrollY = env.section.offsetHeight + 6000;
-  env.context.emit("scroll"); env.intersect(env.section, false);
+  env.context.emit("scroll"); env.intersect(env.section, false); env.flush();
   assert.equal(env.surface.style.opacity, "0");
   env.context.document.hidden = true;
   env.context.document.emit("visibilitychange");
@@ -1387,15 +1396,35 @@ test("model failure retains the photo and a late load cannot revive a failed att
   env.dispose();
 });
 
-test("a real renderer context-loss error after load restores the product photograph", () => {
+test("a temporary renderer context loss keeps its canvas and recovers without disabling later jars", () => {
   const env = mountModel({}, false, { poster: image }, { status: "loading" });
   env.viewer.emit("load");
-  env.viewer.emit("error", { detail: { type: "webglcontextlost" } });
-  const tree = env.render();
-  assert.equal(env.harness.contextLost, true);
-  assert.equal(tree.props["data-status"], "error");
+  const canvas = eventTarget();
+  let prevented = false;
+  env.viewer.emit("error", { detail: { type: "webglcontextlost", sourceError: { target: canvas, preventDefault() { prevented = true; } } } });
+  env.viewer.emit("load");
+  let tree = env.render();
+  assert.equal(prevented, true, "the original WebGL event must allow browser restoration");
+  assert.notEqual(env.harness.contextLost, true, "temporary loss must not poison global capability detection");
+  assert.equal(tree.props["data-status"], "loading");
   assert.equal(all(tree).find((node) => node.props?.className === "posterLayer").props["aria-hidden"], false);
-  assert.ok(!all(tree).some((node) => node.type === "model-viewer"));
+  assert.ok(all(tree).some((node) => node.type === "model-viewer"), "retain the canvas until restoration");
+  canvas.emit("webglcontextrestored");
+  tree = env.render();
+  assert.equal(env.harness.values.get(5), 1, "restoration starts a fresh viewer load");
+  assert.equal(tree.props["data-status"], "loading");
+  env.dispose();
+  assert.equal(canvas.listeners.size, 0);
+});
+
+test("a context that cannot restore reaches the photograph and retry instead of spinning forever", () => {
+  const env = mountModel({}, false, { poster: image }, { status: "loading" });
+  env.viewer.emit("load");
+  env.viewer.emit("webglcontextlost", { target: env.viewer, preventDefault() {} });
+  env.tickTimers(20000);
+  const tree = env.render();
+  assert.equal(tree.props["data-status"], "error");
+  assert.ok(all(tree).some((node) => node.type === "button" && text(node) === "Retry 3D view"));
   env.dispose();
 });
 
@@ -1572,6 +1601,12 @@ test("gallery keeps a product photograph visible when WebGL is unavailable", () 
   const tree = env.components.ProductModel({ model: { url: "/jar.glb", altText: "Jar" }, presentation: "gallery", poster: image });
   assert.ok(all(tree).some((node) => node.type === "img" && node.props.src === image.url));
   assert.ok(text(tree).includes("3D view unavailable"));
+  const retry = all(tree).find((node) => node.type === "button" && text(node) === "Retry 3D view");
+  assert.ok(retry, "capability failure must offer the same recovery path as a model download failure");
+  retry.props.onClick();
+  assert.equal(env.harness.values.get(3), null, "retry must mount a viewer before its startup effect runs");
+  assert.equal(env.harness.values.get(0).status, "loading");
+  assert.equal(env.harness.values.get(5), 1);
 });
 
 test("purchase displays supplied size without a tax assertion and never marks a failed add as Added", async () => {

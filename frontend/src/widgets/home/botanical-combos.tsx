@@ -4,7 +4,7 @@ import Link from "next/link";
 import { MediaImage as Image } from "@/shared/ui/media-image";
 import { useCallback, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { COMBOS_PER_PAGE, comboProductCount, getBotanicalComboPage, type BotanicalCombo, type BotanicalCombosContent } from "@/domain/botanical-combos";
-import { buildComboProductCatalog } from "@/domain/combo-catalog";
+import { buildComboProductCatalog, getComboBookContent, getComboDisplayImage, type ComboCatalogEntry } from "@/domain/combo-catalog";
 import { getComboArtworkFallback } from "@/domain/combo-artwork";
 import { useStore } from "@/features/store/store-provider";
 import { useCompactViewport, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
@@ -122,16 +122,17 @@ function DetailsPage({ content, pageIndex, onPreview }: {
 }
 
 export function BotanicalCombos() {
-  const { content: { botanicalCombos } } = useStore();
+  const { content: { botanicalCombos }, products, source } = useStore();
+  const catalog = useMemo(() => buildComboProductCatalog(botanicalCombos.combos, products, source), [botanicalCombos.combos, products, source]);
+  const bookContent = useMemo(() => getComboBookContent(botanicalCombos, catalog), [botanicalCombos, catalog]);
   if (!botanicalCombos.enabled || !botanicalCombos.combos.length) return null;
   // A content refresh starts a fresh book, including any in-progress page turn.
-  return <ComboBook key={JSON.stringify(botanicalCombos)} content={botanicalCombos} />;
+  return <ComboBook key={JSON.stringify(bookContent)} content={bookContent} catalog={catalog} />;
 }
 
-function ComboBook({ content }: { content: BotanicalCombosContent }) {
+function ComboBook({ content, catalog }: { content: BotanicalCombosContent; catalog: ComboCatalogEntry[] }) {
   const { combos } = content;
-  const { products, source, content: { motionSettings } } = useStore();
-  const catalog = useMemo(() => buildComboProductCatalog(combos, products, source), [combos, products, source]);
+  const { content: { motionSettings } } = useStore();
   const [pageIndex, setPageIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [turn, setTurn] = useState<PageTurn | null>(null);
@@ -236,7 +237,7 @@ function ComboBook({ content }: { content: BotanicalCombosContent }) {
         key={preview.combo.id}
         title={preview.combo.name}
         ingredientLabel={preview.combo.ingredients}
-        image={preview.listingProduct?.featuredImage?.url || preview.combo.image.url}
+        image={getComboDisplayImage(preview).url}
         imageFallback={getComboArtworkFallback(preview)}
         products={preview.products}
         expectedProductCount={preview.count}

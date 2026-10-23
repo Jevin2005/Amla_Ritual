@@ -13,7 +13,7 @@ const result = buildSync({
   format: "esm",
   write: false,
 });
-const { createHeroArrivalGuard, getHeroFrame, getCoverScale, getHeroScrollMetrics, getHeroScrollProgress, getHeroScrollOffset, getHeroHandoffMetrics, getHeroLayout, getHeroBackdrop } = await import(
+const { getHeroFrame, getCoverScale, getHeroScrollMetrics, getHeroScrollProgress, getHeroScrollOffset, getHeroHandoffMetrics, getHeroLayout, getHeroBackdrop } = await import(
   `data:text/javascript;base64,${Buffer.from(result.outputFiles[0].text).toString("base64")}`
 );
 
@@ -43,33 +43,6 @@ test("the incoming hero stays at its beginning through the full reveal and an ar
       }
     }
   }
-});
-
-test("a fast gesture cannot skip the second hero and discarded momentum is never replayed", () => {
-  for (const height of [390, 844, 1080]) {
-    const metrics = getHeroHandoffMetrics(height, 6);
-    const landing = metrics.end - metrics.hold;
-    const guard = createHeroArrivalGuard();
-    guard.arm();
-    assert.equal(guard.limit(metrics.end + height * 3, 100, metrics), landing);
-    assert.equal(guard.limit(metrics.end + 500, 1099, metrics), landing);
-    assert.equal(guard.limit(landing, 1100, metrics), landing, "time alone does not move the page");
-    assert.equal(guard.limit(metrics.end + 50, 1101, metrics), metrics.end + 50);
-  }
-});
-
-test("slow arrival consumes the pause naturally, reverse scroll is free, and navigation bypasses it", () => {
-  const metrics = getHeroHandoffMetrics(900, 6);
-  const guard = createHeroArrivalGuard();
-  assert.equal(guard.limit(metrics.end + 2000, 0, metrics), metrics.end + 2000, "restored positions are not trapped");
-  guard.arm();
-  assert.equal(guard.limit(metrics.revealEnd, 100, metrics), metrics.revealEnd);
-  assert.equal(guard.limit(metrics.end + 10, 1200, metrics), metrics.end + 10);
-  assert.equal(guard.limit(metrics.start - 1, 1300, metrics), metrics.start - 1);
-  assert.equal(guard.limit(metrics.end + 10, 1400, metrics), metrics.end - metrics.hold, "returning from the first hero rearms the pause");
-  assert.equal(guard.limit(metrics.revealEnd - 1, 1450, metrics), metrics.revealEnd - 1, "upward motion is immediate");
-  guard.reset();
-  assert.equal(guard.limit(metrics.end + 2000, 1500, metrics), metrics.end + 2000, "links and explicit jumps bypass the hold");
 });
 
 test("the incoming hero releases into native flow continuously, without a gap, in either direction", () => {

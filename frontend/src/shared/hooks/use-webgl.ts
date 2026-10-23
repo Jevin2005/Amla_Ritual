@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 
 let cachedWebGL: boolean | null = null;
 
-export function isWebGLAvailable(): boolean {
-  if (cachedWebGL !== null) return cachedWebGL;
+export function isWebGLAvailable(recheck = false): boolean {
+  // A failed context allocation can be temporary (for example GPU pressure).
+  // An explicit retry must probe again instead of replaying that failure.
+  if (cachedWebGL !== null && !recheck) return cachedWebGL;
   if (typeof window === "undefined" || typeof document === "undefined") return false;
   try {
     const canvas = document.createElement("canvas");

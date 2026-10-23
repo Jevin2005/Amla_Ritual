@@ -31,6 +31,7 @@
 .pause:focus-visible { outline: 2px solid var(--forest); outline-offset: -4px; }
 .retry { position: absolute; bottom: 10px; z-index: 2; min-height: 44px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 100px; color: var(--forest); background: var(--paper); cursor: pointer; }
 .retry:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+.unavailable .hint { bottom: 64px; }
 @media (prefers-reduced-motion: reduce) {
   .floatLayer[data-floating="true"] { animation: none; }
   .posterLayer, .progress > span { transition: none; }

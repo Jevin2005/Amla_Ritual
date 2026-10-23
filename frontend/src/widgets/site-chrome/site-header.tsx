@@ -25,22 +25,33 @@ export function SiteHeader() {
   const closeMobile = useCallback(() => setMenuPath(null), []);
 
   useEffect(() => {
-    const onScroll = () => {
-      const hero = ritualHeader ? document.querySelector("[data-ritual-hero]") : null;
-      const incoming = hero?.getAttribute("data-handoff") === "true" && hero.getAttribute("data-reduced-motion") !== "true"
-        ? hero.nextElementSibling : null;
-      setCompact(incoming ? incoming.getBoundingClientRect().top < window.innerHeight * 0.22
-        : hero ? hero.getBoundingClientRect().bottom < 100 : window.scrollY > 28);
+    let frame = 0;
+    let measureDirty = true;
+    let threshold = 28;
+    const update = () => {
+      frame = 0;
+      if (measureDirty) {
+        measureDirty = false;
+        const hero = ritualHeader ? document.querySelector("[data-ritual-hero]") : null;
+        const incoming = hero?.getAttribute("data-handoff") === "true" && hero.getAttribute("data-reduced-motion") !== "true"
+          ? hero.nextElementSibling : null;
+        threshold = incoming ? incoming.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.22
+          : hero ? hero.getBoundingClientRect().bottom + window.scrollY - 100 : 28;
+      }
+      setCompact(window.scrollY > threshold);
     };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const onResize = () => { measureDirty = true; onScroll(); };
     onScroll();
-    const resizeObserver = new ResizeObserver(onScroll);
+    const resizeObserver = new ResizeObserver(onResize);
     resizeObserver.observe(document.body);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     return () => {
       resizeObserver.disconnect();
+      cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, [ritualHeader, pathname]);
 

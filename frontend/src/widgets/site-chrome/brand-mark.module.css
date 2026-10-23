@@ -47,10 +47,13 @@
   gap: 5px;
 }
 .mark[data-variant="hero"] {
-  --brand-size: calc(var(--wordmark-start-size) + (var(--wordmark-end-size) - var(--wordmark-start-size)) * var(--header-progress));
-  --brand-leaf-height: calc(var(--leaf-start-height) + (var(--leaf-end-height) - var(--leaf-start-height)) * var(--header-progress));
+  --brand-size: var(--wordmark-start-size);
+  --brand-leaf-height: var(--leaf-start-height);
   --brand-tagline-size: 8px;
   color: inherit;
+  /* A fixed layout box avoids relayout of the navigation on every scroll frame. */
+  transform: scale(calc(1 - .2 * var(--header-progress)));
+  transform-origin: center;
 }
 a:hover > .mark .leaf { transform: translateY(-2px); }
 @media (max-width: 900px) {

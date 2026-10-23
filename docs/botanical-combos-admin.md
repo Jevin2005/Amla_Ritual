@@ -1,40 +1,45 @@
 # Combo products and custom pricing
 
-The homepage's **The botanical cabinet** shows only single products. **Botanical combos** sits in its original position, after Ingredient clarity and before customer reviews. It uses the original book layout: a large photo, one featured combo, and two smaller entries per page. Its buttons open the same photo and purchase popup used by the shop's product cards. The shop and wishlist retain their shared product-card layout. `/combos` opens `/shop?type=combos`.
+The local storefront now reads combos directly from Shopify products. Separate **Botanical combo** entries (`botanical_combo`, singular) are no longer needed by this version. The **Botanical combos section** (`botanical_combos`, plural) remains for homepage headings, visibility, animation and product order.
 
-## Create a combo listing
+**Deployment status, 23 October 2026:** the eight products have their migrated fields, but this code has not been deployed. At the owner's request, the old entries and old section field remain intact until deployment. The currently deployed Vercel site still needs them. See the [migration record](combo-product-migration-2026-10-23/README.md).
 
-1. In Shopify Admin → Products, create a product for the complete combo. Set its title, description, photo, quantity, inventory, and your own selling price. Set a compare-at price only when appropriate.
-2. Use product type **Combo** or add the exact tag **combo**. This separates it from single jars. **Bundle** is also supported.
-3. For an existing saved pairing, use its name (for example, **Classic Trio** or **NatureMist Classic Trio**). For an explicit link, add `combo:<metaobject ID>` using that pairing's full Shopify metaobject ID. Keep only one listing linked to each pairing.
-   In **Content → Metaobjects → Botanical combo**, select all individual powders under **Products in this combo**. These references supply the photos, descriptions, quantities, and product links inside the popup. Select the entry in the **Botanical combos section → Combos in display order** list. A combo-count tag alone does not define which products are included.
-4. For a new combo without a saved pairing, optionally add `combo-count:2`, `combo-count:3`, etc. so the jar-count filter knows its size. Without this tag, it appears under all combos without an invented jar count.
-5. Once the price and inventory are ready, make the product Active and publish it to the Headless sales channel used by the storefront.
+## Edit or create a combo
 
-The combo card's image, title, and arrow open a popup. Customers can expand each included product to see its photo, ingredients, directions, and individual price without leaving the popup. **View full product** closes the popup and opens that product page.
+1. Open **Shopify Admin → Products → your combo**. Edit its title, photos, description, variants, price and inventory there.
+2. Keep the exact **combo** tag (or product type **Combo** or **Bundle**).
+3. Under product metafields, select 2–6 different single jars in **Included products** (`custom.combo_products`). Do not select the combo itself or another combo.
+4. Edit **Combo ingredients** (`custom.combo_ingredients`) and **Combo caption** (`custom.combo_caption`) on that same product. These supply the book's ingredients line and handwritten photo caption.
+5. Set the product Active and publish it, and the included jars, to the storefront's Headless sales channel.
+6. In [Botanical combos section → main](https://admin.shopify.com/store/amla-ritual/content/metaobjects/entries/botanical_combos/431929295034), select it under **Combo products in display order**. Drag products to reorder. Up to 60 products are supported, three per page. Keep the section Active and **Show section** enabled.
 
-Clicking an included product's thumbnail or **View product photos** opens its larger photo gallery inside the same popup. Customers can browse that product's photos with arrows or thumbnails. **Back to combo**, **Close product photos**, or Escape returns to the combo while preserving its option, quantity, and expanded product details.
+No separate pairing entry or `combo:<metaobject ID>` tag is needed. Product IDs link the data, so renaming a product does not attach it to another similarly named combo. The old tags can remain harmlessly until the migration cleanup.
 
-The popup shows the combo's own price, variant selector (when applicable), quantity, **Add combo to bag**, and **Buy now**. Add to bag opens the cart only after a successful addition. Buy now adds the combo and opens the existing checkout; failed additions keep the popup open with an error. The selected variant and quantity determine the displayed total and cart line.
+## Display and buying behavior
 
-Adding a set adds **one variant of the combo product**, independently of the individual jar prices. Set inventory for the complete combo; this implementation does not automatically deduct its component jars. To change the selling price later, edit **Products → your combo → Price** (or the specific variant's Price). No code edit is needed.
+The homepage book uses the selected products in saved order. It uses their current featured photos, then first gallery photos, then a neutral placeholder. Images fit the frames without cropping the jars. Titles come from the products, with the NatureMist prefix omitted in the book. Missing or unpublished listings and invalid member lists are omitted from the book; preview samples appear only when Shopify is unconfigured.
 
-## Existing pairing content
+The popup shows the included jars, their photos and details, plus the combo's own variant selector, quantity and price. **Add combo to bag** and **Buy now** add one variant of the combo product. Pricing and inventory are independent of the individual jars; component inventory is not automatically deducted. Missing member references keep the saved jar count and never silently substitute a different jar. The combo's own availability still controls whether its listing can be purchased.
 
-[Open the section editor](https://admin.shopify.com/store/amla-ritual/content/metaobjects/entries/botanical_combos/431929295034).
+Combos outside the homepage selection still appear in the shop and retain their product-owned members and captions. The homepage visibility switch only hides the book. `/combos` opens `/shop?type=combos`.
 
-Saved Botanical combo metaobjects supply pairing order, ingredients, book photos, and included-jar references. The Botanical combos section's headings, description, and Show section switch control the homepage book section. Its page-turn animation controls apply to the restored book on desktop; mobile and reduced-motion preferences use immediate page changes.
+## Saved order
 
-A saved pairing without a published combo product appears as **Coming soon** in the shop and its popup. The book can still display its editorial entry. Its preview shows individual jars, but it has no combined price or combo checkout action. Publishing its matching combo product enables its independently priced purchase popup and shop card. The homepage visibility switch does not hide combos from the shop.
+1. Classic Trio — 3 jars
+2. Botanical Duo — 2 jars
+3. Floral Duo — 2 jars
+4. Amla Reetha Duo — 2 jars
+5. Amla Shikakai Duo — 2 jars
+6. Cleansing Duo — 2 jars
+7. Botanical Mask Trio — 3 jars
+8. Bhringraj Hibiscus Duo — 2 jars
 
-## Catalog audit — 19 October 2026
+These appear across three pages (3 / 3 / 2). All 24 copied product field values were checked against the original entries. Product prices, inventory and original entries were preserved.
 
-The connected store contains six individual products and no separate combo products. The published saved pairings are Classic Trio (3 jars), Botanical Duo (2 jars), and Floral Duo (2 jars). Their separate listings and merchant-selected selling prices are required before they can be purchased as combos. No live prices were changed by the frontend update.
+## Verification and maintenance
 
-## Maintenance
+From the repository root, run `node frontend/scripts/setup-botanical-combos.mjs --verify` to check the published catalog with the same product mapping as the storefront. It is read-only. The old seeder and singular definition schema were retired; `--apply` now fails before contacting Shopify, so it cannot recreate the unwanted entries.
 
-Classification lives in `frontend/src/domain/catalog/product-kind.ts`; product linking and pricing live in `frontend/src/domain/combo-catalog.ts`. No new Shopify API fields or metaobject definitions are required: the storefront already fetches product type, tags, variants, and pricing.
+The query lives in `frontend/src/lib/shopify/botanical-combos-query.ts`; product fields are loaded in `frontend/src/lib/shopify/storefront.ts`. Parsing and membership live in `frontend/src/domain/botanical-combos.ts`; listing prices and matching live in `frontend/src/domain/combo-catalog.ts`.
 
-Run the collection-catalog and product-card-data tests after changing classification, linking, or prices. Existing editorial schema/setup scripts remain compatible with the saved pairing content.
-
-Reference: [Shopify Storefront product and variant pricing](https://shopify.dev/docs/api/storefront/latest/queries/product).
+Run the botanical-combos, combo-catalog, collection-catalog and combo-preview-actions tests after changing membership, order or purchase behavior.

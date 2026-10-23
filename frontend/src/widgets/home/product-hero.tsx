@@ -8,7 +8,7 @@ import type { HeroSettings } from "@/domain/catalog/hero";
 import { useStore } from "@/features/store/store-provider";
 import { MediaImage } from "@/shared/ui/media-image";
 import { scrollPageTo } from "@/shared/ui/page-scroll";
-import { clamp, createHeroArrivalGuard, getCoverScale, getHeroBackdrop, getHeroFrame, getHeroHandoffMetrics, getHeroLayout, getHeroScrollMetrics, getHeroScrollProgress, smoothstep } from "./hero-motion";
+import { clamp, getCoverScale, getHeroBackdrop, getHeroFrame, getHeroHandoffMetrics, getHeroLayout, getHeroScrollMetrics, getHeroScrollProgress, smoothstep } from "./hero-motion";
 import { heroSealPath, heroSealTitleLength, heroSealTitlePath } from "./hero-seal";
 import { HeroDiscoverHint } from "./hero-discover-hint";
 import styles from "./product-hero.module.css";
@@ -24,6 +24,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
   const productLinks = useRef<(HTMLAnchorElement | null)[]>([]);
   const counter = useRef<HTMLSpanElement>(null);
   const progressBar = useRef<HTMLSpanElement>(null);
+  const productImages = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
     const section = root.current;
@@ -37,6 +38,10 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     let disposed = false;
     let frame = 0;
+    let measureDirty = true;
+    let scrollDirty = true;
+    let sectionHeight = 1;
+    let stageLeft = 0;
     let width = 1;
     let height = 1;
     let storyHeight = 1;
@@ -60,7 +65,16 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     let suppressClickUntil = 0;
     let browsed = false;
     let pendingFocus: number | null = null;
-    const arrival = createHeroArrivalGuard();
+    const setData = (element: HTMLElement, key: string, value: boolean) => {
+      const text = String(value);
+      if (element.dataset[key] !== text) element.dataset[key] = text;
+    };
+    const setStyle = (element: HTMLElement | SVGSVGElement, key: "transform" | "opacity" | "visibility" | "pointerEvents" | "zIndex" | "willChange", value: string) => {
+      if (element.style[key] !== value) element.style[key] = value;
+    };
+    const setVariable = (element: HTMLElement, key: string, value: string) => {
+      if (element.style.getPropertyValue(key) !== value) element.style.setProperty(key, value);
+    };
     let gesture: { id: number; x: number; y: number; lastX: number; time: number; velocity: number; dragging: boolean } | null = null;
     const scrollTravel = () => smoothstep((reduced ? 0 : target) / 0.48) * Math.max(0, slides.length - 1);
     const limitManual = (value: number) => clamp(value, -scrollTravel(), slides.length - 1 - scrollTravel());
@@ -74,7 +88,13 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
 
     const draw = (time: number, settle = false) => {
       frame = 0;
-      if (disposed || (!settle && (document.hidden || !active))) return;
+      if (disposed || document.hidden) return;
+      // Read geometry once per resize, then use cached bounds on scroll/pointer frames.
+      if (measureDirty) { measureDirty = false; measure(); scrollDirty = true; }
+      const wasActive = active;
+      if (scrollDirty) { scrollDirty = false; readScroll(); }
+      if (!active && !wasActive) return;
+      settle ||= !active;
       const delta = Math.min(48, lastTime ? Math.max(0, time - lastTime) : 16.7);
       lastTime = settle ? 0 : time;
       // Time-based damping gives the same gentle scrub on 60 Hz and 120 Hz screens.
@@ -99,45 +119,45 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (Math.abs(aimY - pointerY) < 0.001) pointerY = aimY;
       if (Math.abs(target - current) < 0.0001) current = target;
       const state = getHeroFrame(reduced ? 0 : current, slides.length, width < 680, manualCurrent, travelSpeed, layout);
-      section.dataset.idle = String(active && !document.hidden && !gesture && target === 0 && current < 0.001 && !browsed);
-      section.dataset.browsed = String(browsed || target > 0.01);
+      setData(section, "idle", active && !gesture && target === 0 && current < 0.001 && !browsed);
+      setData(section, "browsed", browsed || target > 0.01);
       const reveal = incoming && !reduced ? state.reveal : 0;
       if (header) {
-        header.dataset.heroMotion = String(!reduced);
+        setData(header, "heroMotion", !reduced);
         if (reduced) {
           header.style.removeProperty("--hero-header-progress");
           header.style.removeProperty("--hero-header-surface");
         } else {
           // Use the same damped frame as the hero, including when scrolling back.
-          header.style.setProperty("--hero-header-progress", String(reveal));
+          setVariable(header, "--hero-header-progress", String(reveal));
           // Keep dark navigation legible before the green cover reaches the top.
-          header.style.setProperty("--hero-header-surface", String(smoothstep((state.expansion - 0.1) / 0.35)));
+          setVariable(header, "--hero-header-surface", String(smoothstep((state.expansion - 0.1) / 0.35)));
         }
       }
-      surface.style.opacity = String(1 - reveal);
-      surface.style.pointerEvents = reveal > 0.02 ? "none" : "auto";
-      surface.inert = reveal > 0.02;
-      const revealing = String(reveal > 0.02);
-      if (section.dataset.revealing !== revealing) section.dataset.revealing = revealing;
-      if (incoming) incoming.inert = !reduced && reveal <= 0.02;
-      section.dataset.covered = String(state.expansion > 0.4);
+      setStyle(surface, "opacity", String(1 - reveal));
+      setStyle(surface, "pointerEvents", reveal > 0.02 ? "none" : "auto");
+      if (surface.inert !== (reveal > 0.02)) surface.inert = reveal > 0.02;
+      setData(section, "revealing", reveal > 0.02);
+      if (incoming && incoming.inert !== (!reduced && reveal <= 0.02)) incoming.inert = !reduced && reveal <= 0.02;
+      setData(section, "covered", state.expansion > 0.4);
       const maxScale = getCoverScale(width, height, diameter, centerY);
       const coverTransform = `translate3d(-50%,0,0) scale(${1 + state.expansion * (maxScale - 1)}) rotate(${state.progress * 12}deg)`;
-      if (seal.current) seal.current.style.transform = coverTransform;
+      if (seal.current) setStyle(seal.current, "transform", coverTransform);
       if (arc.current) {
-        arc.current.style.opacity = String(state.textOpacity);
-        arc.current.style.transform = coverTransform;
+        setStyle(arc.current, "opacity", String(state.textOpacity));
+        if (state.textOpacity > 0) setStyle(arc.current, "transform", coverTransform);
       }
       if (cue.current) {
         // Keep the way forward visible throughout the product story.
         const cueOpacity = 1 - smoothstep((current - 0.66) / 0.08);
-        cue.current.style.opacity = String(cueOpacity);
-        cue.current.style.visibility = cueOpacity === 0 ? "hidden" : "visible";
-        cue.current.style.pointerEvents = cueOpacity < 0.1 ? "none" : "auto";
-        cue.current.tabIndex = cueOpacity < 0.1 ? -1 : 0;
+        setStyle(cue.current, "opacity", String(cueOpacity));
+        setStyle(cue.current, "visibility", cueOpacity === 0 ? "hidden" : "visible");
+        setStyle(cue.current, "pointerEvents", cueOpacity < 0.1 ? "none" : "auto");
+        if (cue.current.tabIndex !== (cueOpacity < 0.1 ? -1 : 0)) cue.current.tabIndex = cueOpacity < 0.1 ? -1 : 0;
       }
-      if (counter.current) counter.current.textContent = `${String(state.focus + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
-      if (progressBar.current) progressBar.current.style.transform = `scaleX(${state.progress})`;
+      const label = `${String(state.focus + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+      if (counter.current && counter.current.textContent !== label) counter.current.textContent = label;
+      if (progressBar.current) setStyle(progressBar.current, "transform", `scaleX(${state.progress})`);
       state.poses.forEach((pose, i) => {
         const hover = reduced ? 0 : (1 - state.exit) * clamp(motionSettings.intensity, 0, 1.5);
         const depth = clamp(pose.height / layout.centerHeight, 0.55, 1);
@@ -151,70 +171,61 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         if (link) {
           const reach = adjusted.height * height * (0.74 * Math.abs(Math.cos(adjusted.roll)) + Math.abs(Math.sin(adjusted.roll))) / (2 * width);
           const visible = adjusted.x + reach > 0 && adjusted.x - reach < 1 && adjusted.opacity > 0.2 && adjusted.y > -0.4;
+          const image = productImages.current[i];
+          // Warm the next jars one viewport ahead in either direction. The browser
+          // retains decoded images when a jar goes offscreen, including reverse swipes.
+          if (image && image.loading === "lazy" && adjusted.x + reach > -1 && adjusted.x - reach < 2) image.loading = "eager";
+          setStyle(link, "visibility", visible ? "visible" : "hidden");
+          setStyle(link, "willChange", visible && active && !reduced ? "transform" : "auto");
+          if (link.tabIndex !== (visible ? 0 : -1)) link.tabIndex = visible ? 0 : -1;
+          if (!visible) { setStyle(link, "opacity", "0"); return; }
           // Size once on resize; animate only the composited transform.
           link.style.transform = `translate3d(${adjusted.x * width}px,${adjusted.y * height}px,0) translate(-50%,-50%) rotate(${-adjusted.roll}rad) scale(${adjusted.height / layout.centerHeight})`;
-          link.style.opacity = String(adjusted.opacity);
-          link.style.setProperty("--jar-brightness", String(reduced ? 1 : pose.brightness));
-          link.style.zIndex = String(Math.round(pose.height * 100));
-          link.style.visibility = visible ? "visible" : "hidden";
-          link.tabIndex = visible ? 0 : -1;
+          setStyle(link, "opacity", String(adjusted.opacity));
+          setStyle(link, "zIndex", String(Math.round(pose.height * 100)));
           if (visible && pendingFocus === i) {
             link.focus({ preventScroll: true });
             pendingFocus = null;
           }
         }
       });
+      if (!active && header) {
+        header.style.removeProperty("--hero-header-progress");
+        header.style.removeProperty("--hero-header-surface");
+      }
       if (!settle && (Math.abs(target - current) > 0.0001 || Math.abs(manualTarget - manualCurrent) > 0.0001 || travelSpeed !== 0 || Math.abs(aimX - pointerX) > 0.001 || Math.abs(aimY - pointerY) > 0.001)) requestDraw();
     };
     function requestDraw() {
-      if (!frame && active && !document.hidden && !disposed) frame = requestAnimationFrame(draw);
+      if (!frame && (active || scrollDirty || measureDirty) && !document.hidden && !disposed) frame = requestAnimationFrame(draw);
     }
     const cancelDraw = () => {
       cancelAnimationFrame(frame);
       frame = 0;
     };
     const readScroll = () => {
-      if (disposed) return;
-      if (incoming && !reduced) {
-        const offset = window.scrollY - start;
-        const limited = arrival.limit(offset, performance.now(), getHeroHandoffMetrics(storyHeight, slides.length));
-        if (limited < offset) {
-          // Use the document's scroll owner so pending Lenis inertia is also
-          // cancelled, rather than replayed after the arrival pause.
-          scrollPageTo(start + limited, { immediate: true });
-        }
-      }
-      const bounds = section.getBoundingClientRect();
-      start = bounds.top + window.scrollY;
       const wasActive = active;
       // Intersection notifications can arrive after a fast return to the top.
       // Current geometry must be able to restart the paused story on its own.
-      active = bounds.bottom > 0 && bounds.top < window.innerHeight;
+      const top = start - window.scrollY;
+      active = top + sectionHeight > 0 && top < window.innerHeight;
       if (active !== wasActive) lastTime = 0;
       const nextTarget = reduced ? 0 : getHeroScrollProgress(window.scrollY - start, storyHeight, slides.length);
       if (nextTarget !== target) manualTarget = 0;
       target = nextTarget;
       if (!active) {
         section.dataset.idle = "false";
-        cancelDraw();
         if (wasActive) {
           cancelGesture();
           aimX = aimY = pointerX = pointerY = 0;
-          draw(0, true);
-          // A jump may leave before the final scrub frame runs.
-          header?.style.removeProperty("--hero-header-progress");
-          header?.style.removeProperty("--hero-header-surface");
         }
-        return;
       }
-      requestDraw();
     };
     const measure = () => {
       const bounds = section.getBoundingClientRect();
+      stageLeft = surface.getBoundingClientRect().left;
       width = section.clientWidth;
       height = surface.clientHeight;
-      // The visible scene follows browser chrome; the story keeps the small
-      // viewport's scroll distances so hiding the address bar cannot skip ahead.
+      // Stable small-viewport CSS keeps mobile browser chrome out of the timeline.
       storyHeight = Number.parseFloat(getComputedStyle(surface).minHeight) || height;
       layout = getHeroLayout(width, height);
       for (const link of productLinks.current) {
@@ -226,6 +237,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       }
       start = bounds.top + window.scrollY;
       const metrics = getHeroScrollMetrics(storyHeight, slides.length);
+      sectionHeight = reduced ? height : height + metrics.distance;
       section.style.setProperty("--story-extra", `${metrics.distance - storyHeight * 1.35}px`);
       if (incoming) {
         const handoff = getHeroHandoffMetrics(storyHeight, slides.length);
@@ -243,17 +255,17 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       section.style.setProperty("--seal-top", `${backdrop.top}px`);
       section.style.setProperty("--arc-size", `${backdrop.arcSize}px`);
       section.style.setProperty("--arc-top", `${backdrop.arcTop}px`);
-      readScroll();
     };
+    const onScroll = () => { scrollDirty = true; requestDraw(); };
+    const onResize = () => { measureDirty = true; requestDraw(); };
     const preferencesChanged = () => {
-      arrival.reset();
       reduced = media.matches || !motionSettings.enabled;
       section.dataset.reducedMotion = String(reduced);
       aimX = aimY = pointerX = pointerY = 0;
       manualTarget = manualCurrent = travelSpeed = previousTravel = 0;
       cancelGesture();
       current = target = 0;
-      measure();
+      onResize();
     };
     const pointerMove = (event: PointerEvent) => {
       if (gesture?.id === event.pointerId) {
@@ -286,9 +298,9 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     const trackPointer = (event: PointerEvent) => {
       if (!active || document.hidden || current >= 0.86 || gesture || event.buttons || reduced || !settings.cursorMotion || !motionSettings.cursor || !finePointer.matches || event.pointerType !== "mouse") return;
       if (!Number.isFinite(event.clientX) || !Number.isFinite(event.clientY)) return;
-      const bounds = surface.getBoundingClientRect();
-      aimX = clamp((event.clientX - bounds.left) / width * 2 - 1, -1, 1);
-      aimY = clamp((event.clientY - bounds.top) / height * 2 - 1, -1, 1);
+      const stageTop = Math.min(Math.max(start - window.scrollY, 0), start + sectionHeight - window.scrollY - height);
+      aimX = clamp((event.clientX - stageLeft) / width * 2 - 1, -1, 1);
+      aimY = clamp((event.clientY - stageTop) / height * 2 - 1, -1, 1);
       requestDraw();
     };
     const resetPointer = () => { aimX = aimY = 0; requestDraw(); };
@@ -343,49 +355,25 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       if (!gesture?.dragging) cancelGesture();
     };
     const resume = () => {
-      arrival.reset();
       cancelDraw();
       lastTime = 0;
       cancelGesture();
       aimX = aimY = pointerX = pointerY = 0;
-      measure();
+      onResize();
     };
     const visibilityChanged = () => {
       lastTime = 0;
       if (document.hidden) { section.dataset.idle = "false"; cancelGesture(); aimX = aimY = pointerX = pointerY = 0; cancelDraw(); }
       else resume();
     };
-    const armArrival = (event: Event) => {
-      if (reduced || !incoming || event.defaultPrevented) return;
-      const element = event.target as Element | null;
-      if (element?.closest?.('input, textarea, select, [contenteditable], dialog, [role="dialog"], [data-native-scroll]')) return;
-      if (event.type === "keydown" && element?.closest?.("a, button")) return;
-      if (event.type === "wheel") {
-        const wheel = event as WheelEvent;
-        if (wheel.ctrlKey || wheel.metaKey || wheel.shiftKey || wheel.deltaY <= 0 || Math.abs(wheel.deltaX) > Math.abs(wheel.deltaY)) return;
-      }
-      const offset = window.scrollY - start;
-      if (offset >= 0 && offset < getHeroHandoffMetrics(storyHeight, slides.length).revealEnd) arrival.arm();
-    };
-    const arrivalKey = (event: KeyboardEvent) => {
-      if (["ArrowDown", "PageDown", " "].includes(event.key) && !event.shiftKey) armArrival(event);
-      else arrival.reset();
-    };
     section.dataset.reducedMotion = String(reduced);
-    measure();
-    current = target;
-    const observer = new IntersectionObserver(readScroll);
+    requestDraw();
+    const observer = new IntersectionObserver(onScroll);
     observer.observe(section);
-    const resizeObserver = new ResizeObserver(measure);
+    const resizeObserver = new ResizeObserver(onResize);
     resizeObserver.observe(surface);
-    window.addEventListener("scroll", readScroll, { passive: true });
-    window.addEventListener("wheel", armArrival, { passive: true });
-    window.addEventListener("touchstart", armArrival, { passive: true });
-    window.addEventListener("keydown", arrivalKey);
-    window.addEventListener("click", arrival.reset, true);
-    window.addEventListener("popstate", arrival.reset);
-    window.addEventListener("hashchange", arrival.reset);
-    window.addEventListener("resize", measure, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("pageshow", resume);
     window.addEventListener("blur", windowBlur);
     window.addEventListener("pointermove", trackPointer, { passive: true });
@@ -407,14 +395,8 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       cancelDraw();
       observer.disconnect();
       resizeObserver.disconnect();
-      window.removeEventListener("scroll", readScroll);
-      window.removeEventListener("wheel", armArrival);
-      window.removeEventListener("touchstart", armArrival);
-      window.removeEventListener("keydown", arrivalKey);
-      window.removeEventListener("click", arrival.reset, true);
-      window.removeEventListener("popstate", arrival.reset);
-      window.removeEventListener("hashchange", arrival.reset);
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pageshow", resume);
       window.removeEventListener("blur", windowBlur);
       window.removeEventListener("pointermove", trackPointer);
@@ -492,7 +474,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
             return <Link key={product.heroEntryId} ref={(element) => { productLinks.current[i] = element; }} href={`/shop/${product.slug}`} className={styles.product} data-hero-product={i} aria-label={`Discover ${product.name}`} aria-describedby={slides.length > 1 ? "jar-browse-instructions" : undefined} draggable={false} tabIndex={initial.poses[i].x > -0.12 && initial.poses[i].x < 1.12 ? 0 : -1} style={{ ...openingStyle, transform: `translate(-50%, -50%) rotate(${initialRoll}rad)` }}>
               <div className={styles.float}>
                 <div className={styles.artwork} style={{ animationDelay: `${i * 70}ms` }}>
-                  <MediaImage src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62dvh" preload draggable={false} className={styles.jarImage} />
+                  <MediaImage ref={(element) => { productImages.current[i] = element; }} src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62svh" preload={i === 0} loading={i === 0 ? undefined : i === 1 ? "eager" : "lazy"} fetchPriority={i > 1 ? "low" : undefined} draggable={false} className={styles.jarImage} />
                 </div>
               </div>
             </Link>;

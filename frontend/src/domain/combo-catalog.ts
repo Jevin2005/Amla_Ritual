@@ -1,4 +1,4 @@
-import { comboProductCount, resolveComboProducts, type BotanicalCombo } from "./botanical-combos";
+import { comboFromProduct, comboProductCount, resolveComboProducts, type BotanicalCombo, type BotanicalCombosContent } from "./botanical-combos";
 import { getDefaultVariant, type Product } from "./catalog/products";
 import { comboJarCount, isComboProduct } from "./catalog/product-kind";
 
@@ -53,12 +53,30 @@ export type ComboCatalogEntry = {
   purchase: ReturnType<typeof getComboPurchaseSummary>;
 };
 
+/** Use the listing's current photo everywhere, retaining the saved editorial order and copy. */
+export function getComboDisplayImage(entry: ComboCatalogEntry) {
+  const image = entry.listingProduct?.featuredImage || entry.listingProduct?.images?.[0] || entry.combo.image;
+  return image.altText?.trim() ? image : { ...image, altText: entry.combo.name };
+}
+
+export function getComboBookContent(content: BotanicalCombosContent, catalog: ComboCatalogEntry[]): BotanicalCombosContent {
+  const byId = new Map(catalog.map((entry) => [entry.combo.id, entry]));
+  return {
+    ...content,
+    combos: content.combos.map((combo) => {
+      const entry = byId.get(combo.id);
+      return entry ? { ...combo, image: getComboDisplayImage(entry) } : combo;
+    }),
+  };
+}
+
 /** A combo is purchased as its own Shopify product, never as a sum of jars. */
 export function buildComboProductCatalog(combos: BotanicalCombo[], products: Product[], source: ComboSource): ComboCatalogEntry[] {
   const listings = products.filter(isComboProduct);
   const normalizedName = (name: string) => name.trim().replace(/^naturemist\s+/i, "").toLowerCase();
   const used = new Set<string>();
   const entryFor = (product: Product, combo?: BotanicalCombo): ComboCatalogEntry => {
+    combo ??= comboFromProduct(product) ?? undefined;
     used.add(product.slug);
     const purchase = getComboPurchaseSummary([product], 1, source);
     const variant = getDefaultVariant(product);
@@ -82,8 +100,10 @@ export function buildComboProductCatalog(combos: BotanicalCombo[], products: Pro
   };
   const entries = combos.map((combo) => {
     const candidates = listings.filter((product) => !used.has(product.slug));
+    // A saved product ID is authoritative, even if its title or old tags change.
+    const direct = candidates.filter((product) => product.id === combo.id);
     const explicit = candidates.filter((product) => product.tags?.some((tag) => tag.trim().toLowerCase() === `combo:${combo.id}`.toLowerCase()));
-    const matches = explicit.length ? explicit : candidates.filter((product) =>
+    const matches = combo.id.startsWith("gid://shopify/Product/") ? direct : explicit.length ? explicit : candidates.filter((product) =>
       !product.tags?.some((tag) => tag.trim().toLowerCase().startsWith("combo:")) &&
       (product.slug === combo.id || product.shopifyHandle === combo.id || normalizedName(product.name) === normalizedName(combo.name)));
     if (matches.length === 1) return entryFor(matches[0], combo);

@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { defaultBotanicalCombos, emptyBotanicalCombos, parseBotanicalCombos, type BotanicalCombosContent, type GraphBotanicalCombos } from "@/domain/botanical-combos";
+import { defaultBotanicalCombos, emptyBotanicalCombos, parseBotanicalCombos, parseProductReferences, type BotanicalCombosContent, type GraphBotanicalCombos } from "@/domain/botanical-combos";
 import { botanicalCombosSelection } from "./botanical-combos-query";
 import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
 import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
@@ -35,6 +35,9 @@ const DEFAULT_API_VERSION = "2026-07";
 const DEFAULT_PRODUCT_LIMIT = 50;
 
 const productMetafields = `
+  comboProducts: metafield(namespace: "custom", key: "combo_products") { value }
+  comboIngredients: metafield(namespace: "custom", key: "combo_ingredients") { value }
+  comboCaption: metafield(namespace: "custom", key: "combo_caption") { value }
   heroEnabled: metafield(namespace: "custom", key: "hero_enabled") { value }
   heroOrder: metafield(namespace: "custom", key: "hero_order") { value }
   heroDuration: metafield(namespace: "custom", key: "hero_duration") { value }
@@ -943,6 +946,9 @@ function mapProduct(product: GraphProduct, index: number): Product {
     slug: canonicalSlug,
     shopifyHandle: product.handle,
     productType: product.productType,
+    comboProductIds: parseProductReferences(meta(product, "comboProducts")),
+    comboIngredients: meta(product, "comboIngredients") || undefined,
+    comboCaption: meta(product, "comboCaption") || undefined,
     careAreas: productCareAreas,
     name: product.title,
     botanical:
@@ -1672,6 +1678,9 @@ async function loadStorefront(): Promise<StorefrontData> {
   const products = rawProducts.sort((a, b) =>
     a.collectionNumber.localeCompare(b.collectionNumber, undefined, { numeric: true }),
   );
+  if (contentResult.status === "fulfilled") {
+    content.botanicalCombos = parseBotanicalCombos(contentResult.value.botanicalCombos, products);
+  }
 
   if (collectionsResult.status === "rejected") {
     warnStorefrontPart("collection", collectionsResult.reason);

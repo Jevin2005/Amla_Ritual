@@ -55,6 +55,9 @@ export type ProductHeroContent = {
 export type Product = {
   id?: string;
   productType?: string;
+  comboProductIds?: string[];
+  comboIngredients?: string;
+  comboCaption?: string;
   careAreas?: CareArea[];
   slug: string;
   shopifyHandle?: string;

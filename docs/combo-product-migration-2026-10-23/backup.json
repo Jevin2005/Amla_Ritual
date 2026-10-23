@@ -1,0 +1,1937 @@
+{
+  "metaobjects": {
+    "section": {
+      "id": "gid://shopify/Metaobject/431929295034",
+      "handle": "main",
+      "updatedAt": "2026-10-22T10:18:04Z",
+      "fields": [
+        {
+          "key": "name",
+          "type": "single_line_text_field",
+          "value": "Homepage botanical book"
+        },
+        {
+          "key": "enabled",
+          "type": "boolean",
+          "value": "true"
+        },
+        {
+          "key": "eyebrow",
+          "type": "single_line_text_field",
+          "value": "Botanical combos"
+        },
+        {
+          "key": "heading",
+          "type": "single_line_text_field",
+          "value": "Your ritual."
+        },
+        {
+          "key": "heading_ending",
+          "type": "single_line_text_field",
+          "value": "One jar at a time."
+        },
+        {
+          "key": "description",
+          "type": "multi_line_text_field",
+          "value": "Explore each botanical's role and wider-use research. Powder sets contain separate 200 g jars; follow each product's directions."
+        },
+        {
+          "key": "button_label",
+          "type": "single_line_text_field",
+          "value": "View combo"
+        },
+        {
+          "key": "page_turn_enabled",
+          "type": "boolean",
+          "value": "true"
+        },
+        {
+          "key": "page_turn_duration",
+          "type": "number_decimal",
+          "value": "1.25"
+        },
+        {
+          "key": "combos",
+          "type": "list.metaobject_reference",
+          "value": "[\"gid://shopify/Metaobject/431929196730\",\"gid://shopify/Metaobject/431929229498\",\"gid://shopify/Metaobject/431929262266\",\"gid://shopify/Metaobject/440397365434\",\"gid://shopify/Metaobject/440397660346\",\"gid://shopify/Metaobject/440397791418\",\"gid://shopify/Metaobject/440397889722\",\"gid://shopify/Metaobject/440398053562\"]"
+        }
+      ]
+    },
+    "combos": {
+      "nodes": [
+        {
+          "id": "gid://shopify/Metaobject/431929196730",
+          "handle": "classic-trio",
+          "updatedAt": "2026-10-21T13:35:30Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Classic Trio"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Amla + Reetha + Shikakai"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Amla · Reetha · Shikakai · 3 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/46690532884666"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8498815107258\",\"gid://shopify/Product/8531585597626\"]"
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Metaobject/431929229498",
+          "handle": "botanical-duo",
+          "updatedAt": "2026-10-21T13:35:47Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Botanical Duo"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Amla + Bhringraj"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Amla · Bhringraj · 2 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/46690534490298"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8531585433786\"]"
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Metaobject/431929262266",
+          "handle": "floral-duo",
+          "updatedAt": "2026-10-21T13:35:50Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Floral Duo"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Hibiscus + Amla"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Hibiscus · Amla · 2 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/46690536915130"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8531585499322\",\"gid://shopify/Product/8494763311290\"]"
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Metaobject/440397365434",
+          "handle": "amla-reetha-duo",
+          "updatedAt": "2026-10-21T13:35:35Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Amla Reetha Duo"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Amla + Reetha"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Amla · Reetha · 2 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/34402531573946"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8498815107258\"]"
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Metaobject/440397660346",
+          "handle": "amla-shikakai-duo",
+          "updatedAt": "2026-10-21T13:35:38Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Amla Shikakai Duo"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Amla + Shikakai"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Amla · Shikakai · 2 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/34402531573946"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8531585597626\"]"
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Metaobject/440397791418",
+          "handle": "cleansing-duo",
+          "updatedAt": "2026-10-21T13:35:41Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Cleansing Duo"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Reetha + Shikakai"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Reetha · Shikakai · 2 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/34403223011514"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8498815107258\",\"gid://shopify/Product/8531585597626\"]"
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Metaobject/440397889722",
+          "handle": "botanical-mask-trio",
+          "updatedAt": "2026-10-21T13:35:44Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Botanical Mask Trio"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Amla + Bhringraj + Hibiscus"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Amla · Bhringraj · Hibiscus · 3 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/34402531573946"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8494763311290\",\"gid://shopify/Product/8531585433786\",\"gid://shopify/Product/8531585499322\"]"
+            }
+          ]
+        },
+        {
+          "id": "gid://shopify/Metaobject/440398053562",
+          "handle": "bhringraj-hibiscus-duo",
+          "updatedAt": "2026-10-21T13:35:53Z",
+          "fields": [
+            {
+              "key": "name",
+              "type": "single_line_text_field",
+              "value": "Bhringraj Hibiscus Duo"
+            },
+            {
+              "key": "ingredients",
+              "type": "single_line_text_field",
+              "value": "Bhringraj + Hibiscus"
+            },
+            {
+              "key": "caption",
+              "type": "single_line_text_field",
+              "value": "Bhringraj · Hibiscus · 2 × 200 g"
+            },
+            {
+              "key": "photo",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/34405092163770"
+            },
+            {
+              "key": "products",
+              "type": "list.product_reference",
+              "value": "[\"gid://shopify/Product/8531585433786\",\"gid://shopify/Product/8531585499322\"]"
+            }
+          ]
+        }
+      ],
+      "pageInfo": {
+        "hasNextPage": false,
+        "endCursor": "eyJsYXN0X2lkIjo0NDAzOTgwNTM1NjIsImxhc3RfdmFsdWUiOiI0NDAzOTgwNTM1NjIiLCJiYWNrZW5kIjoiZWxhc3RpY3NlYXJjaCJ9"
+      }
+    }
+  },
+  "productMetadata": {
+    "sectionDefinition": {
+      "id": "gid://shopify/MetaobjectDefinition/24054988986",
+      "type": "botanical_combos",
+      "fieldDefinitions": [
+        {
+          "key": "name",
+          "name": "Editor name",
+          "required": true,
+          "type": {
+            "name": "single_line_text_field"
+          }
+        },
+        {
+          "key": "enabled",
+          "name": "Show section",
+          "required": false,
+          "type": {
+            "name": "boolean"
+          }
+        },
+        {
+          "key": "eyebrow",
+          "name": "Small heading",
+          "required": false,
+          "type": {
+            "name": "single_line_text_field"
+          }
+        },
+        {
+          "key": "heading",
+          "name": "Heading first part",
+          "required": false,
+          "type": {
+            "name": "single_line_text_field"
+          }
+        },
+        {
+          "key": "heading_ending",
+          "name": "Heading second part",
+          "required": false,
+          "type": {
+            "name": "single_line_text_field"
+          }
+        },
+        {
+          "key": "description",
+          "name": "Section description",
+          "required": false,
+          "type": {
+            "name": "multi_line_text_field"
+          }
+        },
+        {
+          "key": "button_label",
+          "name": "View combo button text",
+          "required": false,
+          "type": {
+            "name": "single_line_text_field"
+          }
+        },
+        {
+          "key": "page_turn_enabled",
+          "name": "Enable desktop book animation",
+          "required": false,
+          "type": {
+            "name": "boolean"
+          }
+        },
+        {
+          "key": "page_turn_duration",
+          "name": "Page turn duration in seconds",
+          "required": false,
+          "type": {
+            "name": "number_decimal"
+          }
+        },
+        {
+          "key": "combos",
+          "name": "Combos in display order",
+          "required": false,
+          "type": {
+            "name": "list.metaobject_reference"
+          }
+        }
+      ]
+    },
+    "comboDefinition": {
+      "id": "gid://shopify/MetaobjectDefinition/24054956218",
+      "type": "botanical_combo",
+      "metaobjectsCount": 8
+    },
+    "products": {
+      "nodes": [
+        {
+          "id": "gid://shopify/Product/10392444928186",
+          "title": "NatureMist Classic Trio",
+          "tags": [
+            "Amla",
+            "Botanical Powder",
+            "Cleanse",
+            "combo",
+            "combo:gid://shopify/Metaobject/431929196730",
+            "Hair Care",
+            "Hair Packs",
+            "Ingredient Research",
+            "Reetha",
+            "Shikakai"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Classic Trio\",\"product_external_id\":10392444928186,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ca688b08-2fcf-4df4-8999-4749cf7b9bbd.png?v=1792489403\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-20T09:57:49Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Classic Trio | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Amla, Reetha, Shikakai in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Herbal wash and hair-pack collection"
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Reetha and Shikakai for herbal hair-wash routines, with Amla for a separate traditional hair pack. Each jar contains 200 g; 600 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 3 jars of 200 g each, for 600 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Amla: Skin-care research. A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess. Composition and antioxidant research. Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence. Oral and traditional-use research. Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\\n\\nReetha: Body-cleansing potential. Soapnut extracts have shown foaming, wetting and detergency in laboratory studies. Body-wash use is a formulation possibility, not an established use for this jar. Appropriate skin-tolerance assessment and directions are still needed. Household and laundry potential. The surfactant properties of soapnut preparations suggest household-washing applications. This powder has not been assessed here for stain removal, fabric compatibility or laundry performance. It is not being sold as a tested household cleaner. Antimicrobial and mildness research. Laboratory antimicrobial findings do not make the powder a treatment for acne, fungal infection or dandruff. Foam does not establish sensitive-skin suitability, and mixed wet paste is not proven to preserve itself.\\n\\nShikakai: Body-cleanser research. A small human study examined a cleanser containing shikakai with other plant extracts. The findings cannot be assigned to shikakai alone or transferred to raw pod powder. Body cleansing remains a formulation option to assess. Softness and skin-barrier claims. Softness, detangling, mildness and moisturising performance need testing of the actual product. The supplied evidence does not establish these benefits or an eczema-treatment role for this jar.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Amla\",\"Reetha\",\"Shikakai\",\"Herbal wash and hair-pack collection\",\"hair care\",\"200 g\",\"600 g\",\"Cleanse\",\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Cleanse\",\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Herbal wash and hair-pack collection\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Herbal wash and hair-pack collection\",\"Includes 3 separate 200 g jars.\",\"Amla: a traditional fruit-based hair pack.\",\"Reetha: a soapnut ingredient for herbal hair washes.\",\"Shikakai: a pod-based ingredient for traditional hair washing.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Amla: Fruit pulp; Reetha: Fruit pericarp; Shikakai: Fruit pods"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Phyllanthus emblica + Sapindus mukorossi + Acacia concinna"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Amla fruit pulp powder (Phyllanthus emblica).\n1 × 200 g Reetha fruit pericarp powder (Sapindus mukorossi).\n1 × 200 g Shikakai pod powder (Acacia concinna)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "3 × 200 g (600 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Amla, Reetha, Shikakai in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Amla\",\"topic\":\"Traditional rejuvenative use\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"Dried fruit pericarp in API\",\"findingAndLimit\":\"Classed as Rasayana; this is historical use, not proof of modern clinical outcomes.\",\"sourceCaution\":\"Educational wording: traditionally valued in Ayurveda as a Rasayana. Do not turn this into an anti-ageing or immunity promise.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-1.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair-fibre strength / reduced breakage potential\",\"evidenceType\":\"Laboratory hair-fibre study\",\"studiedMaterial\":\"3%, 6% and 9% extracts on collected untreated or bleached hair\",\"findingAndLimit\":\"Some strength/extensibility changes depended on concentration and hair damage. No consumer powder trial.\",\"sourceCaution\":\"Candidate claim after finished-product testing: helps reduce breakage during grooming.\",\"source\":\"https://pdfs.semanticscholar.org/5e7d/8f056e4394bd66f46de5faa8b2a6647eb02d.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair growth research\",\"evidenceType\":\"Small human study; oral route\",\"studiedMaterial\":\"Oral syrup; 12 weeks; 60 enrolled, 52 completed\",\"findingAndLimit\":\"A growing/resting hair-ratio improvement was reported. Swallowed syrup is different from a topical hair pack.\",\"sourceCaution\":\"Background research only for this cosmetic range. Do not claim topical regrowth.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/37487962/\"},{\"product\":\"Amla\",\"topic\":\"Facial oil-control potential\",\"evidenceType\":\"Small human formulation study\",\"studiedMaterial\":\"3% fruit-extract toner; 30 volunteers; short-term assessment\",\"findingAndLimit\":\"Lower skin sebum was reported for the tested toner. This does not validate fruit powder as a facial mask.\",\"sourceCaution\":\"Face-pack development option; test the actual product before oil-control wording.\",\"source\":\"https://pdfs.semanticscholar.org/c718/bc660c42efb0e03e51553919d56221d1588e.pdf\"},{\"product\":\"Amla\",\"topic\":\"Skin hydration / wrinkle research\",\"evidenceType\":\"Small human formulation study; different plant part\",\"studiedMaterial\":\"0.1% branch-extract gel; 20 volunteers; 84 days\",\"findingAndLimit\":\"Skin measures improved in the tested branch-extract formulation. Fruit powder is a different ingredient.\",\"sourceCaution\":\"Do not borrow branch-gel hydration, wrinkle or pigmentation claims for fruit powder.\",\"source\":\"https://www.researchgate.net/publication/349192566_Phyllanthus_emblica_L_amla_branch_A_safe_and_effective_ingredient_against_skin_aging\"},{\"product\":\"Amla\",\"topic\":\"Antioxidant compounds / vitamin C content\",\"evidenceType\":\"Composition and laboratory research\",\"studiedMaterial\":\"Fruit processed with different drying methods\",\"findingAndLimit\":\"Measured constituents vary with cultivar and processing. Laboratory antioxidant results are not clinical skin protection.\",\"sourceCaution\":\"A composition claim needs relevant testing. Do not assume a fixed vitamin C content in dried powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/32123419/\"},{\"product\":\"Amla\",\"topic\":\"Cholesterol and triglyceride research\",\"evidenceType\":\"Human randomized trial; oral extract\",\"studiedMaterial\":\"Standardized oral extract; 98 participants; 12 weeks\",\"findingAndLimit\":\"Lipid-marker improvements were reported. This does not establish cardiovascular-event prevention.\",\"sourceCaution\":\"Educational context for a correctly specified oral product only; not a cosmetic label claim.\",\"source\":\"https://link.springer.com/article/10.1186/s12906-019-2430-y\"},{\"product\":\"Amla\",\"topic\":\"Reflux symptom research\",\"evidenceType\":\"Human randomized trial; oral tablets\",\"studiedMaterial\":\"68 patients; 4 weeks\",\"findingAndLimit\":\"Symptom improvements were reported for the studied oral preparation.\",\"sourceCaution\":\"Do not advertise a hair/skin powder as a reflux treatment.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/29526236/\"},{\"product\":\"Amla\",\"topic\":\"Vitamin C nutritional functions\",\"evidenceType\":\"Established nutrient functions; conditional relevance\",\"studiedMaterial\":\"Edible product with verified vitamin C per serving\",\"findingAndLimit\":\"Vitamin C supports normal collagen formation and immune function and increases non-haem iron absorption.\",\"sourceCaution\":\"Only relevant if oral use is intended and content is verified. It does not establish topical collagen boosting.\",\"source\":\"https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/\"},{\"product\":\"Reetha\",\"topic\":\"Hair cleansing / removal of surface oil\",\"evidenceType\":\"Laboratory detergency research\",\"studiedMaterial\":\"Crude saponin extract from fruit pericarp\",\"findingAndLimit\":\"Foaming, wetting and moderate artificial-sebum removal were demonstrated.\",\"sourceCaution\":\"Use description after identity and directions are confirmed: plant-based cleansing powder for herbal hair washes.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Reetha\",\"topic\":\"Natural foaming and wetting\",\"evidenceType\":\"Laboratory functional research\",\"studiedMaterial\":\"Aqueous preparations of commercial soapnut fruits\",\"findingAndLimit\":\"Surface-tension and oil-emulsification properties support a washing role.\",\"sourceCaution\":\"Say naturally occurring cleansing saponins only after ingredient identity is confirmed; foam alone does not prove mildness.\",\"source\":\"https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant\"},{\"product\":\"Reetha\",\"topic\":\"Body-wash ingredient possibility\",\"evidenceType\":\"Formulation inference; not a skin efficacy trial\",\"studiedMaterial\":\"Detergency evidence transferred only as a development hypothesis\",\"findingAndLimit\":\"The washing mechanism suggests a potential cleanser ingredient. Skin tolerance is not established by foam tests.\",\"sourceCaution\":\"Assess an appropriate body-cleanser formulation and directions before adding face/body use.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Reetha\",\"topic\":\"Household washing / laundry development\",\"evidenceType\":\"Functional inference from surfactant research\",\"studiedMaterial\":\"Soapnut aqueous preparations\",\"findingAndLimit\":\"Detergent properties may be useful beyond personal care. The current cosmetic jar has not been tested as a laundry product.\",\"sourceCaution\":\"Explore a separate household-cleaning use only after material, stain-removal and packaging checks.\",\"source\":\"https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant\"},{\"product\":\"Reetha\",\"topic\":\"Antimicrobial or preservative research\",\"evidenceType\":\"Laboratory evidence only\",\"studiedMaterial\":\"Extract tested against microorganisms\",\"findingAndLimit\":\"Laboratory activity does not establish acne, fungal-infection or dandruff treatment, or reliable preservation of a wet mixture.\",\"sourceCaution\":\"Keep medical antimicrobial and self-preserving claims off current product copy.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Shikakai\",\"topic\":\"Traditional hair cleansing\",\"evidenceType\":\"Use history and human wash studies\",\"studiedMaterial\":\"Pod-based wash preparations\",\"findingAndLimit\":\"Shikakai is used in hair-washing preparations; cleansing is the most defensible product role.\",\"sourceCaution\":\"Suggested use description: shikakai pod powder for traditional hair washing.\",\"source\":\"https://jahm.co.in/index.php/jahm/article/view/200\"},{\"product\":\"Shikakai\",\"topic\":\"Scalp flaking / itching research\",\"evidenceType\":\"Small human comparative study; limited reporting\",\"studiedMaterial\":\"Powdered-pod wash; 70 people; 28 days\",\"findingAndLimit\":\"Improvement was reported in scalp symptoms, but design and reporting limit certainty.\",\"sourceCaution\":\"Educational research context; test the finished product and avoid a dandruff-cure claim.\",\"source\":\"https://jahm.co.in/index.php/jahm/article/view/200\"},{\"product\":\"Shikakai\",\"topic\":\"Dandruff shampoo research\",\"evidenceType\":\"Controlled human crossover study; mixed findings\",\"studiedMaterial\":\"Acacia concinna shampoo; 74 analyzed; two 4-week periods\",\"findingAndLimit\":\"Some redness/extent measures improved; dandruff severity and desquamation were not significantly improved.\",\"sourceCaution\":\"Do not present the evidence as proven anti-dandruff efficacy for raw powder.\",\"source\":\"https://he02.tci-thaijo.org/index.php/TJD/article/view/282743\"},{\"product\":\"Shikakai\",\"topic\":\"Body-cleansing / barrier research\",\"evidenceType\":\"Small human study; multi-ingredient formula\",\"studiedMaterial\":\"30 patients; 2 weeks; cleanser with shikakai and other ingredients\",\"findingAndLimit\":\"Transepidermal water loss improved; hydration, pH and roughness did not significantly improve. Effects cannot be assigned to shikakai alone.\",\"sourceCaution\":\"Body-cleanser development option; no eczema-treatment or proven-moisturising claim for powder.\",\"source\":\"https://apjai-journal.org/original-article/ap-050519-0554/\"},{\"product\":\"Shikakai\",\"topic\":\"Softness / detangling / mildness\",\"evidenceType\":\"Finished-product evidence needed\",\"studiedMaterial\":\"NatureMist powder or proposed blend has not been assessed here\",\"findingAndLimit\":\"These are useful customer outcomes to measure, not conclusions from saponin content.\",\"sourceCaution\":\"Test combing, after-feel, rinse-out and tolerance before adding these benefits.\",\"source\":\"NatureMist product test results were not supplied.\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Amla\nSkin-care research: A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess.\n\nComposition and antioxidant research: Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence.\n\nOral and traditional-use research: Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\n\nHair performance research: Laboratory work on extracts and hair fibres does not establish reduced breakage, softness or regrowth from the finished powder. Those outcomes require testing of the actual product.\n\nReetha\nBody-cleansing potential: Soapnut extracts have shown foaming, wetting and detergency in laboratory studies. Body-wash use is a formulation possibility, not an established use for this jar. Appropriate skin-tolerance assessment and directions are still needed.\n\nHousehold and laundry potential: The surfactant properties of soapnut preparations suggest household-washing applications. This powder has not been assessed here for stain removal, fabric compatibility or laundry performance. It is not being sold as a tested household cleaner.\n\nAntimicrobial and mildness research: Laboratory antimicrobial findings do not make the powder a treatment for acne, fungal infection or dandruff. Foam does not establish sensitive-skin suitability, and mixed wet paste is not proven to preserve itself.\n\nShikakai\nBody-cleanser research: A small human study examined a cleanser containing shikakai with other plant extracts. The findings cannot be assigned to shikakai alone or transferred to raw pod powder. Body cleansing remains a formulation option to assess.\n\nScalp research: Small studies of wash preparations and formulated shampoo have explored scalp flaking and irritation, with limited or mixed findings. They do not establish dandruff treatment from this powder.\n\nSoftness and skin-barrier claims: Softness, detangling, mildness and moisturising performance need testing of the actual product. The supplied evidence does not establish these benefits or an eczema-treatment role for this jar."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMTkyMjEwNiwibGFzdF92YWx1ZSI6IjY0ODI3ODExOTIyMTA2In0="
+            }
+          }
+        },
+        {
+          "id": "gid://shopify/Product/10392838209722",
+          "title": "NatureMist Amla Reetha Duo",
+          "tags": [
+            "Amla",
+            "Botanical Powder",
+            "Cleanse",
+            "combo",
+            "combo:gid://shopify/Metaobject/440397365434",
+            "Hair Care",
+            "Hair Packs",
+            "Ingredient Research",
+            "Reetha"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Amla Reetha Duo\",\"product_external_id\":10392838209722,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/bc23ec23-3c47-4c83-8b71-f7b858b5be92.png?v=1792580172\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-21T11:04:39Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Amla Reetha Duo | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Amla, Reetha in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Herbal wash and hair-pack duo"
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Reetha for a botanical wash routine and Amla for a separate traditional hair pack. Each jar contains 200 g; 400 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 2 jars of 200 g each, for 400 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Amla: Skin-care research. A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess. Composition and antioxidant research. Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence. Oral and traditional-use research. Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\\n\\nReetha: Body-cleansing potential. Soapnut extracts have shown foaming, wetting and detergency in laboratory studies. Body-wash use is a formulation possibility, not an established use for this jar. Appropriate skin-tolerance assessment and directions are still needed. Household and laundry potential. The surfactant properties of soapnut preparations suggest household-washing applications. This powder has not been assessed here for stain removal, fabric compatibility or laundry performance. It is not being sold as a tested household cleaner. Antimicrobial and mildness research. Laboratory antimicrobial findings do not make the powder a treatment for acne, fungal infection or dandruff. Foam does not establish sensitive-skin suitability, and mixed wet paste is not proven to preserve itself.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Amla\",\"Reetha\",\"Herbal wash and hair-pack duo\",\"hair care\",\"200 g\",\"400 g\",\"Cleanse\",\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Cleanse\",\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Herbal wash and hair-pack duo\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Herbal wash and hair-pack duo\",\"Includes 2 separate 200 g jars.\",\"Amla: a traditional fruit-based hair pack.\",\"Reetha: a soapnut ingredient for herbal hair washes.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Amla: Fruit pulp; Reetha: Fruit pericarp"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Phyllanthus emblica + Sapindus mukorossi"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Amla fruit pulp powder (Phyllanthus emblica).\n1 × 200 g Reetha fruit pericarp powder (Sapindus mukorossi)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "2 × 200 g (400 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Amla, Reetha in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Amla\",\"topic\":\"Traditional rejuvenative use\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"Dried fruit pericarp in API\",\"findingAndLimit\":\"Classed as Rasayana; this is historical use, not proof of modern clinical outcomes.\",\"sourceCaution\":\"Educational wording: traditionally valued in Ayurveda as a Rasayana. Do not turn this into an anti-ageing or immunity promise.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-1.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair-fibre strength / reduced breakage potential\",\"evidenceType\":\"Laboratory hair-fibre study\",\"studiedMaterial\":\"3%, 6% and 9% extracts on collected untreated or bleached hair\",\"findingAndLimit\":\"Some strength/extensibility changes depended on concentration and hair damage. No consumer powder trial.\",\"sourceCaution\":\"Candidate claim after finished-product testing: helps reduce breakage during grooming.\",\"source\":\"https://pdfs.semanticscholar.org/5e7d/8f056e4394bd66f46de5faa8b2a6647eb02d.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair growth research\",\"evidenceType\":\"Small human study; oral route\",\"studiedMaterial\":\"Oral syrup; 12 weeks; 60 enrolled, 52 completed\",\"findingAndLimit\":\"A growing/resting hair-ratio improvement was reported. Swallowed syrup is different from a topical hair pack.\",\"sourceCaution\":\"Background research only for this cosmetic range. Do not claim topical regrowth.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/37487962/\"},{\"product\":\"Amla\",\"topic\":\"Facial oil-control potential\",\"evidenceType\":\"Small human formulation study\",\"studiedMaterial\":\"3% fruit-extract toner; 30 volunteers; short-term assessment\",\"findingAndLimit\":\"Lower skin sebum was reported for the tested toner. This does not validate fruit powder as a facial mask.\",\"sourceCaution\":\"Face-pack development option; test the actual product before oil-control wording.\",\"source\":\"https://pdfs.semanticscholar.org/c718/bc660c42efb0e03e51553919d56221d1588e.pdf\"},{\"product\":\"Amla\",\"topic\":\"Skin hydration / wrinkle research\",\"evidenceType\":\"Small human formulation study; different plant part\",\"studiedMaterial\":\"0.1% branch-extract gel; 20 volunteers; 84 days\",\"findingAndLimit\":\"Skin measures improved in the tested branch-extract formulation. Fruit powder is a different ingredient.\",\"sourceCaution\":\"Do not borrow branch-gel hydration, wrinkle or pigmentation claims for fruit powder.\",\"source\":\"https://www.researchgate.net/publication/349192566_Phyllanthus_emblica_L_amla_branch_A_safe_and_effective_ingredient_against_skin_aging\"},{\"product\":\"Amla\",\"topic\":\"Antioxidant compounds / vitamin C content\",\"evidenceType\":\"Composition and laboratory research\",\"studiedMaterial\":\"Fruit processed with different drying methods\",\"findingAndLimit\":\"Measured constituents vary with cultivar and processing. Laboratory antioxidant results are not clinical skin protection.\",\"sourceCaution\":\"A composition claim needs relevant testing. Do not assume a fixed vitamin C content in dried powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/32123419/\"},{\"product\":\"Amla\",\"topic\":\"Cholesterol and triglyceride research\",\"evidenceType\":\"Human randomized trial; oral extract\",\"studiedMaterial\":\"Standardized oral extract; 98 participants; 12 weeks\",\"findingAndLimit\":\"Lipid-marker improvements were reported. This does not establish cardiovascular-event prevention.\",\"sourceCaution\":\"Educational context for a correctly specified oral product only; not a cosmetic label claim.\",\"source\":\"https://link.springer.com/article/10.1186/s12906-019-2430-y\"},{\"product\":\"Amla\",\"topic\":\"Reflux symptom research\",\"evidenceType\":\"Human randomized trial; oral tablets\",\"studiedMaterial\":\"68 patients; 4 weeks\",\"findingAndLimit\":\"Symptom improvements were reported for the studied oral preparation.\",\"sourceCaution\":\"Do not advertise a hair/skin powder as a reflux treatment.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/29526236/\"},{\"product\":\"Amla\",\"topic\":\"Vitamin C nutritional functions\",\"evidenceType\":\"Established nutrient functions; conditional relevance\",\"studiedMaterial\":\"Edible product with verified vitamin C per serving\",\"findingAndLimit\":\"Vitamin C supports normal collagen formation and immune function and increases non-haem iron absorption.\",\"sourceCaution\":\"Only relevant if oral use is intended and content is verified. It does not establish topical collagen boosting.\",\"source\":\"https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/\"},{\"product\":\"Reetha\",\"topic\":\"Hair cleansing / removal of surface oil\",\"evidenceType\":\"Laboratory detergency research\",\"studiedMaterial\":\"Crude saponin extract from fruit pericarp\",\"findingAndLimit\":\"Foaming, wetting and moderate artificial-sebum removal were demonstrated.\",\"sourceCaution\":\"Use description after identity and directions are confirmed: plant-based cleansing powder for herbal hair washes.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Reetha\",\"topic\":\"Natural foaming and wetting\",\"evidenceType\":\"Laboratory functional research\",\"studiedMaterial\":\"Aqueous preparations of commercial soapnut fruits\",\"findingAndLimit\":\"Surface-tension and oil-emulsification properties support a washing role.\",\"sourceCaution\":\"Say naturally occurring cleansing saponins only after ingredient identity is confirmed; foam alone does not prove mildness.\",\"source\":\"https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant\"},{\"product\":\"Reetha\",\"topic\":\"Body-wash ingredient possibility\",\"evidenceType\":\"Formulation inference; not a skin efficacy trial\",\"studiedMaterial\":\"Detergency evidence transferred only as a development hypothesis\",\"findingAndLimit\":\"The washing mechanism suggests a potential cleanser ingredient. Skin tolerance is not established by foam tests.\",\"sourceCaution\":\"Assess an appropriate body-cleanser formulation and directions before adding face/body use.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Reetha\",\"topic\":\"Household washing / laundry development\",\"evidenceType\":\"Functional inference from surfactant research\",\"studiedMaterial\":\"Soapnut aqueous preparations\",\"findingAndLimit\":\"Detergent properties may be useful beyond personal care. The current cosmetic jar has not been tested as a laundry product.\",\"sourceCaution\":\"Explore a separate household-cleaning use only after material, stain-removal and packaging checks.\",\"source\":\"https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant\"},{\"product\":\"Reetha\",\"topic\":\"Antimicrobial or preservative research\",\"evidenceType\":\"Laboratory evidence only\",\"studiedMaterial\":\"Extract tested against microorganisms\",\"findingAndLimit\":\"Laboratory activity does not establish acne, fungal-infection or dandruff treatment, or reliable preservation of a wet mixture.\",\"sourceCaution\":\"Keep medical antimicrobial and self-preserving claims off current product copy.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Amla\nSkin-care research: A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess.\n\nComposition and antioxidant research: Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence.\n\nOral and traditional-use research: Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\n\nHair performance research: Laboratory work on extracts and hair fibres does not establish reduced breakage, softness or regrowth from the finished powder. Those outcomes require testing of the actual product.\n\nReetha\nBody-cleansing potential: Soapnut extracts have shown foaming, wetting and detergency in laboratory studies. Body-wash use is a formulation possibility, not an established use for this jar. Appropriate skin-tolerance assessment and directions are still needed.\n\nHousehold and laundry potential: The surfactant properties of soapnut preparations suggest household-washing applications. This powder has not been assessed here for stain removal, fabric compatibility or laundry performance. It is not being sold as a tested household cleaner.\n\nAntimicrobial and mildness research: Laboratory antimicrobial findings do not make the powder a treatment for acne, fungal infection or dandruff. Foam does not establish sensitive-skin suitability, and mixed wet paste is not proven to preserve itself."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMTg1NjU3MCwibGFzdF92YWx1ZSI6IjY0ODI3ODExODU2NTcwIn0="
+            }
+          }
+        },
+        {
+          "id": "gid://shopify/Product/10392838308026",
+          "title": "NatureMist Amla Shikakai Duo",
+          "tags": [
+            "Amla",
+            "Botanical Powder",
+            "Cleanse",
+            "combo",
+            "combo:gid://shopify/Metaobject/440397660346",
+            "Hair Care",
+            "Hair Packs",
+            "Ingredient Research",
+            "Shikakai"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Amla Shikakai Duo\",\"product_external_id\":10392838308026,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/8486a83f-7cf5-4a1a-ae2e-e41e244269ef.png?v=1792580203\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-21T13:03:25Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Amla Shikakai Duo | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Amla, Shikakai in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Shikakai for traditional hair washing and Amla for a separate herbal hair pack. Each jar contains 200 g; 400 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 2 jars of 200 g each, for 400 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Amla: Skin-care research. A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess. Composition and antioxidant research. Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence. Oral and traditional-use research. Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\\n\\nShikakai: Body-cleanser research. A small human study examined a cleanser containing shikakai with other plant extracts. The findings cannot be assigned to shikakai alone or transferred to raw pod powder. Body cleansing remains a formulation option to assess. Softness and skin-barrier claims. Softness, detangling, mildness and moisturising performance need testing of the actual product. The supplied evidence does not establish these benefits or an eczema-treatment role for this jar.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Amla\",\"Shikakai\",\"Traditional wash and hair-pack duo\",\"hair care\",\"200 g\",\"400 g\",\"Cleanse\",\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Cleanse\",\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Traditional wash and hair-pack duo\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Traditional wash and hair-pack duo\",\"Includes 2 separate 200 g jars.\",\"Amla: a traditional fruit-based hair pack.\",\"Shikakai: a pod-based ingredient for traditional hair washing.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Amla: Fruit pulp; Shikakai: Fruit pods"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Phyllanthus emblica + Acacia concinna"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Amla fruit pulp powder (Phyllanthus emblica).\n1 × 200 g Shikakai pod powder (Acacia concinna)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "2 × 200 g (400 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Amla, Shikakai in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Traditional wash and hair-pack duo"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Amla\",\"topic\":\"Traditional rejuvenative use\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"Dried fruit pericarp in API\",\"findingAndLimit\":\"Classed as Rasayana; this is historical use, not proof of modern clinical outcomes.\",\"sourceCaution\":\"Educational wording: traditionally valued in Ayurveda as a Rasayana. Do not turn this into an anti-ageing or immunity promise.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-1.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair-fibre strength / reduced breakage potential\",\"evidenceType\":\"Laboratory hair-fibre study\",\"studiedMaterial\":\"3%, 6% and 9% extracts on collected untreated or bleached hair\",\"findingAndLimit\":\"Some strength/extensibility changes depended on concentration and hair damage. No consumer powder trial.\",\"sourceCaution\":\"Candidate claim after finished-product testing: helps reduce breakage during grooming.\",\"source\":\"https://pdfs.semanticscholar.org/5e7d/8f056e4394bd66f46de5faa8b2a6647eb02d.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair growth research\",\"evidenceType\":\"Small human study; oral route\",\"studiedMaterial\":\"Oral syrup; 12 weeks; 60 enrolled, 52 completed\",\"findingAndLimit\":\"A growing/resting hair-ratio improvement was reported. Swallowed syrup is different from a topical hair pack.\",\"sourceCaution\":\"Background research only for this cosmetic range. Do not claim topical regrowth.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/37487962/\"},{\"product\":\"Amla\",\"topic\":\"Facial oil-control potential\",\"evidenceType\":\"Small human formulation study\",\"studiedMaterial\":\"3% fruit-extract toner; 30 volunteers; short-term assessment\",\"findingAndLimit\":\"Lower skin sebum was reported for the tested toner. This does not validate fruit powder as a facial mask.\",\"sourceCaution\":\"Face-pack development option; test the actual product before oil-control wording.\",\"source\":\"https://pdfs.semanticscholar.org/c718/bc660c42efb0e03e51553919d56221d1588e.pdf\"},{\"product\":\"Amla\",\"topic\":\"Skin hydration / wrinkle research\",\"evidenceType\":\"Small human formulation study; different plant part\",\"studiedMaterial\":\"0.1% branch-extract gel; 20 volunteers; 84 days\",\"findingAndLimit\":\"Skin measures improved in the tested branch-extract formulation. Fruit powder is a different ingredient.\",\"sourceCaution\":\"Do not borrow branch-gel hydration, wrinkle or pigmentation claims for fruit powder.\",\"source\":\"https://www.researchgate.net/publication/349192566_Phyllanthus_emblica_L_amla_branch_A_safe_and_effective_ingredient_against_skin_aging\"},{\"product\":\"Amla\",\"topic\":\"Antioxidant compounds / vitamin C content\",\"evidenceType\":\"Composition and laboratory research\",\"studiedMaterial\":\"Fruit processed with different drying methods\",\"findingAndLimit\":\"Measured constituents vary with cultivar and processing. Laboratory antioxidant results are not clinical skin protection.\",\"sourceCaution\":\"A composition claim needs relevant testing. Do not assume a fixed vitamin C content in dried powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/32123419/\"},{\"product\":\"Amla\",\"topic\":\"Cholesterol and triglyceride research\",\"evidenceType\":\"Human randomized trial; oral extract\",\"studiedMaterial\":\"Standardized oral extract; 98 participants; 12 weeks\",\"findingAndLimit\":\"Lipid-marker improvements were reported. This does not establish cardiovascular-event prevention.\",\"sourceCaution\":\"Educational context for a correctly specified oral product only; not a cosmetic label claim.\",\"source\":\"https://link.springer.com/article/10.1186/s12906-019-2430-y\"},{\"product\":\"Amla\",\"topic\":\"Reflux symptom research\",\"evidenceType\":\"Human randomized trial; oral tablets\",\"studiedMaterial\":\"68 patients; 4 weeks\",\"findingAndLimit\":\"Symptom improvements were reported for the studied oral preparation.\",\"sourceCaution\":\"Do not advertise a hair/skin powder as a reflux treatment.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/29526236/\"},{\"product\":\"Amla\",\"topic\":\"Vitamin C nutritional functions\",\"evidenceType\":\"Established nutrient functions; conditional relevance\",\"studiedMaterial\":\"Edible product with verified vitamin C per serving\",\"findingAndLimit\":\"Vitamin C supports normal collagen formation and immune function and increases non-haem iron absorption.\",\"sourceCaution\":\"Only relevant if oral use is intended and content is verified. It does not establish topical collagen boosting.\",\"source\":\"https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/\"},{\"product\":\"Shikakai\",\"topic\":\"Traditional hair cleansing\",\"evidenceType\":\"Use history and human wash studies\",\"studiedMaterial\":\"Pod-based wash preparations\",\"findingAndLimit\":\"Shikakai is used in hair-washing preparations; cleansing is the most defensible product role.\",\"sourceCaution\":\"Suggested use description: shikakai pod powder for traditional hair washing.\",\"source\":\"https://jahm.co.in/index.php/jahm/article/view/200\"},{\"product\":\"Shikakai\",\"topic\":\"Scalp flaking / itching research\",\"evidenceType\":\"Small human comparative study; limited reporting\",\"studiedMaterial\":\"Powdered-pod wash; 70 people; 28 days\",\"findingAndLimit\":\"Improvement was reported in scalp symptoms, but design and reporting limit certainty.\",\"sourceCaution\":\"Educational research context; test the finished product and avoid a dandruff-cure claim.\",\"source\":\"https://jahm.co.in/index.php/jahm/article/view/200\"},{\"product\":\"Shikakai\",\"topic\":\"Dandruff shampoo research\",\"evidenceType\":\"Controlled human crossover study; mixed findings\",\"studiedMaterial\":\"Acacia concinna shampoo; 74 analyzed; two 4-week periods\",\"findingAndLimit\":\"Some redness/extent measures improved; dandruff severity and desquamation were not significantly improved.\",\"sourceCaution\":\"Do not present the evidence as proven anti-dandruff efficacy for raw powder.\",\"source\":\"https://he02.tci-thaijo.org/index.php/TJD/article/view/282743\"},{\"product\":\"Shikakai\",\"topic\":\"Body-cleansing / barrier research\",\"evidenceType\":\"Small human study; multi-ingredient formula\",\"studiedMaterial\":\"30 patients; 2 weeks; cleanser with shikakai and other ingredients\",\"findingAndLimit\":\"Transepidermal water loss improved; hydration, pH and roughness did not significantly improve. Effects cannot be assigned to shikakai alone.\",\"sourceCaution\":\"Body-cleanser development option; no eczema-treatment or proven-moisturising claim for powder.\",\"source\":\"https://apjai-journal.org/original-article/ap-050519-0554/\"},{\"product\":\"Shikakai\",\"topic\":\"Softness / detangling / mildness\",\"evidenceType\":\"Finished-product evidence needed\",\"studiedMaterial\":\"NatureMist powder or proposed blend has not been assessed here\",\"findingAndLimit\":\"These are useful customer outcomes to measure, not conclusions from saponin content.\",\"sourceCaution\":\"Test combing, after-feel, rinse-out and tolerance before adding these benefits.\",\"source\":\"NatureMist product test results were not supplied.\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Amla\nSkin-care research: A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess.\n\nComposition and antioxidant research: Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence.\n\nOral and traditional-use research: Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\n\nHair performance research: Laboratory work on extracts and hair fibres does not establish reduced breakage, softness or regrowth from the finished powder. Those outcomes require testing of the actual product.\n\nShikakai\nBody-cleanser research: A small human study examined a cleanser containing shikakai with other plant extracts. The findings cannot be assigned to shikakai alone or transferred to raw pod powder. Body cleansing remains a formulation option to assess.\n\nScalp research: Small studies of wash preparations and formulated shampoo have explored scalp flaking and irritation, with limited or mixed findings. They do not establish dandruff treatment from this powder.\n\nSoftness and skin-barrier claims: Softness, detangling, mildness and moisturising performance need testing of the actual product. The supplied evidence does not establish these benefits or an eczema-treatment role for this jar."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMjgzOTYxMCwibGFzdF92YWx1ZSI6IjY0ODI3ODEyODM5NjEwIn0="
+            }
+          }
+        },
+        {
+          "id": "gid://shopify/Product/10392838406330",
+          "title": "NatureMist Cleansing Duo",
+          "tags": [
+            "Botanical Powder",
+            "Cleanse",
+            "combo",
+            "combo:gid://shopify/Metaobject/440397791418",
+            "Hair Care",
+            "Ingredient Research",
+            "Reetha",
+            "Shikakai"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Cleansing Duo\",\"product_external_id\":10392838406330,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/3ef0211d-4636-475b-af46-13f70a01acbe.png?v=1792585884\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-21T12:49:32Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Cleansing Duo | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Reetha, Shikakai in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Herbal Hair Wash Duo"
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Reetha and Shikakai bring two identifiable cleansing botanicals to a herbal hair-wash routine. Each jar contains 200 g; 400 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 2 jars of 200 g each, for 400 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Reetha: Body-cleansing potential. Soapnut extracts have shown foaming, wetting and detergency in laboratory studies. Body-wash use is a formulation possibility, not an established use for this jar. Appropriate skin-tolerance assessment and directions are still needed. Household and laundry potential. The surfactant properties of soapnut preparations suggest household-washing applications. This powder has not been assessed here for stain removal, fabric compatibility or laundry performance. It is not being sold as a tested household cleaner. Antimicrobial and mildness research. Laboratory antimicrobial findings do not make the powder a treatment for acne, fungal infection or dandruff. Foam does not establish sensitive-skin suitability, and mixed wet paste is not proven to preserve itself.\\n\\nShikakai: Body-cleanser research. A small human study examined a cleanser containing shikakai with other plant extracts. The findings cannot be assigned to shikakai alone or transferred to raw pod powder. Body cleansing remains a formulation option to assess. Softness and skin-barrier claims. Softness, detangling, mildness and moisturising performance need testing of the actual product. The supplied evidence does not establish these benefits or an eczema-treatment role for this jar.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Reetha\",\"Shikakai\",\"Herbal Hair Wash Duo\",\"hair care\",\"200 g\",\"400 g\",\"Cleanse\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Cleanse\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Herbal Hair Wash Duo\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "ritual_step",
+                "type": "single_line_text_field",
+                "value": "Cleanse"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Herbal Hair Wash Duo\",\"Includes 2 separate 200 g jars.\",\"Reetha: a soapnut ingredient for herbal hair washes.\",\"Shikakai: a pod-based ingredient for traditional hair washing.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Reetha: Fruit pericarp; Shikakai: Fruit pods"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Sapindus mukorossi + Acacia concinna"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Reetha fruit pericarp powder (Sapindus mukorossi).\n1 × 200 g Shikakai pod powder (Acacia concinna)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "2 × 200 g (400 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Reetha, Shikakai in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Reetha\",\"topic\":\"Hair cleansing / removal of surface oil\",\"evidenceType\":\"Laboratory detergency research\",\"studiedMaterial\":\"Crude saponin extract from fruit pericarp\",\"findingAndLimit\":\"Foaming, wetting and moderate artificial-sebum removal were demonstrated.\",\"sourceCaution\":\"Use description after identity and directions are confirmed: plant-based cleansing powder for herbal hair washes.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Reetha\",\"topic\":\"Natural foaming and wetting\",\"evidenceType\":\"Laboratory functional research\",\"studiedMaterial\":\"Aqueous preparations of commercial soapnut fruits\",\"findingAndLimit\":\"Surface-tension and oil-emulsification properties support a washing role.\",\"sourceCaution\":\"Say naturally occurring cleansing saponins only after ingredient identity is confirmed; foam alone does not prove mildness.\",\"source\":\"https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant\"},{\"product\":\"Reetha\",\"topic\":\"Body-wash ingredient possibility\",\"evidenceType\":\"Formulation inference; not a skin efficacy trial\",\"studiedMaterial\":\"Detergency evidence transferred only as a development hypothesis\",\"findingAndLimit\":\"The washing mechanism suggests a potential cleanser ingredient. Skin tolerance is not established by foam tests.\",\"sourceCaution\":\"Assess an appropriate body-cleanser formulation and directions before adding face/body use.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Reetha\",\"topic\":\"Household washing / laundry development\",\"evidenceType\":\"Functional inference from surfactant research\",\"studiedMaterial\":\"Soapnut aqueous preparations\",\"findingAndLimit\":\"Detergent properties may be useful beyond personal care. The current cosmetic jar has not been tested as a laundry product.\",\"sourceCaution\":\"Explore a separate household-cleaning use only after material, stain-removal and packaging checks.\",\"source\":\"https://indjst.org/articles/study-of-functional-properties-of-sapindus-mukorossi-as-a-potential-bio-surfactant\"},{\"product\":\"Reetha\",\"topic\":\"Antimicrobial or preservative research\",\"evidenceType\":\"Laboratory evidence only\",\"studiedMaterial\":\"Extract tested against microorganisms\",\"findingAndLimit\":\"Laboratory activity does not establish acne, fungal-infection or dandruff treatment, or reliable preservation of a wet mixture.\",\"sourceCaution\":\"Keep medical antimicrobial and self-preserving claims off current product copy.\",\"source\":\"https://www.fda.gov.tw/eng/publishjfdalistContent.aspx?id=1667\"},{\"product\":\"Shikakai\",\"topic\":\"Traditional hair cleansing\",\"evidenceType\":\"Use history and human wash studies\",\"studiedMaterial\":\"Pod-based wash preparations\",\"findingAndLimit\":\"Shikakai is used in hair-washing preparations; cleansing is the most defensible product role.\",\"sourceCaution\":\"Suggested use description: shikakai pod powder for traditional hair washing.\",\"source\":\"https://jahm.co.in/index.php/jahm/article/view/200\"},{\"product\":\"Shikakai\",\"topic\":\"Scalp flaking / itching research\",\"evidenceType\":\"Small human comparative study; limited reporting\",\"studiedMaterial\":\"Powdered-pod wash; 70 people; 28 days\",\"findingAndLimit\":\"Improvement was reported in scalp symptoms, but design and reporting limit certainty.\",\"sourceCaution\":\"Educational research context; test the finished product and avoid a dandruff-cure claim.\",\"source\":\"https://jahm.co.in/index.php/jahm/article/view/200\"},{\"product\":\"Shikakai\",\"topic\":\"Dandruff shampoo research\",\"evidenceType\":\"Controlled human crossover study; mixed findings\",\"studiedMaterial\":\"Acacia concinna shampoo; 74 analyzed; two 4-week periods\",\"findingAndLimit\":\"Some redness/extent measures improved; dandruff severity and desquamation were not significantly improved.\",\"sourceCaution\":\"Do not present the evidence as proven anti-dandruff efficacy for raw powder.\",\"source\":\"https://he02.tci-thaijo.org/index.php/TJD/article/view/282743\"},{\"product\":\"Shikakai\",\"topic\":\"Body-cleansing / barrier research\",\"evidenceType\":\"Small human study; multi-ingredient formula\",\"studiedMaterial\":\"30 patients; 2 weeks; cleanser with shikakai and other ingredients\",\"findingAndLimit\":\"Transepidermal water loss improved; hydration, pH and roughness did not significantly improve. Effects cannot be assigned to shikakai alone.\",\"sourceCaution\":\"Body-cleanser development option; no eczema-treatment or proven-moisturising claim for powder.\",\"source\":\"https://apjai-journal.org/original-article/ap-050519-0554/\"},{\"product\":\"Shikakai\",\"topic\":\"Softness / detangling / mildness\",\"evidenceType\":\"Finished-product evidence needed\",\"studiedMaterial\":\"NatureMist powder or proposed blend has not been assessed here\",\"findingAndLimit\":\"These are useful customer outcomes to measure, not conclusions from saponin content.\",\"sourceCaution\":\"Test combing, after-feel, rinse-out and tolerance before adding these benefits.\",\"source\":\"NatureMist product test results were not supplied.\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Reetha\nBody-cleansing potential: Soapnut extracts have shown foaming, wetting and detergency in laboratory studies. Body-wash use is a formulation possibility, not an established use for this jar. Appropriate skin-tolerance assessment and directions are still needed.\n\nHousehold and laundry potential: The surfactant properties of soapnut preparations suggest household-washing applications. This powder has not been assessed here for stain removal, fabric compatibility or laundry performance. It is not being sold as a tested household cleaner.\n\nAntimicrobial and mildness research: Laboratory antimicrobial findings do not make the powder a treatment for acne, fungal infection or dandruff. Foam does not establish sensitive-skin suitability, and mixed wet paste is not proven to preserve itself.\n\nShikakai\nBody-cleanser research: A small human study examined a cleanser containing shikakai with other plant extracts. The findings cannot be assigned to shikakai alone or transferred to raw pod powder. Body cleansing remains a formulation option to assess.\n\nScalp research: Small studies of wash preparations and formulated shampoo have explored scalp flaking and irritation, with limited or mixed findings. They do not establish dandruff treatment from this powder.\n\nSoftness and skin-barrier claims: Softness, detangling, mildness and moisturising performance need testing of the actual product. The supplied evidence does not establish these benefits or an eczema-treatment role for this jar."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMjc3NDA3NCwibGFzdF92YWx1ZSI6IjY0ODI3ODEyNzc0MDc0In0="
+            }
+          }
+        },
+        {
+          "id": "gid://shopify/Product/10392838766778",
+          "title": "NatureMist Botanical Mask Trio",
+          "tags": [
+            "Amla",
+            "Bhringraj",
+            "Botanical Powder",
+            "combo",
+            "combo:gid://shopify/Metaobject/440397889722",
+            "Hair Care",
+            "Hair Packs",
+            "Hibiscus",
+            "Ingredient Research",
+            "Scalp Ritual"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Botanical Mask Trio\",\"product_external_id\":10392838766778,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/fa28f725-b07d-43e5-afa2-4f76629b942c.png?v=1792585935\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-21T12:50:44Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Botanical Mask Trio | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Amla, Bhringraj, Hibiscus in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Hair-Pack Collection"
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Amla, Hibiscus and Bhringraj offer a choice of traditional hair-pack ingredients in separately packed jars. Each jar contains 200 g; 600 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 3 jars of 200 g each, for 600 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Amla: Skin-care research. A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess. Composition and antioxidant research. Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence. Oral and traditional-use research. Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\\n\\nBhringraj: Traditional skin-care association. The Ayurvedic whole-plant monograph records a traditional skin-care association known as Tvacya. This is historical context, not a human trial of a face or body pack. The supplied product information lists leaves and aerial parts, so the plant-part distinction matters. Skin and hair laboratory research. Cell research on extracts and animal hair-growth studies use preparations different from this powder. They do not establish anti-inflammatory treatment, acne care, wound healing or human hair regrowth from this jar. Wider traditional context. Traditional rejuvenative and liver-related uses concern medicinal contexts. They are not evidence of liver detox, sleep support or stress relief from an external-use pack. Hair softness and scalp comfort also require finished-product testing.\\n\\nHibiscus: Face and body-pack potential. Face and body packs are possible uses for assessment. Suitable product-specific tolerance and performance results were not supplied. Skin-use directions and claims about softness, shine or slip need testing of the actual powder. Hydration and antioxidant research. Research on isolated leaf mucilage concerns a different plant part. Laboratory studies of flower extracts explore plant compounds and antioxidant activity. These do not prove hydration, wrinkle reduction or skin protection from this flower powder. Hibiscus tea is a different preparation. Blood-pressure research on Hibiscus sabdariffa calyx tea does not apply to the Hibiscus rosa-sinensis flower identity recorded for this cosmetic product. This jar is for external use, not tea or nutritional use.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Amla\",\"Bhringraj\",\"Hibiscus\",\"Hair-Pack Collection\",\"hair care\",\"200 g\",\"600 g\",\"Hair Packs\",\"Scalp Ritual\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Packs\",\"Scalp Ritual\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair-Pack Collection\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "ritual_step",
+                "type": "single_line_text_field",
+                "value": "Pack"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair-Pack Collection\",\"Includes 3 separate 200 g jars.\",\"Amla: a traditional fruit-based hair pack.\",\"Bhringraj: a traditional Ayurvedic hair and scalp pack.\",\"Hibiscus: a flower-based ingredient for herbal hair packs.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Amla: Fruit pulp; Bhringraj: Leaves and aerial parts; Hibiscus: Flowers"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Phyllanthus emblica + Eclipta prostrata + Hibiscus rosa-sinensis"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Amla fruit pulp powder (Phyllanthus emblica).\n1 × 200 g Bhringraj leaves and aerial parts powder (Eclipta prostrata).\n1 × 200 g Hibiscus flower powder (Hibiscus rosa-sinensis)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "3 × 200 g (600 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Amla, Bhringraj, Hibiscus in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Amla\",\"topic\":\"Traditional rejuvenative use\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"Dried fruit pericarp in API\",\"findingAndLimit\":\"Classed as Rasayana; this is historical use, not proof of modern clinical outcomes.\",\"sourceCaution\":\"Educational wording: traditionally valued in Ayurveda as a Rasayana. Do not turn this into an anti-ageing or immunity promise.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-1.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair-fibre strength / reduced breakage potential\",\"evidenceType\":\"Laboratory hair-fibre study\",\"studiedMaterial\":\"3%, 6% and 9% extracts on collected untreated or bleached hair\",\"findingAndLimit\":\"Some strength/extensibility changes depended on concentration and hair damage. No consumer powder trial.\",\"sourceCaution\":\"Candidate claim after finished-product testing: helps reduce breakage during grooming.\",\"source\":\"https://pdfs.semanticscholar.org/5e7d/8f056e4394bd66f46de5faa8b2a6647eb02d.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair growth research\",\"evidenceType\":\"Small human study; oral route\",\"studiedMaterial\":\"Oral syrup; 12 weeks; 60 enrolled, 52 completed\",\"findingAndLimit\":\"A growing/resting hair-ratio improvement was reported. Swallowed syrup is different from a topical hair pack.\",\"sourceCaution\":\"Background research only for this cosmetic range. Do not claim topical regrowth.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/37487962/\"},{\"product\":\"Amla\",\"topic\":\"Facial oil-control potential\",\"evidenceType\":\"Small human formulation study\",\"studiedMaterial\":\"3% fruit-extract toner; 30 volunteers; short-term assessment\",\"findingAndLimit\":\"Lower skin sebum was reported for the tested toner. This does not validate fruit powder as a facial mask.\",\"sourceCaution\":\"Face-pack development option; test the actual product before oil-control wording.\",\"source\":\"https://pdfs.semanticscholar.org/c718/bc660c42efb0e03e51553919d56221d1588e.pdf\"},{\"product\":\"Amla\",\"topic\":\"Skin hydration / wrinkle research\",\"evidenceType\":\"Small human formulation study; different plant part\",\"studiedMaterial\":\"0.1% branch-extract gel; 20 volunteers; 84 days\",\"findingAndLimit\":\"Skin measures improved in the tested branch-extract formulation. Fruit powder is a different ingredient.\",\"sourceCaution\":\"Do not borrow branch-gel hydration, wrinkle or pigmentation claims for fruit powder.\",\"source\":\"https://www.researchgate.net/publication/349192566_Phyllanthus_emblica_L_amla_branch_A_safe_and_effective_ingredient_against_skin_aging\"},{\"product\":\"Amla\",\"topic\":\"Antioxidant compounds / vitamin C content\",\"evidenceType\":\"Composition and laboratory research\",\"studiedMaterial\":\"Fruit processed with different drying methods\",\"findingAndLimit\":\"Measured constituents vary with cultivar and processing. Laboratory antioxidant results are not clinical skin protection.\",\"sourceCaution\":\"A composition claim needs relevant testing. Do not assume a fixed vitamin C content in dried powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/32123419/\"},{\"product\":\"Amla\",\"topic\":\"Cholesterol and triglyceride research\",\"evidenceType\":\"Human randomized trial; oral extract\",\"studiedMaterial\":\"Standardized oral extract; 98 participants; 12 weeks\",\"findingAndLimit\":\"Lipid-marker improvements were reported. This does not establish cardiovascular-event prevention.\",\"sourceCaution\":\"Educational context for a correctly specified oral product only; not a cosmetic label claim.\",\"source\":\"https://link.springer.com/article/10.1186/s12906-019-2430-y\"},{\"product\":\"Amla\",\"topic\":\"Reflux symptom research\",\"evidenceType\":\"Human randomized trial; oral tablets\",\"studiedMaterial\":\"68 patients; 4 weeks\",\"findingAndLimit\":\"Symptom improvements were reported for the studied oral preparation.\",\"sourceCaution\":\"Do not advertise a hair/skin powder as a reflux treatment.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/29526236/\"},{\"product\":\"Amla\",\"topic\":\"Vitamin C nutritional functions\",\"evidenceType\":\"Established nutrient functions; conditional relevance\",\"studiedMaterial\":\"Edible product with verified vitamin C per serving\",\"findingAndLimit\":\"Vitamin C supports normal collagen formation and immune function and increases non-haem iron absorption.\",\"sourceCaution\":\"Only relevant if oral use is intended and content is verified. It does not establish topical collagen boosting.\",\"source\":\"https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/\"},{\"product\":\"Hibiscus\",\"topic\":\"Herbal hair-pack use\",\"evidenceType\":\"Traditional cosmetic use\",\"studiedMaterial\":\"Assumed H. rosa-sinensis flowers; verify identity\",\"findingAndLimit\":\"Hair-pack positioning is consistent with traditional use. Specific results depend on preparation.\",\"sourceCaution\":\"Suggested use description: hibiscus flower powder for herbal hair packs.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/12963149/\"},{\"product\":\"Hibiscus\",\"topic\":\"Hair-growth research\",\"evidenceType\":\"Animal and isolated-follicle research\",\"studiedMaterial\":\"Petroleum-ether leaf and flower extracts\",\"findingAndLimit\":\"Hair-growth findings were preclinical; leaves performed better than flowers.\",\"sourceCaution\":\"Do not claim human hair regrowth or transfer leaf-extract effects to flower powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/12963149/\"},{\"product\":\"Hibiscus\",\"topic\":\"Hydration / mucilage research\",\"evidenceType\":\"Laboratory skin-model study\",\"studiedMaterial\":\"Isolated leaf mucilage tested on pig skin\",\"findingAndLimit\":\"The study concerns leaves and a model system, not flower powder tested on people.\",\"sourceCaution\":\"Leaf-mucilage evidence does not substantiate hydration or wrinkle benefits for this jar.\",\"source\":\"https://journals.innovareacademics.in/index.php/ijpps/article/view/3319\"},{\"product\":\"Hibiscus\",\"topic\":\"Plant compounds / antioxidant research\",\"evidenceType\":\"Laboratory extract research\",\"studiedMaterial\":\"H. rosa-sinensis flower extracts\",\"findingAndLimit\":\"Phenolic compounds and antioxidant activity were measured in extracts.\",\"sourceCaution\":\"Research background only. A clinical skin-protection or anti-ageing claim needs relevant product evidence.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/24811803/\"},{\"product\":\"Hibiscus\",\"topic\":\"Face/body packs; softness, shine and slip\",\"evidenceType\":\"Product-development options\",\"studiedMaterial\":\"Actual flower powder or finished blend\",\"findingAndLimit\":\"These are possible uses and sensory outcomes to assess; suitable human evidence for this product was not supplied.\",\"sourceCaution\":\"Confirm cosmetic suitability, tolerance and real-use results before adding face/body or conditioning benefits.\",\"source\":\"NatureMist product test results were not supplied.\"},{\"product\":\"Hibiscus\",\"topic\":\"Blood-pressure / tea benefits\",\"evidenceType\":\"Human trial; different species and oral preparation\",\"studiedMaterial\":\"H. sabdariffa calyx tea; 65 adults; 6 weeks\",\"findingAndLimit\":\"A blood-pressure effect was studied for roselle tea. It does not apply to H. rosa-sinensis flower powder.\",\"sourceCaution\":\"Do not use roselle-tea health claims for the assumed cosmetic flower product.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/20018807/\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional hair care\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"API whole-plant Eclipta alba monograph\",\"findingAndLimit\":\"Keshya denotes a traditional association with hair care; it is not a clinical growth result.\",\"sourceCaution\":\"Use educational wording: traditionally valued in Ayurvedic hair care. Confirm the plant part supplied.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional skin care\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"API whole-plant monograph\",\"findingAndLimit\":\"Tvacya records a traditional skin-care association.\",\"sourceCaution\":\"Discuss as traditional use; validate any face/body-pack directions for the actual product.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional rejuvenative / liver uses\",\"evidenceType\":\"Ayurvedic tradition; not a modern outcome trial\",\"studiedMaterial\":\"Whole-plant medicinal context\",\"findingAndLimit\":\"Rasayana and liver-related traditional uses are historical classifications. The monograph describes Ushna, not cooling.\",\"sourceCaution\":\"No liver-detox, sleep, stress-relief or systemic-health promise for a cosmetic powder.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Hair-growth research\",\"evidenceType\":\"Animal study\",\"studiedMaterial\":\"Extracts in cream formulations tested on rats\",\"findingAndLimit\":\"Hair-growth findings are preclinical; preparation and dose differ from raw powder.\",\"sourceCaution\":\"Do not claim clinically proven regrowth, baldness treatment or superiority to medicines.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/18478241/\"},{\"product\":\"Bhringraj\",\"topic\":\"Skin anti-inflammatory research\",\"evidenceType\":\"Cell-based laboratory research\",\"studiedMaterial\":\"Ultrasonically prepared ethanolic extract\",\"findingAndLimit\":\"Activity was studied in cell models; this is not a human trial of a skin pack.\",\"sourceCaution\":\"Keep anti-inflammatory, acne, eczema and wound-healing treatment claims out of current copy.\",\"source\":\"https://www.researchgate.net/publication/321354930_Enhancement_of_Skin_Anti-Inflammatory_Activities_of_Eclipta_prostrata_L_from_the_Ultrasonic_Extraction_Process\"},{\"product\":\"Bhringraj\",\"topic\":\"Hair softness / scalp comfort\",\"evidenceType\":\"Finished-product evidence needed\",\"studiedMaterial\":\"Actual NatureMist hair/scalp pack\",\"findingAndLimit\":\"Useful customer outcomes for a product test; no relevant finished-product results supplied.\",\"sourceCaution\":\"Use hair/scalp-pack positioning now after checking intended use; add measured benefits after assessment.\",\"source\":\"NatureMist product test results were not supplied.\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Amla\nSkin-care research: A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess.\n\nComposition and antioxidant research: Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence.\n\nOral and traditional-use research: Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\n\nHair performance research: Laboratory work on extracts and hair fibres does not establish reduced breakage, softness or regrowth from the finished powder. Those outcomes require testing of the actual product.\n\nBhringraj\nTraditional skin-care association: The Ayurvedic whole-plant monograph records a traditional skin-care association known as Tvacya. This is historical context, not a human trial of a face or body pack. The supplied product information lists leaves and aerial parts, so the plant-part distinction matters.\n\nSkin and hair laboratory research: Cell research on extracts and animal hair-growth studies use preparations different from this powder. They do not establish anti-inflammatory treatment, acne care, wound healing or human hair regrowth from this jar.\n\nWider traditional context: Traditional rejuvenative and liver-related uses concern medicinal contexts. They are not evidence of liver detox, sleep support or stress relief from an external-use pack. Hair softness and scalp comfort also require finished-product testing.\n\nHibiscus\nFace and body-pack potential: Face and body packs are possible uses for assessment. Suitable product-specific tolerance and performance results were not supplied. Skin-use directions and claims about softness, shine or slip need testing of the actual powder.\n\nHydration and antioxidant research: Research on isolated leaf mucilage concerns a different plant part. Laboratory studies of flower extracts explore plant compounds and antioxidant activity. These do not prove hydration, wrinkle reduction or skin protection from this flower powder.\n\nHair-growth research: Animal and isolated-follicle studies used extracts, with different results for leaves and flowers. They do not establish human hair regrowth from this product.\n\nHibiscus tea is a different preparation: Blood-pressure research on Hibiscus sabdariffa calyx tea does not apply to the Hibiscus rosa-sinensis flower identity recorded for this cosmetic product. This jar is for external use, not tea or nutritional use."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMjcwODUzOCwibGFzdF92YWx1ZSI6IjY0ODI3ODEyNzA4NTM4In0="
+            }
+          }
+        },
+        {
+          "id": "gid://shopify/Product/10392838963386",
+          "title": "NatureMist Botanical Duo",
+          "tags": [
+            "Amla",
+            "Bhringraj",
+            "Botanical Powder",
+            "combo",
+            "combo:gid://shopify/Metaobject/431929229498",
+            "Hair Care",
+            "Hair Packs",
+            "Ingredient Research",
+            "Scalp Ritual"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Botanical Duo\",\"product_external_id\":10392838963386,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/949394c4-cc8e-447c-8777-44f20972733d.png?v=1792586028\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-21T12:52:11Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Botanical Duo | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Amla, Bhringraj in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Traditional Hair & Scalp Duo"
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Amla and Bhringraj bring together two botanicals associated with traditional hair-care routines. Each jar contains 200 g; 400 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 2 jars of 200 g each, for 400 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Amla: Skin-care research. A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess. Composition and antioxidant research. Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence. Oral and traditional-use research. Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\\n\\nBhringraj: Traditional skin-care association. The Ayurvedic whole-plant monograph records a traditional skin-care association known as Tvacya. This is historical context, not a human trial of a face or body pack. The supplied product information lists leaves and aerial parts, so the plant-part distinction matters. Skin and hair laboratory research. Cell research on extracts and animal hair-growth studies use preparations different from this powder. They do not establish anti-inflammatory treatment, acne care, wound healing or human hair regrowth from this jar. Wider traditional context. Traditional rejuvenative and liver-related uses concern medicinal contexts. They are not evidence of liver detox, sleep support or stress relief from an external-use pack. Hair softness and scalp comfort also require finished-product testing.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Amla\",\"Bhringraj\",\"Traditional Hair & Scalp Duo\",\"hair care\",\"200 g\",\"400 g\",\"Hair Packs\",\"Scalp Ritual\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Packs\",\"Scalp Ritual\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Traditional Hair & Scalp Duo\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "ritual_step",
+                "type": "single_line_text_field",
+                "value": "Pack"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Traditional Hair & Scalp Duo\",\"Includes 2 separate 200 g jars.\",\"Amla: a traditional fruit-based hair pack.\",\"Bhringraj: a traditional Ayurvedic hair and scalp pack.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Amla: Fruit pulp; Bhringraj: Leaves and aerial parts"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Phyllanthus emblica + Eclipta prostrata"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Amla fruit pulp powder (Phyllanthus emblica).\n1 × 200 g Bhringraj leaves and aerial parts powder (Eclipta prostrata)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "2 × 200 g (400 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Amla, Bhringraj in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Amla\",\"topic\":\"Traditional rejuvenative use\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"Dried fruit pericarp in API\",\"findingAndLimit\":\"Classed as Rasayana; this is historical use, not proof of modern clinical outcomes.\",\"sourceCaution\":\"Educational wording: traditionally valued in Ayurveda as a Rasayana. Do not turn this into an anti-ageing or immunity promise.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-1.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair-fibre strength / reduced breakage potential\",\"evidenceType\":\"Laboratory hair-fibre study\",\"studiedMaterial\":\"3%, 6% and 9% extracts on collected untreated or bleached hair\",\"findingAndLimit\":\"Some strength/extensibility changes depended on concentration and hair damage. No consumer powder trial.\",\"sourceCaution\":\"Candidate claim after finished-product testing: helps reduce breakage during grooming.\",\"source\":\"https://pdfs.semanticscholar.org/5e7d/8f056e4394bd66f46de5faa8b2a6647eb02d.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair growth research\",\"evidenceType\":\"Small human study; oral route\",\"studiedMaterial\":\"Oral syrup; 12 weeks; 60 enrolled, 52 completed\",\"findingAndLimit\":\"A growing/resting hair-ratio improvement was reported. Swallowed syrup is different from a topical hair pack.\",\"sourceCaution\":\"Background research only for this cosmetic range. Do not claim topical regrowth.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/37487962/\"},{\"product\":\"Amla\",\"topic\":\"Facial oil-control potential\",\"evidenceType\":\"Small human formulation study\",\"studiedMaterial\":\"3% fruit-extract toner; 30 volunteers; short-term assessment\",\"findingAndLimit\":\"Lower skin sebum was reported for the tested toner. This does not validate fruit powder as a facial mask.\",\"sourceCaution\":\"Face-pack development option; test the actual product before oil-control wording.\",\"source\":\"https://pdfs.semanticscholar.org/c718/bc660c42efb0e03e51553919d56221d1588e.pdf\"},{\"product\":\"Amla\",\"topic\":\"Skin hydration / wrinkle research\",\"evidenceType\":\"Small human formulation study; different plant part\",\"studiedMaterial\":\"0.1% branch-extract gel; 20 volunteers; 84 days\",\"findingAndLimit\":\"Skin measures improved in the tested branch-extract formulation. Fruit powder is a different ingredient.\",\"sourceCaution\":\"Do not borrow branch-gel hydration, wrinkle or pigmentation claims for fruit powder.\",\"source\":\"https://www.researchgate.net/publication/349192566_Phyllanthus_emblica_L_amla_branch_A_safe_and_effective_ingredient_against_skin_aging\"},{\"product\":\"Amla\",\"topic\":\"Antioxidant compounds / vitamin C content\",\"evidenceType\":\"Composition and laboratory research\",\"studiedMaterial\":\"Fruit processed with different drying methods\",\"findingAndLimit\":\"Measured constituents vary with cultivar and processing. Laboratory antioxidant results are not clinical skin protection.\",\"sourceCaution\":\"A composition claim needs relevant testing. Do not assume a fixed vitamin C content in dried powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/32123419/\"},{\"product\":\"Amla\",\"topic\":\"Cholesterol and triglyceride research\",\"evidenceType\":\"Human randomized trial; oral extract\",\"studiedMaterial\":\"Standardized oral extract; 98 participants; 12 weeks\",\"findingAndLimit\":\"Lipid-marker improvements were reported. This does not establish cardiovascular-event prevention.\",\"sourceCaution\":\"Educational context for a correctly specified oral product only; not a cosmetic label claim.\",\"source\":\"https://link.springer.com/article/10.1186/s12906-019-2430-y\"},{\"product\":\"Amla\",\"topic\":\"Reflux symptom research\",\"evidenceType\":\"Human randomized trial; oral tablets\",\"studiedMaterial\":\"68 patients; 4 weeks\",\"findingAndLimit\":\"Symptom improvements were reported for the studied oral preparation.\",\"sourceCaution\":\"Do not advertise a hair/skin powder as a reflux treatment.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/29526236/\"},{\"product\":\"Amla\",\"topic\":\"Vitamin C nutritional functions\",\"evidenceType\":\"Established nutrient functions; conditional relevance\",\"studiedMaterial\":\"Edible product with verified vitamin C per serving\",\"findingAndLimit\":\"Vitamin C supports normal collagen formation and immune function and increases non-haem iron absorption.\",\"sourceCaution\":\"Only relevant if oral use is intended and content is verified. It does not establish topical collagen boosting.\",\"source\":\"https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional hair care\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"API whole-plant Eclipta alba monograph\",\"findingAndLimit\":\"Keshya denotes a traditional association with hair care; it is not a clinical growth result.\",\"sourceCaution\":\"Use educational wording: traditionally valued in Ayurvedic hair care. Confirm the plant part supplied.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional skin care\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"API whole-plant monograph\",\"findingAndLimit\":\"Tvacya records a traditional skin-care association.\",\"sourceCaution\":\"Discuss as traditional use; validate any face/body-pack directions for the actual product.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional rejuvenative / liver uses\",\"evidenceType\":\"Ayurvedic tradition; not a modern outcome trial\",\"studiedMaterial\":\"Whole-plant medicinal context\",\"findingAndLimit\":\"Rasayana and liver-related traditional uses are historical classifications. The monograph describes Ushna, not cooling.\",\"sourceCaution\":\"No liver-detox, sleep, stress-relief or systemic-health promise for a cosmetic powder.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Hair-growth research\",\"evidenceType\":\"Animal study\",\"studiedMaterial\":\"Extracts in cream formulations tested on rats\",\"findingAndLimit\":\"Hair-growth findings are preclinical; preparation and dose differ from raw powder.\",\"sourceCaution\":\"Do not claim clinically proven regrowth, baldness treatment or superiority to medicines.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/18478241/\"},{\"product\":\"Bhringraj\",\"topic\":\"Skin anti-inflammatory research\",\"evidenceType\":\"Cell-based laboratory research\",\"studiedMaterial\":\"Ultrasonically prepared ethanolic extract\",\"findingAndLimit\":\"Activity was studied in cell models; this is not a human trial of a skin pack.\",\"sourceCaution\":\"Keep anti-inflammatory, acne, eczema and wound-healing treatment claims out of current copy.\",\"source\":\"https://www.researchgate.net/publication/321354930_Enhancement_of_Skin_Anti-Inflammatory_Activities_of_Eclipta_prostrata_L_from_the_Ultrasonic_Extraction_Process\"},{\"product\":\"Bhringraj\",\"topic\":\"Hair softness / scalp comfort\",\"evidenceType\":\"Finished-product evidence needed\",\"studiedMaterial\":\"Actual NatureMist hair/scalp pack\",\"findingAndLimit\":\"Useful customer outcomes for a product test; no relevant finished-product results supplied.\",\"sourceCaution\":\"Use hair/scalp-pack positioning now after checking intended use; add measured benefits after assessment.\",\"source\":\"NatureMist product test results were not supplied.\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Amla\nSkin-care research: A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess.\n\nComposition and antioxidant research: Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence.\n\nOral and traditional-use research: Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\n\nHair performance research: Laboratory work on extracts and hair fibres does not establish reduced breakage, softness or regrowth from the finished powder. Those outcomes require testing of the actual product.\n\nBhringraj\nTraditional skin-care association: The Ayurvedic whole-plant monograph records a traditional skin-care association known as Tvacya. This is historical context, not a human trial of a face or body pack. The supplied product information lists leaves and aerial parts, so the plant-part distinction matters.\n\nSkin and hair laboratory research: Cell research on extracts and animal hair-growth studies use preparations different from this powder. They do not establish anti-inflammatory treatment, acne care, wound healing or human hair regrowth from this jar.\n\nWider traditional context: Traditional rejuvenative and liver-related uses concern medicinal contexts. They are not evidence of liver detox, sleep support or stress relief from an external-use pack. Hair softness and scalp comfort also require finished-product testing."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMjY0MzAwMiwibGFzdF92YWx1ZSI6IjY0ODI3ODEyNjQzMDAyIn0="
+            }
+          }
+        },
+        {
+          "id": "gid://shopify/Product/10392839028922",
+          "title": "NatureMist Floral Duo",
+          "tags": [
+            "Amla",
+            "Botanical Powder",
+            "combo",
+            "combo:gid://shopify/Metaobject/431929262266",
+            "Hair Care",
+            "Hair Packs",
+            "Hibiscus",
+            "Ingredient Research"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Floral Duo\",\"product_external_id\":10392839028922,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/03371c02-2c6b-4f3c-af36-ac5a2c9c17d1.png?v=1792586139\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-21T12:54:11Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Floral Duo | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Hibiscus, Amla in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Botanical Hair Pack Duo"
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Amla fruit and Hibiscus flowers form a fruit-and-flower collection for traditional herbal hair packs. Each jar contains 200 g; 400 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 2 jars of 200 g each, for 400 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Hibiscus: Face and body-pack potential. Face and body packs are possible uses for assessment. Suitable product-specific tolerance and performance results were not supplied. Skin-use directions and claims about softness, shine or slip need testing of the actual powder. Hydration and antioxidant research. Research on isolated leaf mucilage concerns a different plant part. Laboratory studies of flower extracts explore plant compounds and antioxidant activity. These do not prove hydration, wrinkle reduction or skin protection from this flower powder. Hibiscus tea is a different preparation. Blood-pressure research on Hibiscus sabdariffa calyx tea does not apply to the Hibiscus rosa-sinensis flower identity recorded for this cosmetic product. This jar is for external use, not tea or nutritional use.\\n\\nAmla: Skin-care research. A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess. Composition and antioxidant research. Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence. Oral and traditional-use research. Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hibiscus\",\"Amla\",\"Botanical Hair Pack Duo\",\"hair care\",\"200 g\",\"400 g\",\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Packs\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Botanical Hair Pack Duo\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "ritual_step",
+                "type": "single_line_text_field",
+                "value": "Pack"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Botanical Hair Pack Duo\",\"Includes 2 separate 200 g jars.\",\"Hibiscus: a flower-based ingredient for herbal hair packs.\",\"Amla: a traditional fruit-based hair pack.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Hibiscus: Flowers; Amla: Fruit pulp"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Hibiscus rosa-sinensis + Phyllanthus emblica"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Hibiscus flower powder (Hibiscus rosa-sinensis).\n1 × 200 g Amla fruit pulp powder (Phyllanthus emblica)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "2 × 200 g (400 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Hibiscus, Amla in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Amla\",\"topic\":\"Traditional rejuvenative use\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"Dried fruit pericarp in API\",\"findingAndLimit\":\"Classed as Rasayana; this is historical use, not proof of modern clinical outcomes.\",\"sourceCaution\":\"Educational wording: traditionally valued in Ayurveda as a Rasayana. Do not turn this into an anti-ageing or immunity promise.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-1.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair-fibre strength / reduced breakage potential\",\"evidenceType\":\"Laboratory hair-fibre study\",\"studiedMaterial\":\"3%, 6% and 9% extracts on collected untreated or bleached hair\",\"findingAndLimit\":\"Some strength/extensibility changes depended on concentration and hair damage. No consumer powder trial.\",\"sourceCaution\":\"Candidate claim after finished-product testing: helps reduce breakage during grooming.\",\"source\":\"https://pdfs.semanticscholar.org/5e7d/8f056e4394bd66f46de5faa8b2a6647eb02d.pdf\"},{\"product\":\"Amla\",\"topic\":\"Hair growth research\",\"evidenceType\":\"Small human study; oral route\",\"studiedMaterial\":\"Oral syrup; 12 weeks; 60 enrolled, 52 completed\",\"findingAndLimit\":\"A growing/resting hair-ratio improvement was reported. Swallowed syrup is different from a topical hair pack.\",\"sourceCaution\":\"Background research only for this cosmetic range. Do not claim topical regrowth.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/37487962/\"},{\"product\":\"Amla\",\"topic\":\"Facial oil-control potential\",\"evidenceType\":\"Small human formulation study\",\"studiedMaterial\":\"3% fruit-extract toner; 30 volunteers; short-term assessment\",\"findingAndLimit\":\"Lower skin sebum was reported for the tested toner. This does not validate fruit powder as a facial mask.\",\"sourceCaution\":\"Face-pack development option; test the actual product before oil-control wording.\",\"source\":\"https://pdfs.semanticscholar.org/c718/bc660c42efb0e03e51553919d56221d1588e.pdf\"},{\"product\":\"Amla\",\"topic\":\"Skin hydration / wrinkle research\",\"evidenceType\":\"Small human formulation study; different plant part\",\"studiedMaterial\":\"0.1% branch-extract gel; 20 volunteers; 84 days\",\"findingAndLimit\":\"Skin measures improved in the tested branch-extract formulation. Fruit powder is a different ingredient.\",\"sourceCaution\":\"Do not borrow branch-gel hydration, wrinkle or pigmentation claims for fruit powder.\",\"source\":\"https://www.researchgate.net/publication/349192566_Phyllanthus_emblica_L_amla_branch_A_safe_and_effective_ingredient_against_skin_aging\"},{\"product\":\"Amla\",\"topic\":\"Antioxidant compounds / vitamin C content\",\"evidenceType\":\"Composition and laboratory research\",\"studiedMaterial\":\"Fruit processed with different drying methods\",\"findingAndLimit\":\"Measured constituents vary with cultivar and processing. Laboratory antioxidant results are not clinical skin protection.\",\"sourceCaution\":\"A composition claim needs relevant testing. Do not assume a fixed vitamin C content in dried powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/32123419/\"},{\"product\":\"Amla\",\"topic\":\"Cholesterol and triglyceride research\",\"evidenceType\":\"Human randomized trial; oral extract\",\"studiedMaterial\":\"Standardized oral extract; 98 participants; 12 weeks\",\"findingAndLimit\":\"Lipid-marker improvements were reported. This does not establish cardiovascular-event prevention.\",\"sourceCaution\":\"Educational context for a correctly specified oral product only; not a cosmetic label claim.\",\"source\":\"https://link.springer.com/article/10.1186/s12906-019-2430-y\"},{\"product\":\"Amla\",\"topic\":\"Reflux symptom research\",\"evidenceType\":\"Human randomized trial; oral tablets\",\"studiedMaterial\":\"68 patients; 4 weeks\",\"findingAndLimit\":\"Symptom improvements were reported for the studied oral preparation.\",\"sourceCaution\":\"Do not advertise a hair/skin powder as a reflux treatment.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/29526236/\"},{\"product\":\"Amla\",\"topic\":\"Vitamin C nutritional functions\",\"evidenceType\":\"Established nutrient functions; conditional relevance\",\"studiedMaterial\":\"Edible product with verified vitamin C per serving\",\"findingAndLimit\":\"Vitamin C supports normal collagen formation and immune function and increases non-haem iron absorption.\",\"sourceCaution\":\"Only relevant if oral use is intended and content is verified. It does not establish topical collagen boosting.\",\"source\":\"https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/\"},{\"product\":\"Hibiscus\",\"topic\":\"Herbal hair-pack use\",\"evidenceType\":\"Traditional cosmetic use\",\"studiedMaterial\":\"Assumed H. rosa-sinensis flowers; verify identity\",\"findingAndLimit\":\"Hair-pack positioning is consistent with traditional use. Specific results depend on preparation.\",\"sourceCaution\":\"Suggested use description: hibiscus flower powder for herbal hair packs.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/12963149/\"},{\"product\":\"Hibiscus\",\"topic\":\"Hair-growth research\",\"evidenceType\":\"Animal and isolated-follicle research\",\"studiedMaterial\":\"Petroleum-ether leaf and flower extracts\",\"findingAndLimit\":\"Hair-growth findings were preclinical; leaves performed better than flowers.\",\"sourceCaution\":\"Do not claim human hair regrowth or transfer leaf-extract effects to flower powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/12963149/\"},{\"product\":\"Hibiscus\",\"topic\":\"Hydration / mucilage research\",\"evidenceType\":\"Laboratory skin-model study\",\"studiedMaterial\":\"Isolated leaf mucilage tested on pig skin\",\"findingAndLimit\":\"The study concerns leaves and a model system, not flower powder tested on people.\",\"sourceCaution\":\"Leaf-mucilage evidence does not substantiate hydration or wrinkle benefits for this jar.\",\"source\":\"https://journals.innovareacademics.in/index.php/ijpps/article/view/3319\"},{\"product\":\"Hibiscus\",\"topic\":\"Plant compounds / antioxidant research\",\"evidenceType\":\"Laboratory extract research\",\"studiedMaterial\":\"H. rosa-sinensis flower extracts\",\"findingAndLimit\":\"Phenolic compounds and antioxidant activity were measured in extracts.\",\"sourceCaution\":\"Research background only. A clinical skin-protection or anti-ageing claim needs relevant product evidence.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/24811803/\"},{\"product\":\"Hibiscus\",\"topic\":\"Face/body packs; softness, shine and slip\",\"evidenceType\":\"Product-development options\",\"studiedMaterial\":\"Actual flower powder or finished blend\",\"findingAndLimit\":\"These are possible uses and sensory outcomes to assess; suitable human evidence for this product was not supplied.\",\"sourceCaution\":\"Confirm cosmetic suitability, tolerance and real-use results before adding face/body or conditioning benefits.\",\"source\":\"NatureMist product test results were not supplied.\"},{\"product\":\"Hibiscus\",\"topic\":\"Blood-pressure / tea benefits\",\"evidenceType\":\"Human trial; different species and oral preparation\",\"studiedMaterial\":\"H. sabdariffa calyx tea; 65 adults; 6 weeks\",\"findingAndLimit\":\"A blood-pressure effect was studied for roselle tea. It does not apply to H. rosa-sinensis flower powder.\",\"sourceCaution\":\"Do not use roselle-tea health claims for the assumed cosmetic flower product.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/20018807/\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Hibiscus\nFace and body-pack potential: Face and body packs are possible uses for assessment. Suitable product-specific tolerance and performance results were not supplied. Skin-use directions and claims about softness, shine or slip need testing of the actual powder.\n\nHydration and antioxidant research: Research on isolated leaf mucilage concerns a different plant part. Laboratory studies of flower extracts explore plant compounds and antioxidant activity. These do not prove hydration, wrinkle reduction or skin protection from this flower powder.\n\nHair-growth research: Animal and isolated-follicle studies used extracts, with different results for leaves and flowers. They do not establish human hair regrowth from this product.\n\nHibiscus tea is a different preparation: Blood-pressure research on Hibiscus sabdariffa calyx tea does not apply to the Hibiscus rosa-sinensis flower identity recorded for this cosmetic product. This jar is for external use, not tea or nutritional use.\n\nAmla\nSkin-care research: A small study of a fruit-extract toner explored facial oil control. Research on a branch-extract gel concerns a different plant part. Neither establishes oil control, hydration, wrinkle reduction or brightening from this fruit powder. Face and body packs remain possible uses to assess.\n\nComposition and antioxidant research: Amla fruit has been studied for vitamin C and other plant compounds. Drying and processing affect composition. This jar has no verified vitamin C amount or demonstrated antioxidant skin-protection benefit in the supplied evidence.\n\nOral and traditional-use research: Amla has a traditional Rasayana association. Studies of swallowed preparations have explored hair, lipid and reflux outcomes; nutritional vitamin C functions also depend on verified oral intake. These findings are background about other preparations, not benefits or ingestion directions for this external-use powder.\n\nHair performance research: Laboratory work on extracts and hair fibres does not establish reduced breakage, softness or regrowth from the finished powder. Those outcomes require testing of the actual product."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMjU3NzQ2NiwibGFzdF92YWx1ZSI6IjY0ODI3ODEyNTc3NDY2In0="
+            }
+          }
+        },
+        {
+          "id": "gid://shopify/Product/10392839127226",
+          "title": "NatureMist Bhringraj Hibiscus Duo",
+          "tags": [
+            "Bhringraj",
+            "Botanical Powder",
+            "combo",
+            "combo:gid://shopify/Metaobject/440398053562",
+            "Hair Care",
+            "Hair Packs",
+            "Hibiscus",
+            "Ingredient Research",
+            "Scalp Ritual"
+          ],
+          "metafields": {
+            "nodes": [
+              {
+                "namespace": "judgeme",
+                "key": "badge",
+                "type": "string",
+                "value": "<div style='display:none' class='jdgm-prev-badge' data-average-rating='0.00' data-number-of-reviews='0' data-number-of-questions='0'> <span class='jdgm-prev-badge__stars' data-score='0.00' tabindex='0' aria-label='0.00 stars' role='button'> <span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span><span class='jdgm-star jdgm--off'></span> </span> <span class='jdgm-prev-badge__text'> No reviews </span> </div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "widget",
+                "type": "string",
+                "value": "<div></div>"
+              },
+              {
+                "namespace": "judgeme",
+                "key": "review_widget_data",
+                "type": "json",
+                "value": "{\"number_of_reviews\":0,\"average_rating\":\"0.00\",\"number_of_questions\":0,\"product_name\":\"NatureMist Bhringraj Hibiscus Duo\",\"product_external_id\":10392839127226,\"product_coupons_enabled\":true,\"image_url\":\"https://cdn.shopify.com/s/files/1/0777/1291/6666/files/5e803373-7a97-40db-8ee0-15094c3e37f7.png?v=1792586268\",\"histogram\":[{\"rating\":5,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":4,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":3,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":2,\"frequency\":0,\"percentage\":0,\"extra_class\":null},{\"rating\":1,\"frequency\":0,\"percentage\":0,\"extra_class\":null}],\"review_keywords\":null,\"product_medals\":[],\"custom_form_filters_and_averages\":null,\"photo_gallery\":null,\"review_summary_text\":\"Be the first to write a review\",\"ai_summary_text\":\"\",\"sort_key\":\"created_at\",\"multi_language_sorting_enabled\":false,\"metafield_updated_at\":\"2026-10-21T12:54:57Z\",\"reviews\":[],\"pagination\":{\"total_pages\":0,\"current_page\":1,\"per_page\":5}}"
+              },
+              {
+                "namespace": "global",
+                "key": "title_tag",
+                "type": "string",
+                "value": "NatureMist Bhringraj Hibiscus Duo | Botanical Powder Set"
+              },
+              {
+                "namespace": "global",
+                "key": "description_tag",
+                "type": "string",
+                "value": "Explore Bhringraj, Hibiscus in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "subtitle",
+                "type": "single_line_text_field",
+                "value": "Traditional and floral hair-pack duo"
+              },
+              {
+                "namespace": "custom",
+                "key": "short_description",
+                "type": "multi_line_text_field",
+                "value": "Bhringraj and Hibiscus provide a choice of botanical ingredients for traditional hair and scalp-pack routines. Each jar contains 200 g; 400 g total. Explore each ingredient's wider traditional uses and research separately from its current product role."
+              },
+              {
+                "namespace": "custom",
+                "key": "care_areas",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Care\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "experience",
+                "type": "single_line_text_field",
+                "value": "Familiar"
+              },
+              {
+                "namespace": "custom",
+                "key": "color_considerations",
+                "type": "list.single_line_text_field",
+                "value": "[\"Grey\",\"Blonde/Bleached\",\"Chemically Coloured\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "mixers",
+                "type": "list.single_line_text_field",
+                "value": "[\"Clean water as directed on each jar\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "faqs",
+                "type": "json",
+                "value": "[{\"question\":\"How much powder does this set include?\",\"answer\":\"The set contains 2 jars of 200 g each, for 400 g total net powder weight.\"},{\"question\":\"Should I mix all the powders together?\",\"answer\":\"No. The jars provide a choice of ingredients and separate steps. Use a combined formula only when appropriate tested instructions are supplied.\"},{\"question\":\"Can I use this as a skin-care set?\",\"answer\":\"Skin use has not been established for these products. Amla and Hibiscus face/body packs remain development options pending product assessment.\"},{\"question\":\"Does the combination have proven extra benefits?\",\"answer\":\"This is a merchandising collection, not a clinically tested blend. Ingredient studies and traditional use do not prove synergy, regrowth or specific conditioning results for this set.\"},{\"question\":\"What wider benefits are discussed as research?\",\"answer\":\"Bhringraj: Traditional skin-care association. The Ayurvedic whole-plant monograph records a traditional skin-care association known as Tvacya. This is historical context, not a human trial of a face or body pack. The supplied product information lists leaves and aerial parts, so the plant-part distinction matters. Skin and hair laboratory research. Cell research on extracts and animal hair-growth studies use preparations different from this powder. They do not establish anti-inflammatory treatment, acne care, wound healing or human hair regrowth from this jar. Wider traditional context. Traditional rejuvenative and liver-related uses concern medicinal contexts. They are not evidence of liver detox, sleep support or stress relief from an external-use pack. Hair softness and scalp comfort also require finished-product testing.\\n\\nHibiscus: Face and body-pack potential. Face and body packs are possible uses for assessment. Suitable product-specific tolerance and performance results were not supplied. Skin-use directions and claims about softness, shine or slip need testing of the actual powder. Hydration and antioxidant research. Research on isolated leaf mucilage concerns a different plant part. Laboratory studies of flower extracts explore plant compounds and antioxidant activity. These do not prove hydration, wrinkle reduction or skin protection from this flower powder. Hibiscus tea is a different preparation. Blood-pressure research on Hibiscus sabdariffa calyx tea does not apply to the Hibiscus rosa-sinensis flower identity recorded for this cosmetic product. This jar is for external use, not tea or nutritional use.\"}]"
+              },
+              {
+                "namespace": "custom",
+                "key": "search_terms",
+                "type": "list.single_line_text_field",
+                "value": "[\"Bhringraj\",\"Hibiscus\",\"Traditional and floral hair-pack duo\",\"hair care\",\"200 g\",\"400 g\",\"Hair Packs\",\"Scalp Ritual\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "concerns",
+                "type": "list.single_line_text_field",
+                "value": "[\"Hair Packs\",\"Scalp Ritual\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "storage",
+                "type": "multi_line_text_field",
+                "value": "Store each jar tightly closed in a cool, dry place. Use a clean, dry spoon."
+              },
+              {
+                "namespace": "custom",
+                "key": "safety",
+                "type": "list.single_line_text_field",
+                "value": "[\"For external hair-care use only. Do not ingest or use as a face/body pack; skin suitability has not been established.\",\"Avoid eyes, inhaling loose powder and broken or irritated skin. Stop and rinse if irritation occurs.\",\"Strand-test light, grey, bleached, porous or colour-treated hair.\",\"Follow each jar's own instructions; combining powders does not establish improved efficacy or tolerance.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "suitable_for",
+                "type": "list.single_line_text_field",
+                "value": "[\"Traditional and floral hair-pack duo\",\"Customers who prefer separately packed botanical ingredients\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "ritual_step",
+                "type": "single_line_text_field",
+                "value": "Pack"
+              },
+              {
+                "namespace": "custom",
+                "key": "how_to_use",
+                "type": "list.single_line_text_field",
+                "value": "[\"Preparation: Read the current directions on each jar and complete the directed skin test before first use.\",\"Routine: Choose the appropriate wash or pack step. Use powders separately unless a tested combination is provided in the product directions.\",\"Application: Mix with clean water, apply only to the intended hair or scalp area, and follow each product's preparation and rinse-out instructions.\",\"After use: Discard leftover wet preparation and close each dry powder jar securely.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits",
+                "type": "list.single_line_text_field",
+                "value": "[\"Traditional and floral hair-pack duo\",\"Includes 2 separate 200 g jars.\",\"Bhringraj: a traditional Ayurvedic hair and scalp pack.\",\"Hibiscus: a flower-based ingredient for herbal hair packs.\"]"
+              },
+              {
+                "namespace": "custom",
+                "key": "formulation",
+                "type": "single_line_text_field",
+                "value": "Separately packed botanical powders"
+              },
+              {
+                "namespace": "custom",
+                "key": "plant_part",
+                "type": "single_line_text_field",
+                "value": "Bhringraj: Leaves and aerial parts; Hibiscus: Flowers"
+              },
+              {
+                "namespace": "custom",
+                "key": "botanical_name",
+                "type": "single_line_text_field",
+                "value": "Eclipta prostrata + Hibiscus rosa-sinensis"
+              },
+              {
+                "namespace": "custom",
+                "key": "ingredient",
+                "type": "multi_line_text_field",
+                "value": "1 × 200 g Bhringraj leaves and aerial parts powder (Eclipta prostrata).\n1 × 200 g Hibiscus flower powder (Hibiscus rosa-sinensis)."
+              },
+              {
+                "namespace": "custom",
+                "key": "net_quantity",
+                "type": "single_line_text_field",
+                "value": "2 × 200 g (400 g total)"
+              },
+              {
+                "namespace": "custom",
+                "key": "meta_description",
+                "type": "multi_line_text_field",
+                "value": "Explore Bhringraj, Hibiscus in separately packed 200 g jars. Discover each botanical's role, directions and clearly labelled wider-use research."
+              },
+              {
+                "namespace": "custom",
+                "key": "benefits_evidence",
+                "type": "json",
+                "value": "{\"source\":\"NatureMist_Six_Powders_Benefits_and_Claims (1).xlsx\",\"reviewedInSource\":\"2026-10-21\",\"classification\":\"Ingredient research and traditional context; not proof of finished-product benefits. External-use range assumed by the source.\",\"rows\":[{\"product\":\"Hibiscus\",\"topic\":\"Herbal hair-pack use\",\"evidenceType\":\"Traditional cosmetic use\",\"studiedMaterial\":\"Assumed H. rosa-sinensis flowers; verify identity\",\"findingAndLimit\":\"Hair-pack positioning is consistent with traditional use. Specific results depend on preparation.\",\"sourceCaution\":\"Suggested use description: hibiscus flower powder for herbal hair packs.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/12963149/\"},{\"product\":\"Hibiscus\",\"topic\":\"Hair-growth research\",\"evidenceType\":\"Animal and isolated-follicle research\",\"studiedMaterial\":\"Petroleum-ether leaf and flower extracts\",\"findingAndLimit\":\"Hair-growth findings were preclinical; leaves performed better than flowers.\",\"sourceCaution\":\"Do not claim human hair regrowth or transfer leaf-extract effects to flower powder.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/12963149/\"},{\"product\":\"Hibiscus\",\"topic\":\"Hydration / mucilage research\",\"evidenceType\":\"Laboratory skin-model study\",\"studiedMaterial\":\"Isolated leaf mucilage tested on pig skin\",\"findingAndLimit\":\"The study concerns leaves and a model system, not flower powder tested on people.\",\"sourceCaution\":\"Leaf-mucilage evidence does not substantiate hydration or wrinkle benefits for this jar.\",\"source\":\"https://journals.innovareacademics.in/index.php/ijpps/article/view/3319\"},{\"product\":\"Hibiscus\",\"topic\":\"Plant compounds / antioxidant research\",\"evidenceType\":\"Laboratory extract research\",\"studiedMaterial\":\"H. rosa-sinensis flower extracts\",\"findingAndLimit\":\"Phenolic compounds and antioxidant activity were measured in extracts.\",\"sourceCaution\":\"Research background only. A clinical skin-protection or anti-ageing claim needs relevant product evidence.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/24811803/\"},{\"product\":\"Hibiscus\",\"topic\":\"Face/body packs; softness, shine and slip\",\"evidenceType\":\"Product-development options\",\"studiedMaterial\":\"Actual flower powder or finished blend\",\"findingAndLimit\":\"These are possible uses and sensory outcomes to assess; suitable human evidence for this product was not supplied.\",\"sourceCaution\":\"Confirm cosmetic suitability, tolerance and real-use results before adding face/body or conditioning benefits.\",\"source\":\"NatureMist product test results were not supplied.\"},{\"product\":\"Hibiscus\",\"topic\":\"Blood-pressure / tea benefits\",\"evidenceType\":\"Human trial; different species and oral preparation\",\"studiedMaterial\":\"H. sabdariffa calyx tea; 65 adults; 6 weeks\",\"findingAndLimit\":\"A blood-pressure effect was studied for roselle tea. It does not apply to H. rosa-sinensis flower powder.\",\"sourceCaution\":\"Do not use roselle-tea health claims for the assumed cosmetic flower product.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/20018807/\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional hair care\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"API whole-plant Eclipta alba monograph\",\"findingAndLimit\":\"Keshya denotes a traditional association with hair care; it is not a clinical growth result.\",\"sourceCaution\":\"Use educational wording: traditionally valued in Ayurvedic hair care. Confirm the plant part supplied.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional skin care\",\"evidenceType\":\"Ayurvedic tradition\",\"studiedMaterial\":\"API whole-plant monograph\",\"findingAndLimit\":\"Tvacya records a traditional skin-care association.\",\"sourceCaution\":\"Discuss as traditional use; validate any face/body-pack directions for the actual product.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Traditional rejuvenative / liver uses\",\"evidenceType\":\"Ayurvedic tradition; not a modern outcome trial\",\"studiedMaterial\":\"Whole-plant medicinal context\",\"findingAndLimit\":\"Rasayana and liver-related traditional uses are historical classifications. The monograph describes Ushna, not cooling.\",\"sourceCaution\":\"No liver-detox, sleep, stress-relief or systemic-health promise for a cosmetic powder.\",\"source\":\"https://www.ayurveda.hu/api/API-Vol-2.pdf\"},{\"product\":\"Bhringraj\",\"topic\":\"Hair-growth research\",\"evidenceType\":\"Animal study\",\"studiedMaterial\":\"Extracts in cream formulations tested on rats\",\"findingAndLimit\":\"Hair-growth findings are preclinical; preparation and dose differ from raw powder.\",\"sourceCaution\":\"Do not claim clinically proven regrowth, baldness treatment or superiority to medicines.\",\"source\":\"https://pubmed.ncbi.nlm.nih.gov/18478241/\"},{\"product\":\"Bhringraj\",\"topic\":\"Skin anti-inflammatory research\",\"evidenceType\":\"Cell-based laboratory research\",\"studiedMaterial\":\"Ultrasonically prepared ethanolic extract\",\"findingAndLimit\":\"Activity was studied in cell models; this is not a human trial of a skin pack.\",\"sourceCaution\":\"Keep anti-inflammatory, acne, eczema and wound-healing treatment claims out of current copy.\",\"source\":\"https://www.researchgate.net/publication/321354930_Enhancement_of_Skin_Anti-Inflammatory_Activities_of_Eclipta_prostrata_L_from_the_Ultrasonic_Extraction_Process\"},{\"product\":\"Bhringraj\",\"topic\":\"Hair softness / scalp comfort\",\"evidenceType\":\"Finished-product evidence needed\",\"studiedMaterial\":\"Actual NatureMist hair/scalp pack\",\"findingAndLimit\":\"Useful customer outcomes for a product test; no relevant finished-product results supplied.\",\"sourceCaution\":\"Use hair/scalp-pack positioning now after checking intended use; add measured benefits after assessment.\",\"source\":\"NatureMist product test results were not supplied.\"}]}"
+              },
+              {
+                "namespace": "custom",
+                "key": "beyond_hair_research",
+                "type": "multi_line_text_field",
+                "value": "Bhringraj\nTraditional skin-care association: The Ayurvedic whole-plant monograph records a traditional skin-care association known as Tvacya. This is historical context, not a human trial of a face or body pack. The supplied product information lists leaves and aerial parts, so the plant-part distinction matters.\n\nSkin and hair laboratory research: Cell research on extracts and animal hair-growth studies use preparations different from this powder. They do not establish anti-inflammatory treatment, acne care, wound healing or human hair regrowth from this jar.\n\nWider traditional context: Traditional rejuvenative and liver-related uses concern medicinal contexts. They are not evidence of liver detox, sleep support or stress relief from an external-use pack. Hair softness and scalp comfort also require finished-product testing.\n\nHibiscus\nFace and body-pack potential: Face and body packs are possible uses for assessment. Suitable product-specific tolerance and performance results were not supplied. Skin-use directions and claims about softness, shine or slip need testing of the actual powder.\n\nHydration and antioxidant research: Research on isolated leaf mucilage concerns a different plant part. Laboratory studies of flower extracts explore plant compounds and antioxidant activity. These do not prove hydration, wrinkle reduction or skin protection from this flower powder.\n\nHair-growth research: Animal and isolated-follicle studies used extracts, with different results for leaves and flowers. They do not establish human hair regrowth from this product.\n\nHibiscus tea is a different preparation: Blood-pressure research on Hibiscus sabdariffa calyx tea does not apply to the Hibiscus rosa-sinensis flower identity recorded for this cosmetic product. This jar is for external use, not tea or nutritional use."
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "eyJsYXN0X2lkIjo2NDgyNzgxMzUyNzczOCwibGFzdF92YWx1ZSI6IjY0ODI3ODEzNTI3NzM4In0="
+            }
+          }
+        }
+      ],
+      "pageInfo": {
+        "hasNextPage": false,
+        "endCursor": "eyJsYXN0X2lkIjoxMDM5MjgzOTEyNzIyNiwibGFzdF92YWx1ZSI6MTAzOTI4MzkxMjcyMjZ9"
+      }
+    }
+  },
+  "note": "Backup before replacing botanical_combo entries with product metafields. No credentials included."
+}

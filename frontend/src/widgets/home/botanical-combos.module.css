@@ -52,7 +52,7 @@
 .hero { min-width: 0; margin: 0; padding: 26px 4.4% 0 4%; }
 .photoFrame { padding: 7px; border: 1px solid var(--combo-line); }
 .heroPhoto { position: relative; overflow: hidden; aspect-ratio: 1.3; background: #d8ceb9; }
-.photo { object-fit: cover; }
+.photo { object-fit: contain; }
 .caption { position: relative; display: flex; align-items: center; justify-content: center; gap: 20px; min-height: clamp(74px, 7vw, 112px); padding: 12px 22% 12px 2.5%; }
 .captionRule { width: 14%; min-width: 36px; height: 1px; background: var(--combo-line); }
 .captionText { position: relative; z-index: 1; min-width: 0; text-align: center; font-family: "Combo Script", cursive; font-size: clamp(28px, 3.1vw, 50px); font-weight: 400; line-height: 1.15; }
@@ -80,7 +80,7 @@
 .rowCopy .comboButton { width: 100%; margin-top: 10px; padding-inline: 10px; }
 .rowCopy .arrow { width: 19px; height: 13px; }
 .thumbnail { position: relative; display: block; align-self: stretch; overflow: hidden; width: 100%; min-width: 0; min-height: 166px; padding: 0; border: 0; aspect-ratio: 1.89; background: #ddd1b9; cursor: pointer; }
-.thumbnail img { object-fit: cover; transition: transform 650ms var(--ease); }
+.thumbnail img { object-fit: contain; transition: transform 650ms var(--ease); }
 .pagination { position: relative; z-index: 1; display: flex; align-items: center; gap: 16px; padding: 13px 3% 23px; }
 .pageArrow { display: grid; flex: none; place-items: center; width: 48px; height: 48px; padding: 5px; border: 0; background: transparent; color: var(--combo-ink); cursor: pointer; }
 .pageArrow .arrow { width: 37px; height: 23px; }

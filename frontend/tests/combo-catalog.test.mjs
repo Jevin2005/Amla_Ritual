@@ -7,7 +7,7 @@ const bundle = buildSync({
   entryPoints: [fileURLToPath(new URL("../src/domain/combo-catalog.ts", import.meta.url))],
   bundle: true, platform: "node", format: "esm", write: false,
 });
-const { getComboPurchaseSummary, buildComboCatalog, filterComboCatalog } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { getComboPurchaseSummary, buildComboCatalog, filterComboCatalog, buildComboProductCatalog, getComboDisplayImage, getComboBookContent } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 
 const variant = (id, pricePaise = 10000, overrides = {}) => ({
   id: `gid://shopify/ProductVariant/${id}`, title: "100 g", pricePaise,
@@ -26,6 +26,76 @@ const combo = (id, products, overrides = {}) => ({
 const defaults = { query: "", size: "all", availableOnly: false, sort: "featured" };
 const filter = (entries, options = {}) => filterComboCatalog(entries, { ...defaults, ...options });
 const ids = (entries) => entries.map((entry) => entry.combo.id);
+
+test("product-owned combos retain exact members and their own price outside the homepage selection", () => {
+  const jars = [product(1, "Renamed Amla", 10000, { availableForSale: false }), product(2, "Reetha")];
+  const listing = product(10, "NatureMist Updated Duo", 49900, {
+    tags: ["combo"], comboProductIds: jars.map(({ id }) => id), comboIngredients: "Amla + Reetha", comboCaption: "My caption",
+  });
+  const [entry] = buildComboProductCatalog([], [...jars, listing], "shopify");
+  assert.deepEqual(entry.products, jars);
+  assert.equal(entry.count, 2);
+  assert.equal(entry.combo.id, listing.id);
+  assert.equal(entry.combo.caption, "My caption");
+  assert.equal(entry.purchase.total, 49900);
+  assert.equal(entry.purchase.items.length, 1);
+  assert.equal(entry.purchase.purchasable, true);
+  assert.equal(filter([entry], { size: "2", query: "reetha" }).length, 1);
+});
+
+test("saved product IDs survive renames and old tag removal without matching another similarly named listing", () => {
+  const jars = [product(1, "Amla"), product(2, "Reetha")];
+  const listing = product(10, "Renamed Duo", 49900, { tags: ["combo"] });
+  const other = product(11, "Old Duo", 29900, { tags: ["combo"] });
+  const saved = combo(listing.id, jars, { name: "Old Duo" });
+  assert.equal(buildComboProductCatalog([saved], [...jars, other, listing], "shopify")[0].listingProduct.id, listing.id);
+  const missing = buildComboProductCatalog([saved], [...jars, other], "shopify");
+  assert.equal(missing[0].listingProduct, undefined);
+  assert.equal(missing[0].purchase.purchasable, false);
+  assert.equal(missing[1].listingProduct.id, other.id);
+});
+
+test("the homepage keeps all eight selected combos in saved order with their linked listing photos", () => {
+  const jars = [product(1, "Amla"), product(2, "Reetha")];
+  const saved = Array.from({ length: 8 }, (_, index) => combo(`saved-${index}`, jars, { name: `Editorial ${index}`, caption: `Caption ${index}` }));
+  const listings = saved.map((pairing, index) => product(100 + index, `Listing ${index}`, 25000 + index, {
+    tags: ["combo", `combo:${pairing.id}`],
+    featuredImage: { url: `/listing-${index}.webp`, altText: `Set ${index}`, width: 1536, height: 1024 },
+  }));
+  const content = { enabled: true, combos: saved, heading: "Saved heading" };
+  const catalog = buildComboProductCatalog(saved, [...listings].reverse().concat(jars, product(999, "Not selected", 10000, { tags: ["combo"] })), "shopify");
+  const book = getComboBookContent(content, catalog);
+  assert.equal(book.heading, content.heading);
+  assert.equal(book.combos.length, 8);
+  assert.deepEqual(book.combos.map(({ id, name, caption, productIds }) => ({ id, name, caption, productIds })), saved.map(({ id, name, caption, productIds }) => ({ id, name, caption, productIds })));
+  for (let index = 0; index < saved.length; index++) {
+    assert.equal(book.combos[index].image, listings[index].featuredImage);
+    assert.equal(book.combos[index].image, getComboDisplayImage(catalog[index]));
+    assert.equal(catalog[index].listingProduct.id, listings[index].id);
+    assert.equal(catalog[index].purchase.total, 25000 + index);
+  }
+  assert.ok(saved.every((entry) => entry.image.url === "/combo.webp"), "does not overwrite the merchant's saved photo");
+});
+
+test("missing listing photos fall back to its gallery then the selected metaobject, without inventing a listing", () => {
+  const jars = [product(1, "Amla"), product(2, "Reetha")];
+  const saved = combo("duo", jars);
+  const gallery = { url: "/gallery.webp", altText: "Complete duo", width: 1000, height: 800 };
+  const listing = product(3, "Duo", 45000, { tags: ["combo:duo"], images: [gallery] });
+  const content = { enabled: true, combos: [saved] };
+  const linked = buildComboProductCatalog([saved], [...jars, listing], "shopify");
+  assert.equal(getComboBookContent(content, linked).combos[0].image, gallery);
+  const unlabelled = buildComboProductCatalog([saved], [...jars, { ...listing, featuredImage: { ...gallery, altText: "" } }], "shopify");
+  assert.equal(getComboDisplayImage(unlabelled[0]).altText, "Duo");
+  assert.equal(getComboDisplayImage(unlabelled[0]).url, gallery.url);
+  const missingPhoto = buildComboProductCatalog([saved], [...jars, { ...listing, images: [] }], "shopify");
+  assert.equal(getComboDisplayImage(missingPhoto[0]), saved.image);
+  const unpublished = buildComboProductCatalog([saved], jars, "shopify");
+  assert.equal(getComboBookContent(content, unpublished).combos[0].image, saved.image);
+  assert.equal(unpublished[0].listingProduct, undefined);
+  assert.equal(unpublished[0].purchase.purchasable, false);
+  assert.deepEqual(getComboBookContent({ ...content, combos: [] }, linked).combos, []);
+});
 
 test("purchase summaries use available variant prices and preserve product order", () => {
   const amla = product(1, "Amla", 5000, { variants: [variant(11, 9000, { availableForSale: false }), variant(12, 18000)] });
