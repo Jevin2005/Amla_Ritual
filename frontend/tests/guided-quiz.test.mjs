@@ -7,7 +7,7 @@ const bundle = await build({
   stdin: { contents: 'export * from "./src/features/rituals/guided-quiz"; export { products as currentProducts } from "./src/domain/catalog/products";', resolveDir: fileURLToPath(new URL("../", import.meta.url)) },
   bundle: true, platform: "node", format: "esm", write: false,
 });
-const { getQuizFlow, setQuizAnswer, resolveQuizResult, resolveQuizBrowseItems, ritualQuestions, currentProducts } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { getQuizFlow, getQuizAnswerSummary, quizCatalogKey, setQuizAnswer, resolveQuizResult, resolveQuizRecommendations, ritualQuestions, currentProducts } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 const answer = (entries) => Object.fromEntries(Object.entries(entries).map(([id, value]) => [id, Array.isArray(value) ? value : [value]]));
 const care = (overrides = {}) => answer({ careArea: "hair", check: "none", hairGoal: "cleanse", washNeed: "reetha", hairHistory: "natural", routine: "one", ...overrides });
 const colour = (overrides = {}) => answer({ careArea: "colour", check: "none", colourTarget: "deeper", colourBase: "dark", colourHistory: "none", henna: "ready", colourChecks: "passed", ...overrides });
@@ -46,7 +46,7 @@ const ids = (answers, context = catalog) => getQuizFlow(answers, context).questi
 const resolved = (answers, products = futureProducts) => resolveQuizResult(outcome(answers), products, "shopify");
 
 test("starts with four unselected care categories and rejects old or malformed answers", () => {
-  assert.equal(ritualQuestions.length, 25);
+  assert.equal(ritualQuestions.length, 27);
   assert.deepEqual(ritualQuestions[0].options.map((o) => o.value), ["hair", "skin", "both", "colour"]);
   assert.deepEqual(getQuizFlow({}, catalog), { questions: [ritualQuestions[0]], complete: false, outcome: null });
   for (const careArea of [[], ["unknown"], ["hair", "skin"], ["hair", "hair"], "hair"]) {
@@ -77,7 +77,9 @@ test("reaction review names ingredients without offering allergy-safe replacemen
   assert.match(result.description, /Amla Powder and Reetha Powder/);
   assert.deepEqual(result.candidates, []);
   for (const reactionIngredient of ["other", "unsure"]) assert.equal(outcome(care({ check: "reaction", reactionIngredient })).kind, "review");
-  assert.equal(outcome(care({ check: "unsure" })).kind, "review");
+  assert.equal(getQuizFlow(care({ check: "unsure" }), catalog).questions.at(-1).id, "comfortCheck");
+  assert.equal(outcome(care({ check: "unsure", comfortCheck: "none" })).kind, "candidate");
+  assert.equal(outcome(care({ check: "unsure", comfortCheck: "unsure" })).kind, "review");
 });
 
 test("hair ingredient selection preserves all five roles and handles uncertainty", () => {
@@ -94,7 +96,7 @@ test("hair ingredient selection preserves all five roles and handles uncertainty
     const prefix = { hairGoal, scalpNeed: "unsure" };
     assert.deepEqual(slugs(outcome(care({ ...prefix, hairStep: "pack", packNeed: "flower" }))), ["hibiscus-powder"]);
     assert.deepEqual(slugs(outcome(care({ ...prefix, hairStep: "wash", washNeed: "reetha" }))), ["reetha-powder"]);
-    assert.equal(outcome(care({ ...prefix, hairStep: "unsure" })).kind, "guidance");
+    assert.deepEqual(slugs(outcome(care({ ...prefix, hairStep: "unsure", packNeed: "general" }))), ["amla-powder"]);
   }
   for (const scalpNeed of ["irritation", "loss"]) {
     assert.equal(outcome(care({ hairGoal: "scalp", scalpNeed })).kind, "review");
@@ -117,29 +119,31 @@ test("hair-only second steps require an explicit request and remain separate use
 });
 
 test("history and strand checks use the exact selected hair products", () => {
-  assert.equal(outcome(care({ hairHistory: "unsure" })).kind, "review");
+  assert.equal(outcome(care({ hairHistory: "unsure", strand: "notyet" })).kind, "conditional");
   assert.equal(getQuizFlow(care({ hairHistory: "treated" }), catalog).complete, false);
-  assert.equal(outcome(care({ hairHistory: "treated", treatmentType: "unsure" })).kind, "review");
+  assert.equal(outcome(care({ hairHistory: "treated", treatmentType: "unsure", strand: "passed" })).kind, "conditional");
   const answers = care({ hairHistory: "treated", treatmentType: ["colour", "bleach", "chemical"], routine: "two", packAddon: "flower" });
   const question = getQuizFlow(answers, catalog).questions.at(-1);
   assert.equal(question.id, "strand");
   assert.match(question.helper, /Hibiscus Powder and Reetha Powder/);
   assert.equal(outcome({ ...answers, strand: ["passed"] }).kind, "candidate");
   assert.equal(outcome({ ...answers, strand: ["notyet"] }).kind, "conditional");
-  for (const strand of ["changed", "unsure"]) assert.equal(outcome({ ...answers, strand: [strand] }).kind, "review");
+  assert.equal(outcome({ ...answers, strand: ["changed"] }).kind, "review");
+  assert.equal(outcome({ ...answers, strand: ["unsure"] }).kind, "conditional");
 });
 
-test("the actual catalogue offers skin guidance and an explicit Both-to-hair choice", () => {
-  assert.deepEqual(ids(skin(), actualCatalog), ["careArea", "check"]);
-  assert.match(outcome(skin(), actualCatalog).title, /Skin use is not yet confirmed/);
+test("the actual catalogue offers an explicit hair choice for skin and Both interests", () => {
+  assert.deepEqual(ids(skin(), actualCatalog), ["careArea", "check", "bothFallback"]);
+  assert.equal(getQuizFlow(skin(), actualCatalog).complete, false);
   assert.equal(getQuizFlow(both(), actualCatalog).questions.at(-1).id, "bothFallback");
   assert.equal(getQuizFlow(both(), actualCatalog).complete, false);
-  assert.deepEqual(outcome(both({ bothFallback: "guidance" }), actualCatalog).candidates, []);
+  assert.equal(outcome(care({ careArea: "skin", bothFallback: "pack", packNeed: "flower" }), actualCatalog).careArea, "hair");
+  assert.deepEqual(slugs(outcome(care({ careArea: "skin", bothFallback: "pack", packNeed: "flower" }), actualCatalog)), ["hibiscus-powder"]);
   const hairOnly = care({ careArea: "both", bothFallback: "hair", bothPlan: "shared", skinChecks: "reaction" });
   assert.equal(outcome(hairOnly, actualCatalog).careArea, "hair");
   assert.deepEqual(slugs(outcome(hairOnly, actualCatalog)), ["reetha-powder"]);
   assert.ok(!ids(hairOnly, actualCatalog).includes("skinChecks"));
-  assert.match(getQuizFlow(skin()).outcome.title, /not yet confirmed/, "absent catalogue never enables skin use");
+  assert.deepEqual(getQuizFlow(skin()).outcome.candidates, [], "absent catalogue never enables skin use");
 });
 
 test("skin tags, ambiguous directions and contradictory restrictions cannot authorise application", () => {
@@ -154,13 +158,14 @@ test("skin tags, ambiguous directions and contradictory restrictions cannot auth
     { safety: ["Do not use for skin masks, eyebrows or eyelashes."] },
   ]) {
     const context = { products: [skinProduct("hibiscus-powder", overrides)], source: "shopify" };
-    assert.equal(outcome(skin(), context).kind, "guidance", JSON.stringify(overrides));
-    assert.deepEqual(outcome(skin(), context).candidates, []);
+    const flow = getQuizFlow(skin(), context);
+    assert.ok(!flow.outcome || flow.outcome.kind === "guidance", JSON.stringify(overrides));
+    assert.deepEqual(flow.outcome?.candidates ?? [], []);
     assert.deepEqual(resolveQuizResult(outcome(skin()), context.products, "shopify").items, []);
   }
   const faceOnly = { products: [skinProduct("hibiscus-powder", { howTo: ["Face: Use the facial directions."] })], source: "shopify" };
   assert.equal(outcome(skin(), faceOnly).kind, "candidate");
-  for (const skinArea of ["body", "both"]) assert.equal(outcome(skin({ skinArea }), faceOnly).kind, "guidance");
+  for (const skinArea of ["body", "both"]) assert.equal(getQuizFlow(skin({ skinArea }), faceOnly).questions.at(-1).id, "bothFallback");
   const sharedHeading = { products: [skinProduct("hibiscus-powder", { howTo: ["Face and body: Use the separate area directions."] })], source: "shopify" };
   assert.equal(outcome(skin({ skinArea: "both" }), sharedHeading).kind, "candidate");
 });
@@ -187,10 +192,9 @@ test("skin-only paths compare alternatives without hair questions or unsupported
 
 test("sold-out skin and dual-use products are distinguished from unconfirmed uses", () => {
   const context = { products: [skinProduct("hibiscus-powder", { availableForSale: false })], source: "shopify" };
-  assert.match(outcome(skin(), context).title, /available right now/);
-  assert.doesNotMatch(outcome(skin(), context).title, /not yet confirmed/);
-  assert.equal(getQuizFlow(both(), context).questions.at(-1).id, "bothFallback");
-  assert.match(outcome(both({ bothFallback: "guidance" }), context).title, /available right now/);
+  assert.match(outcome(skin(), context).description, /restocked/);
+  assert.doesNotMatch(outcome(skin(), context).description, /unconfirmed/);
+  assert.match(outcome(both(), context).description, /restocked/);
 });
 
 test("shared Both uses one verified dual-use product and no routine upsell", () => {
@@ -248,17 +252,24 @@ test("Both waits for every relevant check, and a reaction or strand concern stop
   assert.equal(strand.id, "strand");
   assert.match(strand.helper, /Reetha Powder/);
   assert.doesNotMatch(strand.helper, /Hibiscus Powder/, "skin-only product must not appear in hair strand checks");
-  for (const answers of [both({ skinChecks: "reaction" }), both({ hairHistory: "light", strand: "changed" }), both({ hairHistory: "unsure" })]) {
+  for (const answers of [both({ skinChecks: "reaction" }), both({ hairHistory: "light", strand: "changed" })]) {
     assert.deepEqual(outcome(answers).candidates, []);
-    assert.deepEqual(resolveQuizBrowseItems(answers, futureProducts, "shopify"), []);
+    assert.deepEqual(resolved(answers).items, []);
   }
 });
 
 test("colour remains isolated and requires a supported target, history, method and checks", () => {
-  for (const colourTarget of ["lighter", "copper"]) assert.equal(outcome(colour({ colourTarget })).kind, "no-match");
-  for (const overrides of [{ colourTarget: "unsure" }, { colourBase: "unsure" }, { henna: "no" }, { henna: "unsure" }]) assert.equal(outcome(colour(overrides)).kind, "guidance");
-  for (const colourHistory of [["dye"], ["bleach"], ["chemical"], ["unsure"], ["henna", "dye"]]) assert.equal(outcome(colour({ colourHistory })).kind, "review");
-  assert.equal(outcome(colour({ colourBase: "light" })).kind, "review");
+  for (const colourTarget of ["lighter", "copper", "unsure"]) {
+    assert.equal(getQuizFlow(colour({ colourTarget }), catalog).questions.at(-1).id, "colourFallback");
+    assert.equal(getQuizFlow(colour({ colourTarget }), catalog).complete, false);
+    assert.deepEqual(slugs(outcome(colour({ colourTarget, colourFallback: "deeper" }))), ["indigo-powder"]);
+    const hair = { ...colour({ colourTarget, colourFallback: "hair" }), ...care({ careArea: "colour", hairGoal: "pack", packNeed: "flower" }) };
+    assert.equal(outcome(hair).careArea, "hair");
+    assert.deepEqual(slugs(outcome(hair)), ["hibiscus-powder"]);
+  }
+  for (const overrides of [{ colourBase: "unsure" }, { henna: "no" }, { henna: "unsure" }]) assert.equal(outcome(colour(overrides)).kind, "conditional");
+  for (const colourHistory of [["dye"], ["bleach"], ["chemical"], ["unsure"], ["henna", "dye"]]) assert.equal(outcome(colour({ colourHistory })).kind, "conditional");
+  assert.equal(outcome(colour({ colourBase: "light" })).kind, "conditional");
   for (const colourTarget of ["deeper", "grey"]) for (const colourBase of ["dark", "brown", "grey", "mixed"]) for (const colourHistory of ["henna", "none"]) {
     const answers = colour({ colourTarget, colourBase, colourHistory });
     assert.deepEqual(slugs(outcome(answers)), ["indigo-powder"]);
@@ -331,24 +342,112 @@ test("catalogue changes revalidate skin area, dual-use permission and partial st
   assert.equal(getQuizFlow(both(), newCatalog).complete, false);
 });
 
-test("generic browsing is clearly separate and never substitutes skin, colour or excluded ingredients", () => {
-  for (const answers of [skin({ check: "irritated" }), skin({ skinChecks: "reaction" }), both({ check: "unsure" })]) {
-    assert.deepEqual(resolveQuizBrowseItems(answers, futureProducts, "shopify"), []);
+test("stopped and unsupported routes never turn into unrelated product suggestions", () => {
+  for (const answers of [
+    skin({ check: "irritated" }), skin({ skinChecks: "reaction" }), both({ check: "unsure", comfortCheck: "unsure" }),
+    care({ check: "reaction", reactionIngredient: ["amla", "reetha"] }),
+    care({ hairHistory: "light", strand: "changed", routine: "two", packAddon: "flower" }),
+    colour({ colourChecks: "reaction" }), colour({ colourChecks: "shade" }),
+  ]) {
+    const result = resolved(answers);
+    assert.deepEqual(result.items, []);
+    assert.doesNotMatch(result.description, /browse.*below|ingredients below|products below/);
   }
-  const reaction = care({ check: "reaction", reactionIngredient: ["amla", "reetha"] });
-  const items = resolveQuizBrowseItems(reaction, futureProducts, "shopify");
-  assert.ok(items.length <= 2 && items.length > 0);
-  assert.ok(items.every((i) => !["amla-powder", "reetha-powder", "indigo-powder"].includes(i.product.slug)));
-  for (const answers of [colour({ colourTarget: "lighter" }), colour({ colourHistory: "bleach" })]) {
-    assert.ok(resolveQuizBrowseItems(answers, futureProducts, "shopify").every((i) => i.role === "Pack"));
+});
+
+test("general preferences select available verified products in the requested role", () => {
+  const context = { products: [product("shikakai-powder", { availableForSale: false }), product("reetha-powder"), product("amla-powder", { availableForSale: false }), product("hibiscus-powder"), product("indigo-powder")], source: "shopify" };
+  for (const washNeed of ["beginner", "unsure"]) {
+    const result = outcome(care({ washNeed }), context);
+    assert.deepEqual(slugs(result), ["reetha-powder"]);
+    assert.match(result.candidates[0].reason, /herbal hair wash.*available/);
   }
-  const changed = care({ hairHistory: "light", strand: "changed", routine: "two", packAddon: "flower" });
-  assert.ok(resolveQuizBrowseItems(changed, futureProducts, "shopify").every((i) => !["reetha-powder", "hibiscus-powder"].includes(i.product.slug)));
-  assert.deepEqual(resolveQuizBrowseItems(care(), futureProducts, "shopify"), []);
-  const excluded = Object.keys(liveIds).map((slug) => slug.replace("-powder", ""));
-  assert.deepEqual(resolveQuizBrowseItems(care({ check: "reaction", reactionIngredient: excluded }), futureProducts, "shopify"), []);
-  const terminal = care({ check: "unsure" });
-  assert.deepEqual(resolveQuizBrowseItems({ ...terminal, reactionIngredient: excluded }, futureProducts, "shopify"), resolveQuizBrowseItems(terminal, futureProducts, "shopify"));
+  for (const packNeed of ["general", "unsure"]) {
+    assert.deepEqual(slugs(outcome(care({ hairGoal: "pack", packNeed }), context)), ["hibiscus-powder"]);
+  }
+  for (const overrides of [{ id: "gid://shopify/Product/999" }, { howTo: [] }, { ritualStep: "Colour" }, { variants: [] }]) {
+    const invalid = { products: [product("shikakai-powder", overrides), product("reetha-powder")], source: "shopify" };
+    assert.deepEqual(slugs(outcome(care({ washNeed: "unsure" }), invalid)), ["reetha-powder"]);
+  }
+  const packsOnly = { products: [product("amla-powder")], source: "shopify" };
+  assert.deepEqual(resolveQuizResult(outcome(care({ washNeed: "unsure" }), packsOnly), packsOnly.products, "shopify").items, []);
+});
+
+test("specific ingredients are never silently replaced by available alternatives", () => {
+  for (const [answers, products] of [
+    [care({ washNeed: "shikakai" }), [product("reetha-powder")]],
+    [care({ hairGoal: "pack", packNeed: "fruit" }), [product("hibiscus-powder")]],
+    [care({ hairGoal: "scalp", scalpNeed: "pack" }), [product("amla-powder")]],
+  ]) {
+    const result = resolveQuizResult(outcome(answers, { products, source: "shopify" }), products, "shopify");
+    assert.equal(result.kind, "no-match");
+    assert.deepEqual(result.items, []);
+    assert.match(result.description, /preferences have been kept/);
+  }
+});
+
+test("final recommendations offer a labelled same-step alternative with fresh checks", () => {
+  const requested = outcome(care({ washNeed: "shikakai", hairHistory: "light", strand: "passed" }));
+  const result = resolveQuizRecommendations(requested, [product("reetha-powder"), product("amla-powder")], "shopify");
+  assert.equal(result.kind, "conditional");
+  assert.equal(result.unavailable, true);
+  assert.deepEqual(result.items.map((item) => item.product.slug), ["reetha-powder"]);
+  assert.equal(result.items[0].alternativeFor, "Shikakai Powder");
+  assert.equal(result.items[0].role, "Cleanse");
+  assert.match(result.description, /Checks for a different product do not carry over/);
+  assert.match(result.items[0].reason, /different ingredient/);
+  assert.deepEqual(resolveQuizRecommendations(requested, [product("amla-powder")], "shopify").items, []);
+});
+
+test("two-step recommendations preserve the available choice, order and product limit", () => {
+  const requested = outcome(care({ washNeed: "shikakai", routine: "two", packAddon: "flower" }));
+  const result = resolveQuizRecommendations(requested, [product("hibiscus-powder"), product("reetha-powder"), product("amla-powder")], "shopify");
+  assert.deepEqual(result.items.map((item) => item.product.slug), ["hibiscus-powder", "reetha-powder"]);
+  assert.equal(result.items[0].alternativeFor, undefined);
+  assert.equal(result.items[1].alternativeFor, "Shikakai Powder");
+  const one = resolveQuizRecommendations(outcome(care()), futureProducts, "shopify");
+  assert.deepEqual(one.items.map((item) => item.product.slug), ["reetha-powder"]);
+  assert.equal(one.kind, "candidate");
+});
+
+test("skin alternatives require the exact area and shared-use permission", () => {
+  const requested = outcome(both());
+  assert.deepEqual(resolveQuizRecommendations(requested, [product("hibiscus-powder")], "shopify").items, []);
+  assert.deepEqual(resolveQuizRecommendations(requested, [skinProduct("hibiscus-powder", { careAreas: ["Skin Care"] })], "shopify").items, []);
+  const result = resolveQuizRecommendations(requested, [skinProduct("hibiscus-powder")], "shopify");
+  assert.equal(result.items[0].role, "Both");
+  assert.equal(result.items[0].skinArea, "face");
+  assert.equal(result.items[0].alternativeFor, "Amla Powder");
+  const body = outcome(skin({ skinArea: "body", skinNeed: "fruit" }));
+  assert.deepEqual(resolveQuizRecommendations(body, [skinProduct("hibiscus-powder", { howTo: ["Face: Follow the facial directions."] })], "shopify").items, []);
+});
+
+test("alternative matching never bypasses a stopped branch or changes a colour goal", () => {
+  for (const answers of [care({ check: "irritated" }), care({ check: "reaction", reactionIngredient: "amla" }),
+    care({ hairHistory: "light", strand: "changed" }), colour({ colourChecks: "reaction" })]) {
+    assert.deepEqual(resolveQuizRecommendations(outcome(answers), futureProducts, "shopify").items, []);
+  }
+  assert.deepEqual(resolveQuizRecommendations(outcome(colour()), hairProducts.filter((p) => p.slug !== "indigo-powder"), "shopify").items, []);
+  const requested = outcome(care());
+  assert.deepEqual(resolveQuizRecommendations(requested, [product("shikakai-powder", { variants: [] })], "shopify").items, []);
+});
+
+test("preference summary ignores unreachable answers and follows edits", () => {
+  const answers = care({ skinArea: "face", colourTarget: "grey", packAddon: "flower" });
+  const summary = getQuizAnswerSummary(answers, getQuizFlow(answers, catalog));
+  assert.deepEqual(summary.map((item) => item.id), ["careArea", "hairGoal", "washNeed", "routine"]);
+  assert.equal(summary.find((item) => item.id === "washNeed").value, "Reetha soapnut powder");
+  const edited = setQuizAnswer(answers, "hairGoal", ["pack"], catalog);
+  assert.deepEqual(getQuizAnswerSummary(edited, getQuizFlow(edited, catalog)).map((item) => item.id), ["careArea", "hairGoal"]);
+});
+
+test("catalogue eligibility changes invalidate the quiz session, unrelated price or ordering changes do not", () => {
+  const original = quizCatalogKey(catalog);
+  assert.equal(original, quizCatalogKey({ ...catalog, products: [...futureProducts].reverse() }));
+  assert.equal(original, quizCatalogKey({ ...catalog, products: futureProducts.map((p) => ({ ...p, price: 999 })) }));
+  for (const change of [{ availableForSale: false }, { variants: [] }, { howTo: [] }, { careAreas: [] }, { safety: ["Hair use only."] }]) {
+    assert.notEqual(original, quizCatalogKey({ ...catalog, products: futureProducts.map((p, index) => index ? p : { ...p, ...change }) }));
+  }
 });
 
 function choices(question) {
@@ -383,7 +482,7 @@ test("all reachable paths terminate with consistent care roles, no stale checks 
       assert.deepEqual(result.candidates, []);
       return;
     }
-    assert.deepEqual(answers.check, ["none"]);
+    assert.ok(answers.check[0] === "none" || (answers.check[0] === "unsure" && answers.comfortCheck?.[0] === "none"));
     assert.ok(result.candidates.length > 0);
     for (const c of result.candidates) {
       seenProducts.add(c.slug);
@@ -397,30 +496,32 @@ test("all reachable paths terminate with consistent care roles, no stale checks 
     }
     const resolution = resolveQuizResult(result, context.products, context.source);
     assert.equal(resolution.items.length, result.candidates.length);
-    if (result.kind === "conditional") assert.equal(result.title, "Check before starting");
     if (result.careArea === "colour") {
       assert.deepEqual(slugs(result), ["indigo-powder"]);
-      assert.deepEqual(answers.henna, ["ready"]);
-      assert.ok(["deeper", "grey"].includes(answers.colourTarget[0]));
+      if (result.kind === "candidate") assert.deepEqual(answers.henna, ["ready"]);
+      assert.ok(["deeper", "grey"].includes(answers.colourTarget[0]) || answers.colourFallback?.[0] === "deeper");
     } else if (result.careArea === "skin") {
       assert.ok(!flow.questions.some((q) => q.id === "hairHistory"));
       assert.ok(result.candidates.every((c) => c.role === "Skin"));
     } else {
-      if (answers.hairHistory[0] !== "natural") assert.ok(["passed", "notyet"].includes(answers.strand[0]));
+      if (answers.hairHistory[0] !== "natural") assert.ok(["passed", "notyet", "unsure"].includes(answers.strand[0]));
       if (result.careArea === "hair" && answers.routine[0] !== "two") assert.equal(result.candidates.length, 1);
       if (result.careArea === "both") assert.ok(!flow.questions.some((q) => q.id === "routine"));
     }
-    const requiredChecks = result.careArea === "colour" ? [answers.colourChecks[0]] : [
+    const requiredChecks = result.careArea === "colour" ? [answers.colourChecks?.[0]] : [
       ...(result.careArea !== "hair" ? [answers.skinChecks[0]] : []),
       ...(flow.questions.some((q) => q.id === "strand") ? [answers.strand[0]] : []),
     ];
-    assert.equal(result.kind, requiredChecks.includes("notyet") ? "conditional" : "candidate");
+    const reviewNeeded = result.careArea === "colour"
+      ? ["light", "unsure"].includes(answers.colourBase[0]) || answers.colourHistory.some((value) => ["dye", "bleach", "chemical", "unsure"].includes(value)) || answers.henna[0] !== "ready"
+      : flow.questions.some((q) => q.id === "hairHistory") && (answers.hairHistory[0] === "unsure" || answers.treatmentType?.includes("unsure"));
+    assert.equal(result.kind, reviewNeeded || requiredChecks.some((check) => ["notyet", "unsure"].includes(check)) ? "conditional" : "candidate");
   };
   visit({}, catalog);
   visit({}, { products: hairProducts, source: "shopify" });
   assert.ok(paths > 3400);
   assert.equal(seenQuestions.size, ritualQuestions.length);
-  assert.deepEqual([...seenKinds].sort(), ["candidate", "conditional", "guidance", "no-match", "pause", "review"]);
+  assert.deepEqual([...seenKinds].sort(), ["candidate", "conditional", "pause", "review"]);
   assert.deepEqual([...seenProducts].sort(), Object.keys(liveIds).sort());
   t.diagnostic(`${paths} completed paths checked across the current-role and synthetic future skin catalogues.`);
 });

@@ -1,102 +1,79 @@
 NATUREMIST - ADAPTIVE RITUAL QUIZ
 Question bank and product-routing specification
-Updated 22 October 2026
-
-SCOPE AND STATUS
-Four starting choices: Hair Care, Skin Care, Both Hair & Skin, and Hair Colour.
-Catalogue scope: Amla, Reetha, Shikakai, Hibiscus, Bhringraj and Indigo powders.
-This file specifies the revised experience. Updating this file does not update or deploy the website quiz.
-
-Aligned with the current local website catalogue, collection filters and guided-quiz source. The public product URLs could not be fetched during this revision, so current live content and availability have not been independently reverified.
-
-The website currently identifies the five non-colour powders for hair washes or traditional hair packs, and Indigo for hair colour. Its local product descriptions do not establish facial or body use. Skin Care and Both remain visible quiz choices, but must return an honest availability/guidance result until the exact products have confirmed skin-use directions. A category button, ingredient tradition or jar illustration is not proof of an approved use.
+Aligned with the current local implementation; deployment is separate.
 
 CUSTOMER EXPERIENCE
 Heading: Find your ritual.
-Introduction: Explore a botanical ritual for your hair, skin, both, or hair colour.
-One question at a time. No preselected answers. Continue stays inactive until a valid answer is selected.
-Back preserves valid answers. Editing an earlier answer clears dependent answers and recommendations.
-Show Question N and the stage name; do not promise a fixed question count.
-Recommend at most two distinct products. Never add a second product unless the customer requests another step.
-Use ingredient preference and the product's stated role. Do not promise softness, shine, regrowth, acne relief or a guaranteed colour.
+Four starting interests: Hair Care, Skin Care, Hair & Skin, Hair Colour.
+Ask one relevant question at a time, using the previous answers and current product catalogue.
+Use positive, practical language. Ordinary uncertainty leads to clarification or a product card with preparation steps.
+Show product cards immediately below the result title. Put Your next steps and the expandable Your preferences summary below the products.
+Give a specific reason connected to the customer's ingredient preference, care step and routine size.
+Keep one-product requests to one product. A requested second step can add one complementary product, up to two distinct products total.
+Back preserves answers. Editing an earlier answer clears all dependent answers and checks.
+Restart the quiz when product eligibility changes so old checks cannot transfer to another product.
 
-WEBSITE CATEGORY MAPPING
-hair   = Hair Care         = /shop?care=hair
-skin   = Skin Care         = /shop?care=skin
-both   = Both Hair & Skin  = /shop?care=both
-colour = Hair Colour       = /shop?care=colour
+CATALOGUE AND INTENDED USE
+Amla, Hibiscus and Bhringraj: traditional hair packs.
+Reetha and Shikakai: herbal hair washes.
+Indigo: botanical hair colour, within an appropriate complete colouring method.
+Use current product identity, ingredient, intended role, directions, variant and stock.
+General wash preferences choose the first eligible available product in this order: Shikakai, Reetha.
+General pack preferences choose the first eligible available product in this order: Amla, Hibiscus, Bhringraj.
+Explicit ingredient preferences take priority. If the exact choice is unavailable, show a labelled available alternative for the same care step.
+Alternatives require their own directions and checks; preserve the customer's original preference in the summary.
+Skin eligibility requires a Skin Care classification and explicit Face/Facial and/or Body directions, without conflicting restrictions.
+A shared Hair & Skin product must meet both sets of intended-use requirements.
+Current local product information establishes hair uses. Skin and Both interests therefore offer an explicit choice to explore hair care while confirmed skin-use directions are pending.
+Product descriptions, research, traditions and jar illustrations alone do not establish skin-use eligibility.
+Read prices, sizes, availability and links from current product data. Preview data is labelled as preview.
 
-The website's Both filter means a product explicitly has BOTH Hair Care and Skin Care in careAreas. It does not mean every hair powder is suitable for skin.
-A separate hair-only product plus a skin-only product may form a two-step plan, but must not be presented as two dual-use products or linked as a matching Both-filter set.
-Use "Hair Colour" in displayed copy, matching the site. Accept "color" as a search synonym.
+ADAPTIVE ROUTING
+1. Everyone starts with careArea, then check.
+2. check=unsure asks comfortCheck. A comfortable/no-known-reaction answer continues to the selected care branch. Personal-guidance, reaction and active-irritation answers retain their appropriate guidance.
+3. Previous reaction asks reactionIngredient. Active irritation, reported reactions and an unexpected strand result remain guidance routes rather than claims of personal suitability.
+4. Hair asks hairGoal. Cleanse asks washNeed; pack asks packNeed; scalp asks scalpNeed; unsure asks hairStep.
+5. scalpNeed=wash continues to washNeed; pack selects Bhringraj; unsure asks hairStep. Persistent symptoms receive professional guidance.
+6. hairStep=wash chooses the wash branch. pack or Choose a simple hair pack for me continues to packNeed.
+7. Hair history is asked after choosing the hair ingredient. Treated hair asks treatmentType. An unsure history or treatment answer continues through the routine and strand questions; the product result includes a compatibility-review step.
+8. Hair-only routine=one/unsure keeps one product. routine=two asks packAddon for a wash, or washAddon for a pack. Skip keeps the first product.
+9. Light, treated or uncertain hair history asks strand for the exact selected hair products. passed continues; notyet/unsure retains the products with preparation guidance; changed receives a personal review result.
+10. Skin and Both check catalogue eligibility before asking skin ingredient questions. When a hair alternative is available, bothFallback offers a clear choice: explore a hair-care step or a traditional hair pack. Only that explicit choice changes careArea to hair.
+11. bothFallback=hair asks hairGoal; pack goes directly to packNeed. The result is labelled Hair Care, and the summary retains the original skin/Both interest and explicit continuation choice.
+12. With eligible skin products, Skin asks skinArea, then skinNeed, then skinChecks. Compare is an alternatives comparison: choose one to start.
+13. Eligible Both asks bothPlan. Shared asks skinArea, sharedNeed, hairHistory and any treatmentType, then skinChecks and any strand check. Separate asks skinArea, a hair goal and ingredient, hair history, a single skin ingredient, then the relevant checks. The Both plan replaces the hair-only routine/addon questions.
+14. If the selected skin area has no eligible product, offer the explicit hair-care continuation where available. Shared uses require directions for both areas. The same product chosen twice becomes one Both card.
+15. Hair Colour asks colourTarget. deeper/grey continues to colourBase. lighter/copper/unsure asks colourFallback: explore deeper tones or a separate hair-care ritual. Never silently present Indigo as a lighter/copper product.
+16. colourFallback=deeper explicitly changes the target and continues to colourBase. hair explicitly changes careArea to hair and asks hairGoal. The summary records both answers.
+17. Colour asks colourBase, colourHistory and henna. Uncertain or treated/lightened hair retains an Indigo information card with compatibility-review instructions before use.
+18. henna=no/unsure shows an Indigo card with a plan-the-method next step. It does not imply the complete method is ready. Henna is a separately sourced product outside this collection.
+19. henna=ready asks colourChecks. passed gives the colour-stage result; notyet gives preparation steps; reaction or unwanted strand shade receives review guidance. Compatibility review still applies where indicated by hair history.
+20. Every ordinary completed choice path offers products when the catalogue has an eligible item. A completely empty/unavailable catalogue, unsupported intended use without a chosen alternative, or an actual reaction/irritation requires truthful guidance rather than a fabricated match.
 
-PRODUCT ELIGIBILITY - RESOLVE BEFORE ASKING BRANCH QUESTIONS
-Hair candidate:
-  Confirmed Hair Care classification, matching Cleanse or Pack role, current hair-use directions and a purchasable matching variant.
+RESULT PRESENTATION
+Product first: current image, name, intended use, why it fits, product link and directions link.
+Candidate title: Your suggested starting ritual.
+Hair preparation title: Your ritual, with a little preparation.
+Colour preparation title: Explore your colour ritual.
+Alternative title: Your available botanical picks.
+Show the precise next steps under the products. Conditional cards link to directions for review rather than implying ready-to-use suitability.
+Do not promise treatment benefits, guaranteed colour, allergy-safe substitutes or a perfect match.
+Pause/review states use calm, actionable wording and preserve the option to edit answers.
 
-Skin candidate:
-  Confirmed Skin Care classification AND current directions for the requested application area, with no conflicting restriction.
-  "Skin Care" alone does not establish facial use, body use, sensitive-skin suitability or treatment benefits.
-  Within this quiz, Amla and Hibiscus are the only proposed skin candidates to review for future activation. Neither is currently confirmed for skin use by the local product copy.
-  Reetha, Shikakai, Bhringraj and Indigo must not become skin recommendations merely because they are botanical powders.
-
-Dual-use candidate:
-  Meets both hair and skin requirements for the exact same product. Show separate hair and skin directions.
-
-Colour candidate:
-  Indigo with confirmed Hair Colour classification, current colour directions and the compatibility checks below.
-
-Live selection:
-  Resolve product identity, ingredient, careAreas, directions, restrictions, current variant and stock from the catalogue.
-  Conflicting directions override a category tag. Missing or uncertain intended-use information produces guidance, not a guessed recommendation.
-  Preview data must never be treated as verified live stock, price or purchase eligibility.
-  If an item is unavailable, show that fact. Do not silently substitute a different care role.
-  At every eligibility gate, distinguish unconfirmed intended use from confirmed products that are only out of stock. Use the no-stock result for the latter; do not describe their skin use as unconfirmed.
-  No skin or dual-use candidates in the current catalogue is an expected outcome, not an error.
-
-QUESTION BANK
+QUESTION BANK - EXACT CURRENT UI COPY
 
 CAREAREA | Your care
 ID: careArea
-Show when: Everyone; first question.
 Question: What would you like to care for?
 Helper: Choose the kind of ritual you want to explore.
 Selection: Single.
-  hair - Hair care (Herbal hair washes and traditional hair packs.)
-  skin - Skin care (Explore products with confirmed face or body directions.)
-  both - Hair & skin (Explore a shared product or separate care steps.)
+  hair - Hair care (Herbal washes and traditional hair packs.)
+  skin - Skin care (Explore confirmed face and body uses.)
+  both - Hair & skin (One shared botanical or separate care steps.)
   colour - Hair colour (Explore a botanical colouring method.)
-
-CHECK | Quick check
-ID: check
-Show when: After careArea, on every path.
-Question: Anything we should consider first?
-Helper: Select all that apply to the areas where you plan to use a product.
-Selection: Multiple; none and unsure are individually exclusive.
-  irritated - My skin or scalp is irritated, or the skin is broken
-  reaction - I have reacted to a skin, hair or botanical product
-  none - Neither applies
-  unsure - I am not sure
-
-REACTIONINGREDIENT | Ingredient review
-ID: reactionIngredient
-Show when: Previous reaction, without active irritation.
-Question: Do you know what you reacted to?
-Helper: Select known ingredients, or choose I do not know.
-Selection: Multiple; other and unsure are individually exclusive.
-  reetha - Reetha Powder
-  shikakai - Shikakai Powder
-  amla - Amla Powder
-  hibiscus - Hibiscus Powder
-  bhringraj - Bhringraj Powder
-  indigo - Indigo Powder
-  other - Another ingredient
-  unsure - I do not know the ingredient
-End with ingredient review. Do not automatically replace the ingredient with an "allergy-safe" alternative.
 
 HAIRGOAL | Your hair ritual
 ID: hairGoal
-Show when: Hair care; Both with a separate hair-and-skin plan; or an explicit decision to continue with hair only.
 Question: Which hair-care step would you like?
 Helper: Choose a wash or a separate traditional hair pack.
 Selection: Single.
@@ -105,33 +82,106 @@ Selection: Single.
   scalp - Hair & scalp care
   unsure - Help me choose a step
 
-HAIRSTEP | Choose a step
-ID: hairStep
-Show when: hairGoal = unsure.
-Question: Which step would you like to explore?
-Helper: A wash is a cleansing step. A pack is a separate botanical hair-care step.
+SKINAREA | Your skin ritual
+ID: skinArea
+Question: Where would you like to use your skin-care product?
+Helper: We will match only products with directions for that area.
 Selection: Single.
-  wash - A hair wash
-  pack - A traditional hair pack
-  unsure - Show me the difference
-unsure ends with explanatory guidance and links, without selecting a powder.
+  face - Face
+  body - Body
+  both - Face and body
+
+BOTHPLAN | Hair & skin, your way
+ID: bothPlan
+Question: How would you like to plan your hair and skin care?
+Helper: Each use needs its own product directions.
+Selection: Single.
+  shared - One product confirmed for both
+  separate - Separate hair and skin steps
+  unsure - Keep it to one shared product
+
+SHAREDNEED | Your shared botanical
+ID: sharedNeed
+Question: Which dual-use botanical would you like?
+Helper: Choose one product; prepare and use it separately for each area.
+Selection: Single.
+  fruit - Amla fruit powder
+  flower - Hibiscus flower powder
+
+BOTHFALLBACK | Explore a hair ritual
+ID: bothFallback
+Question: Would you like to explore a hair ritual from our current collection?
+Helper: Our current powders have directions for hair care. Choose a hair ritual to explore their stated uses.
+Selection: Single.
+  hair - Yes, help me choose a hair-care step
+  pack - Yes, explore a traditional hair pack
+
+CHECK | Quick check
+ID: check
+Question: Anything we should consider first?
+Helper: Select all that apply.
+Selection: Multiple; exclusive options clear other selections.
+  irritated - My skin or scalp is irritated, or the skin is broken
+  reaction - I have reacted to a skin, hair or botanical product
+  none - Neither applies [exclusive]
+  unsure - I am not sure [exclusive]
+
+COMFORTCHECK | A little more about you
+ID: comfortCheck
+Question: Which description fits you best today?
+Helper: This helps us choose the next step in your ritual guide.
+Selection: Single.
+  none - My skin and scalp feel comfortable, with no known product reactions
+  irritated - I have current irritation or broken skin
+  reaction - I have had a product reaction
+  unsure - I would like personal guidance first
+
+SKINNEED | Your skin ritual
+ID: skinNeed
+Question: Which botanical would you like to explore?
+Helper: Choose your preferred ingredient for the skin-use directions you selected.
+Selection: Single.
+  flower - Hibiscus flower powder (A flower-based rinse-off skin ritual.)
+  fruit - Amla fruit powder (A fruit-based rinse-off skin ritual.)
+  compare - Compare both options (Read about each powder, then choose one to start.)
+
+SKINCHECKS | Before skin use
+ID: skinChecks
+Question: Have you followed the skin-use patch-test directions?
+Helper: Use the current pack directions for every powder you are considering. A clear patch test cannot rule out a later reaction.
+Selection: Single.
+  passed - Yes, with no irritation or reaction
+  notyet - Not yet
+  reaction - I noticed irritation or a reaction
+
+REACTIONINGREDIENT | Ingredient review
+ID: reactionIngredient
+Question: Do you know what you reacted to?
+Helper: Select known ingredients, or choose Not sure.
+Selection: Multiple; exclusive options clear other selections.
+  reetha - Reetha Powder
+  shikakai - Shikakai Powder
+  amla - Amla Powder
+  hibiscus - Hibiscus Powder
+  bhringraj - Bhringraj Powder
+  indigo - Indigo Powder
+  other - Another ingredient [exclusive]
+  unsure - I do not know the ingredient [exclusive]
 
 WASHNEED | Your wash
 ID: washNeed
-Show when: A wash has been selected, including a scalp-care wash.
 Question: Which hair-wash ingredient interests you?
-Helper: Choose by ingredient preference.
+Helper: Choose an ingredient for a herbal cleansing routine.
 Selection: Single.
   reetha - Reetha soapnut powder
   shikakai - Shikakai pod powder
-  beginner - My first botanical wash
+  beginner - Trying my first botanical wash
   unsure - I am not sure
 
 PACKNEED | Your hair pack
 ID: packNeed
-Show when: A traditional hair pack has been selected.
 Question: Which hair-pack ingredient interests you?
-Helper: Choose a botanical ingredient, without a promise of a particular result.
+Helper: Choose your favourite botanical for a freshly prepared hair-pack ritual.
 Selection: Single.
   flower - Hibiscus flower powder
   fruit - Amla fruit powder
@@ -140,7 +190,6 @@ Selection: Single.
 
 SCALPNEED | Your scalp
 ID: scalpNeed
-Show when: hairGoal = scalp.
 Question: What brings you to scalp care?
 Helper: Choose the closest match.
 Selection: Single.
@@ -148,14 +197,19 @@ Selection: Single.
   pack - A traditional hair-and-scalp pack
   irritation - Persistent itching, flaking or discomfort
   loss - Sudden or patchy hair loss
-  unsure - Help me choose a step
-wash leads to washNeed; pack selects Bhringraj as the hair candidate.
-irritation or loss ends in professional guidance, not a treatment recommendation.
-unsure leads to hairStep.
+  unsure - I am not sure
+
+HAIRSTEP | Choose a step
+ID: hairStep
+Question: Which kind of step are you looking for?
+Helper: Choose a hair-wash ingredient or a separate traditional hair pack.
+Selection: Single.
+  wash - A wash for my scalp and hair
+  pack - A traditional hair pack
+  unsure - Choose a simple hair pack for me
 
 HAIRHISTORY | Your hair
 ID: hairHistory
-Show when: A non-colour hair candidate exists, including shared-product Both paths.
 Question: Which best describes your hair now?
 Helper: If your hair is treated, choose the treated option.
 Selection: Single.
@@ -166,30 +220,27 @@ Selection: Single.
 
 TREATMENTTYPE | Hair history
 ID: treatmentType
-Show when: hairHistory = treated.
 Question: Which treatments are on your hair?
 Helper: Select all that apply.
-Selection: Multiple; unsure is exclusive.
+Selection: Multiple; exclusive options clear other selections.
   colour - Hair dye
   bleach - Bleach or highlights
   chemical - Perming, relaxing or chemical straightening
-  unsure - I am not sure
+  unsure - I am not sure [exclusive]
 
 ROUTINE | Your routine
 ID: routine
-Show when: Hair-only path after known hair history.
 Question: How simple would you like your routine?
-Helper: Choose the number of separate steps you want.
+Helper: Choose the number of steps you actually want.
 Selection: Single.
   one - One product to start
   two - A hair pack and a hair wash
-  unsure - Keep it simple
-Do not ask on Both paths: bothPlan already sets the product/step preference.
+  unsure - I am not sure — keep it simple
 
 PACKADDON | Your second step
 ID: packAddon
-Show when: Hair-only, two steps requested, cleanser is the main candidate.
-Question: Which separate hair pack would you like?
+Question: Which hair-pack ingredient would you like?
+Helper: This would be a separate pack step, used according to its directions.
 Selection: Single.
   flower - Hibiscus flower powder
   fruit - Amla fruit powder
@@ -198,95 +249,25 @@ Selection: Single.
 
 WASHADDON | Your second step
 ID: washAddon
-Show when: Hair-only, two steps requested, pack is the main candidate.
-Question: Which separate hair wash would you like?
+Question: Which hair-wash ingredient would you like?
+Helper: This would be a separate wash step.
 Selection: Single.
   reetha - Reetha soapnut powder
   shikakai - Shikakai pod powder
   skip - Keep just the hair pack
 
-SKINAREA | Your skin ritual
-ID: skinArea
-Show when: Skin or Both has at least one potentially eligible skin candidate.
-Question: Where would you like to use your skin-care product?
-Helper: We will match only products with directions for that area.
-Selection: Single.
-  face - Face
-  body - Body
-  both - Face and body
-Retain only products explicitly supported for the selected area(s).
-If none remain, end with skin-use guidance. Do not adapt hair-use instructions.
-
-SKINNEED | Your ingredient
-ID: skinNeed
-Show when: Skin-only or separate-step Both, after skin-area eligibility passes.
-Question: Which botanical would you like to explore?
-Helper: Choose by ingredient preference, not a promised treatment.
-Selection: Single; display only eligible options.
-  flower - Hibiscus flower powder
-  fruit - Amla fruit powder
-  compare - Compare the eligible options
-compare is a comparison result, not a two-product routine. On a separate-step Both path, omit compare and ask the customer to choose one skin product.
-
-BOTHPLAN | Hair & skin, your way
-ID: bothPlan
-Show when: Both selected and at least one eligible skin product exists.
-Question: How would you like to plan your hair and skin care?
-Helper: Each use needs its own product directions.
-Selection: Single.
-  shared - One product confirmed for both
-  separate - Separate hair and skin steps
-  unsure - Keep it to one shared product
-Show shared and unsure only when a dual-use product is eligible.
-Show separate only when both a hair candidate and a skin candidate are eligible.
-
-SHAREDNEED | Your shared botanical
-ID: sharedNeed
-Show when: Both shared/unsure, after skinArea filters dual-use products.
-Question: Which dual-use botanical would you like?
-Helper: Choose one product; prepare and use it separately for each area.
-Selection: Single; display only eligible options.
-  fruit - Amla fruit powder
-  flower - Hibiscus flower powder
-Then ask hairHistory and any treatmentType follow-up. Do not recommend a cleanser or Indigo as a dual-use alternative.
-
-BOTHFALLBACK | Available care
-ID: bothFallback
-Show when: Both selected but no eligible skin products exist; or a shared plan has no eligible dual-use product after area filtering.
-Question: How would you like to continue?
-Helper: Skin use is not currently confirmed for a matching product. We can still help you explore a hair routine.
-Selection: Single.
-  hair - Continue with hair care only
-  guidance - Show me the current product-use guidance
-hair explicitly changes the result to Hair Care and clears Both/Skin-dependent answers.
-guidance ends without a product recommendation. Never quietly turn a Both request into a hair-only result.
-
-SKINCHECKS | Before skin use
-ID: skinChecks
-Show when: Exact eligible skin candidates have been selected.
-Question: Have you followed the skin-use patch-test directions for these products?
-Helper: Name each candidate and the selected face/body use. A clear test cannot guarantee that a later reaction will not occur.
-Selection: Single.
-  passed - Yes, with no irritation or reaction
-  notyet - Not yet
-  reaction - I noticed irritation or a reaction
-reaction stops the recommendation; notyet makes the result conditional.
-A hair strand check does not replace a skin-use check.
-
-STRAND | Before hair use
+STRAND | Check before starting
 ID: strand
-Show when: Non-colour hair candidate exists and hairHistory = light or treated.
 Question: Have you checked these botanicals on a hidden strand?
-Helper: Name the exact hair-use candidates. Yes means each was checked. This does not replace a skin patch test.
+Helper: Yes means every suggested product was checked. A strand check does not replace a skin patch test.
 Selection: Single.
-  passed - Yes, with an acceptable result for each product
+  passed - Yes — I checked each one and am happy with the results
   notyet - Not yet
   changed - The colour or feel changed unexpectedly
   unsure - I am not sure
 
 COLOURTARGET | Your colour goal
 ID: colourTarget
-Show when: Hair Colour after quick check.
 Question: What colour result are you hoping for?
 Helper: Choose a direction, rather than an exact promised shade.
 Selection: Single.
@@ -296,10 +277,18 @@ Selection: Single.
   copper - Red or copper tones
   unsure - I am not sure yet
 
+COLOURFALLBACK | Your next ritual
+ID: colourFallback
+Question: Which available ritual would you like to explore?
+Helper: Indigo is for deeper brown-to-dark tones. You can explore that colour direction or choose a separate hair-care ritual.
+Selection: Single.
+  deeper - Explore deeper brown-to-dark tones
+  hair - Explore a separate hair-care ritual
+
 COLOURBASE | Your starting colour
 ID: colourBase
-Show when: Deeper-tone or grey-darkening goal.
 Question: What colour are you starting with?
+Helper: Choose the closest match.
 Selection: Single.
   dark - Dark brown or black
   brown - Light or medium brown
@@ -310,189 +299,31 @@ Selection: Single.
 
 COLOURHISTORY | Your colour history
 ID: colourHistory
-Show when: Supported colour goal and known starting colour.
 Question: Which colour treatments are on your hair?
 Helper: Select all that apply.
-Selection: Multiple; none and unsure are individually exclusive.
+Selection: Multiple; exclusive options clear other selections.
   henna - Henna
   dye - Other hair dye
   bleach - Bleach or highlights
   chemical - Perming, relaxing or chemical straightening
-  none - No previous colour or chemical treatment
-  unsure - I am not sure
+  none - No previous colour or chemical treatment [exclusive]
+  unsure - I am not sure [exclusive]
 
 HENNA | Your colour method
 ID: henna
-Show when: Supported darkening goal, known compatible history and no lightened base.
 Question: Does your colour plan include a suitable henna-first step?
-Helper: This quiz's Indigo route covers a henna-first method. Henna is not included in this six-product range.
+Helper: This route covers a henna-first method. Henna is not included in this six-product range; other methods need their own verified directions.
 Selection: Single.
-  ready - Yes, I have the henna step and product directions
+  ready - Yes — I have the henna step and product directions
   no - No, I only have or want Indigo
   unsure - I need help with the method
-Do not present henna-first as the only possible colouring method. Other methods need their own verified instructions and are outside this automated route.
 
 COLOURCHECKS | Before full colour
 ID: colourChecks
-Show when: Suitable henna-first plan confirmed.
 Question: Have you completed the product patch and strand checks?
-Helper: Check the complete method using its product directions. Neither a shade nor freedom from future reactions is guaranteed.
+Helper: Check the complete henna-and-indigo method using its product instructions. A clear test cannot guarantee that a reaction will never happen.
 Selection: Single.
-  passed - Yes, with no reaction and an acceptable strand result
+  passed - Yes — no reaction and an acceptable strand result
   notyet - Not yet
   reaction - I noticed irritation or a reaction
   shade - The strand colour was not what I wanted
-
-ROUTING RULES
-1. Everyone: careArea -> check. Active irritation takes priority and ends in pause. Previous reaction -> reactionIngredient -> review. Uncertain quick check -> review. Neither -> selected care branch.
-2. Hair wash: Reetha preference -> Reetha; Shikakai preference -> Shikakai. First wash/unsure -> Shikakai as a simple ingredient-based starting option, not a claim of superior mildness.
-3. Hair pack: flower -> Hibiscus; fruit/general/unsure -> Amla. A traditional hair-and-scalp pack selected through scalpNeed -> Bhringraj.
-4. Hair history: unknown -> review. Treated -> treatmentType; unknown treatment -> review. Known history -> continue.
-5. Hair-only routine: one/unsure -> one candidate; two -> complementary addon question. Skip retains one. Packs and washes are separate steps using each pack's directions, not an invented mixed recipe.
-6. Skin: check eligibility before ingredient questions. No eligible product -> "Skin use is not yet confirmed" with no recommendation. Eligible -> skinArea -> filter again -> skinNeed -> skinChecks.
-7. Skin comparison: return up to two eligible alternatives, clearly labelled "Choose one to start." Do not call them a routine, imply mixing, or automatically add both to the bag.
-8. Both: no eligible skin option -> bothFallback. Otherwise bothPlan. Shared/unsure -> skinArea with dual-use filter -> sharedNeed -> hairHistory -> treatmentType when relevant -> skinChecks -> strand when relevant.
-9. Both separate: bothPlan -> skinArea -> hairGoal and its hair-selection follow-ups -> hairHistory -> treatmentType when relevant -> skinNeed (one item only) -> skinChecks -> strand when relevant. Do not ask hair-only addon questions; the skin step is the requested second step.
-10. Both separate may use a hair-only product and a skin-only product. Label their intended areas separately. If the same verified product is selected for both, show one product card with two separately directed uses.
-11. Any stop/review answer on a combined plan prevents a complete "ready" result. Do not carry a recommendation into a pause or review result. An explicit bothFallback choice is the only automatic transition to hair-only planning.
-12. Non-colour strand: passed -> continue; notyet -> conditional; changed/unsure -> review. Natural untreated brown/black hair does not require this extra quiz question; ordinary label-directed checks still apply.
-13. Skin check: passed -> continue; notyet -> conditional; reaction -> pause. On Both, complete all relevant skin and hair checks. If either remains uncompleted, the overall result is conditional.
-14. Colour: lighter/copper -> no matching colour product in this range; unsure target/base -> guidance. A lightened base or dye/bleach/chemical/uncertain history -> compatibility review.
-15. Supported colour history -> henna. No/unsure -> method guidance. Ready -> colourChecks. Passed -> Indigo-stage candidate; notyet -> conditional; reaction -> pause; unwanted shade -> review.
-16. Indigo belongs only to Hair Colour. Do not add it to skin, dual-use, cleansing or general hair-pack results. Amla and Hibiscus do not replace henna.
-17. Irritation, previous reactions and unsupported use always outrank product preferences. No percentages, "perfect match", diagnosis, treatment promises or allergy-safe substitutions.
-18. Refresh availability before purchase. Do not present a partial two-step result as a complete plan. Explain any missing step and let the customer edit.
-19. Read price, pack size, stock and directions from current product data. The local single-powder catalogue uses 200 g. Do not retain the old 250 g discrepancy as a current fact, or hardcode price, dose, timing or frequency.
-20. Shikakai and Reetha are hair cleansers. Amla, Hibiscus and Bhringraj are traditional hair packs. Use Pack rather than claiming proven conditioning, softness or shine.
-
-EXACT PATH SUMMARY
-Hair:
-  careArea -> check -> hairGoal -> washNeed / packNeed / scalpNeed / hairStep
-  -> hairHistory -> treatmentType if treated -> routine
-  -> packAddon / washAddon if requested -> strand if light/treated -> result.
-  Scalp symptoms, uncertain history and unresolved step selection exit as described above.
-
-Skin:
-  careArea -> check -> skin eligibility gate.
-  No eligible product -> guidance.
-  Eligible -> skinArea -> area eligibility gate -> skinNeed -> skinChecks -> result.
-
-Both:
-  careArea -> check -> eligibility gate.
-  No skin candidate -> bothFallback -> explicit hair-only path or guidance.
-  Eligible -> bothPlan.
-  Shared -> skinArea -> dual-use eligibility gate -> sharedNeed -> hairHistory
-    -> treatmentType if treated -> skinChecks -> strand if light/treated -> result.
-  Separate -> skinArea -> skin eligibility gate -> hairGoal and hair-selection follow-ups
-    -> hairHistory -> treatmentType if treated -> skinNeed
-    -> skinChecks -> strand if light/treated -> result.
-  A failed area gate returns guidance; a failed shared dual-use gate offers bothFallback.
-
-Hair Colour:
-  careArea -> check -> colourTarget -> colourBase -> colourHistory
-  -> henna -> colourChecks -> result, subject to the early exits above.
-  Do not ask skinArea, hair routine or addon questions on this path.
-
-RESULT COPY AND ACTIONS
-Candidate:
-  Title: Your suggested starting ritual.
-  Care: Hair Care / Skin Care / Hair & Skin / Hair Colour.
-  Product: current product name, image and intended role.
-  Why it fits: a short explanation tied to the customer's ingredient and step choices.
-  Directions: link to the exact product and the relevant use.
-  Actions: View product directions; Edit my answers.
-  Purchase actions appear only for eligible, available variants.
-
-Shared Both:
-  Title: One botanical, two separately directed uses.
-  One product card.
-  Hair use: its approved hair step and directions.
-  Skin use: its confirmed face/body directions.
-  Do not reuse prepared paste between areas or invent a shared recipe.
-
-Separate Both:
-  Title: Your hair and skin starting plan.
-  Step 1: selected hair product, labelled Hair use.
-  Step 2: selected skin product, labelled Skin use.
-  These are separate uses, not a mixture or a required same-session sequence.
-
-Conditional:
-  Title: Check before starting.
-  Name the exact unfinished checks and the products/areas they concern.
-  Show directions and Edit my answers. No start-now instruction or automatic add-to-cart.
-
-No confirmed skin use:
-  Title: Skin use is not yet confirmed.
-  Copy: We do not currently have a matching powder with confirmed directions for your selected skin use. Explore its stated uses, or choose another care path.
-  Actions: View product-use guidance; Edit my answers.
-  For Both, offer the explicit hair-only continuation through bothFallback.
-
-No stock:
-  Title: Your selected ritual is unavailable right now.
-  Explain the unavailable item or step. Never substitute an unsupported skin or colour product.
-
-Pause / review / guidance / no match:
-  Explain the unresolved point in plain language. No personalised product recommendations.
-  Allow editing and appropriate product-information or contact links.
-  General browsing must be labelled as browsing, not as a quiz match.
-
-PRODUCT ROLE REFERENCE
-Amla Powder: Hair Care / Pack. Fruit-based traditional hair pack.
-Hibiscus Powder: Hair Care / Pack. Flower-based traditional hair pack.
-Bhringraj Powder: Hair Care / Pack. Traditional hair-and-scalp pack.
-Reetha Powder: Hair Care / Cleanse. Soapnut-based herbal hair wash.
-Shikakai Powder: Hair Care / Cleanse. Pod-based herbal hair wash.
-Indigo Powder: Hair Colour / Colour. A stage within a suitable botanical colour method.
-
-Skin and shared Both eligibility are not currently confirmed by the local product copy.
-Enable future skin suggestions only after the exact product's intended use, area-specific directions and restrictions are confirmed and consistent.
-
-SOURCE REFERENCES
-Local website sources reviewed:
-  frontend/src/domain/catalog/products.ts
-  frontend/src/domain/collection-catalog.ts
-  frontend/src/features/rituals/guided-quiz.ts
-  frontend/src/features/rituals/recommendation.ts
-  frontend/src/lib/shopify/storefront.ts
-
-Product links to use in results:
-  https://naturemist.shop/shop/amla-powder
-  https://naturemist.shop/shop/hibiscus-powder
-  https://naturemist.shop/shop/bhringraj-powder
-  https://naturemist.shop/shop/reetha-powder
-  https://naturemist.shop/shop/shikakai-powder
-  https://naturemist.shop/shop/indigo-powder
-
-IMPLEMENTATION NOTES
-The local Find your ritual section now starts with careArea and implements the four care branches, including shared and separate Both plans when product eligibility permits them.
-The quiz uses the new question IDs in this document. Do not reuse old stored answers without migration or reset.
-Skin eligibility requires explicit Face/Facial and/or Body directions in howTo, with no conflicting restriction, as well as the matching care classification and verified product identity.
-Keep category labels, result labels and catalogue filters consistent. Keep care eligibility separate from product preference.
-Changing careArea, bothPlan, skinArea or a selected ingredient invalidates the affected history, candidate and check answers. A check for one product must not transfer to a newly selected product.
-If catalogue eligibility changes mid-session, recompute the flow and require any newly relevant checks.
-Do not infer future skin approval from the proposed skin questions in this file.
-
-VALIDATION STATUS AND ACCEPTANCE CASES
-The local quiz implementation passes 46 targeted tests covering the adaptive flow, navigation, recommendations and section motion. Exhaustive traversal checks 31,368 completed paths across current-role and synthetic future-skin fixtures. Synthetic fixtures test future behaviour; they do not establish current product skin eligibility. Deployment is not part of this update.
-
-Acceptance cases (retain when changing products or publishing):
-  1. All four starting choices are visible with no preselection.
-  2. Hair-only users never receive skin-use questions.
-  3. Skin-only users never receive hair-history or hair-addon questions.
-  4. Current local catalogue: Skin ends in guidance with no recommended product.
-  5. Current local catalogue: Both offers explicit hair-only continuation or guidance.
-  6. A Skin Care tag with hair-only or conflicting directions does not pass eligibility.
-  7. Face/body selection filters products by their exact confirmed application areas.
-  8. Shared Both requires both care classifications and both sets of directions.
-  9. Separate Both labels hair and skin items correctly and adds no third product.
- 10. The same dual-use product selected twice becomes one card with two uses.
- 11. Ingredient preference cannot override irritation, reaction or unsupported use.
- 12. Light/treated hair triggers strand checks for the exact selected hair products.
- 13. Both remains conditional until every relevant uncompleted check is addressed.
- 14. Skin comparison returns alternatives, not an instruction to mix or buy both.
- 15. Indigo never appears in hair-pack, cleanser, skin or shared Both results.
- 16. Unsupported colour goals and uncertain colour compatibility return guidance.
- 17. A hair-only continuation clears old skin and Both answers and labels.
- 18. Switching branches or products clears dependent answers and stale checks.
- 19. Unavailable products and missing intended-use information cannot become purchasable matches.
- 20. Product links, size, price and availability come from the current verified catalogue.

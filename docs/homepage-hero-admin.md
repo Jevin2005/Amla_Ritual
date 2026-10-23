@@ -80,6 +80,8 @@ The shared effects use React, CSS and native browser animation APIs. The ingredi
 
 ## Ingredient clarity: responsive collage and gooey effect
 
+**Local update, 23 October 2026:** the prepared version uses the 18 bundled photos from `NatureMist_18_Posters` as six matching sets. Shopify continues to control copy and settings, but its old image selections are not used by this version. Phones use the lightweight image transition. See the current collection note in [Ingredient section controls](ingredient-clarity-admin.md); the gallery-selection instructions below apply to the previous deployed version.
+
 Open **Content → Metaobjects → Ingredient clarity → Homepage ingredient section**. This dedicated entry manages all three image galleries, backgrounds, botanical artwork, headings, captions, button, colors and section visibility. See [Ingredient section controls in Shopify](ingredient-clarity-admin.md) for the complete guide. The legacy ingredient fields under Storefront content are used only when the dedicated entry is unavailable.
 
 1. Upload or select **1–8 images** independently in `ingredient_plant_images`, `ingredient_preparation_images`, and `ingredient_lifestyle_images`.

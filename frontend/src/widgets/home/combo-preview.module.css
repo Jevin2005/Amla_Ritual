@@ -58,10 +58,10 @@
   position: relative;
   min-height: 100%;
   overflow: hidden;
-  background: #d9d0b6;
+  background: #eee8d9;
 }
 
-.image { object-fit: cover; }
+.image { object-fit: contain; padding: 16px; }
 
 .content {
   padding: 54px 34px 30px;
@@ -215,8 +215,8 @@
 @media (max-width: 640px) {
   .overlay { padding: 16px; }
   .dialog { grid-template-columns: 1fr; max-height: calc(100dvh - 32px); }
-  .photo { min-height: 0; aspect-ratio: 1.65; }
-  .image { object-position: center 55%; }
+  .photo { min-height: 0; aspect-ratio: 1; }
+  .image { padding: 12px; }
   .content { padding: 26px 22px 24px; }
   .title { font-size: 2.75rem; }
   .quantity { margin-bottom: 20px; }

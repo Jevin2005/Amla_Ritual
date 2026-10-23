@@ -1,5 +1,13 @@
 # Ingredient section controls in Shopify
 
+## Local photo collection — 23 October 2026
+
+The prepared storefront now uses all 18 supplied WebP images from `NatureMist_18_Posters`, copied unchanged into `frontend/public/images/botanical-posters`. The image manifest is `frontend/src/domain/ingredient-poster-gallery.ts`. The three panels show matching ingredient, preparation and jar photos in this order: Amla, Reetha, Shikakai, Hibiscus, Bhringraj, Indigo. Navigation and autoplay move all panels together.
+
+Shopify still controls wording, visibility, backgrounds, decorative artwork, colors and animation timing. The three old Shopify gallery fields remain saved for the currently deployed site, but this local version replaces their selections with the supplied collection. The gallery-upload instructions below describe the previous version. No Shopify files or metaobjects were changed for this update, and it has not been deployed.
+
+The mobile ingredient photo uses a full landscape frame; jar photos keep their tall native proportions. Phones and touch devices use the regular image fade instead of loading the WebGL poster galleries. Desktop mouse interaction retains the configured gooey effect. Reduced motion continues to disable autoplay and animated effects.
+
 Open **Shopify Admin → Content → Metaobjects → Ingredient clarity → Homepage ingredient section** (handle `main`).
 
 [Open the installed Shopify entry](https://admin.shopify.com/store/zyv78m-p7/content/metaobjects/entries/ingredient_clarity/431726788794).

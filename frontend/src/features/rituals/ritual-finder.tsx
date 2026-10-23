@@ -8,7 +8,7 @@ import { useStore } from "@/features/store/store-provider";
 import { useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { MediaImage } from "@/shared/ui/media-image";
 import { scrollPageTo } from "@/shared/ui/page-scroll";
-import { getQuizFlow, resolveQuizBrowseItems, resolveQuizResult, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
+import { getQuizFlow, getQuizAnswerSummary, quizCatalogKey, resolveQuizRecommendations, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
 import { createQuizNavigation, type QuizNavigation } from "./ritual-navigation";
 import { skinDirections } from "./quiz-catalog";
 import styles from "./ritual-finder.module.css";
@@ -35,7 +35,13 @@ function GoalIcon({ goal }: { goal: string }) {
   );
 }
 
-export function RitualFinder({ onProgress }: RitualFinderProps) {
+export function RitualFinder(props: RitualFinderProps) {
+  const { products, source } = useStore();
+  const catalogKey = useMemo(() => quizCatalogKey({ products, source }), [products, source]);
+  return <RitualFinderSession key={catalogKey} {...props} />;
+}
+
+function RitualFinderSession({ onProgress }: RitualFinderProps) {
   const [state, setState] = useState<QuizState>({ answers: {}, cursor: 0, showResult: false });
   const [busy, setBusy] = useState(false);
   const [direction, setDirection] = useState<"forward" | "back">("forward");
@@ -51,16 +57,20 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
   const cursor = Math.min(state.cursor, Math.max(0, flow.questions.length - 1));
   const question = flow.questions[cursor];
   const complete = state.showResult && flow.complete && Boolean(flow.outcome);
-  const result = useMemo(() => flow.outcome ? resolveQuizResult(flow.outcome, products, source) : null, [flow.outcome, products, source]);
-  const browseItems = useMemo(() => resolveQuizBrowseItems(state.answers, products, source), [state.answers, products, source]);
+  const result = useMemo(() => flow.outcome ? resolveQuizRecommendations(flow.outcome, products, source) : null, [flow.outcome, products, source]);
   const browsingOnly = Boolean(result && result.items.length === 0);
-  const displayedItems = browsingOnly ? browseItems : result?.items ?? [];
+  const displayedItems = result?.items ?? [];
+  const answerSummary = useMemo(() => getQuizAnswerSummary(state.answers, flow), [state.answers, flow]);
   const selectedCare = result?.careArea ?? state.answers.careArea?.[0];
   const skinRitual = selectedCare === "skin";
   const bothRitual = selectedCare === "both";
   const careLabel = careLabels[selectedCare as keyof typeof careLabels];
   const selection = question ? state.answers[question.id] || [] : [];
   const validSelection = selection.length > 0 && selection.every((value) => question?.options.some((option) => option.value === value));
+
+  useEffect(() => {
+    onProgress?.({ questionNumber: 1, complete: false });
+  }, [onProgress]);
 
   useEffect(() => {
     motionRef.current = motionActive;
@@ -130,8 +140,8 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
       <div className={styles.header}>
         <span className={styles.stepNumber} aria-hidden="true">{complete ? <svg viewBox="0 0 24 24" fill="none"><path d={browsingOnly ? "M6 12h12m-5-5 5 5-5 5" : "m6 12 4 4 8-8"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg> : String(cursor + 1).padStart(2, "0")}</span>
         <div className={styles.stageCopy}>
-          <p className={styles.stepLabel}>{complete ? browsingOnly ? "Your discovery" : "Your ritual" : `Question ${cursor + 1}`}</p>
-          <p className={styles.stage}>{complete ? browsingOnly ? "Meet the botanicals" : "A considered next step" : question?.label}</p>
+          <p className={styles.stepLabel}>{complete ? browsingOnly ? "Your guidance" : "Your ritual" : `Question ${cursor + 1}`}</p>
+          <p className={styles.stage}>{complete ? browsingOnly ? "Before choosing a product" : "A considered next step" : question?.label}</p>
         </div>
         <span className={styles.headerRule} aria-hidden="true" />
       </div>
@@ -171,15 +181,14 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
           <div className={styles.result} data-result-kind={result.kind} data-browsing-only={browsingOnly} data-result-reveal={motionActive}>
             <p className={styles.resultEyebrow}>{careLabel ? `${careLabel} · ${browsingOnly ? "Your guidance" : "Your ritual"}` : "Chosen around your answers"}</p>
             <h3 className={styles.resultTitle} style={{ "--reveal-order": 1 } as CSSProperties} tabIndex={-1} data-quiz-focus>{result.title}</h3>
-            <p className={styles.resultDescription} style={{ "--reveal-order": 2 } as CSSProperties}>{result.description}</p>
+            {displayedItems.length === 0 && <p className={styles.resultDescription} style={{ "--reveal-order": 2 } as CSSProperties}>{result.description}</p>}
             {displayedItems.length > 0 && <section className={styles.suggestions} aria-labelledby={`${quizId}-suggestions`}>
               <div className={styles.suggestionsHeader}>
-                <h4 className={styles.suggestionsTitle} id={`${quizId}-suggestions`}>{browsingOnly ? "Botanicals to explore" : skinRitual && displayedItems.length > 1 ? "Skin-care options to compare" : "Suggested products"}</h4>
+                <h4 className={styles.suggestionsTitle} id={`${quizId}-suggestions`}>{skinRitual && displayedItems.length > 1 ? "Skin-care options to compare" : "Products matched to your answers"}</h4>
                 <span className={styles.matchCount}>{displayedItems.length} {displayedItems.length === 1 ? "product" : "products"}</span>
               </div>
-              {browsingOnly && <p className={styles.browseContext}>{selectedCare === "colour" ? "Traditional hair-pack ingredients for browsing; these do not provide your requested colour result." : "For browsing: ingredients, intended uses and product details."}</p>}
               <ol className={styles.resultProducts} role="list">
-                {displayedItems.map(({ product, role, reason, skinArea }) => {
+                {displayedItems.map(({ product, role, reason, skinArea, alternativeFor }) => {
                   const image = product.featuredImage || product.images?.[0];
                   const botanical = botanicalArtworks.find((name) => matchesProductSlug(`${name}-powder`, product));
                   const fallbackImage = botanical ? `/images/specimen-collection/${botanical}.webp` : undefined;
@@ -193,7 +202,7 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
                         <p className={styles.productRole}>{role === "Both" ? "Hair & skin · separate uses" : role === "Skin" ? `Skin use · ${skinArea === "both" ? "Face and body" : skinArea === "body" ? "Body" : "Face"}` : role === "Pack" ? "Traditional hair pack" : role === "Condition" ? "Conditioning mask" : role === "Cleanse" ? "Botanical wash" : "Indigo colour stage"}</p>
                         <h5 className={styles.productName} style={{ "--reveal-order": 1 } as CSSProperties}><Link href={`/shop/${product.slug}${result.kind === "conditional" ? "#product-directions" : ""}`} className={styles.productNameLink}>{product.name}</Link></h5>
                         <div className={styles.matchReasons} style={{ "--reveal-order": 2 } as CSSProperties}>
-                          <p className={styles.reasonLabel}>{browsingOnly ? "About this botanical" : "Why this fits your answers"}</p>
+                          <p className={styles.reasonLabel}>{alternativeFor ? `Available alternative to ${alternativeFor}` : "Why this fits your answers"}</p>
                           <p>{reason}</p>
                           {role === "Both" && <p><strong>Hair use:</strong> Follow this product’s hair-pack directions separately.</p>}
                           {(role === "Skin" || role === "Both") && skinArea && <p><strong>Skin use:</strong> {skinDirections(product, skinArea).join(" ")}</p>}
@@ -208,7 +217,12 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
                 })}
               </ol>
             </section>}
-            {browsingOnly && <Link href="/shop" className={styles.directionsLink}>Browse the full collection <span aria-hidden="true">↗</span></Link>}
+            {displayedItems.length > 0 && <p className={styles.resultNote}><strong>Your next steps:</strong> {result.description}</p>}
+            {answerSummary.length > 0 && <details className={styles.answerSummary}>
+              <summary>Your preferences</summary>
+              <dl>{answerSummary.map(({ id, label, value }) => <div key={id}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+            </details>}
+            {browsingOnly && result.kind !== "pause" && result.kind !== "review" && <Link href="/shop" className={styles.directionsLink}>Browse the full collection <span aria-hidden="true">↗</span></Link>}
             {result.items.length > 0 && <p className={styles.resultNote}>{bothRitual ? "Prepare and use each product separately for hair and skin. Follow the directions and checks for each intended area." : skinRitual ? `${result.items.length > 1 ? "These are alternatives; choose one powder to start. " : ""}Follow the current skin-use directions and patch-test guidance. Hair-care directions do not apply to skin.` : `${result.items.length > 1 ? "Use these as separate care steps in the order specified by the product directions. " : ""}Follow each product’s current pack directions, including its patch and strand checks.`}</p>}
             {source === "preview" && displayedItems.length > 0 && <p className={styles.resultNote}>Preview collection. See the product page for current details.</p>}
             <div className={styles.resultActions}>

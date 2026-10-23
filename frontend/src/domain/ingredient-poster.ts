@@ -1,6 +1,7 @@
 import type { StoreImage } from "./catalog/products";
 import { boundedNumber } from "./catalog/hero";
 import { parseSheryConfig, type SheryConfig } from "./shery-config";
+import { ingredientPosterGalleries } from "./ingredient-poster-gallery";
 
 export type IngredientClarityContent = {
   settings: IngredientClaritySettings;
@@ -95,9 +96,7 @@ export function parseIngredientClaritySettings(fields: ContentFields): Ingredien
 
 export const defaultIngredientClarity: IngredientClarityContent = {
   settings: defaultIngredientClaritySettings,
-  plantImages: [{ url: "/images/ingredient-plant-v1.png", altText: "Fresh amla fruit in a woven basket with leafy botanical branches", width: 1448, height: 1086 }],
-  preparationImages: [{ url: "/images/naturemist-ritual.png", altText: "Mixing an amla botanical paste with a wooden spoon", width: 1024, height: 1536 }],
-  lifestyleImages: [{ url: "/images/ingredient-lifestyle-v1.png", altText: "A NatureMist amla powder jar beside a sunlit bathroom basin", width: 1086, height: 1448 }],
+  ...ingredientPosterGalleries,
   background: null,
   mobileBackground: null,
   botanical: { url: "/images/ingredient-botanical-v1.png", altText: "", width: 1448, height: 1086 },

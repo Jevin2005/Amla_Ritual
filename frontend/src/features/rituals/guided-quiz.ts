@@ -1,7 +1,7 @@
 import { type Product } from "@/domain/catalog/products";
 import { availableProduct, verifiedProduct, verifiedCandidate, supportsHairRole, skinDirections, skinSlugs, type SkinArea } from "./quiz-catalog";
 
-export type QuizQuestionId = "careArea" | "hairGoal" | "check" | "reactionIngredient" | "skinArea" | "skinNeed" | "skinChecks" | "bothPlan" | "sharedNeed" | "bothFallback" | "washNeed" | "packNeed" | "scalpNeed" | "hairStep" | "hairHistory" | "treatmentType" | "routine" | "packAddon" | "washAddon" | "strand" | "colourTarget" | "colourBase" | "colourHistory" | "henna" | "colourChecks";
+export type QuizQuestionId = "careArea" | "hairGoal" | "check" | "comfortCheck" | "reactionIngredient" | "skinArea" | "skinNeed" | "skinChecks" | "bothPlan" | "sharedNeed" | "bothFallback" | "washNeed" | "packNeed" | "scalpNeed" | "hairStep" | "hairHistory" | "treatmentType" | "routine" | "packAddon" | "washAddon" | "strand" | "colourTarget" | "colourFallback" | "colourBase" | "colourHistory" | "henna" | "colourChecks";
 export type QuizCare = "hair" | "skin" | "both" | "colour";
 export type QuizAnswers = Partial<Record<QuizQuestionId, string[]>>;
 export type QuizQuestion = {
@@ -24,7 +24,7 @@ export type QuizOutcome = {
 };
 export type QuizFlow = { questions: QuizQuestion[]; complete: boolean; outcome: QuizOutcome | null };
 export type QuizResult = Omit<QuizOutcome, "candidates"> & {
-  items: (Omit<QuizCandidate, "slug"> & { product: Product })[];
+  items: (Omit<QuizCandidate, "slug"> & { product: Product; alternativeFor?: string })[];
   unavailable: boolean;
 };
 
@@ -63,9 +63,9 @@ export const ritualQuestions: QuizQuestion[] = [
     ]
   },
   {
-    id: "bothFallback", label: "Available care", question: "How would you like to continue?", helper: "No matching shared ritual is available. You can still explore a hair routine.", multiple: false, options: [
-      { value: "hair", label: "Continue with hair care only" },
-      { value: "guidance", label: "Show me the current product-use guidance" },
+    id: "bothFallback", label: "Explore a hair ritual", question: "Would you like to explore a hair ritual from our current collection?", helper: "Our current powders have directions for hair care. Choose a hair ritual to explore their stated uses.", multiple: false, options: [
+      { value: "hair", label: "Yes, help me choose a hair-care step" },
+      { value: "pack", label: "Yes, explore a traditional hair pack" },
     ]
   },
   {
@@ -77,7 +77,15 @@ export const ritualQuestions: QuizQuestion[] = [
     ]
   },
   {
-    id: "skinNeed", label: "Your skin ritual", question: "Which botanical would you like to explore?", helper: "Choose by ingredient preference. This guide does not assess skin conditions or predict how your skin will respond.", multiple: false, options: [
+    id: "comfortCheck", label: "A little more about you", question: "Which description fits you best today?", helper: "This helps us choose the next step in your ritual guide.", multiple: false, options: [
+      { value: "none", label: "My skin and scalp feel comfortable, with no known product reactions" },
+      { value: "irritated", label: "I have current irritation or broken skin" },
+      { value: "reaction", label: "I have had a product reaction" },
+      { value: "unsure", label: "I would like personal guidance first" },
+    ]
+  },
+  {
+    id: "skinNeed", label: "Your skin ritual", question: "Which botanical would you like to explore?", helper: "Choose your preferred ingredient for the skin-use directions you selected.", multiple: false, options: [
       { value: "flower", label: "Hibiscus flower powder", description: "A flower-based rinse-off skin ritual." },
       { value: "fruit", label: "Amla fruit powder", description: "A fruit-based rinse-off skin ritual." },
       { value: "compare", label: "Compare both options", description: "Read about each powder, then choose one to start." },
@@ -108,7 +116,7 @@ export const ritualQuestions: QuizQuestion[] = [
     ]
   },
   {
-    id: "packNeed", label: "Your hair pack", question: "Which hair-pack ingredient interests you?", helper: "Choose by ingredient preference. Choose a botanical ingredient without a promise of a particular result.", multiple: false, options: [
+    id: "packNeed", label: "Your hair pack", question: "Which hair-pack ingredient interests you?", helper: "Choose your favourite botanical for a freshly prepared hair-pack ritual.", multiple: false, options: [
       { value: "flower", label: "Hibiscus flower powder" },
       { value: "fruit", label: "Amla fruit powder" },
       { value: "general", label: "A simple traditional hair pack" },
@@ -128,7 +136,7 @@ export const ritualQuestions: QuizQuestion[] = [
     id: "hairStep", label: "Choose a step", question: "Which kind of step are you looking for?", helper: "Choose a hair-wash ingredient or a separate traditional hair pack.", multiple: false, options: [
       { value: "wash", label: "A wash for my scalp and hair" },
       { value: "pack", label: "A traditional hair pack" },
-      { value: "unsure", label: "I need help choosing" },
+      { value: "unsure", label: "Choose a simple hair pack for me" },
     ]
   },
   {
@@ -186,6 +194,12 @@ export const ritualQuestions: QuizQuestion[] = [
     ]
   },
   {
+    id: "colourFallback", label: "Your next ritual", question: "Which available ritual would you like to explore?", helper: "Indigo is for deeper brown-to-dark tones. You can explore that colour direction or choose a separate hair-care ritual.", multiple: false, options: [
+      { value: "deeper", label: "Explore deeper brown-to-dark tones" },
+      { value: "hair", label: "Explore a separate hair-care ritual" },
+    ]
+  },
+  {
     id: "colourBase", label: "Your starting colour", question: "What colour are you starting with?", helper: "Choose the closest match.", multiple: false, options: [
       { value: "dark", label: "Dark brown or black" }, { value: "brown", label: "Light or medium brown" },
       { value: "light", label: "Blonde or lightened hair" }, { value: "grey", label: "Mostly grey or white" },
@@ -236,6 +250,7 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
   let careArea: QuizCare | undefined;
   let plan: QuizOutcome["plan"];
   let area: SkinArea | undefined;
+  let startingHairGoal: string | undefined;
   const pending = (): QuizFlow => ({ questions, complete: false, outcome: null });
   const finish = (kind: QuizOutcome["kind"], title: string, description: string, candidates: QuizCandidate[] = []): QuizFlow =>
     ({ questions, complete: true, outcome: { kind, title, description, candidates, careArea, plan } });
@@ -248,16 +263,20 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
   };
   careArea = ask("careArea")?.[0] as QuizCare | undefined;
   if (!careArea) return pending();
-  const check = ask("check");
+  let check = ask("check");
   if (!check) return pending();
-  if (check.includes("irritated")) return finish("pause", "Pause before starting", "Avoid applying botanicals to irritated or broken skin or scalp. Seek professional advice before choosing a ritual.");
+  if (check.includes("unsure")) {
+    check = ask("comfortCheck");
+    if (!check) return pending();
+  }
+  if (check.includes("irritated")) return finish("pause", "Care begins with comfort", "Give irritated or broken skin or scalp time to recover. Seek professional guidance before applying a new botanical.");
   if (check.includes("reaction")) {
     const ingredients = ask("reactionIngredient");
     if (!ingredients) return pending();
     const known = ingredients.map((value) => names[value + "-powder"]).filter(Boolean);
-    return finish("review", "Review your ingredients first", (known.length ? "Avoid " + known.join(" and ") + ", which you linked to a reaction. " : "") + "Get professional advice before trying another botanical. This guide will not suggest an allergy-safe substitute.");
+    return finish("review", "Find your next step with personal guidance", (known.length ? "Share your reaction to " + known.join(" and ") + " with a qualified healthcare professional. " : "") + "Review ingredient compatibility together before trying a new botanical.");
   }
-  if (check.includes("unsure")) return finish("review", "Check before choosing", "Clarify any previous reactions or current skin or scalp irritation before choosing a botanical.");
+  if (check.includes("unsure")) return finish("review", "Personal guidance for your next ritual", "Review your skin or scalp comfort and previous product experiences with a qualified professional, then return to explore your preferred care step.");
 
   const skinPool = (shared = false, forArea?: SkinArea) => catalog?.products.filter((product) =>
     skinSlugs.some((slug) => verifiedProduct(product, slug, catalog.source))
@@ -265,19 +284,20 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
     && (!shared || supportsHairRole(product, "Pack"))) ?? [];
   const availableSkin = (shared = false, forArea?: SkinArea) => skinPool(shared, forArea).filter((product) => availableProduct(product, catalog!.source));
   const skinGuidance = (shared = false, forArea?: SkinArea) => skinPool(shared, forArea).length
-    ? finish("guidance", "No skin ritual is available right now", "Matching skin-use directions are confirmed, but no matching product is currently available. Check back or edit your care choice.")
-    : finish("guidance", "Skin use is not yet confirmed", "No matching powder has confirmed directions for your selected skin use. Do not use hair-pack directions for your face or body. Explore the stated product uses or edit your care choice.");
+    ? finish("guidance", "Your next skin ritual", "Explore the confirmed skin-use directions and check back for restocked products, or edit your care choice to discover another ritual.")
+    : finish("guidance", "Explore each botanical's intended uses", "Our current collection focuses on hair packs, herbal washes and botanical colour. Choose one of these care areas to discover a product with directions for that use.");
   const hairFallback = (shared = false, forArea?: SkinArea): QuizFlow | "hair" => {
+    const hasHair = catalog?.products.some((product) => collectionCare.some((candidate) => verifiedCandidate(product, candidate.slug, catalog.source) && supportsHairRole(product, candidate.role as "Pack" | "Cleanse")));
+    if (!hasHair) return skinGuidance(shared, forArea);
     const choice = ask("bothFallback", skinPool(shared, forArea).length
-      ? "The matching skin or shared product is unavailable right now. You can still explore hair care."
-      : "No matching product has confirmed skin-use directions. You can still explore hair care.")?.[0];
+      ? "While your skin-care choice awaits restocking, you can choose a separate hair ritual from the available collection."
+      : "Our current powders have confirmed directions for hair care. Choose a hair ritual below, or use Back to revisit your care choice. Hair-use directions apply to hair only.")?.[0];
     if (!choice) return pending();
-    if (choice === "guidance") return skinGuidance(shared, forArea);
+    if (choice === "pack") startingHairGoal = "pack";
     return "hair";
   };
   if (careArea === "skin" || careArea === "both") {
     if (!availableSkin().length) {
-      if (careArea === "skin") return skinGuidance();
       const fallback = hairFallback();
       if (fallback !== "hair") return fallback;
       careArea = "hair";
@@ -295,8 +315,7 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
       area = ask("skinArea")?.[0] as SkinArea | undefined;
       if (!area) return pending();
       if (!availableSkin(plan === "shared", area).length) {
-        if (plan !== "shared") return skinGuidance(false, area);
-        const fallback = hairFallback(true, area);
+        const fallback = hairFallback(plan === "shared", area);
         if (fallback !== "hair") return fallback;
         careArea = "hair";
         plan = undefined;
@@ -336,45 +355,60 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
       "Follow the current directions for your selected skin area and stop if irritation occurs.", candidates);
   }
 
+  let target: string | undefined;
   if (careArea === "colour") {
-    const target = ask("colourTarget")?.[0];
+    target = ask("colourTarget")?.[0];
     if (!target) return pending();
-    if (target === "lighter" || target === "copper") return finish("no-match", "Explore care alongside colour", `This collection does not create ${target === "lighter" ? "lighter or blonde" : "red or copper"} tones. Discover traditional hair-pack ingredients below for a separate hair-care step.`);
-    if (target === "unsure") return finish("guidance", "Choose your colour direction first", "Clarify the colour result you want before selecting a botanical colour method. Results depend on your starting colour and the complete method.");
+    if (["lighter", "copper", "unsure"].includes(target)) {
+      const next = ask("colourFallback")?.[0];
+      if (!next) return pending();
+      if (next === "hair") careArea = "hair";
+      else target = "deeper";
+    }
+  }
+  if (careArea === "colour") {
+    const candidate: QuizCandidate = { slug: "indigo-powder", role: "Colour", reason: target === "grey" ? "Explore Indigo as the colour stage for your goal of a darker result on greys, with your complete colouring method." : "Explore Indigo as the colour stage for your chosen deeper brown-to-dark direction, with your complete colouring method." };
     const base = ask("colourBase")?.[0];
     if (!base) return pending();
-    if (base === "unsure") return finish("guidance", "Check your starting colour", "Your starting colour needs to be clear before choosing a darkening method. Get guidance on your current base and the result you want.");
     const history = ask("colourHistory");
     if (!history) return pending();
-    if (base === "light" || history.some((value) => ["dye", "bleach", "chemical", "unsure"].includes(value))) return finish("review", "Review colour compatibility first", "Your starting colour or treatment history needs a compatibility review before choosing Indigo. Check the current product instructions and seek guidance for your hair history.");
+    const compatibilityReview = ["light", "unsure"].includes(base) || history.some((value) => ["dye", "bleach", "chemical", "unsure"].includes(value));
     const henna = ask("henna")?.[0];
     if (!henna) return pending();
-    if (henna !== "ready") return finish("guidance", "Plan the complete colour method", "This quiz's Indigo route needs a suitable henna-first step and its directions; other colour methods need separate verified guidance. Indigo alone cannot promise black results on grey or blonde hair. Henna is not included in this collection.");
+    if (henna !== "ready") return finish("conditional", "Explore your colour ritual", "Start by reading Indigo's colour directions and planning the complete method with a suitable, separately sourced henna step. Confirm compatibility with your starting colour and treatment history before use, then complete the method's patch and strand checks.", [candidate]);
     const checks = ask("colourChecks")?.[0];
     if (!checks) return pending();
-    if (checks === "reaction") return finish("pause", "Explore care beyond colour", "Stop using the colour products that caused a reaction and seek professional advice before trying another botanical. You can browse general care products below.");
-    if (checks === "shade") return finish("review", "Explore care alongside colour", "Your strand result was different from your goal. Review the colour method before a full application; the products below are separate hair-pack ingredients.");
-    const candidate: QuizCandidate = { slug: "indigo-powder", role: "Colour", reason: target === "grey" ? "The Indigo stage of your confirmed henna-first method fits your aim of a darker result on greys; the final shade is not guaranteed." : "The Indigo stage of your confirmed henna-first method fits your aim of deeper brown-to-dark tones; the final shade is not guaranteed." };
+    if (checks === "reaction") return finish("pause", "Pause your colour ritual", "Stop using the colour products that caused a reaction and seek professional advice before trying another botanical.");
+    if (checks === "shade") return finish("review", "Review your colour result", "Your strand result was different from your goal. Review the colour method before a full application. No replacement has been suggested.");
+    if (compatibilityReview) return finish("conditional", "Explore your colour ritual", "Read Indigo's directions with a qualified colour professional to confirm compatibility with your starting colour and treatments before use. Complete the patch and strand checks for the agreed method.", [candidate]);
     return finish(checks === "notyet" ? "conditional" : "candidate", checks === "notyet" ? "Check before starting" : "Your suggested starting ritual", checks === "notyet" ? "Complete the patch and strand checks for the whole henna-and-indigo method using its product directions before deciding on a full application." : "Indigo is one colour stage, alongside your separate suitable henna-first step. Follow the complete method's current directions. An acceptable check does not guarantee a shade or rule out a future reaction.", [candidate]);
   }
 
 
 
   let main: QuizCandidate | undefined;
+  const generalChoice = (role: "Pack" | "Cleanse", preferred: string[], beginner = false): QuizCandidate => {
+    const eligible = preferred.filter((slug) => !catalog || catalog.products.some((product) =>
+      verifiedCandidate(product, slug, catalog.source) && supportsHairRole(product, role)));
+    const slug = eligible[0] ?? preferred[0];
+    return { slug, role, reason: `${names[slug]} matches your request for ${role === "Cleanse" ? "a herbal hair wash" : "a traditional hair pack"} without a specific ingredient preference.${catalog && eligible.length ? " It is available with confirmed directions for this step." : ""}${beginner ? " For your first botanical wash, follow this ingredient's preparation directions." : ""}` };
+  };
   const pack = (choice: string): QuizCandidate => choice === "flower"
     ? { slug: "hibiscus-powder", role: "Pack", reason: "You chose Hibiscus flower powder for a separate traditional hair-pack step." }
     : choice === "scalp"
       ? { slug: "bhringraj-powder", role: "Pack", reason: "You chose Bhringraj for a traditional hair-and-scalp pack." }
-      : { slug: "amla-powder", role: "Pack", reason: choice === "fruit" ? "You chose Amla fruit powder for a traditional hair pack." : "Amla is an option to explore for a simple traditional hair-pack routine." };
+      : choice === "fruit" ? { slug: "amla-powder", role: "Pack", reason: "You chose Amla fruit powder for a traditional hair pack." }
+        : generalChoice("Pack", ["amla-powder", "hibiscus-powder", "bhringraj-powder"]);
   const cleanser = (choice: string): QuizCandidate => choice === "reetha"
     ? { slug: "reetha-powder", role: "Cleanse", reason: "You chose Reetha soapnut powder for a separate herbal hair-wash step." }
-    : { slug: "shikakai-powder", role: "Cleanse", reason: choice === "shikakai" ? "You chose Shikakai pod powder for a traditional hair-washing routine." : "Shikakai is an ingredient to explore for a simple traditional herbal wash." };
+    : choice === "shikakai" ? { slug: "shikakai-powder", role: "Cleanse", reason: "You chose Shikakai pod powder for a traditional hair-washing routine." }
+      : generalChoice("Cleanse", ["shikakai-powder", "reetha-powder"], choice === "beginner");
   if (plan === "shared") {
     const selected = skinChoice(true);
     if (!selected) return pending();
     main = selected[0];
   } else {
-    let goal = ask("hairGoal")?.[0];
+    let goal = startingHairGoal ?? ask("hairGoal")?.[0];
     if (!goal) return pending();
     if (goal === "scalp") {
       const need = ask("scalpNeed")?.[0];
@@ -386,7 +420,6 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
     if (goal === "unsure") {
       const step = ask("hairStep")?.[0];
       if (!step) return pending();
-      if (step === "unsure") return finish("guidance", "Choose your care step first", "A herbal wash cleanses; a traditional hair pack is a separate care step. Explore the product directions before choosing a powder.");
       goal = step === "wash" ? "cleanse" : "pack";
     }
     if (!main) {
@@ -397,11 +430,11 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
   }
   const history = ask("hairHistory")?.[0];
   if (!history) return pending();
-  if (history === "unsure") return finish("review", "Check your hair history first", "Clarify your current colour and treatment history before choosing a botanical.");
+  let historyReview = history === "unsure";
   if (history === "treated") {
     const treatments = ask("treatmentType");
     if (!treatments) return pending();
-    if (treatments.includes("unsure")) return finish("review", "Review your treatment history", "Check which treatments are on your hair and review product compatibility before choosing a botanical.");
+    historyReview = treatments.includes("unsure");
   }
   const candidates: QuizCandidate[] = [main];
   if (careArea === "hair") {
@@ -433,23 +466,24 @@ export function getQuizFlow(answers: QuizAnswers, catalog?: QuizCatalog): QuizFl
     skinCheck = checks;
   }
   let strandCheck: string | undefined;
-  if (history === "light" || history === "treated") {
+  if (history !== "natural") {
     const hairCandidates = candidates.filter((c) => c.role !== "Skin");
     strandCheck = ask("strand", hairCandidates.map((c) => names[c.slug]).join(" and ") + ". " + questionsById.strand.helper)?.[0];
     if (!strandCheck) return pending();
-    if (strandCheck === "changed" || strandCheck === "unsure") return finish("review", "Review your strand result", "The strand result was unexpected or uncertain. Review the selected products and your hair history before a full application.");
+    if (strandCheck === "changed") return finish("review", "Plan your next step with care", "Review the unexpected strand result and your hair history with a qualified professional before a full application.");
   }
-  const conditional = skinCheck === "notyet" || strandCheck === "notyet";
+  const conditional = historyReview || skinCheck === "notyet" || strandCheck === "notyet" || strandCheck === "unsure";
   const instructions = careArea === "both"
     ? "Use separate preparations and follow the product directions for each hair and skin use. Hair-care instructions do not apply to skin."
     : candidates.length > 1 ? "These are separate care steps: a traditional hair pack and a herbal hair wash. Follow each product's current directions."
       : "Follow the current product directions and patch-test guidance before use.";
   const outstanding = [
+    ...(historyReview ? ["Confirm your hair treatment history and the selected product's compatibility before use."] : []),
     ...(skinCheck === "notyet" ? ["Complete the skin-use patch-test directions for " + candidates.filter((c) => c.role === "Skin" || c.role === "Both").map((c) => names[c.slug]).join(" and ") + "."] : []),
-    ...(strandCheck === "notyet" ? ["Check " + candidates.filter((c) => c.role !== "Skin").map((c) => names[c.slug]).join(" and ") + " on a hidden strand before starting."] : []),
+    ...(["notyet", "unsure"].includes(strandCheck ?? "") ? ["Check " + candidates.filter((c) => c.role !== "Skin").map((c) => names[c.slug]).join(" and ") + " on a hidden strand before starting."] : []),
   ].join(" ");
   return finish(conditional ? "conditional" : "candidate",
-    conditional ? "Check before starting" : careArea === "both" ? (candidates.length === 1 ? "One botanical, two separately directed uses" : "Your hair and skin starting plan") : "Your suggested starting ritual",
+    conditional ? "Your ritual, with a little preparation" : careArea === "both" ? (candidates.length === 1 ? "One botanical, two separately directed uses" : "Your hair and skin starting plan") : "Your suggested starting ritual",
     (conditional ? outstanding + " " : "") + instructions, candidates);
 }
 
@@ -483,38 +517,18 @@ const collectionCare: QuizCandidate[] = [
   { slug: "reetha-powder", role: "Cleanse", reason: "Reetha soapnut powder is an ingredient for a botanical hair-wash routine." },
 ];
 
-/** General product discovery for completed routes without a personal recommendation. */
-export function resolveQuizBrowseItems(answers: QuizAnswers, products: readonly Product[], source: "shopify" | "preview"): QuizResult["items"] {
-  const flow = getQuizFlow(answers, { products, source });
-  if (!flow.complete || !flow.outcome || resolveQuizResult(flow.outcome, products, source).items.length > 0) return [];
-  const care = flow.outcome.careArea ?? answers.careArea?.[0];
-  const goal = care === "hair" ? answers.hairGoal?.[0] : care;
-  // A stopped skin route must not turn a reaction or an unconfirmed product
-  // into a recommendation for a different powder.
-  if (care === "skin" || care === "both") return [];
-  const excluded = flow.questions.some((question) => question.id === "reactionIngredient")
-    ? (answers.reactionIngredient ?? []).filter((ingredient) => Boolean(names[`${ingredient}-powder`]))
-    : [];
-  const changedStrandSlugs = flow.questions.some((question) => question.id === "strand") && answers.strand?.[0] === "changed"
-    ? getQuizFlow({ ...answers, strand: ["passed"] }, { products, source }).outcome?.candidates.map((candidate) => candidate.slug) ?? []
-    : [];
-  const preferred = goal === "cleanse" ? ["shikakai-powder", "reetha-powder"]
-    : goal === "scalp" ? ["bhringraj-powder", "reetha-powder"]
-      : ["amla-powder", "hibiscus-powder"];
-  const collection = [...collectionCare].sort((a, b) => {
-    const priority = (slug: string) => preferred.includes(slug) ? preferred.indexOf(slug) : preferred.length;
-    return priority(a.slug) - priority(b.slug);
-  });
-  return collection.flatMap(({ slug, role, reason }) => {
-    // Colour dead ends show separate hair packs, never an incompatible colour substitute.
-    if (goal === "colour" && role !== "Pack") return [];
-    if (changedStrandSlugs.includes(slug)) return [];
-    if (excluded.some((ingredient) => slug === `${ingredient}-powder`)) return [];
-    const product = products.find((entry) => verifiedCandidate(entry, slug, source)
-      && supportsHairRole(entry, role as "Pack" | "Cleanse")
-      && !excluded.some((ingredient) => new RegExp(`\\b${ingredient}\\b`, "i").test(`${entry.name} ${entry.ingredient}`)));
-    return product ? [{ product, role, reason }] : [];
-  }).slice(0, 2);
+/** Only reachable, validated preferences belong in the customer's result summary. */
+export function getQuizAnswerSummary(answers: QuizAnswers, flow: QuizFlow) {
+  const preferences: QuizQuestionId[] = ["careArea", "bothFallback", "bothPlan", "skinArea", "skinNeed", "sharedNeed", "hairGoal", "hairStep", "scalpNeed", "washNeed", "packNeed", "routine", "packAddon", "washAddon", "colourTarget", "colourFallback"];
+  return flow.questions.filter((question) => preferences.includes(question.id) && validAnswer(question, answers[question.id]))
+    .map((question) => ({ id: question.id, label: question.label, value: question.options.filter((option) => answers[question.id]!.includes(option.value)).map((option) => option.label).join(", ") }));
+}
+
+/** Reset a running quiz when eligibility changes: checks cannot transfer to a new product. */
+export function quizCatalogKey({ products, source }: QuizCatalog): string {
+  return JSON.stringify([source, products.map((product) => [product.id, product.slug, product.shopifyHandle, product.name,
+    product.ingredient, product.careAreas, product.ritualStep, product.howTo, product.safety, product.description,
+    availableProduct(product, source)]).sort((a, b) => String(a[0] ?? a[1]).localeCompare(String(b[0] ?? b[1])))]);
 }
 
 /** Resolve exact candidates against current records; never fill a gap with another role. */
@@ -531,9 +545,40 @@ export function resolveQuizResult(outcome: QuizOutcome, products: readonly Produ
   });
   const unavailable = items.length !== outcome.candidates.length;
   const skinOnly = outcome.candidates.every((candidate) => candidate.role === "Skin");
-  if (!items.length) return { ...context, kind: "no-match", title: skinOnly ? "No confirmed skin ritual is available" : "Discover more botanicals", description: skinOnly ? "No matching product is available with confirmed skin-use information. The current powders are for their stated hair-care or hair-colour roles; do not adapt hair-pack directions for your face or body." : "Your selected ritual is not available right now. Explore the collection below or edit your answers to plan a different care routine.", items, unavailable: true };
+  if (!items.length) return { ...context, kind: "no-match", title: skinOnly ? "No confirmed skin ritual is available" : "Your matching ritual is unavailable", description: skinOnly ? "No matching product is available with confirmed skin-use information. The current powders are for their stated hair-care or hair-colour roles; do not adapt hair-pack directions for your face or body." : "No available product with confirmed directions matches your selected ritual right now. Your ingredient and care preferences have been kept; no unrelated substitute has been added. Edit your answers to choose a different preference or check back later.", items, unavailable: true };
   const partialDescription = skinOnly
     ? "Only one of your skin-care options is available with confirmed product information. No substitute has been added. Follow the available product's current skin-use directions and patch-test guidance before starting."
     : "Only part of your requested ritual is available with confirmed product information. The remaining suggested step is unavailable; no substitute has been added. Follow the available product's directions and complete the relevant checks for its stated use before starting.";
   return { ...context, kind, title: unavailable ? "Part of your ritual is unavailable" : title, description: unavailable ? partialDescription : description, items, unavailable };
+}
+
+/** Keep exact matches first, then offer clearly named alternatives for missing steps. */
+export function resolveQuizRecommendations(outcome: QuizOutcome, products: readonly Product[], source: "shopify" | "preview"): QuizResult {
+  const exact = resolveQuizResult(outcome, products, source);
+  if (!exact.unavailable || !["candidate", "conditional"].includes(outcome.kind)) return exact;
+  // Reserve all original choices so an alternative cannot duplicate another requested step.
+  const reserved = new Set(outcome.candidates.map((candidate) => candidate.slug));
+  const alternatives: QuizResult["items"] = [];
+  const items = outcome.candidates.slice(0, 2).flatMap((candidate) => {
+    const match = resolveQuizResult({ ...outcome, candidates: [candidate] }, products, source).items[0];
+    if (match) return [match];
+    if (candidate.role === "Colour") return [];
+    const pool = candidate.role === "Skin" || candidate.role === "Both"
+      ? skinSlugs : collectionCare.filter((entry) => candidate.role === "Cleanse" ? entry.role === "Cleanse" : entry.role === "Pack").map((entry) => entry.slug);
+    for (const slug of pool) {
+      if (reserved.has(slug)) continue;
+      const replacement = resolveQuizResult({ ...outcome, candidates: [{ ...candidate, slug }] }, products, source).items[0];
+      if (!replacement) continue;
+      reserved.add(slug);
+      const step = candidate.role === "Cleanse" ? "herbal wash" : candidate.role === "Both" ? "separate hair and skin uses" : candidate.role === "Skin" ? "selected skin area" : "traditional hair-pack step";
+      const item = { ...replacement, alternativeFor: names[candidate.slug],
+        reason: `${replacement.product.name} is an available alternative for your ${step}, in place of your original ${names[candidate.slug]} choice. It uses a different ingredient; explore its own preparation directions.` };
+      alternatives.push(item);
+      return [item];
+    }
+    return [];
+  });
+  if (!alternatives.length) return exact;
+  return { ...exact, kind: "conditional", title: "Your available botanical picks",
+    description: `Explore these available products for the care steps you chose. Alternatives to your original choices are labelled on each card.${items.length < outcome.candidates.length ? " This selection covers part of your requested routine; check back for the remaining step." : ""} Follow each alternative's own directions and complete its patch and strand checks where required. Checks for a different product do not carry over.`, items };
 }

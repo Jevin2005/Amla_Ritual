@@ -1064,14 +1064,6 @@ function contentImage(content: GraphSiteContent | null, key: string, fallback: S
   return toImage(content?.[key]?.reference?.image) || fallback;
 }
 
-function contentImages(content: GraphSiteContent | null, key: string, fallback: StoreImage): StoreImage[] {
-  const images = (content?.[key]?.references?.nodes || []).flatMap((node) => {
-    const image = toImage(node.image);
-    return image ? [image] : [];
-  });
-  return posterImages(images, fallback);
-}
-
 function storefrontPath(value: string) {
   try {
     const config = configuration();
@@ -1383,9 +1375,11 @@ function mapContent(response: ContentResponse): StorefrontContent {
     ritualPosterSettings: parseIngredientPosterSettings(ingredient),
     ingredientClarity: {
       settings: parseIngredientClaritySettings(ingredient),
-      plantImages: contentImages(ingredient, "ingredientPlantImages", defaultIngredientClarity.plantImages[0]),
-      preparationImages: contentImages(ingredient, "ingredientPreparationImages", defaultIngredientClarity.preparationImages[0]),
-      lifestyleImages: contentImages(ingredient, "ingredientLifestyleImages", defaultIngredientClarity.lifestyleImages[0]),
+      // The supplied 18-photo collection replaces the old independent galleries.
+      // Shopify still owns the section copy, visibility, colors and motion settings.
+      plantImages: defaultIngredientClarity.plantImages,
+      preparationImages: defaultIngredientClarity.preparationImages,
+      lifestyleImages: defaultIngredientClarity.lifestyleImages,
       background: toImage(ingredient?.ingredientBackground?.reference?.image),
       mobileBackground: toImage(ingredient?.ingredientMobileBackground?.reference?.image),
       botanical: toImage(ingredient?.ingredientBotanical?.reference?.image),

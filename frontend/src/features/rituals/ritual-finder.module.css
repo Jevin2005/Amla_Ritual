@@ -550,6 +550,36 @@
   min-height: 48px;
 }
 
+.answerSummary {
+  margin-top: 18px;
+  border-block: 1px solid var(--quiz-line);
+  color: var(--quiz-ink);
+  font-size: 14px;
+}
+
+.answerSummary summary {
+  padding: 15px 0;
+  min-height: 48px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.answerSummary dl {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+
+.answerSummary dt {
+  font-size: 12px;
+  opacity: .75;
+}
+
+.answerSummary dd {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+}
+
 .resultNote {
   padding: 15px 17px;
   margin: 18px 0 0;
