@@ -904,8 +904,11 @@ function mapProduct(product: GraphProduct, index: number): Product {
   // Live product facts come only from Shopify. Preview profiles must never
   // supply ingredients, claims, directions or quantities for a published item.
   const fallbackDescription = `Explore ${product.title}.`;
-  const ritualStepValue = meta(product, "ritualStep")?.toLowerCase();
-  const canonicalStep = ritualStepValue === "color" ? "colour" : ritualStepValue;
+  const ritualStepValue = meta(product, "ritualStep")?.trim().toLowerCase();
+  // Shopify uses "Pack" for Amla, Hibiscus, Bhringraj and their pack combos.
+  // Preserve the existing internal Condition key used by filters and the quiz.
+  const canonicalStep = ritualStepValue === "pack" ? "condition"
+    : ritualStepValue === "color" ? "colour" : ritualStepValue;
   const ritualStep = (["Cleanse", "Condition", "Colour"] as const)
     .find((step) => step.toLowerCase() === canonicalStep) || "";
   const experienceValue = meta(product, "experience")?.toLowerCase();

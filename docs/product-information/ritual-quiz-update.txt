@@ -1,0 +1,51 @@
+NatureMist ritual finder — implementation update, 24 October 2026
+
+Implemented locally; not deployed. This update supersedes the goal labels and
+benefit-based matching copy in the 11 October quiz draft. Existing colour,
+reaction, hair-history and strand-check branches remain in effect.
+
+ENTRY POINTS
+Hair cleansing, Hair packs, Scalp care, Botanical colour, Skin research,
+Body research, and Hair + skin or body.
+
+ADAPTIVE RESEARCH ROUTES
+Skin research offers Amla, Reetha, Hibiscus and Bhringraj.
+Body research offers Reetha and Shikakai.
+Customers choose one ingredient or all relevant ingredients.
+Indigo is not offered as a skin/body research ingredient.
+Results use the shared botanical-uses.ts references and explicitly describe
+what was studied, limitations and a source link. These routes do not produce
+face/body application directions or automatic hair-product purchase matches.
+Customers can explicitly restart to explore a hair ritual.
+
+COMBINED ROUTE
+Choose skin or body research, choose an ingredient, then choose a hair goal.
+The ordinary adaptive hair questions determine the hair-product match.
+The selected research appears separately below the hair result.
+
+PRODUCT MATCHING
+Soapnut/oil-cleansing preference: Reetha.
+Traditional Shikakai wash or undecided first wash: Shikakai.
+Floral pack or Hibiscus preference: Hibiscus.
+Amla or general herbal pack preference: Amla.
+Traditional hair/scalp pack: Bhringraj.
+Compatible darker-colour method with henna-first step: Indigo, subject to
+the existing colour checks. No alternative powder is sold as a colour match.
+Two-step choices still ask for a complementary pack or wash preference.
+Reasons describe the selected ingredient/role rather than promise shine,
+softness or improved manageability from an untested finished powder.
+
+DATA AND NAVIGATION
+Live matches require verified Shopify product identity, matching ingredient,
+directions, sale availability and an available variant. Missing products
+are not silently replaced in personalised recommendations.
+Editing any earlier answer clears all dependent answers. Restart clears all.
+Research references never grant skin/body product-use eligibility.
+
+VALIDATION
+46 focused tests passed, including all reachable answer paths, research-area
+filtering, invalid/unreachable answers, combined interests, previous reactions,
+colour compatibility, unavailable products and navigation interruptions.
+TypeScript and ESLint passed for the changed modules.
+Browser: skin research result verified at 390px viewport without horizontal
+overflow; source links and explicit restart action present.

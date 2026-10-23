@@ -138,6 +138,8 @@ export function getHomepageHeroProducts(
     });
 }
 
+// Preview copy follows the supplied product guide; live Shopify content takes priority.
+// Source and claim boundaries: docs/product-information/workbook-source.json.
 export const products: Product[] = [
   {
     slug: "amla-powder",
@@ -145,7 +147,7 @@ export const products: Product[] = [
     botanical: "Phyllanthus emblica",
     plantPart: "Fruit powder",
     collectionNumber: "01",
-    subtitle: "Condition + shine",
+    subtitle: "Traditional hair pack",
     accent: "#6f8f2f",
     accentSoft: "#dce7ad",
     pricePaise: 44900,
@@ -153,22 +155,22 @@ export const products: Product[] = [
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
-      "A versatile pre-wash botanical mask for soft-feeling, smooth and luminous-looking lengths.",
+      "Amla fruit powder for a traditional herbal hair-pack routine.",
     metaDescription:
       "Discover the NatureMist Amla ritual: a carefully explained single-botanical pre-wash mask for modern hair care.",
     ingredient: "Amla fruit powder. Botanical identity and batch details are confirmed on the final pack.",
     benefits: [
-      "Helps hair feel conditioned and smooth",
-      "Supports natural-looking shine",
-      "Creates an easy, adaptable pre-wash ritual",
+      "Fruit powder for herbal hair packs",
+      "A botanical with an Ayurvedic care heritage",
+      "A separate pack step alongside your cleansing routine",
     ],
     howTo: [
-      "Scoop enough powder for your hair length into a clean, dry bowl.",
-      "Add water gradually and mix until smooth and spreadable.",
-      "Apply in sections from roots to ends, leave for 20–30 minutes, then rinse thoroughly with cool water.",
+      "Read the pack directions and complete the directed small-area test before use.",
+      "Mix fresh with clean water using the quantities and consistency on the pack.",
+      "Apply and rinse according to the pack's hair-use directions and timing. Discard leftover wet paste.",
     ],
-    mixers: ["Water", "Aloe gel", "Plain yoghurt", "Hibiscus powder"],
-    suitableFor: ["Dull-looking lengths", "Dry-feeling hair", "All hair textures"],
+    mixers: ["Clean water, as directed on the pack"],
+    suitableFor: ["Herbal hair-pack routines", "Traditional botanical care"],
     safety: [
       "Patch test before first use.",
       "Strand-test blonde, grey, bleached, porous or colour-treated hair.",
@@ -183,7 +185,7 @@ export const products: Product[] = [
     searchTerms: ["amla", "indian gooseberry", "shine", "conditioning", "mask"],
     featuredImage: {
       url: "/images/amla-powder.jpg",
-      altText: "NatureMist Amla Powder 100% Pure Herbal Powder 250g Jar",
+      altText: "NatureMist Amla Powder jar",
       width: 1000,
       height: 1000,
     },
@@ -197,12 +199,12 @@ export const products: Product[] = [
       {
         question: "Is Amla a good first botanical ritual?",
         answer:
-          "It can be a simple place to begin because the paste is easy to adapt. Start with water, leave for 20–30 minutes, then rinse thoroughly. Strand-test very light or porous hair first.",
+          "Amla offers a traditional herbal hair-pack step. Start with the preparation and application directions on your jar, including the directed small-area and strand tests.",
       },
       {
         question: "Can I combine Amla with another powder?",
         answer:
-          "Yes. Amla pairs naturally with Shikakai for a wash-day ritual or Hibiscus for a richer conditioning mask. Introduce one new botanical at a time.",
+          "You can build a routine with a separate cleansing step and an Amla pack. Follow each product's directions; use a combined mixture only when the pack provides directions for it.",
       },
     ],
   },
@@ -220,28 +222,28 @@ export const products: Product[] = [
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
-      "A naturally saponin-containing botanical cleanser for a fresh-feeling scalp and lengths.",
+      "A soapnut powder for a botanical hair-wash routine.",
     metaDescription:
       "Explore the NatureMist Reetha wash ritual, with careful preparation, pairing and eye-safety guidance.",
     ingredient: "Reetha fruit shell powder. Exact plant part and batch details are confirmed on the final pack.",
     featuredImage: {
       url: "/images/reetha-powder.jpg",
-      altText: "NatureMist Reetha Powder 100% Pure Herbal Powder 250g Jar",
+      altText: "NatureMist Reetha Powder jar",
       width: 1000,
       height: 1000,
     },
     benefits: [
-      "Helps lift excess oil and everyday buildup",
-      "Creates a naturally low-foam cleansing ritual",
-      "Pairs well with softer wash-day botanicals",
+      "Soapnut powder for herbal hair washes",
+      "A botanical cleansing step",
+      "A rinse-off routine guided by the pack directions",
     ],
     howTo: [
-      "Mix a small amount with warm water into a thin paste or strained infusion.",
+      "Complete the directed small-area test. Mix with clean water using the pack quantities and preparation method.",
       "Work gently at the roots without splashing.",
-      "Rinse extremely well, keeping the mixture strictly away from eyes.",
+      "Follow the pack timing and rinse thoroughly, keeping the mixture away from your face and eyes. Discard leftover wet mixture.",
     ],
-    mixers: ["Water", "Shikakai powder", "Amla powder"],
-    suitableFor: ["Oily-to-balanced hair", "Wash-day buildup", "Experienced ritual users"],
+    mixers: ["Clean water, as directed on the pack"],
+    suitableFor: ["Botanical hair-wash routines"],
     safety: [
       "Keep strictly away from eyes; natural saponins can sting.",
       "Begin with less on dry, curly or sensitive hair.",
@@ -271,9 +273,9 @@ export const products: Product[] = [
     slug: "shikakai-powder",
     name: "Shikakai Powder",
     botanical: "Acacia concinna",
-    plantPart: "Fruit powder",
+    plantPart: "Pod powder",
     collectionNumber: "03",
-    subtitle: "Gentle cleanse + slip",
+    subtitle: "Traditional hair wash",
     accent: "#b18236",
     accentSoft: "#ecdfbf",
     pricePaise: 39900,
@@ -281,28 +283,28 @@ export const products: Product[] = [
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
-      "A traditional low-lather wash that supports soft, manageable-feeling hair and natural slip.",
+      "Shikakai pod powder for a traditional botanical hair-washing routine.",
     metaDescription:
-      "Meet the NatureMist Shikakai ritual, a thoughtful low-lather botanical wash for soft, manageable-feeling hair.",
-    ingredient: "Shikakai fruit powder. Botanical identity and plant part are confirmed on the final pack.",
+      "Explore NatureMist Shikakai pod powder for traditional hair washing, with preparation and rinse-out guidance.",
+    ingredient: "Shikakai pod powder. Check the final pack for botanical identity and plant-part details.",
     featuredImage: {
       url: "/images/shikakai-powder.jpg",
-      altText: "NatureMist Shikakai Powder 100% Pure Herbal Powder 250g Jar",
+      altText: "NatureMist Shikakai Powder jar",
       width: 1000,
       height: 1000,
     },
     benefits: [
-      "Supports a gentle, low-foam cleanse",
-      "Helps hair feel soft and manageable",
-      "Offers a considered option for textured hair rituals",
+      "Pod powder with a traditional hair-washing role",
+      "A botanical ingredient for rinse-off cleansing",
+      "A dedicated wash step in your routine",
     ],
     howTo: [
-      "Mix with water into a smooth, pourable paste.",
+      "Complete the directed small-area test. Mix with clean water as directed on the pack.",
       "Apply gently through roots and lengths without rough rubbing.",
-      "Rinse thoroughly and follow with your usual conditioning step if needed.",
+      "Follow the pack timing and rinse thoroughly. Discard leftover wet paste and follow with your usual conditioning step if needed.",
     ],
-    mixers: ["Water", "Reetha powder", "Amla powder"],
-    suitableFor: ["Balanced or dry-feeling hair", "Curly and textured hair", "Low-foam routines"],
+    mixers: ["Clean water, as directed on the pack"],
+    suitableFor: ["Traditional hair-washing routines"],
     safety: [
       "Patch test before first use.",
       "Avoid eyes, inhalation and broken skin.",
@@ -314,7 +316,7 @@ export const products: Product[] = [
     ritualStep: "Cleanse",
     experience: "Beginner",
     colorConsiderations: [],
-    searchTerms: ["shikakai", "acacia concinna", "gentle wash", "slip", "curly"],
+    searchTerms: ["shikakai", "acacia concinna", "senegalia rugata", "pods", "hair wash"],
     faqs: [
       {
         question: "Is Shikakai the same as shampoo?",
@@ -324,7 +326,7 @@ export const products: Product[] = [
       {
         question: "Can I combine it with Reetha?",
         answer:
-          "Yes. Shikakai can soften the feel of a Reetha-led wash. Begin with a simple blend and adjust only after observing how your hair feels.",
+          "Reetha and Shikakai are both cleansing botanicals. Follow each jar's directions and use a combined mixture only when the product provides a preparation method for it.",
       },
     ],
   },
@@ -332,7 +334,7 @@ export const products: Product[] = [
     slug: "bhringraj-powder",
     name: "Bhringraj Powder",
     botanical: "Eclipta prostrata",
-    plantPart: "Whole plant powder",
+    plantPart: "Check the plant part on the pack",
     collectionNumber: "04",
     subtitle: "Scalp + length ritual",
     accent: "#244c32",
@@ -342,28 +344,28 @@ export const products: Product[] = [
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
-      "A grounding deep-green botanical mask for conditioned, cared-for scalp and lengths.",
+      "Bhringraj powder for traditional hair and scalp packs, with an Ayurvedic care heritage.",
     metaDescription:
       "Discover NatureMist Bhringraj, a grounding scalp-and-length botanical ritual explained without exaggerated claims.",
-    ingredient: "Bhringraj whole plant powder. Botanical species and plant part are verified on the final pack.",
+    ingredient: "Bhringraj powder. Check the final pack for the supplied species and plant part.",
     featuredImage: {
       url: "/images/bhringraj-powder.jpg",
-      altText: "NatureMist Bhringraj Powder 100% Pure Herbal Powder 250g Jar",
+      altText: "NatureMist Bhringraj Powder jar",
       width: 1000,
       height: 1000,
     },
     benefits: [
-      "Creates a grounding scalp-and-length ritual",
-      "Supports conditioned, cared-for hair",
-      "Blends naturally into richer botanical masks",
+      "Traditionally valued in Ayurvedic hair care",
+      "A botanical ingredient for hair and scalp packs",
+      "A separate pack step in your routine",
     ],
     howTo: [
-      "Mix with water until the paste is smooth and easy to spread.",
+      "Complete the directed small-area test. Mix fresh with clean water as directed on the pack.",
       "Apply in sections across scalp and lengths.",
-      "Leave for 20–30 minutes, then rinse or cleanse out thoroughly with cool water.",
+      "Follow the pack's application time and rinse-out method. Discard leftover wet paste.",
     ],
-    mixers: ["Water", "Amla powder", "Hibiscus powder"],
-    suitableFor: ["Normal-to-dry hair", "Scalp-focused rituals", "Rich pre-wash masks"],
+    mixers: ["Clean water, as directed on the pack"],
+    suitableFor: ["Traditional hair and scalp packs"],
     safety: [
       "Patch test before use.",
       "Avoid eyes, inhalation and irritated skin.",
@@ -385,7 +387,7 @@ export const products: Product[] = [
       {
         question: "What can I pair it with?",
         answer:
-          "Amla makes a versatile companion, while Hibiscus creates a richer softness-focused mask.",
+          "Amla, Hibiscus and Bhringraj offer a choice of traditional hair-pack ingredients. Follow each jar's directions and keep preparation steps separate unless a blend is specifically directed.",
       },
     ],
   },
@@ -395,7 +397,7 @@ export const products: Product[] = [
     botanical: "Hibiscus rosa-sinensis",
     plantPart: "Flower powder",
     collectionNumber: "05",
-    subtitle: "Softness + luster",
+    subtitle: "Botanical flower pack",
     accent: "#8b3041",
     accentSoft: "#eccbd1",
     pricePaise: 49900,
@@ -403,28 +405,28 @@ export const products: Product[] = [
     size: "Net weight to be confirmed",
     availability: "Preview catalogue",
     shortDescription:
-      "A vivid floral conditioning mask for soft-feeling, smooth and glossy-looking lengths.",
+      "Hibiscus flower powder for a traditional botanical hair-pack routine.",
     metaDescription:
-      "Explore NatureMist Hibiscus, a vivid floral powder for softness-focused, glossy-looking hair rituals.",
+      "Explore NatureMist Hibiscus flower powder for herbal hair packs, with preparation and care guidance.",
     ingredient: "Hibiscus flower powder. Species, plant part and cosmetic use are confirmed on the final pack.",
     featuredImage: {
       url: "/images/hibiscus-powder.jpg",
-      altText: "NatureMist Hibiscus Powder 100% Pure Herbal Powder 250g Jar",
+      altText: "NatureMist Hibiscus Powder jar",
       width: 1000,
       height: 1000,
     },
     benefits: [
-      "Supports soft-feeling, smooth lengths",
-      "Encourages a glossy-looking finish",
-      "Adds richness to conditioning botanical masks",
+      "Flower powder for traditional herbal hair packs",
+      "A floral ingredient for a separate pack step",
+      "A botanical choice alongside your usual wash routine",
     ],
     howTo: [
-      "Mix with water into a silky, smooth mask.",
-      "Concentrate the ritual through mid-lengths and ends.",
-      "Leave for 20–30 minutes, then rinse extremely well with cool water.",
+      "Complete the directed small-area and strand tests. Prepare a fresh paste with clean water as directed on the pack.",
+      "Apply according to the hair-pack directions, avoiding eyes and irritated scalp.",
+      "Follow the pack timing and rinse-out method. Discard leftover wet paste.",
     ],
-    mixers: ["Water", "Amla powder", "Bhringraj powder"],
-    suitableFor: ["Dry or coarse hair", "Curly and textured hair", "Softness-focused rituals"],
+    mixers: ["Clean water, as directed on the pack"],
+    suitableFor: ["Herbal hair-pack routines"],
     safety: [
       "Patch and strand test before use.",
       "Pigment may mark fabric or temporarily affect very light, porous hair.",
@@ -446,7 +448,7 @@ export const products: Product[] = [
       {
         question: "Can I use it on my face?",
         answer:
-          "Only use a powder on facial skin when the final product is specifically assessed and labelled for that purpose. This collection is designed around hair rituals.",
+          "Follow the uses on your jar's label. Face and body packs are a future development option in the product guide; facial directions for this flower powder are still needed.",
       },
     ],
   },
@@ -470,7 +472,7 @@ export const products: Product[] = [
     ingredient: "Indigo leaf powder. Batch identity and colour-use directions are confirmed on the final pack.",
     featuredImage: {
       url: "/images/indigo-powder.jpg",
-      altText: "NatureMist Indigo Powder 100% Pure Herbal Powder 250g Jar",
+      altText: "NatureMist Indigo Powder jar",
       width: 1000,
       height: 1000,
     },
@@ -481,10 +483,10 @@ export const products: Product[] = [
     ],
     howTo: [
       "Read all directions in full before mixing — Indigo requires precision and proper preparation.",
-      "Use gloves, mix with water only, and apply within the recommended 10–15 minute window after mixing.",
+      "Wear gloves and follow the pack's mixing, application and processing times. A suitable henna step may be required; henna is not included in this range and Amla does not replace it.",
       "Patch and strand test before use; final tone varies with starting colour, porosity and previous treatments.",
     ],
-    mixers: ["Water only", "A separately designed henna step"],
+    mixers: ["Use only the ingredients specified in the pack's colour directions"],
     suitableFor: ["Experienced botanical colour users", "Hair colour rituals only"],
     safety: [
       "Indigo alone may appear blue or green on light or grey hair.",

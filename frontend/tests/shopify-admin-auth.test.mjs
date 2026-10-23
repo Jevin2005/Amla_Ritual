@@ -5,10 +5,10 @@ import { build } from "esbuild";
 import { fileURLToPath } from "node:url";
 const bundle = await build({ entryPoints: [fileURLToPath(new URL("../src/lib/shopify/admin-auth.ts", import.meta.url))], bundle: true, platform: "node", format: "cjs", write: false });
 function setup(env, fetch) {
-  const module = { exports: {} };
-  const context = vm.createContext({ module, exports: module.exports, process: { env: { SHOPIFY_STORE_DOMAIN: "test.myshopify.com", ...env } }, fetch, Date });
+  const testModule = { exports: {} };
+  const context = vm.createContext({ module: testModule, exports: testModule.exports, process: { env: { SHOPIFY_STORE_DOMAIN: "test.myshopify.com", ...env } }, fetch, Date });
   vm.runInContext(bundle.outputFiles[0].text, context);
-  return module.exports;
+  return testModule.exports;
 }
 const credentials = { SHOPIFY_CLIENT_ID: "client", SHOPIFY_CLIENT_SECRET: "secret", SHOPIFY_ADMIN_API_TOKEN: "expired" };
 const reply = (data, status = 200) => ({ ok: status < 400, status, json: async () => data });

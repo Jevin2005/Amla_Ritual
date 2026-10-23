@@ -4,6 +4,7 @@ import { MediaImage as Image } from "@/shared/ui/media-image";
 import Link from "next/link";
 import { useState, type CSSProperties, type ComponentProps } from "react";
 import { isComboProduct } from "@/domain/catalog/product-kind";
+import { ritualStepLabels } from "@/domain/catalog/botanical-uses";
 import { formatCurrency, calculateDiscountPercent, calculateSavingsPaise, type Product } from "@/domain/catalog/products";
 import { getProductReviewSummary } from "@/domain/reviews/custom-reviews";
 import { StarRating } from "@/features/reviews/star-rating";
@@ -125,7 +126,7 @@ export function ProductCard({
       {/* Info area */}
       <div className="flex flex-col border-t border-[var(--line)] px-5 pt-4 pb-4 max-[680px]:px-3.5 max-[680px]:pt-3 max-[680px]:pb-3.5 max-[420px]:px-2.5 max-[420px]:py-2.5">
         <p className="mb-1 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--product-accent)] uppercase max-[680px]:mb-0.5 max-[680px]:text-[0.62rem] max-[680px]:tracking-[0.1em]">
-          {isCombo ? "Botanical combo" : product.ritualStep ? `${product.ritualStep} Ritual` : "Botanical hair care"}
+          {isCombo ? "Botanical combo" : product.ritualStep ? ritualStepLabels[product.ritualStep] : "Botanical care"}
         </p>
 
         <CardDestination

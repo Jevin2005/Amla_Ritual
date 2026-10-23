@@ -1,0 +1,11 @@
+.guide { border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: var(--paper); color: var(--forest); }
+.eyebrow { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+.guide h2 { margin: 0; font-family: var(--font-display); font-size: 24px; font-weight: 400; }
+.guide p { font-size: 14px; line-height: 1.6; }
+.guide details { border-top: 1px solid var(--line); margin-top: 12px; }
+.guide summary { padding: 14px 0; min-height: 44px; cursor: pointer; font-size: 14px; line-height: 1.5; font-weight: 600; }
+.research { border-top: 1px solid var(--line); padding-top: 12px; }
+.research h3 { margin: 0; font-size: 15px; }
+.research a { display: inline-block; padding-block: 12px; min-height: 44px; color: var(--forest); font-size: 13px; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.guide :is(summary, a):focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

@@ -8,6 +8,7 @@ import { CollectionGrid } from "@/features/catalog/collection-grid";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
 import { IngredientClarity } from "./ingredient-clarity";
+import { BotanicalCombos } from "./botanical-combos";
 import { ProductHero } from "./product-hero";
 import { PreviousProductHero } from "./previous-product-hero";
 import { ProductBenefits } from "./product-benefits";
@@ -32,7 +33,6 @@ export function HomePage() {
   const { products, content, source } = useStore();
   const collectionEntries = useMemo(() => buildCollectionCatalog(products, content.botanicalCombos.enabled ? content.botanicalCombos.combos : [], source), [products, content.botanicalCombos, source]);
   const individualEntries = collectionEntries.filter((entry) => entry.kind === "product");
-  const comboEntries = collectionEntries.filter((entry) => entry.kind === "combo");
   const homeMotion = useMemo(() => ({ ...content.motionSettings, duration: content.motionSettings.duration * 1.25 }), [content.motionSettings]);
 
   if (!products.length) {
@@ -278,21 +278,7 @@ export function HomePage() {
           </div>
         </div>
       </section>
-      {content.botanicalCombos.enabled && comboEntries.length > 0 && (
-        <section id="botanical-combos" className={sectionClass} aria-labelledby="combos-title">
-          <div className={`${splitHeadingClass} mb-10 max-[680px]:mb-6`}>
-            <div>
-              <p className={eyebrowClass}>{content.botanicalCombos.eyebrow}</p>
-              <h2 id="combos-title" className={sectionTitleClass}>{content.botanicalCombos.heading} {content.botanicalCombos.headingEnding}</h2>
-            </div>
-            <div>
-              <p className="mb-5 text-[var(--muted)]">{content.botanicalCombos.description}</p>
-              <MagneticLink href="/shop?type=combos" className={textLinkClass}>Explore all combos <span aria-hidden="true">↗</span></MagneticLink>
-            </div>
-          </div>
-          <CollectionGrid entries={comboEntries} />
-        </section>
-      )}
+      <BotanicalCombos />
     </main>
   );
 }

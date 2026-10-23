@@ -3,6 +3,8 @@
 import { useId, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ritualGoals, type RitualGoal } from "@/domain/catalog/products";
+import { ritualStepLabels } from "@/domain/catalog/botanical-uses";
+import Link from "next/link";
 import { buildCollectionCatalog, filterCollectionCatalog, type CollectionKind, type CollectionSort, type CollectionFilters } from "@/domain/collection-catalog";
 import type { ComboCatalogSize } from "@/domain/combo-catalog";
 import { CollectionGrid } from "./collection-grid";
@@ -84,9 +86,10 @@ export function ShopExplorer() {
         <fieldset><legend>Ritual goal</legend><div className={styles.choices}>
           {(["All", ...ritualGoals] as const).map((option) => <button key={option} type="button" aria-pressed={goal === option} onClick={() => chooseGoal(option)}>{option === "All" ? "Every goal" : option}</button>)}
         </div></fieldset>
-        <fieldset><legend>Ritual step</legend><div className={styles.choices}>
-          {steps.map((option) => <button key={option} type="button" aria-pressed={step === option} onClick={() => { setStep(option); track("filter_applied", { filter: "step", value: option }); }}>{option === "All" ? "Every step" : option}</button>)}
+        <fieldset><legend>Product use</legend><div className={styles.choices}>
+          {steps.map((option) => <button key={option} type="button" aria-pressed={step === option} onClick={() => { setStep(option); track("filter_applied", { filter: "step", value: option }); }}>{ritualStepLabels[option]}</button>)}
         </div></fieldset>
+        <p className={styles.footnote}><Link href="/#specimen-collection">Explore skin &amp; body ingredient research →</Link></p>
         {kind !== "individual" && counts.combos > 0 && <fieldset><legend>Combo size</legend><div className={styles.sizeChoices}>
           {sizes.map((option) => <button key={option.value} type="button" aria-pressed={size === option.value} onClick={() => setSize(option.value)}>{option.label}</button>)}
         </div></fieldset>}

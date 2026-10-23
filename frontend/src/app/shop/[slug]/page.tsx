@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { globalSafety } from "@/domain/catalog/products";
+import { getBotanicalProfile } from "@/domain/catalog/botanical-uses";
+import { ProductUseGuide } from "@/features/catalog/product-use-guide";
 import {
   filterReviewsByProduct,
   getProductReviewSummary,
@@ -186,7 +188,7 @@ export default async function ProductPage(props: ProductPageProps) {
     name: product.name,
     description: product.metaDescription || product.shortDescription,
     brand: { "@type": "Brand", name: "NatureMist" },
-    category: "Botanical hair care powder",
+    category: getBotanicalProfile(product)?.category || product.productType || "Botanical powders",
     image: imageUrl,
     url: productUrl,
     offers: {
@@ -346,6 +348,7 @@ export default async function ProductPage(props: ProductPageProps) {
           </div>}
 
           {/* Main Purchase Actions (Inline & Seamless) */}
+          <ProductUseGuide product={product} />
           <div className="pt-1">
             <ProductDetailActions product={product} />
           </div>

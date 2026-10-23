@@ -1,0 +1,39 @@
+NatureMist local release preparation — 24 October 2026
+
+RESULT
+The current workspace passes the configured production checks and all 503
+regression tests. Nothing was pushed, deployed or changed in Shopify.
+Existing botanical_combo entries remain intact.
+
+FIXES IN THIS PREPARATION
+Renamed a CommonJS test-container variable in shopify-admin-auth.test.mjs and
+shopify-order-failure.test.mjs to satisfy Next.js's no-assign-module-variable
+lint rule. No production behavior changed in this preparation step.
+
+VALIDATION
+- npm run check: passed lint, generated route types, TypeScript, Next production
+  build, vinext compatibility check and Sites production build.
+- node --test --test-reporter=spec tests/*.test.mjs: 503 passed, 0 failed.
+- Rebuilt Next with network access: successful, with live Shopify data and
+  without the catalogue-fetch failures seen in the restricted-network build.
+- Local Next production server: homepage, shop, combos and Amla detail returned
+  HTTP 200. Homepage includes the new quiz interests; the Amla detail includes
+  the hair-pack category and research source. Combos include the Classic Trio.
+- Live catalogue endpoint returned 14 products.
+- Chrome production check: catalogue shows 6 individual powders and 8 combos.
+  Individual powders + Hair packs returns Amla, Bhringraj and Hibiscus (3).
+- git diff --check: passed.
+
+LIMITS / FOLLOW-UP
+The secondary Sites build warns about a minified JavaScript chunk above 500 kB
+and partial image-optimization support in vinext. These warnings do not fail
+the build. This check does not establish real-device scroll performance.
+Vercel is the current live target; the Sites build is a separate preview path.
+No real orders, payment transactions or write operations were used to test.
+Skin/body quiz paths remain educational research, not directions for applying
+the current powders to face/body.
+
+NEXT RELEASE STEP
+Review and commit the prepared workspace changes, then deploy to the intended
+Vercel project and check the live catalogue/quiz. Do not remove legacy combo
+metaobjects before the replacement is deployed and verified.

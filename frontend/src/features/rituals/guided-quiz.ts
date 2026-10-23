@@ -1,7 +1,8 @@
 import { type Product } from "@/domain/catalog/products";
 import { matchesProductSlug } from "@/domain/catalog/canonical-slug";
+import { botanicalProfiles, profilesForTopic } from "@/domain/catalog/botanical-uses";
 
-export type QuizQuestionId = "goal" | "check" | "reactionIngredient" | "washNeed" | "conditionNeed" | "scalpNeed" | "scalpType" | "hairHistory" | "treatmentType" | "routine" | "conditionAddon" | "cleanseAddon" | "strand" | "colourTarget" | "colourBase" | "colourHistory" | "henna" | "colourChecks";
+export type QuizQuestionId = "goal" | "hairGoal" | "researchArea" | "researchFocus" | "check" | "reactionIngredient" | "washNeed" | "conditionNeed" | "scalpNeed" | "scalpType" | "hairHistory" | "treatmentType" | "routine" | "conditionAddon" | "cleanseAddon" | "strand" | "colourTarget" | "colourBase" | "colourHistory" | "henna" | "colourChecks";
 export type QuizAnswers = Partial<Record<QuizQuestionId, string[]>>;
 export type QuizQuestion = {
   id: QuizQuestionId;
@@ -13,7 +14,7 @@ export type QuizQuestion = {
 };
 export type QuizCandidate = { slug: string; reason: string; role: "Cleanse" | "Condition" | "Colour" };
 export type QuizOutcome = {
-  kind: "candidate" | "conditional" | "review" | "guidance" | "pause" | "no-match";
+  kind: "candidate" | "conditional" | "review" | "guidance" | "pause" | "no-match" | "research";
   title: string;
   description: string;
   candidates: QuizCandidate[];
@@ -28,9 +29,28 @@ export const ritualQuestions: QuizQuestion[] = [
   {
     id: "goal", label: "Your goal", question: "What would you like to focus on?", helper: "Choose one main goal.", multiple: false, options: [
       { value: "cleanse", label: "Cleanse", description: "A botanical wash-day routine." },
-      { value: "softness", label: "Softness + shine", description: "Condition and care for your lengths." },
+      { value: "softness", label: "Hair packs", description: "Choose a botanical pack ingredient." },
       { value: "scalp", label: "Scalp care", description: "Choose between cleansing and conditioning." },
       { value: "colour", label: "Botanical colour", description: "Explore a suitable colour method." },
+      { value: "skin", label: "Skin research", description: "Discover ingredient studies and traditions." },
+      { value: "body", label: "Body research", description: "Explore botanical cleanser research." },
+      { value: "both", label: "Hair + skin or body", description: "Plan hair care and explore wider ingredient research." },
+    ]
+  },
+  {
+    id: "researchArea", label: "Your wider interest", question: "Which research would you like alongside your hair ritual?", helper: "Your product suggestions will be for hair use. Wider uses are presented as ingredient research.", multiple: false, options: [
+      { value: "skin", label: "Skin research" }, { value: "body", label: "Body research" },
+    ]
+  },
+  {
+    id: "researchFocus", label: "Your ingredient interest", question: "Which botanical would you like to learn about?", helper: "Explore the evidence and what it can tell us about the ingredient.", multiple: false, options: [
+      { value: "all", label: "Show all relevant botanicals" },
+      ...botanicalProfiles.filter((profile) => profile.research.length > 0).map((profile) => ({ value: profile.slug, label: profile.name })),
+    ]
+  },
+  {
+    id: "hairGoal", label: "Your hair ritual", question: "What would you like your hair ritual to include?", helper: "Choose the hair-care step you want to explore.", multiple: false, options: [
+      { value: "cleanse", label: "Hair cleansing" }, { value: "softness", label: "A botanical hair pack" }, { value: "scalp", label: "Hair and scalp care" },
     ]
   },
   {
@@ -53,17 +73,17 @@ export const ritualQuestions: QuizQuestion[] = [
   {
     id: "washNeed", label: "Your wash", question: "What matters most in your wash?", helper: "Choose the closest match.", multiple: false, options: [
       { value: "oil", label: "Removing oil and everyday buildup" },
-      { value: "manage", label: "Cleansing and easier-to-manage lengths" },
+      { value: "manage", label: "A traditional Shikakai wash" },
       { value: "beginner", label: "Trying my first botanical wash" },
       { value: "unsure", label: "I am not sure" },
     ]
   },
   {
-    id: "conditionNeed", label: "Your lengths", question: "What would you like from a hair mask?", helper: "Choose your main priority.", multiple: false, options: [
-      { value: "dry", label: "Care for dry or rough-feeling hair" },
-      { value: "manage", label: "More manageable-feeling lengths" },
-      { value: "shine", label: "More natural-looking shine" },
-      { value: "general", label: "A simple conditioning routine" },
+    id: "conditionNeed", label: "Your hair pack", question: "Which kind of hair pack interests you?", helper: "Choose an ingredient preference. Individual results vary.", multiple: false, options: [
+      { value: "dry", label: "A floral hair pack" },
+      { value: "manage", label: "Explore Hibiscus flower powder" },
+      { value: "shine", label: "Explore Amla fruit powder" },
+      { value: "general", label: "A simple herbal pack routine" },
       { value: "unsure", label: "I am not sure" },
     ]
   },
@@ -107,8 +127,8 @@ export const ritualQuestions: QuizQuestion[] = [
   },
   {
     id: "conditionAddon", label: "Your second step", question: "What should your conditioning step focus on?", helper: "This would be a separate mask step.", multiple: false, options: [
-      { value: "dry", label: "Dry-feeling or hard-to-manage lengths" },
-      { value: "shine", label: "General conditioning and shine" },
+      { value: "dry", label: "A Hibiscus flower pack" },
+      { value: "shine", label: "An Amla fruit pack" },
       { value: "scalp", label: "Hair-and-scalp conditioning" },
       { value: "skip", label: "Keep just the cleanser" },
     ]
@@ -116,7 +136,7 @@ export const ritualQuestions: QuizQuestion[] = [
   {
     id: "cleanseAddon", label: "Your second step", question: "What should your cleansing step focus on?", helper: "This would be a separate wash step.", multiple: false, options: [
       { value: "oil", label: "Oil and everyday buildup" },
-      { value: "manage", label: "Cleansing and manageability" },
+      { value: "manage", label: "A traditional Shikakai wash" },
       { value: "skip", label: "Keep just the mask" },
     ]
   },
@@ -187,13 +207,23 @@ export function getQuizFlow(answers: QuizAnswers): QuizFlow {
   const questions: QuizQuestion[] = [];
   const pending = (): QuizFlow => ({ questions, complete: false, outcome: null });
   const finish = (kind: QuizOutcome["kind"], title: string, description: string, candidates: QuizCandidate[] = []): QuizFlow => ({ questions, complete: true, outcome: { kind, title, description, candidates } });
-  const ask = (id: QuizQuestionId, helper?: string) => {
-    const question = helper ? { ...questionsById[id], helper } : questionsById[id];
+  const ask = (id: QuizQuestionId, helper?: string, options?: QuizQuestion["options"]) => {
+    const question = { ...questionsById[id], ...(helper ? { helper } : {}), ...(options ? { options } : {}) };
     questions.push(question);
     return validAnswer(question, answers[id]) ? answers[id] : undefined;
   };
-  const goal = ask("goal")?.[0];
+  let goal = ask("goal")?.[0];
   if (!goal) return pending();
+  if (["skin", "body", "both"].includes(goal)) {
+    const area = goal === "both" ? ask("researchArea")?.[0] : goal;
+    if (area !== "skin" && area !== "body") return pending();
+    const relevant = profilesForTopic(area);
+    const focus = ask("researchFocus", `Choose from botanicals with ${area} research or traditional references. These references do not establish application directions for the current powders.`, questionsById.researchFocus.options.filter((option) => option.value === "all" || relevant.some((profile) => profile.slug === option.value)))?.[0];
+    if (!focus) return pending();
+    if (goal !== "both") return finish("research", `Your ${area} research guide`, "Explore the references for your selected ingredients below. Each entry explains the preparation studied and the limits of the evidence. The current powders have hair-use directions; these references are for learning about wider uses.");
+    goal = ask("hairGoal")?.[0];
+    if (!goal) return pending();
+  }
   const check = ask("check");
   if (!check) return pending();
   if (check.includes("irritated")) return finish("pause", "Discover the botanical collection", "Explore product details while you plan your care. Avoid applying botanicals to irritated or broken skin, and seek professional advice before use.");
@@ -233,15 +263,15 @@ export function getQuizFlow(answers: QuizAnswers): QuizFlow {
     if (!need) return;
     main = need === "oil"
       ? { slug: "reetha-powder", role: "Cleanse", reason: "You want a wash focused on removing oil and everyday buildup." }
-      : { slug: "shikakai-powder", role: "Cleanse", reason: need === "manage" ? "You want cleansing with easier-to-manage lengths." : need === "beginner" ? "You are trying your first botanical wash; Shikakai is a modest starting suggestion based on its cleansing role." : "You are still choosing your wash priority; Shikakai offers a cleansing and manageability starting point." };
+      : { slug: "shikakai-powder", role: "Cleanse", reason: need === "manage" ? "You chose a traditional Shikakai wash; this pod powder has a hair-cleansing role." : need === "beginner" ? "You are trying your first botanical wash; Shikakai is a starting suggestion based on its cleansing role." : "You are still choosing your wash priority; Shikakai offers a traditional hair-cleansing starting point." };
   };
   if (goal === "cleanse") wash();
   if (goal === "softness") {
     const need = ask("conditionNeed")?.[0];
     if (!need) return pending();
     main = need === "dry" || need === "manage"
-      ? { slug: "hibiscus-powder", role: "Condition", reason: need === "dry" ? "You want a conditioning mask for dry or rough-feeling hair." : "You want a conditioning mask for more manageable-feeling lengths." }
-      : { slug: "amla-powder", role: "Condition", reason: need === "shine" ? "You want a pre-wash conditioning mask for more natural-looking shine." : "You want a simple conditioning starting point for your lengths." };
+      ? { slug: "hibiscus-powder", role: "Condition", reason: need === "dry" ? "You chose a floral hair pack; Hibiscus is the flower powder in this collection." : "You chose to explore Hibiscus flower powder for a separate hair-pack step." }
+      : { slug: "amla-powder", role: "Condition", reason: need === "shine" ? "You chose Amla fruit powder for your hair-pack step." : "You want a simple herbal pack routine; Amla offers a traditional fruit-powder starting point." };
   }
   if (goal === "scalp") {
     const need = ask("scalpNeed")?.[0];
@@ -275,13 +305,13 @@ export function getQuizFlow(answers: QuizAnswers): QuizFlow {
     if (!addon) return pending();
     if (addon !== "skip") {
       if (id === "conditionAddon") candidates.unshift(addon === "dry"
-        ? { slug: "hibiscus-powder", role: "Condition", reason: "You asked for a separate mask for dry-feeling or hard-to-manage lengths." }
+        ? { slug: "hibiscus-powder", role: "Condition", reason: "You chose a Hibiscus flower pack as your separate second care step." }
         : addon === "shine"
-          ? { slug: "amla-powder", role: "Condition", reason: "You asked for a separate mask for general conditioning and shine." }
+          ? { slug: "amla-powder", role: "Condition", reason: "You chose an Amla fruit pack as your separate second care step." }
           : { slug: "bhringraj-powder", role: "Condition", reason: "You asked for a separate hair-and-scalp conditioning step." });
       else candidates.push(addon === "oil"
         ? { slug: "reetha-powder", role: "Cleanse", reason: "You asked for a separate wash focused on oil and everyday buildup." }
-        : { slug: "shikakai-powder", role: "Cleanse", reason: "You asked for a separate wash focused on cleansing and manageability." });
+        : { slug: "shikakai-powder", role: "Cleanse", reason: "You chose a traditional Shikakai wash as your separate cleansing step." });
     }
   }
   if (history === "light" || history === "treated") {
@@ -337,10 +367,10 @@ function isVerifiedCandidate(product: Product, slug: string, source: "shopify" |
 }
 
 const collectionCare: QuizCandidate[] = [
-  { slug: "amla-powder", role: "Condition", reason: "A pre-wash conditioning botanical for softer-feeling hair and natural-looking shine." },
-  { slug: "hibiscus-powder", role: "Condition", reason: "A conditioning mask botanical for dry-feeling lengths and more manageable hair." },
+  { slug: "amla-powder", role: "Condition", reason: "A fruit powder for traditional herbal hair packs." },
+  { slug: "hibiscus-powder", role: "Condition", reason: "A flower powder for a separate herbal hair-pack step." },
   { slug: "bhringraj-powder", role: "Condition", reason: "A botanical for a general hair-and-scalp conditioning ritual." },
-  { slug: "shikakai-powder", role: "Cleanse", reason: "A wash-day botanical for cleansing and easier-to-manage lengths." },
+  { slug: "shikakai-powder", role: "Cleanse", reason: "A pod powder for traditional hair washing." },
   { slug: "reetha-powder", role: "Cleanse", reason: "A cleansing botanical for removing everyday oil and buildup." },
 ];
 
@@ -348,7 +378,8 @@ const collectionCare: QuizCandidate[] = [
 export function resolveQuizBrowseItems(answers: QuizAnswers, products: readonly Product[], source: "shopify" | "preview"): QuizResult["items"] {
   const flow = getQuizFlow(answers);
   if (!flow.complete || !flow.outcome || resolveQuizResult(flow.outcome, products, source).items.length > 0) return [];
-  const goal = answers.goal?.[0];
+  if (flow.outcome.kind === "research") return [];
+  const goal = answers.goal?.[0] === "both" ? answers.hairGoal?.[0] : answers.goal?.[0];
   const excluded = flow.questions.some((question) => question.id === "reactionIngredient")
     ? (answers.reactionIngredient ?? []).filter((ingredient) => Boolean(names[`${ingredient}-powder`]))
     : [];
@@ -371,6 +402,17 @@ export function resolveQuizBrowseItems(answers: QuizAnswers, products: readonly 
       && !excluded.some((ingredient) => new RegExp(`\\b${ingredient}\\b`, "i").test(`${entry.name} ${entry.ingredient}`)));
     return product ? [{ product, role, reason }] : [];
   }).slice(0, 2);
+}
+
+/** Research is editorial information, never a product-use recommendation. */
+export function getQuizResearch(answers: QuizAnswers) {
+  const flow = getQuizFlow(answers);
+  if (!flow.complete || !flow.questions.some((question) => question.id === "researchFocus")) return [];
+  const area = answers.goal?.[0] === "both" ? answers.researchArea?.[0] : answers.goal?.[0];
+  if (area !== "skin" && area !== "body") return [];
+  const focus = answers.researchFocus?.[0];
+  return profilesForTopic(area).filter((profile) => focus === "all" || profile.slug === focus)
+    .flatMap((profile) => profile.research.filter((entry) => entry.topic === area).map((entry) => ({ ...entry, name: profile.name, slug: profile.slug })));
 }
 
 /** Resolve exact candidates against current records; never fill a gap with another role. */

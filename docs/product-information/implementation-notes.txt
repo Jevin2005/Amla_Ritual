@@ -1,0 +1,63 @@
+NatureMist product information — 23 October 2026
+
+Source
+E:/jevin/NatureMist_Six_Powders_Benefits_and_Claims.xlsx
+workbook-source.json preserves the supplied cell text from all three sheets.
+The workbook is product/research input, not confirmation that every proposed use
+has been assessed. Its suggested actions have not been treated as user commands.
+
+Product positioning from Product guide!B7:G12
+
+Product     Current role                 Wider use recorded in the workbook
+Amla        Herbal hair pack             Face/body pack development option
+Reetha      Botanical hair wash          Body cleanser / household development
+Shikakai    Traditional hair wash        Formulated body-cleanser development
+Hibiscus    Herbal hair pack             Face/body pack development option
+Bhringraj   Traditional hair/scalp pack  Traditional skin-care association
+Indigo      Botanical hair colour        Keep as scalp-hair colour
+
+Shopify comparison
+The six active Shopify product descriptions were read on 23 October 2026.
+They already distinguish current product roles from wider ingredient research.
+No Shopify descriptions, tags, prices, media, variants or metaobjects were changed.
+
+Amla:     gid://shopify/Product/8494763311290
+Reetha:   gid://shopify/Product/8498815107258
+Shikakai: gid://shopify/Product/8531585597626
+Hibiscus: gid://shopify/Product/8531585499322
+Bhringraj:gid://shopify/Product/8531585433786
+Indigo:   gid://shopify/Product/8531585368250
+
+Local implementation
+Updated frontend/src/domain/catalog/products.ts, which supplies preview/fallback
+content. The live Shopify catalogue remains authoritative.
+- Replaced unsubstantiated performance promises with the workbook's product roles.
+- Removed fixed application times absent from the supplied workbook.
+- Replaced improvised mixing suggestions with label-based preparation guidance.
+- Changed Shikakai's preview plant part to pods, as in Product guide!C9.
+- Removed the unverified whole-plant assumption for Bhringraj (Product guide!C11).
+- Removed old 250 g / 100% pure assertions from fallback image alternative text.
+- Preserved product identities, layout, prices and existing shopping/filter logic.
+
+Information still needed for face/body product directions
+Product guide!E7:G11 and Benefits and evidence!F30:G30 / F33:G33 describe
+possibilities or traditional associations. Combos!B12:G12 explicitly describes
+the face/body duo as a development option. No skin mixing ratio, application
+time, frequency, rinse method or product-specific tolerance results are supplied.
+
+To enable actual skin recommendations, record for each intended skin product:
+exact species and supplied plant part; face/body/both; preparation quantity and
+mixing method; application and rinse method; contact time and frequency;
+patch-test directions and restrictions; source of the confirmed instructions.
+These values must come from the product owner/supplier, rather than being inferred
+from extract studies or invented from generic botanical recipes.
+
+Research boundaries
+The workbook's study summaries were preserved as supplied, not independently
+revalidated in this implementation. No new medical or clinical claims were added.
+Oral studies, different plant parts, isolated extracts and mixed formulations
+are not treated as finished-powder performance claims.
+
+Release status
+Prepared locally. No deployment, catalogue publication or metaobject deletion.
+The separate combo-section restoration remains in the working tree.

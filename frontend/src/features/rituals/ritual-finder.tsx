@@ -8,7 +8,7 @@ import { useStore } from "@/features/store/store-provider";
 import { useReducedMotion } from "@/shared/hooks/use-motion-preferences";
 import { MediaImage } from "@/shared/ui/media-image";
 import { scrollPageTo } from "@/shared/ui/page-scroll";
-import { getQuizFlow, resolveQuizBrowseItems, resolveQuizResult, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
+import { getQuizFlow, getQuizResearch, resolveQuizBrowseItems, resolveQuizResult, setQuizAnswer, type QuizAnswers, type QuizQuestion } from "./guided-quiz";
 import { createQuizNavigation, type QuizNavigation } from "./ritual-navigation";
 import styles from "./ritual-finder.module.css";
 
@@ -26,6 +26,7 @@ function GoalIcon({ goal }: { goal: string }) {
       {goal === "softness" && <><path d="m16 5 2.7 8.3L27 16l-8.3 2.7L16 27l-2.7-8.3L5 16l8.3-2.7L16 5Z" /><path d="M25 5v5m-2.5-2.5h5M6 25v3m-1.5-1.5h3" /></>}
       {goal === "scalp" && <><path d="M25 5C13 3 6 10 7 19c.5 4 3.2 6.5 7.2 6C23 24 27 15 25 5Z" /><path d="M5 28 20 12m-7 7v-7m0 7h7" /></>}
       {goal === "colour" && <><path d="M16 5c-2.5 4-7.5 9.5-7.5 15a7.5 7.5 0 0 0 15 0C23.5 14.5 18.5 9 16 5Z" /><path d="M8.7 18.5c5-3 9.5 4.5 14.6 1.5M12 23c1.2 1.2 2.4 1.7 4 1.7" /></>}
+      {["skin", "body", "both"].includes(goal) && <><path d="M5 7h8l3 3 3-3h8v19h-8l-3 2-3-2H5V7Zm11 3v18" /><path d="M9 12h3m-3 5h3m8-5h3m-3 5h3" /></>}
     </svg>
   );
 }
@@ -46,6 +47,8 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
   const complete = state.showResult && flow.complete && Boolean(flow.outcome);
   const result = useMemo(() => flow.outcome ? resolveQuizResult(flow.outcome, products, source) : null, [flow.outcome, products, source]);
   const browseItems = useMemo(() => resolveQuizBrowseItems(state.answers, products, source), [state.answers, products, source]);
+  const research = useMemo(() => getQuizResearch(state.answers), [state.answers]);
+  const researchOnly = result?.kind === "research";
   const browsingOnly = Boolean(result && result.items.length === 0);
   const displayedItems = browsingOnly ? browseItems : result?.items ?? [];
   const selection = question ? state.answers[question.id] || [] : [];
@@ -153,12 +156,12 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
               {state.cursor > 0 ? (
                 <button type="button" className={styles.backButton} disabled={busy} onClick={() => navigate({ ...state, cursor: state.cursor - 1 }, "back")}><span aria-hidden="true">←</span> Back</button>
               ) : <span className={styles.navigationHint}>Choose an answer to continue</span>}
-              <button type="submit" className={styles.primaryButton} disabled={busy || !validSelection}>{flow.complete && state.cursor === flow.questions.length - 1 ? flow.outcome && ["candidate", "conditional"].includes(flow.outcome.kind) ? "See my ritual" : "Explore products" : "Continue"} <span aria-hidden="true">→</span></button>
+              <button type="submit" className={styles.primaryButton} disabled={busy || !validSelection}>{flow.complete && state.cursor === flow.questions.length - 1 ? researchOnly ? "See my research guide" : flow.outcome && ["candidate", "conditional"].includes(flow.outcome.kind) ? "See my ritual" : "Explore products" : "Continue"} <span aria-hidden="true">→</span></button>
             </div>
           </form>
         ) : complete && result ? (
           <div className={styles.result} data-result-kind={result.kind} data-browsing-only={browsingOnly} data-result-reveal={motionActive}>
-            <p className={styles.resultEyebrow}>{browsingOnly ? "Explore the collection" : "Chosen around your answers"}</p>
+            <p className={styles.resultEyebrow}>{researchOnly ? "Ingredient research" : browsingOnly ? "Explore the collection" : "Chosen around your answers"}</p>
             <h3 className={styles.resultTitle} style={{ "--reveal-order": 1 } as CSSProperties} tabIndex={-1} data-quiz-focus>{result.title}</h3>
             <p className={styles.resultDescription} style={{ "--reveal-order": 2 } as CSSProperties}>{result.description}</p>
             {displayedItems.length > 0 && <section className={styles.suggestions} aria-labelledby={`${quizId}-suggestions`}>
@@ -179,7 +182,7 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
                         {imageSource ? <MediaImage src={imageSource} fallbackSrc={fallbackImage} alt={product.name} fill sizes="(max-width: 767px) 260px, (max-width: 1023px) 280px, 300px" className={styles.image} /> : <span className={styles.imagePlaceholder}>NatureMist<br />{role}</span>}
                       </div>
                       <div className={styles.resultCopy}>
-                        <p className={styles.productRole}>{!browsingOnly && displayedItems.length > 1 ? `Step ${index + 1} · ` : ""}{role === "Condition" ? "Conditioning mask" : role === "Cleanse" ? "Botanical wash" : "Indigo colour stage"}</p>
+                        <p className={styles.productRole}>{!browsingOnly && displayedItems.length > 1 ? `Step ${index + 1} · ` : ""}{role === "Condition" ? "Hair pack" : role === "Cleanse" ? "Hair cleansing" : "Indigo colour stage"}</p>
                         <h5 className={styles.productName} style={{ "--reveal-order": 1 } as CSSProperties}><Link href={`/shop/${product.slug}${result.kind === "conditional" ? "#product-directions" : ""}`} className={styles.productNameLink}>{product.name}</Link></h5>
                         <div className={styles.matchReasons} style={{ "--reveal-order": 2 } as CSSProperties}>
                           <p className={styles.reasonLabel}>{browsingOnly ? "About this botanical" : "Why this fits your answers"}</p>
@@ -195,7 +198,19 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
                 })}
               </ol>
             </section>}
-            {browsingOnly && <Link href="/shop" className={styles.directionsLink}>Browse the full collection <span aria-hidden="true">↗</span></Link>}
+            {research.length > 0 && <section className={styles.research} aria-labelledby={`${quizId}-research`}>
+              <h4 className={styles.suggestionsTitle} id={`${quizId}-research`}>{researchOnly ? "Your selected botanical references" : "Your wider ingredient interests"}</h4>
+              {!researchOnly && <p className={styles.browseContext}>The products above are suggested for hair use. Explore your selected skin or body references below.</p>}
+              {research.map((entry) => <article className={styles.researchCard} key={`${entry.slug}-${entry.topic}`}>
+                <p className={styles.productRole}>{entry.topic === "skin" ? "Skin research" : "Body research"} · {entry.label}</p>
+                <h5 className={styles.researchName}>{entry.name}</h5>
+                <p>{entry.summary}</p>
+                <p>{entry.limitation}</p>
+                <a className={styles.directionsLink} href={entry.sourceUrl} target="_blank" rel="noreferrer">{entry.sourceTitle} <span aria-hidden="true">↗</span></a>
+              </article>)}
+            </section>}
+            {browsingOnly && !researchOnly && <Link href="/shop" className={styles.directionsLink}>Browse the full collection <span aria-hidden="true">↗</span></Link>}
+            {researchOnly && <button type="button" className={styles.textButton} disabled={busy} onClick={() => navigate({ answers: {}, cursor: 0, showResult: false }, "back")}>Explore a hair ritual <span aria-hidden="true">→</span></button>}
             {result.items.length > 0 && <p className={styles.resultNote}>{result.items.length > 1 ? "Use these as separate care steps, with the mask before the wash. " : ""}Follow each product’s current pack directions, including its patch and strand checks.</p>}
             {source === "preview" && displayedItems.length > 0 && <p className={styles.resultNote}>Preview collection. See the product page for current details.</p>}
             <div className={styles.resultActions}>

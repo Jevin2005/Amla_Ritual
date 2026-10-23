@@ -1,0 +1,104 @@
+NatureMist: face/body evidence review
+Reviewed 23 October 2026
+
+Decision
+Prioritise Amla and Hibiscus for skin-product development. Explore Reetha and
+Shikakai as ingredients in formulated rinse-off body cleansers. Keep Bhringraj
+as a lower-priority skin-development candidate and Indigo as hair colour.
+This ranking is an editorial/product-development judgement, not a finding that
+the current NatureMist raw powders have been clinically validated for skin use.
+
+Scope
+Targeted review of Ayurvedic reference material and original scientific studies.
+This is not a systematic review. Species, plant part, extraction, formulation,
+route, application site and study limitations were considered. The supplied
+workbook remains a source record; its original cell text was not overwritten.
+
+AMLA — first candidate for facial-formulation development
+Phyllanthus emblica fruit
+A randomized, single-blind, split-face study in 30 volunteers evaluated a 3%
+fruit-extract toner over four hours and reported reduced sebum recovery versus
+its base. This supports further investigation of that type of formulation.
+It does not establish a raw fruit-powder mask, body use, or lasting acne control.
+Source: https://www.mdpi.com/2076-3417/10/22/8193
+
+A separate 20-person, 84-day study used a gel with 0.1% BRANCH extract.
+Its results must not be assigned to NatureMist fruit powder.
+Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC8427479/
+
+A 2026 acne trial used an ORAL, combined Phyllanthus/Tinospora formulation.
+It does not validate applying Amla powder to acne.
+Source: https://pubmed.ncbi.nlm.nih.gov/42487522/
+
+HIBISCUS — second candidate, particularly a formulated rinse-off mask
+Hibiscus rosa-sinensis flowers
+A 2026 study reports 15 female participants using flower ethanol-extract clay
+masks over four weeks. Concentrations were 2.5%, 5% and 10%. The study reports
+changes in instrument-measured skin parameters. The small sample, short duration
+and formulated extract limit transfer to a plain flower-powder jar. Full-text
+PDF retrieval failed; assessment is limited to the publisher's methods/results
+abstract. Do not use the reported percentages as NatureMist claims or infer a
+raw-powder recipe from the extract concentrations.
+Source: https://journal-jps.com/new/index.php/jps/en/article/view/1783
+
+REETHA — cleanser-development candidate
+Sapindus mukorossi fruit/pericarp
+A 2024 study involved 20 participants washing with a hot-water fruit extract
+for 14 days. The authors report cleansing-related changes and no observed adverse
+effects. The available abstract does not describe a randomized control group.
+This adds preliminary human evidence beyond laboratory detergency research.
+It does not establish safety of dry powder near eyes or a NatureMist face-mask
+application. Prioritising a formulated body cleanser is a development judgement;
+body use itself was not tested in this facial study.
+Source: https://doi.org/10.15810/jic.2024.20.3.003
+Abstract: https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003126972
+
+SHIKAKAI — formulated body-cleanser candidate
+Acacia concinna / Senegalia rugata pods
+A randomized, double-blind, split-side study in 30 patients examined a cleanser
+containing Shikakai plus two other botanical extracts on forearms for two weeks.
+It reported a difference in water-loss measures, without significant differences
+in hydration, pH or roughness. Effects cannot be assigned to Shikakai alone.
+This does not justify raw-powder moisturising or eczema-treatment claims.
+Source: https://apjai-journal.org/original-article/ap-050519-0554/
+
+BHRINGRAJ — traditional skin context, lower priority for facial development
+Eclipta prostrata / Eclipta alba; supplied plant part must be confirmed
+The Ayurvedic Pharmacopoeia of India, Part I, Volume II, Bhrngaraja monograph
+lists Tvacya alongside Kesya. This records a traditional skin association.
+The monograph concerns whole plant; it does not provide a modern facial-mask
+protocol or validate a leaves/aerial-parts jar for all skin types.
+Source: https://www.ayurveda.hu/api/API-Vol-2.pdf
+Location: printed pages 21-24; properties/actions on printed page 24 (PDF page 36).
+
+An original 2017 study examined an ethanolic extract in cell assays, including
+human fibroblasts. Human cells in a laboratory are not a clinical trial in people.
+This is insufficient to recommend the current powder for acne, eczema or wounds.
+Source: https://www.mdpi.com/2076-3417/7/12/1227
+
+INDIGO — retain hair-colour role; exclude from face/body-mask recommendations
+Indigofera tinctoria leaves
+The SCCS assessment concerns specified non-oxidative hair-colour preparations
+and notes that weak sensitisation potential cannot be excluded. It is not an
+assessment of a facial/body mask or certification of a NatureMist product.
+Source: https://health.ec.europa.eu/publications/hair-dye-indigofera-tinctoria-c170-cas-84775-63-3-submission-iii_en
+
+Implementation consequence
+Use these findings in clearly labelled ingredient education and product planning.
+Do not automatically equate ingredient-level research with skin eligibility in
+the quiz, shop filters, product directions or combos. No current jar gained
+validated face/body directions from this review. Amla/Hibiscus are priorities
+to assess, not a clinically tested duo; the combination was not validated here.
+
+Practical next step
+Give a cosmetic formulator/safety assessor the actual supplier specifications
+and powder samples. Ask them to establish the intended face/body preparation,
+mixing ratio, application time, rinse method and frequency, and assess identity,
+particle size, mixed-product pH, microbiological quality and skin tolerance.
+Any claimed benefit should match evidence for that finished preparation.
+Do not copy extract percentages, study patch-test durations or oral doses into
+consumer raw-powder directions.
+
+Changes this review
+Added this research record only. No website code, live Shopify fields, skin
+recommendation eligibility, deployment or metaobjects were changed.

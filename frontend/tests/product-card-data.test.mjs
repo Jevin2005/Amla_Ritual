@@ -28,14 +28,14 @@ const render = (overrides = {}) => renderToStaticMarkup(createElement(ProductCar
 
 test("listing card displays current Shopify identity, quantity, price, step and handle", () => {
   const html = render({ featuredImage: { url: "https://cdn.shopify.com/indigo.jpg", altText: "Saved Indigo photo" } });
-  for (const expected of ["Saved Indigo", "Saved subtitle · 250 g", "₹325.50", "Colour Ritual", '/shop/old-handle', "Saved Indigo photo"]) assert.ok(html.includes(expected), expected);
+  for (const expected of ["Saved Indigo", "Saved subtitle · 250 g", "₹325.50", "Hair colour", '/shop/old-handle', "Saved Indigo photo"]) assert.ok(html.includes(expected), expected);
 });
 
 test("missing media never impersonates Amla and sold-out cards cannot add to bag", () => {
   const html = render({ ritualStep: "", availableForSale: false, availability: "In stock" });
   assert.ok(html.includes("/images/product-placeholder.svg"));
   assert.ok(!html.includes("amla-powder.jpg"));
-  assert.ok(html.includes("Botanical hair care"));
+  assert.ok(html.includes("Botanical care"));
   assert.ok(html.includes("Sold out"));
   assert.match(html, /<button[^>]*disabled=""[^>]*aria-label="Saved Indigo is sold out"/);
 });

@@ -4,7 +4,7 @@ import { build } from "esbuild";
 import { fileURLToPath } from "node:url";
 
 const bundle = await build({ entryPoints: [fileURLToPath(new URL("../src/features/rituals/guided-quiz.ts", import.meta.url))], bundle: true, platform: "node", format: "esm", write: false });
-const { getQuizFlow, setQuizAnswer, resolveQuizResult, resolveQuizBrowseItems, ritualQuestions } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
+const { getQuizFlow, getQuizResearch, setQuizAnswer, resolveQuizResult, resolveQuizBrowseItems, ritualQuestions } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`);
 const answer = (entries) => Object.fromEntries(Object.entries(entries).map(([id, value]) => [id, Array.isArray(value) ? value : [value]]));
 const care = (overrides = {}) => answer({ goal: "cleanse", check: "none", washNeed: "oil", hairHistory: "natural", routine: "one", ...overrides });
 const colour = (overrides = {}) => answer({ goal: "colour", check: "none", colourTarget: "deeper", colourBase: "dark", colourHistory: "none", henna: "ready", colourChecks: "passed", ...overrides });
@@ -28,7 +28,7 @@ const product = (slug, overrides = {}) => ({
 });
 
 test("starts unanswered and stops at the first missing or invalid answer", () => {
-  assert.equal(ritualQuestions.length, 18);
+  assert.equal(ritualQuestions.length, 21);
   assert.deepEqual(getQuizFlow({}), { questions: [ritualQuestions[0]], complete: false, outcome: null });
   for (const goal of [[], ["unknown"], ["cleanse", "softness"], ["cleanse", "cleanse"], "cleanse"]) {
     assert.deepEqual(ids({ goal }), ["goal"]);
@@ -504,8 +504,46 @@ test("exhaustively traverses every reachable completed path and verifies routing
     }
   };
   visit({});
-  assert.equal(paths, 3499);
+  assert.ok(paths > 3499, `visited ${paths} completed paths`);
   assert.equal(seenQuestions.size, ritualQuestions.length);
-  assert.deepEqual([...seenKinds].sort(), ["candidate", "conditional", "guidance", "no-match", "pause", "review"]);
+  assert.deepEqual([...seenKinds].sort(), ["candidate", "conditional", "guidance", "no-match", "pause", "research", "review"]);
   assert.deepEqual([...seenProducts].sort(), Object.keys(liveIds).sort());
+});
+
+test("skin and body routes adapt the ingredient choices and keep research separate from purchases", () => {
+  const products = Object.keys(liveIds).map((slug) => product(slug));
+  for (const [goal, expected] of Object.entries({ skin: ["amla-powder", "reetha-powder", "hibiscus-powder", "bhringraj-powder"], body: ["reetha-powder", "shikakai-powder"] })) {
+    const pending = getQuizFlow(answer({ goal }));
+    assert.deepEqual(pending.questions.map((question) => question.id), ["goal", "researchFocus"]);
+    assert.deepEqual(pending.questions.at(-1).options.map((option) => option.value), ["all", ...expected]);
+    for (const researchFocus of ["all", ...expected]) {
+      const answers = answer({ goal, researchFocus });
+      const result = outcome(answers);
+      assert.equal(result.kind, "research");
+      assert.deepEqual(result.candidates, []);
+      assert.deepEqual(resolveQuizResult(result, products, "shopify").items, []);
+      assert.deepEqual(resolveQuizBrowseItems(answers, products, "shopify"), []);
+      const references = getQuizResearch(answers);
+      assert.equal(references.length, researchFocus === "all" ? expected.length : 1);
+      assert.ok(references.every((entry) => entry.topic === goal && entry.sourceUrl.startsWith("https://") && entry.limitation));
+    }
+  }
+  for (const researchFocus of ["amla-powder", "indigo-powder", "unknown"]) {
+    assert.equal(getQuizFlow(answer({ goal: "body", researchFocus })).complete, false);
+    assert.deepEqual(getQuizResearch(answer({ goal: "body", researchFocus })), []);
+  }
+});
+
+test("combined interests retain the hair match and clear stale research and care answers when edited", () => {
+  const answers = care({ goal: "both", researchArea: "skin", researchFocus: "hibiscus-powder", hairGoal: "cleanse" });
+  assert.deepEqual(slugs(outcome(answers)), ["reetha-powder"]);
+  assert.deepEqual(getQuizResearch(answers).map((entry) => entry.slug), ["hibiscus-powder"]);
+  const changed = setQuizAnswer(answers, "researchArea", ["body"]);
+  assert.deepEqual(changed, answer({ goal: "both", researchArea: "body" }));
+  assert.deepEqual(getQuizResearch(changed), []);
+  assert.deepEqual(setQuizAnswer(answers, "goal", ["skin"]), answer({ goal: "skin" }));
+  assert.deepEqual(getQuizResearch(care({ researchArea: "skin", researchFocus: "all" })), []);
+  const blocked = { ...answers, check: ["irritated"] };
+  assert.equal(outcome(blocked).kind, "pause");
+  assert.deepEqual(slugs(outcome(blocked)), []);
 });

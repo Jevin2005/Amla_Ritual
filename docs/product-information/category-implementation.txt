@@ -1,0 +1,45 @@
+Botanical categories implemented locally — 23 October 2026
+
+Shopping categories
+Hair packs: Amla, Hibiscus, Bhringraj.
+Hair cleansing: Reetha, Shikakai.
+Hair colour: Indigo.
+
+Shopify remains the source of shopping classification through custom.ritual_step.
+Read-only verification found Pack on the three single pack products and four
+pack combos, Cleanse on Reetha/Shikakai/the cleansing duo, and Colour on Indigo.
+The loader now accepts Pack as the existing internal Condition key. Previously,
+Pack became an empty step and products disappeared from the pack filter.
+No Shopify values were changed.
+
+Homepage ingredient explorer
+The existing specimen section now has All botanicals, Hair care, Skin research,
+Body research and Hair colour controls. It uses the existing botanical artwork.
+Skin: Amla, Reetha, Hibiscus and Bhringraj, with the actual study/tradition and
+its limitation attached to each card.
+Body: Shikakai formulation research and Reetha development inference.
+Indigo is excluded from both research views.
+
+Product pages
+The six known single products show their current use and an expandable wider
+research guide. Sources open separately. Research is not a purchase eligibility
+flag, a skin-use instruction or a promised benefit. Product structured data now
+distinguishes the current use category instead of labelling every item hair care.
+Known Shopify IDs keep evidence attached when a product is renamed. Unknown
+products and combos do not inherit the single-ingredient guide by name similarity.
+
+Primary implementation files
+frontend/src/domain/catalog/botanical-uses.ts
+frontend/src/widgets/home/product-benefits.tsx and its CSS module
+frontend/src/features/catalog/product-use-guide.tsx and its CSS module
+frontend/src/features/catalog/shop-explorer.tsx
+frontend/src/features/catalog/product-card.tsx
+frontend/src/app/shop/[slug]/page.tsx
+frontend/src/lib/shopify/storefront.ts
+
+Boundaries
+The research records are editorial source summaries in code, not Shopify-managed
+fields. Shopping filters still read the Shopify ritual-step field. Quiz question
+logic has not been expanded to recommend face/body application. Existing hair
+logic now receives the previously unrecognised Pack classification correctly.
+No deployment, publication or metaobject deletion was performed.

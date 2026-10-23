@@ -29,6 +29,16 @@
 .heading { margin: 0; font-family: var(--font-instrument, "Instrument Serif", Georgia, serif); font-size: clamp(48px, 5vw, 72px); font-weight: 400; line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; }
 .heading em { color: var(--specimen-green); font-weight: 400; }
 .subtitle { margin: 12px 0 0; font-size: clamp(17px, 1.6vw, 23px); line-height: 1.45; font-weight: 400; letter-spacing: -.02em; }
+.topics { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.topics button { min-height: 44px; padding: 10px 18px; border: 1px solid #758167; border-radius: 999px; background: #f8f2e2; color: #102d25; font: inherit; font-size: 14px; cursor: pointer; }
+.topics button[aria-pressed="true"] { background: #0d382e; color: #fff9e9; border-color: #0d382e; }
+.topics button:focus-visible, .source:focus-visible { outline: 3px solid #30491c; outline-offset: 4px; }
+.topicDescription { max-width: 780px; margin: 18px auto 10px; text-align: center; font-size: 16px; line-height: 1.6; }
+.topicCount { margin: 0 0 26px; text-align: center; font-size: 13px; }
+.category { margin: 0 0 9px; font-size: 11px; line-height: 1.5; letter-spacing: .06em; text-transform: uppercase; }
+.researchSummary { margin: 0; font-size: 16px; line-height: 1.6; }
+.source { display: inline-block; min-height: 44px; padding-block: 12px; color: #0d382e; font-size: 13px; line-height: 1.5; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
 .card { position: relative; isolation: isolate; display: flex; flex-direction: column; min-width: 0; padding: 24px 30px 26px; }
 .paperShell { position: absolute; inset: 0; z-index: -1; pointer-events: none; filter: drop-shadow(0 2px 1px #6c674b35) drop-shadow(1px 5px 6px #4c563c2e); }
@@ -86,6 +96,8 @@
   .inner { max-width: 570px; }
   .cards { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .card { display: grid; grid-template-columns: minmax(0, .76fr) minmax(0, 1.24fr); align-items: center; column-gap: 10px; min-height: 150px; padding: 14px 16px 14px 10px; }
+  .card[data-research="true"] { grid-template-columns: minmax(0, 1fr); padding: 20px; }
+  .card[data-research="true"] .art { width: 130px; justify-self: center; }
   .number { top: -4px; left: 5px; width: 44px; height: 36px; border-radius: 6px; font-size: 20px; }
   .engraving { top: 12px; right: 12px; width: 48px; height: 76px; opacity: .2; }
   .art { aspect-ratio: 1; margin: 0; align-self: center; }

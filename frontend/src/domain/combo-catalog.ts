@@ -1,4 +1,4 @@
-import { comboProductCount, resolveComboProducts, type BotanicalCombo } from "./botanical-combos";
+import { comboProductCount, resolveComboProducts, type BotanicalCombo, type BotanicalCombosContent } from "./botanical-combos";
 import { getDefaultVariant, type Product } from "./catalog/products";
 import { comboJarCount, isComboProduct } from "./catalog/product-kind";
 
@@ -52,6 +52,23 @@ export type ComboCatalogEntry = {
   count: number;
   purchase: ReturnType<typeof getComboPurchaseSummary>;
 };
+
+/** Use the listing's current photo while retaining the saved section order. */
+export function getComboDisplayImage(entry: ComboCatalogEntry) {
+  const image = entry.listingProduct?.featuredImage || entry.listingProduct?.images?.[0] || entry.combo.image;
+  return image.altText?.trim() ? image : { ...image, altText: entry.combo.name };
+}
+
+export function getComboBookContent(content: BotanicalCombosContent, catalog: ComboCatalogEntry[]): BotanicalCombosContent {
+  const byId = new Map(catalog.map((entry) => [entry.combo.id, entry]));
+  return {
+    ...content,
+    combos: content.combos.map((combo) => {
+      const entry = byId.get(combo.id);
+      return entry ? { ...entry.combo, image: getComboDisplayImage(entry) } : combo;
+    }),
+  };
+}
 
 /** A combo is purchased as its own Shopify product, never as a sum of jars. */
 export function buildComboProductCatalog(combos: BotanicalCombo[], products: Product[], source: ComboSource): ComboCatalogEntry[] {

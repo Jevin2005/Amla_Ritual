@@ -87,6 +87,16 @@ async function withShopify({ products = [], catalogPages = null, product = null,
   }
 }
 
+test("Shopify Pack values remain usable by hair-pack filters and existing quiz rules", async () => {
+  const values = ["Pack", " pack ", "Condition", "Cleanse", "Color", "Colour", "Skin", ""];
+  await withShopify({ products: values.map((value, index) => rawProduct({
+    id: `product-${index}`, title: `Product ${index}`, ritualStep: field(value),
+  })) }, async () => {
+    assert.deepEqual((await getSearchCatalog()).map((item) => item.ritualStep),
+      ["Condition", "Condition", "Condition", "Cleanse", "Colour", "Colour", "", ""]);
+  });
+});
+
 test("search fetches every catalog page without cache or hero restrictions", async () => {
   const first = Array.from({ length: 50 }, (_, i) => rawProduct({ id: `product-${i}`, handle: `botanical-${i}` }));
   const added = rawProduct({ id: "new-neem", handle: "neem-powder", title: "Neem Powder", heroEnabled: field("false") });

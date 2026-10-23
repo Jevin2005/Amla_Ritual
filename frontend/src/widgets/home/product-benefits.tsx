@@ -2,19 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MotionSettings } from "@/domain/motion";
+import { botanicalProfiles, botanicalTopics, profilesForTopic, type BotanicalTopic } from "@/domain/catalog/botanical-uses";
 import { installBenefitsPointer, observeBenefitsEntrance } from "./product-benefits-motion";
 import styles from "./product-benefits.module.css";
-
-const specimens = [
-  { name: "Amla", image: "amla", alt: "Fresh green amla fruits with delicate leafy branches", benefits: ["Softer-feeling hair", "Natural-looking shine", "Pre-wash conditioning"] },
-  { name: "Reetha", image: "reetha", alt: "Brown reetha soapnuts, an open shell and green leaves", benefits: ["Cleanses scalp and hair", "Removes everyday oil", "Lifts everyday buildup"] },
-  { name: "Shikakai", image: "shikakai", alt: "Dried shikakai pods with green compound leaves", benefits: ["Botanical cleansing", "Softer-feeling hair", "Easier manageability"] },
-  { name: "Hibiscus", image: "hibiscus", alt: "A red hibiscus flower with its yellow stamen and green leaves", benefits: ["Conditions dry-feeling lengths", "Smoother, more manageable hair", "Natural-looking shine"] },
-  { name: "Bhringraj", image: "bhringraj", alt: "Bhringraj leaves and small white flowers", benefits: ["Hair and scalp conditioning", "Softer-feeling hair", "Easier manageability"] },
-  { name: "Indigo", image: "indigo", alt: "Indigo leaves beside a wooden bowl of green botanical powder", benefits: ["Cooler, deeper-looking tones", "Deepens henna-based colour", "Botanical colour care"], note: "For a suitable henna-based routine. Colour results vary." },
-];
 
 function Leaf() {
   return <svg viewBox="0 0 20 24" fill="none" aria-hidden="true"><path d="M16.5 2.5C7 2.5 2.4 6.6 3.4 14.7c7.8 1.2 12.8-3.1 13.1-12.2Z" fill="currentColor" /><path d="M2.5 21C4 15 7.5 10.1 13.2 5.8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /><path d="m5.3 14.1 7-7" stroke="#f7f2e4" strokeWidth=".7" /></svg>;
@@ -26,6 +18,9 @@ function Sprig() {
 
 export function ProductBenefits({ motionSettings }: { motionSettings: MotionSettings }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const [topic, setTopic] = useState<BotanicalTopic>("all");
+  const specimens = profilesForTopic(topic);
+  const currentTopic = botanicalTopics.find((item) => item.value === topic)!;
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -57,7 +52,7 @@ export function ProductBenefits({ motionSettings }: { motionSettings: MotionSett
       delete section.dataset.motionEnabled;
       delete section.dataset.motionRunning;
     };
-  }, [motionSettings]);
+  }, [motionSettings, topic]);
 
   return (
     <section ref={sectionRef} id="specimen-collection" className={styles.section} aria-labelledby="benefits-title" data-reveal-ignore>
@@ -67,14 +62,21 @@ export function ProductBenefits({ motionSettings }: { motionSettings: MotionSett
       <div className={styles.inner}>
         <header className={styles.header} data-benefit-reveal="header">
           <p className={styles.caption}><span>02 / The Specimen Collection</span></p>
-          <h2 className={styles.heading} id="benefits-title">Know your herbs. <em>Know their benefits.</em></h2>
-          <p className={styles.subtitle}>Discover what each botanical brings to your hair ritual.</p>
+          <h2 className={styles.heading} id="benefits-title">Know your herbs. <em>Explore their uses.</em></h2>
+          <p className={styles.subtitle}>Hair care, colour and the wider world of botanical skin and body research.</p>
         </header>
-        <ol className={styles.cards} role="list">
-          {specimens.map((specimen, index) => (
-            <li key={specimen.image} className={styles.card} data-benefit-card data-benefit-reveal="card" data-botanical={specimen.image}>
+        <div className={styles.topics} role="group" aria-label="Explore botanical uses">
+          {botanicalTopics.map((item) => <button key={item.value} type="button" aria-pressed={topic === item.value} aria-controls="botanical-topic-cards" onClick={() => setTopic(item.value)}>{item.label}</button>)}
+        </div>
+        <p className={styles.topicDescription}>{currentTopic.description}</p>
+        <p className={styles.topicCount} role="status">{specimens.length} {specimens.length === 1 ? "botanical" : "botanicals"} · {currentTopic.label}</p>
+        <ol id="botanical-topic-cards" className={styles.cards} role="list" aria-label={currentTopic.label}>
+          {specimens.map((specimen) => {
+            const research = specimen.research.find((item) => item.topic === topic);
+            return (
+            <li key={specimen.image} className={styles.card} data-benefit-card data-benefit-reveal="card" data-botanical={specimen.image} data-research={Boolean(research)}>
               <div className={styles.paperShell} aria-hidden="true"><div className={styles.paper} /></div>
-              <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <span className={styles.number} aria-hidden="true">{String(botanicalProfiles.indexOf(specimen) + 1).padStart(2, "0")}</span>
               <div className={styles.engraving} aria-hidden="true" />
               <div className={styles.art}>
                 <div className={styles.contactShadow} aria-hidden="true" />
@@ -85,12 +87,17 @@ export function ProductBenefits({ motionSettings }: { motionSettings: MotionSett
                 </div></div>
               </div>
               <div className={styles.cardCopy}>
+                <p className={styles.category}>{research ? research.label : specimen.category}</p>
                 <h3 className={styles.name}>{specimen.name}</h3>
-                <ul className={styles.benefits} role="list">{specimen.benefits.map((benefit) => <li key={benefit}><Leaf /><span>{benefit}</span></li>)}</ul>
-                {specimen.note && <p className={styles.note}>{specimen.note}</p>}
+                {research ? <>
+                  <p className={styles.researchSummary}>{research.summary}</p>
+                  <p className={styles.note}>{research.limitation}</p>
+                  <a className={styles.source} href={research.sourceUrl} target="_blank" rel="noopener noreferrer">{research.sourceTitle}<span className={styles.srOnly}> (opens in a new tab)</span> ↗</a>
+                  <p className={styles.note}>Current product use: {specimen.category.toLowerCase()}.</p>
+                </> : <ul className={styles.benefits} role="list">{specimen.roles.map((role) => <li key={role}><Leaf /><span>{role}</span></li>)}</ul>}
               </div>
             </li>
-          ))}
+          ); })}
         </ol>
         <div className={styles.footer}>
           <span className={styles.ornament} aria-hidden="true"><Sprig /></span>
