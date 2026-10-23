@@ -5,9 +5,9 @@ import { PageHero } from "@/shared/ui/page-hero";
 import { LoadingIndicator } from "@/shared/ui/loading-indicator";
 
 export const metadata: Metadata = {
-  title: "Shop Herbal Hair Packs, Cleansers & Hair Colour",
+  title: "Shop Botanical Powders & Combos",
   description:
-    "Shop six NatureMist botanical powders in 200 g packs: Amla, Hibiscus and Bhringraj for hair packs, Reetha and Shikakai for herbal washes, and Indigo for hair colour.",
+    "Explore NatureMist individual botanical powders and thoughtfully paired combos in one collection. Filter by product type, care goal or ritual step.",
   alternates: { canonical: "/shop" },
 };
 
@@ -17,7 +17,7 @@ export default function ShopPage() {
       <PageHero
         eyebrow="The botanical cabinet"
         title={<><span>Your botanicals.</span><br />Your ritual.</>}
-        description="Traditional hair packs, herbal washes and plant-based colour. Explore six botanicals in 200 g packs, as single jars or thoughtfully chosen sets."
+        description="A single jar or a thoughtful pairing. Explore every botanical and combo together, then find the care that fits your routine."
         className="max-[900px]:min-h-[250px] max-[900px]:py-10 max-[900px]:pb-6 max-[680px]:min-h-[190px] max-[680px]:py-6 max-[680px]:pb-4"
       />
       <Suspense fallback={<LoadingIndicator page label="Arranging the botanical cabinet…" />}>

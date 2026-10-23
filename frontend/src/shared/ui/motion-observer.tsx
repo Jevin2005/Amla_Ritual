@@ -149,10 +149,7 @@ export function MotionObserver() {
         for (const node of record.addedNodes) {
           if (node instanceof HTMLElement) scheduleRegister(node);
         }
-        // Counter/text updates cannot add or detach reveal targets.
-        if (Array.from(record.removedNodes).some((node) => node instanceof HTMLElement)) {
-          scheduleRegister(record.target as ParentNode);
-        }
+        if (record.removedNodes.length) scheduleRegister(record.target as ParentNode);
       }
     });
     mutations.observe(document.body, { childList: true, subtree: true });

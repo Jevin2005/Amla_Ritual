@@ -11,101 +11,83 @@ const inputClass =
 type FaqItem = {
   question: string;
   answer: string;
-  category: "botanicals" | "preparation" | "compatibility" | "orders";
+  category: "botanicals" | "preparation" | "hair-types" | "orders";
 };
 
 const FAQ_DATA: FaqItem[] = [
   {
     category: "botanicals",
-    question: "Which powders are for hair packs, washing or colour?",
+    question: "What makes NatureMist botanicals different from commercial hair powders?",
     answer:
-      "Amla and Hibiscus are ingredients for traditional hair packs; Bhringraj is for traditional hair-and-scalp packs. Reetha and Shikakai are for herbal hair washing. Indigo is for a suitable botanical hair-colour process. Follow the current product directions for the step you choose.",
-  },
-  {
-    category: "botanicals",
-    question: "How much powder is in a jar or combo?",
-    answer:
-      "Each individual powder contains 200 g. A two-jar combo contains 2 × 200 g, or 400 g in total; a three-jar combo contains 3 × 200 g, or 600 g in total. The jars remain separate, with their own ingredients and directions.",
+      "Every NatureMist powder is 100% single-origin, micro-milled from wildcrafted or shade-dried Indian botanicals. We never use preservatives, fragrances, silicones, dyes, or anti-caking agents. Each batch is triple-sieved for ultra-smooth paste application that rinses clean without grittiness.",
   },
   {
     category: "botanicals",
     question: "How should I store my botanical powders once opened?",
     answer:
-      "Keep the container tightly closed in a cool, dry place away from sunlight and moisture. Use a clean, dry spoon and keep water out of the jar. Follow the expiry and storage information on the pack. Prepare paste fresh and discard any leftovers.",
+      "Store your jars in a cool, dry place away from direct sunlight and moisture. Ensure the inner lid is tightly sealed after every use. Our amber and frosted UV-protective glass preserves botanical polyphenol integrity for up to 18 months.",
   },
   {
     category: "botanicals",
-    question: "Does traditional Ayurvedic use mean a product is clinically proven?",
+    question: "Are these products certified pure and tested for heavy metals?",
     answer:
-      "No. Ayurvedic tradition, ingredient research and testing of a finished product are different kinds of evidence. Research using extracts, oral products, animals or laboratory models does not prove results from these powders. Softness, shine, slip, reduced breakage and mildness require relevant product testing before we claim them.",
+      "Yes. Every harvest batch undergoes independent third-party microbiological and heavy metal screening (lead, arsenic, mercury, cadmium) before milling to ensure absolute safety for hair, scalp, and skin.",
   },
   {
     category: "preparation",
-    question: "How do I prepare a botanical hair pack?",
+    question: "How do I prepare an Amla or Shikakai hair mask at home?",
     answer:
-      "Use the quantity, mixer and timing given in the current product directions. Mix a fresh portion in a clean bowl and rinse thoroughly as directed. Hair-pack directions do not establish facial or body suitability. Avoid breathing in loose powder, keep it away from your eyes and discard leftover paste.",
+      "Take 2–3 tablespoons of botanical powder. Slowly whisk in warm distilled water (or pure rose water / aloe juice) until it reaches a smooth, yogurt-like consistency. Let it rest for 10–15 minutes before applying to damp hair and scalp. Leave for 30–45 minutes, then rinse thoroughly with lukewarm water.",
   },
   {
     category: "preparation",
-    question: "Can I combine powders or add other ingredients?",
+    question: "Which mixers work best with dry or oily scalps?",
     answer:
-      "Start with one botanical and the mixer specified in its directions. Introduce products separately so you can observe your response. A combo is a selection of separate jars, not a tested blended formula. Keep wash and pack steps separate unless the product directions explicitly support a combination.",
+      "For dry hair and scalp, mix with fresh yogurt, coconut milk, or cold-pressed Castor/Almond oil for deep moisture. For oily scalps or clarifying washes, use warm green tea, aloe vera juice, or filtered water with a dash of apple cider vinegar.",
   },
   {
     category: "preparation",
-    question: "How do Reetha and Shikakai fit into my hair routine?",
+    question: "Do I still need a synthetic shampoo and conditioner?",
     answer:
-      "Reetha and Shikakai contain naturally occurring saponins and are used for cleansing hair and scalp. Their lather and feel differ from a conventional shampoo. Choose the routine that works for your hair, rinse thoroughly and keep the cleanser away from your eyes. These are not our facial-mask powders.",
+      "Many practitioners transition to our Shikakai and Reetha ritual as a natural soapnut cleanser that gently washes away sebum without stripping the scalp's protective lipid barrier. You can alternate between natural herbal washes and gentle clean shampoos as preferred.",
   },
   {
-    category: "compatibility",
-    question: "Can botanical powders affect light or colour-treated hair?",
+    category: "hair-types",
+    question: "Will Amla or Bhringraj darken my blonde or chemically colored hair?",
     answer:
-      "Plant pigments can affect light, grey, bleached, porous or previously coloured hair. Follow the strand-test guidance for each product before a full application, especially with Amla, Hibiscus and Indigo. A strand test checks colour and feel; it does not replace the skin patch test.",
+      "Pure Amla and Bhringraj are rich in natural tannins and phytonutrients. On very light blonde, platinum, or bleached porous hair, prolonged use can impart a subtle warm or deeper golden-ash tone. We recommend a discreet strand test behind your ear if your hair is chemically lightened.",
   },
   {
-    category: "compatibility",
-    question: "What if my skin or scalp is sensitive or irritated?",
+    category: "hair-types",
+    question: "Are these rituals safe for sensitive, eczema, or psoriasis-prone scalps?",
     answer:
-      "Plant ingredients can cause irritation or allergy. Follow each product's patch-test instructions, avoid the eyes and broken or irritated skin, and stop use if irritation occurs. If you have eczema, psoriasis, an active rash or a previous reaction, seek advice from a qualified healthcare professional before trying a new botanical.",
-  },
-  {
-    category: "compatibility",
-    question: "Are Amla and Hibiscus currently suitable for face or body packs?",
-    answer:
-      "Face and body packs are development options, not current uses we recommend for these jars. The exact species, plant part, particle size, skin tolerance and instructions need assessment. Amla toner-extract research and Hibiscus leaf or extract studies do not establish facial results from the actual fruit or flower powders. Skin use is not currently recommended for any of the six powders.",
-  },
-  {
-    category: "compatibility",
-    question: "Can Indigo alone turn grey hair black?",
-    answer:
-      "Indigo alone does not guarantee black hair and can appear blue or green on light or grey hair. A darker result commonly requires a suitable henna-first method. Henna is not included in this six-powder collection. Follow the complete method's directions, check compatibility with previous treatments, and patch- and strand-test as directed.",
+      "Our botanicals are completely unfragranced and non-synthetic. However, because plant actives are potent, we always advise performing a 24-hour patch test inside the elbow before full scalp application.",
   },
   {
     category: "orders",
     question: "How are payments processed on the website?",
     answer:
-      "The payment methods available for your order are shown at checkout. Review the order total, delivery details and selected payment method before confirming your purchase. Contact our care team if you need help with an existing order.",
+      "All payment transactions, UPI (Google Pay, PhonePe, Paytm), Net Banking, and Credit/Debit cards are 100% encrypted and processed securely via Razorpay.",
   },
   {
     category: "orders",
     question: "What is your shipping timeline and delivery coverage?",
     answer:
-      "Check our Shipping + Returns page for the current dispatch and delivery policy. Availability and delivery estimates depend on your destination and order. Use Track an Order for updates once tracking information is available.",
+      "Orders are prepared and dispatched within 24–48 hours from our botanical dispensary. Domestic delivery across India typically takes 3–5 business days with tracked express couriers.",
   },
   {
     category: "orders",
     question: "What is your return and satisfaction policy?",
     answer:
-      "Our current Shipping + Returns policy explains eligibility, time limits and how to request help. If an item arrives damaged or incorrect, contact our care team with your order reference and details so we can review it.",
+      "Due to the pure, sealed botanical nature of our wellness products, unopened items in original packaging can be returned within 14 days of delivery. If an item arrived damaged, our Care Team will immediately dispatch a fresh replacement.",
   },
 ];
 
 const CATEGORIES = [
   { id: "all", label: "All Questions" },
-  { id: "botanicals", label: "Botanicals & Benefits" },
+  { id: "botanicals", label: "Botanicals & Purity" },
   { id: "preparation", label: "Preparation & Usage" },
-  { id: "compatibility", label: "Suitability & Colour" },
+  { id: "hair-types", label: "Hair & Scalp Types" },
   { id: "orders", label: "Orders & Checkout" },
 ] as const;
 
@@ -136,14 +118,14 @@ export function FaqsPage() {
             Frequently Asked Questions
           </h1>
           <p className="mx-auto mt-6 max-w-[580px] text-[1.05rem] leading-[1.75] text-[var(--muted)]">
-            Find a botanical for your hair-pack, wash or colour routine, with clear answers on pack sizes, preparation, evidence and orders.
+            Explore complete guidance on traditional botanical preparation, scalp compatibility, purity standards, and order handoff.
           </p>
 
           {/* Search Box */}
           <div className="mx-auto mt-8 max-w-[540px]">
             <input
               type="search"
-              placeholder="Search questions (e.g., 200 g, hair pack, wash, colour)..."
+              placeholder="Search questions (e.g., mixing, hair fall, delivery, color)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={inputClass}
@@ -179,13 +161,13 @@ export function FaqsPage() {
               No matching answers found.
             </p>
             <p className="mt-2 text-[0.9rem] text-[var(--muted)]">
-              Try another search, or ask our care team about your product and intended use.
+              Try searching with another word, or contact our specialists for personalized advice.
             </p>
             <Link
               href="/contact"
               className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--forest)] px-7 text-[0.74rem] font-bold tracking-[0.12em] text-[var(--paper)] uppercase"
             >
-              Ask our care team →
+              Ask a botanical specialist →
             </Link>
           </div>
         ) : (
@@ -230,10 +212,10 @@ export function FaqsPage() {
         {/* Bottom Consultation Callout */}
         <div className="mt-16 rounded-[var(--radius-lg)] border border-[var(--line)] bg-[radial-gradient(circle_at_90%_10%,rgba(183,212,90,0.18),transparent_40%),linear-gradient(135deg,var(--forest),var(--forest-dark))] p-[clamp(32px,5vw,56px)] text-center text-white">
           <h2 className="m-0 font-serif text-[clamp(1.8rem,3vw,2.5rem)] font-normal text-[var(--paper)]">
-            Still choosing your hair-pack, wash or colour ritual?
+            Still have questions about your hair ritual?
           </h2>
           <p className="mx-auto mt-3 max-w-[520px] text-[0.95rem] leading-[1.7] text-white/80">
-            Our care team can help you compare products, understand their intended uses and find the relevant preparation guidance.
+            Our Ayurvedic hair experts are ready to curate a bespoke botanical combination tailored to your scalp type and climate.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link

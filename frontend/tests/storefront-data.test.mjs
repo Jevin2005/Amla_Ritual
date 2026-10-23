@@ -87,20 +87,6 @@ async function withShopify({ products = [], catalogPages = null, product = null,
   }
 }
 
-test("care categories require explicit Shopify data and ignore invalid or duplicate values", async () => {
-  await withShopify({ products: [
-    rawProduct({ careAreas: field('[" Skin Care ", "Hair Care", "Skin Care", "Medicine"]') }),
-    rawProduct({ id: "missing", handle: "hibiscus-powder", title: "Hibiscus Powder", tags: ["Skin Care"] }),
-    rawProduct({ id: "colour", handle: "indigo-powder", careAreas: field('["hair colour"]') }),
-  ] }, async (requests) => {
-    const catalog = (await getStorefront()).products;
-    assert.deepEqual(catalog[0].careAreas, ["Hair Care", "Skin Care"]);
-    assert.deepEqual(catalog[1].careAreas, []);
-    assert.deepEqual(catalog[2].careAreas, ["Hair Colour"]);
-    assert.ok(requests.find(({ query }) => query.includes("NatureMistCatalog")).query.includes('careAreas: metafield(namespace: "custom", key: "care_areas")'));
-  });
-});
-
 test("search fetches every catalog page without cache or hero restrictions", async () => {
   const first = Array.from({ length: 50 }, (_, i) => rawProduct({ id: `product-${i}`, handle: `botanical-${i}` }));
   const added = rawProduct({ id: "new-neem", handle: "neem-powder", title: "Neem Powder", heroEnabled: field("false") });

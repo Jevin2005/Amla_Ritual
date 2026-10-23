@@ -16,8 +16,8 @@ const expectedThemes = [
   ["reetha", "Reetha", "Your wash-day ritual.", "#FFF4E3", "#EAD9C8", "#EDBD90", "#F5E6CF", "#432516"],
   ["indigo", "Indigo", "Your colour ritual.", "#F7F4EC", "#DFE6EF", "#DCC49B", "#F2EBDD", "#172943"],
   ["shikakai", "Shikakai", "Your cleansing ritual.", "#FFF3E1", "#E8D8C7", "#E7BE91", "#F3E4CD", "#402719"],
-  ["bhringraj", "Bhringraj", "Your hair and scalp pack.", "#F5F1DD", "#DFE7D8", "#DED3A0", "#F0EDD9", "#173A29"],
-  ["hibiscus", "Hibiscus", "Your floral hair-pack ritual.", "#FFF0E7", "#F0DCE0", "#EDB3AD", "#F6E7DA", "#531B2B"],
+  ["bhringraj", "Bhringraj", "Your botanical ritual.", "#F5F1DD", "#DFE7D8", "#DED3A0", "#F0EDD9", "#173A29"],
+  ["hibiscus", "Hibiscus", "Your floral hair ritual.", "#FFF0E7", "#F0DCE0", "#EDB3AD", "#F6E7DA", "#531B2B"],
 ];
 
 test("all five hero themes preserve the supplied names, taglines and exact palettes", () => {

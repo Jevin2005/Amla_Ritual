@@ -61,7 +61,6 @@ Use the [product entry form](product-entry-form.md) as the merchant-facing check
 | --- | --- | --- |
 | `botanical_name` | Single-line text | Botanical name; preferred over the legacy `botanical` key |
 | `plant_part` | Single-line text | Plant part/form |
-| `care_areas` | List of single-line text | Explicit care categories: `Hair Care`, `Skin Care`, `Hair Colour`; select more than one when appropriate |
 | `collection_number` | Single-line text | Display order/ritual number |
 | `subtitle` | Single-line text | Product card subtitle |
 | `accent` | Color | Product accent colour |
@@ -80,21 +79,13 @@ Use the [product entry form](product-entry-form.md) as the merchant-facing check
 | `storage` | Multi-line text | Storage guidance |
 | `texture` | Single-line text | Texture description |
 | `concerns` | List of single-line text | Listing/ritual filters |
-| `ritual_step` | Single-line text | `Cleanse`, `Pack`, or `Colour`; legacy `Condition` is still read |
+| `ritual_step` | Single-line text | `Cleanse`, `Condition`, or `Colour` |
 | `experience` | Single-line text | `Beginner`, `Familiar`, or `Advanced` |
 | `color_considerations` | List of single-line text | Hair-colour cautions |
 | `search_terms` | List of single-line text | Extra storefront search words |
 | `faqs` | JSON | Array of `{ "question": "…", "answer": "…" }` |
 
 When Shopify is connected, deleted or empty metafields stay empty or use a neutral product-derived label; the original preview claims are never substituted into a live product. Complete every customer-facing and safety field before publishing.
-
-Create the `custom.care_areas` definition with Storefront read access, then save its values on each product. The workbook reviewed on 21 October 2026 positions Amla, Reetha, Shikakai, Hibiscus and Bhringraj as `Hair Care`, and Indigo as `Hair Colour`. Amla/Hibiscus face and body packs are development options pending product suitability and tolerance assessment; they are not currently assigned `Skin Care`. The Storefront product query reads this metafield explicitly; missing categories stay empty rather than being inferred from names or preview data.
-
-Use `Pack` for Amla/Hibiscus/Bhringraj, `Cleanse` for Reetha/Shikakai, and `Colour` for Indigo. Use neutral `Hair Packs` merchandising rather than untested softness, shine, detangling or breakage claims. Prefix `how_to_use` entries with `Preparation:`, `Hair:`, `Rinse:` and `After use:`; `Before colouring:` and `Hair colour:` are also supported. The product page separates the directions and displays the product's own `safety` instructions. Keep quantities, timing and any combinations specific to assessed product directions.
-
-The six singles each contain **200 g**. Align `custom.net_quantity`, retained `custom.size`, descriptions, SEO and variant text. Keep image files unchanged while updating accessible metadata that states the old quantity. Bhringraj's supplied leaves and aerial parts must not be labelled whole plant. Workbook-aligned values are recorded in [single-profiles.json](claims-refresh-2026-10-21/single-profiles.json).
-
-Ayurvedic tradition, oral studies, animal studies and extract research do not establish clinical effects from these finished powders. Conditioning, skin-use, ingredient-free and tolerance claims require relevant evidence. Indigo shade and grey coverage depend on the method and hair; henna is outside this six-product range, and Amla does not substitute for it.
 
 Homepage content is managed under **Products → Metafields** using the existing `custom.hero_*` fields. Only products with **Show in homepage hero = True**, published to Headless, with a resolved GLB model, poster and background appear. Order, timing and copy come from that same product. See [Homepage hero editor](homepage-hero-admin.md).
 

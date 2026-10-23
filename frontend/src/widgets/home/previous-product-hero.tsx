@@ -4,7 +4,6 @@ import { MediaImage as Image } from "@/shared/ui/media-image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { getHomepageHeroProducts, type HomepageHeroProduct, type Product } from "@/domain/catalog/products";
-import { getHeroJarImage } from "@/domain/catalog/image-hero";
 import { nextHeroIndex, type HeroSettings } from "@/domain/catalog/hero";
 import { getHeroPresentation } from "./hero-presentation";
 import { ProductModel } from "@/features/catalog/product-model";
@@ -73,10 +72,8 @@ export function PreviousProductHero({ products, settings }: { products: Product[
   const mediaToken = mediaTransition?.token;
   const playing = mediaReady && !modelLoading && !activeTransition && requested === null && slides.length > 1 && settings.autoplay && !paused && !focused && !modelInteracting && !modelHovered && moving && pageVisible && inView;
   const showProgress = mediaReady && slides.length > 1 && settings.autoplay && moving && pageVisible && inView;
-  // The full-resolution photographs remain underneath. Decorative WebGL
-  // layers use smaller textures to leave graphics memory for the 3D jar.
-  const heroBackgrounds = useMemo(() => slides.map((slide) => ({ ...slide.heroBackground, url: shopifyImageLoader({ src: slide.heroBackground.url, width: 960 }) })), [slides]);
-  const heroPosters = useMemo(() => slides.map((slide) => ({ ...slide.heroPoster, url: shopifyImageLoader({ src: slide.heroPoster.url, width: 512 }) })), [slides]);
+  const heroBackgrounds = useMemo(() => slides.map((slide) => ({ ...slide.heroBackground, url: shopifyImageLoader({ src: slide.heroBackground.url, width: 1600 }) })), [slides]);
+  const heroPosters = useMemo(() => slides.map((slide) => ({ ...slide.heroPoster, url: shopifyImageLoader({ src: slide.heroPoster.url, width: 960 }) })), [slides]);
   const posterCursor = finePointer && settings.cursorMotion && motionSettings.cursor && motionSettings.intensity > 0;
   const handleModelLoading = useCallback((url: string, loading: boolean) => {
     // A previous viewer may finish after a manual slide change. Track each URL
@@ -324,8 +321,6 @@ export function PreviousProductHero({ products, settings }: { products: Product[
 
   if (!product) return null;
 
-  const modelPoster = getHeroJarImage(product) ?? product.featuredImage ?? product.heroPoster;
-  const upcomingModelPoster = upcoming ? getHeroJarImage(upcoming) ?? upcoming.featuredImage ?? upcoming.heroPoster : null;
   const { theme, firstLine, productLine, tagline, description } = getHeroPresentation(product);
   const animation = !mediaReady || !visited || reducedMotion || !motionSettings.enabled ? "none" : settings.transition;
   const heroTransitionDuration = mediaDuration;
@@ -478,11 +473,11 @@ export function PreviousProductHero({ products, settings }: { products: Product[
           >
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
               settings={settings} presentation="showcase" paused={paused || !inView} cameraDistancePercent={95} eager enabled preload={nearHero && pageVisible}
-              poster={modelPoster}
+              poster={product.featuredImage || product.heroPoster}
               onLoadingChange={handleModelLoading} />
           </div>
           <div className={styles.productDetails} key={`details-${product.heroEntryId}`} data-transition={animation}>
-            <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical care rituals"}</p>
+            <p className={styles.eyebrow}>{product.hero?.eyebrow || "Botanical hair care"}</p>
             <h3 className={styles.productName}><Link href={`/shop/${product.slug}`}>{product.name}</Link></h3>
             {(product.subtitle || product.size) && <p className={styles.subtitle}>{[product.subtitle, product.size].filter(Boolean).join(" · ")}</p>}
             <div className={styles.disclosures}>
@@ -534,8 +529,8 @@ export function PreviousProductHero({ products, settings }: { products: Product[
             onLoad={() => markReady(upcoming.heroPoster.url)} />
           <Image src={upcoming.heroBackground.url} alt="" fill sizes="100vw" loading="eager" fetchPriority="low"
             onLoad={() => markReady(upcoming.heroBackground.url)} />
-          {upcomingModelPoster && upcomingModelPoster.url !== upcoming.heroPoster.url && (
-            <Image src={upcomingModelPoster.url} alt="" fill sizes="(max-width: 900px) 40vw, 28vw" loading="eager" fetchPriority="low" />
+          {upcoming.featuredImage?.url && upcoming.featuredImage.url !== upcoming.heroPoster.url && (
+            <Image src={upcoming.featuredImage.url} alt="" fill sizes="(max-width: 900px) 40vw, 28vw" loading="eager" fetchPriority="low" />
           )}
         </div>
       )}

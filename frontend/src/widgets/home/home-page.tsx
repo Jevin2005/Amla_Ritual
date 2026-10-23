@@ -13,7 +13,6 @@ import { PreviousProductHero } from "./previous-product-hero";
 import { ProductBenefits } from "./product-benefits";
 import { BuildYourRitual } from "./build-your-ritual";
 import { VideoReviewsSection } from "./video-reviews-section";
-import { BotanicalCombos } from "./botanical-combos";
 import { homeFaqs } from "./content";
 
 const eyebrowClass =
@@ -33,6 +32,7 @@ export function HomePage() {
   const { products, content, source } = useStore();
   const collectionEntries = useMemo(() => buildCollectionCatalog(products, content.botanicalCombos.enabled ? content.botanicalCombos.combos : [], source), [products, content.botanicalCombos, source]);
   const individualEntries = collectionEntries.filter((entry) => entry.kind === "product");
+  const comboEntries = collectionEntries.filter((entry) => entry.kind === "combo");
   const homeMotion = useMemo(() => ({ ...content.motionSettings, duration: content.motionSettings.duration * 1.25 }), [content.motionSettings]);
 
   if (!products.length) {
@@ -72,13 +72,13 @@ export function HomePage() {
               className="m-0 scroll-mt-[calc(var(--header-height)+24px)] text-[clamp(2.6rem,4vw,4.5rem)] leading-[0.96] font-normal tracking-[-0.045em] text-[var(--forest)] [font-family:var(--font-display)] max-[680px]:text-[clamp(1.6rem,7.5vw,2.1rem)]"
               id="collection-title"
             >
-              Botanical care, your way.
+              Shop the herbal collection.
             </CollectionHeading>
           </div>
           <div className="flex flex-col justify-end gap-3 max-[680px]:gap-2">
             <p className="m-0 text-[0.84rem] leading-[1.65] text-[var(--muted)] max-[680px]:hidden">
-              Six botanicals in 200 g packs for traditional hair packs,
-              herbal washes and plant-based colour.
+              Your favourite botanicals, one jar at a time.
+              Find the single powder for your everyday ritual.
             </p>
             <MagneticLink
               className={`${textLinkClass} max-[680px]:text-[0.6rem] max-[680px]:min-h-[34px]`}
@@ -89,17 +89,6 @@ export function HomePage() {
           </div>
         </div>
 
-        <nav aria-label="Shop by care" className="mb-7 flex flex-wrap gap-2.5 max-[680px]:mb-5">
-          {[
-            { href: "/shop?care=hair", title: "Hair care" },
-            { href: "/shop?goal=Cleanse", title: "Herbal hair washes" },
-            { href: "/shop?care=colour", title: "Hair colour" },
-          ].map((category) => (
-            <Link key={category.href} href={category.href} className="inline-flex min-h-11 items-center rounded-full border border-[var(--forest)]/25 bg-[var(--paper)] px-5 py-2.5 text-[0.76rem] font-bold tracking-[0.04em] text-[var(--forest)] transition-colors hover:bg-[var(--forest)] hover:text-[var(--paper)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)]">
-              {category.title} <span className="ml-3" aria-hidden="true">&rarr;</span>
-            </Link>
-          ))}
-        </nav>
         <p className="sr-only" role="status" aria-live="polite">{individualEntries.length} single products in the collection</p>
         {individualEntries.length ? <CollectionGrid entries={individualEntries} eagerImages={!hasHero} /> : <p className="text-[var(--muted)]">Single botanical powders are coming soon.</p>}
       </section>
@@ -121,7 +110,7 @@ export function HomePage() {
             </h2>
           </div>
           <p className="max-w-[460px] pb-1 leading-[1.75] text-[var(--muted)] max-[900px]:p-0 max-[680px]:hidden">
-            Choose a powder for its intended use. Hair packs, herbal washes and colour rituals each have their own directions.
+            Every powder has its own directions. The rhythm, however, stays beautifully simple.
           </p>
         </div>
 
@@ -155,7 +144,7 @@ export function HomePage() {
                 Scoop
               </h3>
               <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
-                Measure the amount directed for your hair pack, wash or colour step.
+                Begin with enough botanical powder for your hair length.
               </p>
             </div>
           </article>
@@ -188,7 +177,7 @@ export function HomePage() {
                 Mix
               </h3>
               <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
-                Follow the product directions to make a fresh, smooth paste.
+                Add water gradually until the texture is smooth and spreadable.
               </p>
             </div>
           </article>
@@ -223,7 +212,7 @@ export function HomePage() {
                 Apply
               </h3>
               <p className="mx-auto mt-2 max-w-[280px] text-[0.84rem] leading-[1.55] text-[var(--muted)] max-[680px]:mt-1 max-[680px]:text-[0.72rem] max-[680px]:leading-[1.35]">
-                Apply only to the intended area. Follow the timing, then rinse thoroughly.
+                Follow the botanical directions, then rinse thoroughly.
               </p>
             </div>
           </article>
@@ -232,7 +221,6 @@ export function HomePage() {
 
       <IngredientClarity />
 
-      <BotanicalCombos />
 
       <VideoReviewsSection />
 
@@ -290,6 +278,21 @@ export function HomePage() {
           </div>
         </div>
       </section>
+      {content.botanicalCombos.enabled && comboEntries.length > 0 && (
+        <section id="botanical-combos" className={sectionClass} aria-labelledby="combos-title">
+          <div className={`${splitHeadingClass} mb-10 max-[680px]:mb-6`}>
+            <div>
+              <p className={eyebrowClass}>{content.botanicalCombos.eyebrow}</p>
+              <h2 id="combos-title" className={sectionTitleClass}>{content.botanicalCombos.heading} {content.botanicalCombos.headingEnding}</h2>
+            </div>
+            <div>
+              <p className="mb-5 text-[var(--muted)]">{content.botanicalCombos.description}</p>
+              <MagneticLink href="/shop?type=combos" className={textLinkClass}>Explore all combos <span aria-hidden="true">↗</span></MagneticLink>
+            </div>
+          </div>
+          <CollectionGrid entries={comboEntries} />
+        </section>
+      )}
     </main>
   );
 }

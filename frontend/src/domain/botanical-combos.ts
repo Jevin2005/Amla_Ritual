@@ -1,5 +1,4 @@
 import type { Product, StoreImage } from "./catalog/products";
-import { isComboProduct } from "./catalog/product-kind";
 
 export const COMBOS_PER_PAGE = 3;
 export const MAX_BOTANICAL_COMBOS = 60;
@@ -37,7 +36,7 @@ export const defaultBotanicalCombos: BotanicalCombosContent = {
   eyebrow: "Botanical combos",
   heading: "Your ritual.",
   headingEnding: "Better together.",
-  description: "Choose a herbal wash duo, a traditional hair-pack pairing or a set with separate wash and pack steps. Each jar contains 200 g and has its own directions.",
+  description: "Discover thoughtfully paired botanical powders.",
   buttonLabel: "View combo",
   pageTurnEnabled: true,
   pageTurnDuration: 1.25,
@@ -50,6 +49,14 @@ export const defaultBotanicalCombos: BotanicalCombosContent = {
 export const emptyBotanicalCombos: BotanicalCombosContent = { ...defaultBotanicalCombos, enabled: false, combos: [] };
 
 type TextField = { value?: string | null } | null;
+type ComboNode = {
+  id: string;
+  name?: TextField;
+  ingredients?: TextField;
+  caption?: TextField;
+  photo?: { reference?: { image?: Partial<StoreImage> | null } | null } | null;
+  products?: TextField;
+};
 export type GraphBotanicalCombos = {
   enabled?: TextField;
   eyebrow?: TextField;
@@ -59,49 +66,45 @@ export type GraphBotanicalCombos = {
   buttonLabel?: TextField;
   pageTurnEnabled?: TextField;
   pageTurnDuration?: TextField;
-  comboProducts?: TextField;
+  combos?: { references?: { nodes: ComboNode[] } | null } | null;
 };
 
 const text = (field: TextField | undefined, fallback = "") => field?.value?.trim() || fallback;
 const boolean = (field: TextField | undefined, fallback: boolean) => field?.value === "false" ? false : field?.value === "true" ? true : fallback;
 
-export function parseProductReferences(value: string | null | undefined): string[] {
+function parseCombo(node: ComboNode): BotanicalCombo | null {
+  const name = text(node.name);
+  const photo = node.photo?.reference?.image;
+  if (!node.id || !name || !photo?.url) return null;
   try {
-    const ids: unknown = JSON.parse(value || "[]");
-    return Array.isArray(ids) && ids.every((id) => typeof id === "string" && /^gid:\/\/shopify\/Product\/\d+$/.test(id)) ? ids : [];
+    const url = new URL(photo.url);
+    if (url.protocol !== "https:" || url.hostname !== "cdn.shopify.com" || !url.pathname.startsWith("/s/files/")) return null;
+    const ids: unknown = JSON.parse(node.products?.value || "[]");
+    // Keep the saved IDs even when a product is unpublished. The preview must
+    // disable the entire pairing instead of silently selling fewer jars.
+    if (!Array.isArray(ids) || ids.length < 2 || ids.length > 6 ||
+      ids.some((id) => typeof id !== "string" || !/^gid:\/\/shopify\/Product\/\d+$/.test(id)) ||
+      new Set(ids).size !== ids.length) return null;
+    return {
+      id: node.id, name,
+      ingredients: text(node.ingredients, name),
+      caption: text(node.caption, text(node.ingredients, name)),
+      image: { url: photo.url, altText: photo.altText || name, width: photo.width || 1536, height: photo.height || 1024 },
+      productIds: ids, previewSlugs: [],
+    };
   } catch {
-    return [];
+    return null;
   }
 }
 
-/** Product-owned copy and members survive removal of the old combo metaobjects. */
-export function comboFromProduct(product: Product): BotanicalCombo | null {
-  const ids = product.comboProductIds || [];
-  if (!product.id || !isComboProduct(product) || ids.length < 2 || ids.length > 6 ||
-    ids.includes(product.id) || new Set(ids).size !== ids.length ||
-    ids.some((id) => !/^gid:\/\/shopify\/Product\/\d+$/.test(id))) return null;
-  const name = product.name.replace(/^naturemist\s+/i, "").trim() || product.name;
-  const image = product.featuredImage || product.images?.[0] || { url: "/images/product-placeholder.svg", altText: name, width: 800, height: 800 };
-  return {
-    id: product.id, name,
-    ingredients: product.comboIngredients?.trim() || name,
-    caption: product.comboCaption?.trim() || product.comboIngredients?.trim() || name,
-    image: { ...image, altText: image.altText?.trim() || name },
-    // Retain unpublished member IDs so the displayed jar count never shrinks.
-    productIds: [...ids], previewSlugs: [],
-  };
-}
-
-export function parseBotanicalCombos(section: GraphBotanicalCombos | null | undefined, products: Product[] = []): BotanicalCombosContent {
+export function parseBotanicalCombos(section: GraphBotanicalCombos | null | undefined): BotanicalCombosContent {
   // Missing/Draft live content stays hidden; local samples are preview-only.
   if (!section) return emptyBotanicalCombos;
   const defaults = defaultBotanicalCombos;
   const duration = Number(text(section.pageTurnDuration, String(defaults.pageTurnDuration)));
   const seen = new Set<string>();
-  const byId = new Map(products.map((product) => [product.id, product]));
-  const combos = parseProductReferences(section.comboProducts?.value).flatMap((id) => {
-    const product = byId.get(id);
-    const combo = product ? comboFromProduct(product) : null;
+  const combos = (section.combos?.references?.nodes || []).flatMap((node) => {
+    const combo = parseCombo(node);
     if (!combo || seen.has(combo.id)) return [];
     seen.add(combo.id);
     return [combo];
@@ -134,5 +137,5 @@ export function resolveComboProducts(combo: BotanicalCombo, products: Product[])
   const candidates = combo.productIds.length
     ? combo.productIds.map((id) => products.find((product) => product.id === id))
     : combo.previewSlugs.map((slug) => products.find((product) => product.slug === slug));
-  return candidates.filter((product): product is Product => Boolean(product) && !isComboProduct(product!));
+  return candidates.filter((product): product is Product => Boolean(product));
 }

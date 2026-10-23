@@ -92,7 +92,7 @@ function fixture({ reduced = false, enabled = true, animationSupport = true } = 
   const flush = () => { const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(); };
   const setup = () => { context.module.exports.setup(); flush(); };
   setup();
-  return { above, below, targets, Element, document, media, observers, mutations, frames, flush, setup, cleanup: () => cleanup() };
+  return { above, below, targets, Element, document, media, observers, mutations, flush, setup, cleanup: () => cleanup() };
 }
 
 test("reveal registration never mutates markup, including streamed elements awaiting hydration", () => {
@@ -142,15 +142,6 @@ test("removed route content releases its pending animation", () => {
   f.flush();
   assert.equal(f.below.animations[0].cancelled, true);
   assert.equal(f.observers[0].observed.has(f.below), false);
-  f.cleanup();
-});
-
-test("animated text replacements do not schedule reveal scans", () => {
-  const f = fixture();
-  for (let frame = 0; frame < 120; frame++) {
-    f.mutations[0].callback([{ addedNodes: [{ nodeType: 3 }], removedNodes: [{ nodeType: 3 }], target: f.above }]);
-  }
-  assert.equal(f.frames.size, 0);
   f.cleanup();
 });
 

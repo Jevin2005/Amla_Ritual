@@ -26,11 +26,11 @@ export default async function TermsPage() {
         <PolicyContent>
           <h2>1. Botanical Products & Authenticity</h2>
           <p>
-            NatureMist offers 200 g botanical powders for traditional hair packs, herbal washing and plant-based hair colour. Use each product only for the purposes and in the manner stated on its current label. Potential face or body uses require separate product assessment and are not current directions for this range.
+            NatureMist provides pure, unadulterated botanical powders, oils, and ritual accessories. Every botanical is harvested sustainably and lab-tested for purity and potency.
           </p>
           <h2>2. Ritual Guidance & Patch Testing</h2>
           <p>
-            Our care guidance draws on traditional botanical use and is for cosmetic routines. Traditional Ayurvedic use does not establish that a finished product is clinically proven or suitable for every person. Follow the product-specific patch-test directions and, for hair colour or light or treated hair, the strand-test guidance. Avoid irritated or broken skin and stop use if irritation occurs.
+            Information provided on our website is educational and rooted in traditional Ayurvedic hair wellness. Because natural plant botanicals are active, we recommend performing a 24-hour patch test prior to full application.
           </p>
           <h2>3. Orders & Pricing</h2>
           <p>

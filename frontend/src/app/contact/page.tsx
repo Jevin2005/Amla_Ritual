@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { ContactPage } from "@/features/contact/contact-page";
 
 export const metadata: Metadata = {
-  title: "Contact & Botanical Care",
+  title: "Contact & Botanical Consultation | NatureMist",
   description:
-    "Contact the NatureMist care team for herbal hair-pack, hair-wash and botanical colour guidance, product information and order help.",
+    "Connect with NatureMist botanical specialists for personalized hair ritual guidance, order inquiries, and pure ingredient consultations.",
   alternates: { canonical: "/contact" },
 };
 

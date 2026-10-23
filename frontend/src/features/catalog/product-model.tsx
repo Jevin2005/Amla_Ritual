@@ -4,8 +4,7 @@ import { MediaImage as Image } from "@/shared/ui/media-image";
 import { useCallback, useEffect, useRef, useState, type ComponentType, type CSSProperties, type PointerEvent } from "react";
 import { defaultHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
 import { usePageVisible, useReducedMotion } from "@/shared/hooks/use-motion-preferences";
-import { isWebGLAvailable } from "@/shared/hooks/use-webgl";
-import { optimizedModelUrl } from "@/shared/media/model-delivery";
+import { isWebGLAvailable, markWebGLUnavailable } from "@/shared/hooks/use-webgl";
 import { useStore } from "@/features/store/store-provider";
 import { resolveModelMotion } from "./model-motion";
 import { useDeferredMedia } from "@/shared/hooks/use-deferred-media";
@@ -76,7 +75,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
 
   useEffect(() => {
     if (!activated) return;
-    const supported = isWebGLAvailable(attempt > 0);
+    const supported = isWebGLAvailable();
     const element = viewer.current;
     const container = stage.current;
     const initialFrame = requestAnimationFrame(() => {
@@ -92,14 +91,13 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     let settled = false;
     let lastProgress = 0;
     let stallTimeout = 0;
-    let lostContext: EventTarget | null = null;
     const timeout = window.setTimeout(() => failed(), 120000);
     const watchForStall = () => {
       window.clearTimeout(stallTimeout);
       stallTimeout = window.setTimeout(() => failed(), 20000);
     };
     const ready = () => {
-      if (disposed || settled || lostContext) return;
+      if (disposed || settled) return;
       settled = true;
       window.clearTimeout(timeout);
       window.clearTimeout(stallTimeout);
@@ -126,32 +124,18 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
       const percent = Math.round(normalized * 100);
       setProgress((previous) => Math.max(previous, percent));
     };
-    const onContextRestored = () => {
-      if (disposed) return;
-      // Remount against the vendor's restored renderer and await a fresh load.
-      setLoadStatus({ url: model.url, status: "loading" });
-      setProgress(0);
-      setAttempt((value) => value + 1);
+    const onError = (event: Event) => {
+      if ((event as CustomEvent<{ type?: string }>).detail?.type === "webglcontextlost") {
+        markWebGLUnavailable();
+        // A context can be lost after an initially successful load as well.
+        if (!disposed) setLoadStatus({ url: model.url, status: "error" });
+      }
+      failed();
     };
     const onContextLost = (event: Event) => {
       event.preventDefault();
-      if (disposed) return;
-      lostContext?.removeEventListener("webglcontextrestored", onContextRestored);
-      lostContext = event.target;
-      lostContext?.addEventListener("webglcontextrestored", onContextRestored);
-      // Keep the canvas mounted so the browser can restore it. A temporary
-      // context loss must not disable every subsequent jar for this page visit.
-      settled = false;
-      setLoadStatus({ url: model.url, status: "loading" });
-      setProgress(0);
-      watchForStall();
-    };
-    const onError = (event: Event) => {
-      const detail = (event as CustomEvent<{ type?: string; sourceError?: Event }>).detail;
-      if (detail?.type === "webglcontextlost") {
-        onContextLost(detail.sourceError ?? event);
-        return;
-      }
+      markWebGLUnavailable();
+      if (!disposed) setLoadStatus({ url: model.url, status: "error" });
       failed();
     };
 
@@ -164,8 +148,9 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
 
     // Use the vendor's production bundle in dev too, avoiding Lit's debug runtime.
     import("@google/model-viewer/dist/model-viewer.js").then(({ ModelViewerElement }) => {
-      // Active viewers are protected by the cache; release past carousel jars.
-      ModelViewerElement.modelCacheSize = 1;
+      // Each botanical has about 80–91 MiB of decoded textures. Retain only
+      // the current/recent models; active viewers are protected by the cache.
+      ModelViewerElement.modelCacheSize = 2;
     }).catch(() => {
       if (!disposed) failed();
     });
@@ -180,7 +165,6 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
       element.removeEventListener("error", onError);
       element.removeEventListener("progress", onProgress);
       element.removeEventListener("webglcontextlost", onContextLost);
-      lostContext?.removeEventListener("webglcontextrestored", onContextRestored);
     };
   }, [model.url, activated, attempt]);
 
@@ -263,19 +247,11 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     />
   ) : null;
 
-  const retry = () => {
-    setWebglSupported(null);
-    setLoadStatus({ url: model.url, status: "loading" });
-    setProgress(0);
-    setAttempt((value) => value + 1);
-  };
-
   if (webglSupported === false) {
     return (
-      <div ref={stage} className={`${styles.stage} ${styles.unavailable}`} data-status="error">
+      <div ref={stage} className={styles.stage} data-status="error">
         {fallback}
         <span className={styles.hint} role="status">3D view unavailable</span>
-        <button type="button" className={styles.retry} onClick={retry}>Retry 3D view</button>
       </div>
     );
   }
@@ -284,7 +260,7 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
     <div ref={stage} className={styles.stage} data-status={status} data-presentation={presentation} data-motion={cursorEnabled} data-transition={motion.enabled && settings.transition !== "none"} style={{ "--model-float-lift": `${-7 * motion.intensity}px`, "--model-float-tilt": `${.6 * motion.intensity}deg` } as CSSProperties} onPointerMove={followCursor} onPointerLeave={resetPosition} onPointerCancel={resetPosition} onPointerDown={startDrag} onPointerUp={() => stage.current?.removeAttribute("data-interacting")}>
       {fallback && <div className={styles.posterLayer} aria-hidden={status === "ready"}>{fallback}</div>}
       {activated && status !== "error" && <div className={styles.floatLayer} data-floating={floating} data-floating-running={floating && moving && !rotationPaused}><ModelViewer key={attempt} ref={viewer} {...{
-        src: optimizedModelUrl(model.url),
+        src: model.url,
         alt: model.altText,
         className: styles.viewer,
         style: { opacity: status === "ready" ? 1 : 0, pointerEvents: status === "ready" ? "auto" : "none", transition: motion.enabled && settings.transition !== "none" ? undefined : "none" },
@@ -321,7 +297,11 @@ function ModelStage({ model, settings = defaultHeroSettings, paused = false, eag
           <span className={styles.progress} aria-hidden="true"><span style={{ transform: `scaleX(${progress / 100})` }} /></span>
         </span>
       )}
-      {status === "error" && <button type="button" className={styles.retry} onClick={retry}>Retry 3D view</button>}
+      {status === "error" && <button type="button" className={styles.retry} onClick={() => {
+        setLoadStatus({ url: model.url, status: "loading" });
+        setProgress(0);
+        setAttempt((value) => value + 1);
+      }}>Retry 3D view</button>}
     </div>
   );
 }

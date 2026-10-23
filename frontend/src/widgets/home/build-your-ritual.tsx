@@ -36,10 +36,10 @@ export function BuildYourRitual() {
               Find your <em>ritual.</em>
             </h2>
             <p className={styles.body}>
-              Hair, skin, both or botanical colour. Share your care preferences and explore a ritual guided by each product’s intended uses.
+              A little about your hair. A little about your routine. Discover the botanicals that fit your care goals.
             </p>
             <ol className={styles.introSteps} aria-label="How the ritual finder works" role="list">
-              <li><span aria-hidden="true">01</span> Choose your care</li>
+              <li><span aria-hidden="true">01</span> Share your goal</li>
               <li><span aria-hidden="true">02</span> Shape your routine</li>
               <li><span aria-hidden="true">03</span> Discover your match</li>
             </ol>

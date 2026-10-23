@@ -395,7 +395,7 @@ test("the restored 3D viewer occupies the original featured-product slot and fol
   assert.ok(model, "the viewer belongs in the original featured-product column");
   assert.equal(all(env.tree).filter((node) => node.type === "ProductModel").length, 1);
   assert.equal(model.props.model.url, products[0].heroModel.url);
-  assert.equal(model.props.poster.url, "/images/hero/naturemist-amla-200g.png");
+  assert.equal(model.props.poster.url, products[0].featuredImage.url);
   assert.equal(model.props.cameraDistancePercent, 95);
   assert.equal(model.props.presentation, "showcase");
   assert.equal(model.props.settings.rotationSpeed, 20);
@@ -406,7 +406,7 @@ test("the restored 3D viewer occupies the original featured-product slot and fol
   env.click("Next featured product");
   env.load(products[1].heroPoster.url); env.load(products[1].heroBackground.url); env.flushFrames();
   assert.equal(all(env.tree).find((node) => node.type === "ProductModel").props.model.url, products[1].heroModel.url);
-  assert.equal(all(env.tree).find((node) => node.type === "ProductModel").props.poster.url, "/images/hero/naturemist-reetha-200g.png");
+  assert.equal(all(env.tree).find((node) => node.type === "ProductModel").props.poster.url, products[1].featuredImage.url);
   env.intersect(false);
   assert.equal(all(env.tree).find((node) => node.type === "ProductModel").props.paused, true);
   env.intersect(true);

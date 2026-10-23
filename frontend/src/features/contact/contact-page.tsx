@@ -48,7 +48,7 @@ export function ContactPage() {
             We are here to guide your ritual.
           </h1>
           <p className="mx-auto mt-6 max-w-[560px] text-[1.05rem] leading-[1.75] text-[var(--muted)]">
-            Choosing a herbal hair pack or wash, planning botanical colour, or checking an order? Email or call our care team.
+            For product questions, order care, or any problem with your experience, email or call our support team.
           </p>
         </div>
       </section>
@@ -132,9 +132,9 @@ export function ContactPage() {
                       onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
                       className={`${inputClass} cursor-pointer`}
                     >
-                      <option value="ritual-guidance">Hair Packs, Washes & Colour</option>
+                      <option value="ritual-guidance">Ritual & Hair Routine Advice</option>
                       <option value="order-status">Order & Delivery Inquiry</option>
-                      <option value="ingredient-purity">Ingredients & Product Information</option>
+                      <option value="ingredient-purity">Ingredient & Lab Sourcing</option>
                       <option value="wholesale-press">Press & Wholesale Partnerships</option>
                       <option value="general">Other Inquiries</option>
                     </select>
@@ -162,7 +162,7 @@ export function ContactPage() {
                     id="message"
                     required
                     rows={5}
-                    placeholder="Tell us which product, hair-pack, wash or colour step you need help with..."
+                    placeholder="Describe your hair concerns, current routine, or question here..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className={inputClass}
@@ -224,7 +224,7 @@ export function ContactPage() {
                   </div>
                 </div>
                 <p className="mt-3 text-[0.84rem] leading-relaxed text-[var(--muted)]">
-                  Find guidance on choosing a botanical, preparation and intended use in our FAQs, or contact the care team.
+                  Need an immediate answer about your hair type or mixing ratios? Check our instant FAQ guide or reach out.
                 </p>
               </div>
 
@@ -252,10 +252,10 @@ export function ContactPage() {
             {/* Botanical Standards Badge */}
             <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--botanical)]/40 bg-[var(--sand)]/50 p-6 text-center">
               <span className="font-serif text-[1.15rem] italic text-[var(--forest)]">
-                “The right botanical, clear directions and a little time for yourself.”
+                “Every botanical harvested at seasonal peak potency, batch-tested, and prepared in pure micro-batches.”
               </span>
               <p className="mt-2 text-[0.72rem] font-bold tracking-[0.14em] text-[var(--botanical)] uppercase">
-                The NatureMist approach
+                NatureMist Purity Standard
               </p>
             </div>
           </div>

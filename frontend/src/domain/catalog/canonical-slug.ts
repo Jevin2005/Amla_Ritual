@@ -19,21 +19,9 @@ const GENERIC_TITLE_WORDS = new Set([
   "grams",
   "gram",
   "250g",
-  "200g",
   "100g",
   "500g",
-  "hair", "scalp", "skin", "pack", "packs", "wash", "washes", "washing",
-  "fruit", "flower", "leaf", "leaves", "pod", "pods", "cleansing", "traditional", "botanical", "colour", "color",
 ]);
-
-const powderTitles: [RegExp, string][] = [
-  [/^amla (?:fruit )?powder(?: for hair packs)?$/i, "amla-powder"],
-  [/^reetha (?:cleansing )?powder(?: for hair washes)?$/i, "reetha-powder"],
-  [/^shikakai (?:pod )?powder(?: for (?:traditional )?hair washing)?$/i, "shikakai-powder"],
-  [/^hibiscus (?:flower )?powder(?: for hair packs)?$/i, "hibiscus-powder"],
-  [/^bhringraj powder(?: for (?:traditional )?hair (?:&|and) scalp packs)?$/i, "bhringraj-powder"],
-  [/^indigo (?:leaf )?powder(?: for (?:botanical )?hair colou?r)?$/i, "indigo-powder"],
-];
 
 /**
  * Generates a clean, canonical URL slug from a product title and fallback handle.
@@ -56,16 +44,9 @@ export function getCanonicalProductSlug(
 
     // 2. Remove packaging / weight specifications from title for clean URLs
     clean = clean
-      .replace(/\b100\s*%/gi, "")
-      .replace(/\b\d+(?:[.,]\d+)?\s*(?:kg|g|grams?)\b/gi, "")
-      .replace(/\b(pure|organic|herbal|natural|jar)\b/gi, "")
+      .replace(/\b(100%|pure|organic|herbal|natural|jar|250g|100g|500g)\b/gi, "")
       .replace(/\s+/g, " ")
-      .replace(/^[\s,|()·-]+|[\s,|()·-]+$/g, "");
-
-    // Descriptive titles for the six established powders keep their existing
-    // URLs. Exact patterns avoid assigning a single ingredient's slug to a blend.
-    const knownPowder = powderTitles.find(([pattern]) => pattern.test(clean));
-    if (knownPowder) return knownPowder[1];
+      .trim();
 
     // 3. Slugify
     const slug = clean
@@ -169,7 +150,7 @@ export function findProductBySlug<
     .toLowerCase()
     .replace(/[^a-z0-9]/g, " ")
     .split(/\s+/)
-    .filter((w) => w.length >= 4 && !GENERIC_TITLE_WORDS.has(w) && !/^\d+(?:g|kg)?$/.test(w));
+    .filter((w) => w.length >= 4 && !GENERIC_TITLE_WORDS.has(w));
 
   if (candidateTokens.length > 0) {
     const tokenMatch = products.find((p) => {
@@ -177,7 +158,7 @@ export function findProductBySlug<
         .toLowerCase()
         .replace(/[^a-z0-9]/g, " ")
         .split(/\s+/)
-        .filter((w) => w.length >= 4 && !GENERIC_TITLE_WORDS.has(w) && !/^\d+(?:g|kg)?$/.test(w));
+        .filter((w) => w.length >= 4 && !GENERIC_TITLE_WORDS.has(w));
       return candidateTokens.some((t) => pTokens.includes(t));
     });
     if (tokenMatch) return tokenMatch;

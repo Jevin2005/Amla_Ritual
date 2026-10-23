@@ -66,7 +66,6 @@ function mount(options = {}) {
   let nextFrame = 0, time = 0;
   const harness = {
     effects: [], scrollCalls: [],
-    geometryReads: 0,
     store: { content: { motionSettings: { enabled: !options.disabled, cursor: true, intensity: 1 } } },
   };
   const incoming = { dataset: {}, style: style(), inert: false, hasAttribute: (name) => name === "data-previous-hero" };
@@ -101,14 +100,14 @@ function mount(options = {}) {
   });
   Object.defineProperties(section, {
     clientWidth: { get: () => viewport.width },
-    offsetHeight: { get: () => viewport.storyHeight },
+    offsetHeight: { get: () => viewport.height },
   });
   Object.defineProperties(surface, {
     clientWidth: { get: () => viewport.width },
-    clientHeight: { get: () => viewport.storyHeight },
+    clientHeight: { get: () => viewport.height },
   });
-  section.getBoundingClientRect = () => { harness.geometryReads++; return { top: -context.scrollY, bottom: 6000 - context.scrollY, width: viewport.width, height: 6000 }; };
-  surface.getBoundingClientRect = () => { harness.geometryReads++; return { top: 0, left: 0, bottom: viewport.height, width: viewport.width, height: viewport.height }; };
+  section.getBoundingClientRect = () => ({ top: -context.scrollY, bottom: 6000 - context.scrollY, width: viewport.width, height: 6000 });
+  surface.getBoundingClientRect = () => ({ top: 0, left: 0, bottom: viewport.height, width: viewport.width, height: viewport.height });
   context.window = context;
   vm.createContext(context);
   vm.runInContext(bundle.outputFiles[0].text, context);
@@ -121,7 +120,6 @@ function mount(options = {}) {
     const element = node.props["data-ritual-hero"] !== undefined ? section
       : node.props.className === "stage" ? surface : { dataset: {}, style: style() };
     Object.assign(element.style, node.props.style);
-    if (node.type === "img") element.loading = node.props.loading;
     if (typeof ref === "function") ref(element);
     else ref.current = element;
     nodes.set(node, element);
@@ -131,7 +129,6 @@ function mount(options = {}) {
   const cueNode = descendants.find((node) => node.props?.className === "scrollCue");
   const progressNode = descendants.find((node) => node.props?.className === "progress").props.children;
   const env = {
-    descendants, nodes,
     api, viewport, context, document, harness, section, surface, incoming, header, frames, observers, reducedMotion, finePointer,
     seal: byClass("seal"), jar: byClass("product"), progress: nodes.get(progressNode),
     settle() {
@@ -175,7 +172,7 @@ function timing(env) {
   };
 }
 
-test("stable phone scene geometry survives toolbar changes without retiming the story or arrival", () => {
+test("collapsing and expanding phone toolbars resize the scene without retiming the story or arrival", () => {
   for (const phase of [0.28, 0.6, 0.8, 0.99]) {
     const env = mount();
     env.scroll(env.api.getHeroScrollOffset(phase, 740, products.length));
@@ -186,9 +183,9 @@ test("stable phone scene geometry survives toolbar changes without retiming the 
     assert.equal(original.destination, env.api.getHeroScrollMetrics(740, products.length).distance);
     env.resize({ height: 800 });
     assert.deepEqual(timing(env), original, `toolbar collapse must not change phase ${phase}`);
-    assert.equal(env.section.style.getPropertyValue("--seal-top"), originalTop, "the backdrop does not chase browser chrome");
-    assert.equal(env.jar.style.height, originalJarHeight, "jar proportions retain the small viewport height");
-    assert.equal(env.seal.style.transform, originalCover);
+    assert.notEqual(env.section.style.getPropertyValue("--seal-top"), originalTop, "backdrop follows the larger visible area");
+    assert.notEqual(env.jar.style.height, originalJarHeight, "jar proportions use the current visible height");
+    if (phase > 0.5) assert.notEqual(env.seal.style.transform, originalCover, "the expanding seal covers the current viewport");
     env.resize({ height: 740 }, "window");
     assert.deepEqual(timing(env), original, "expanding the toolbar retraces the same story");
     assert.equal(env.section.style.getPropertyValue("--seal-top"), originalTop);
@@ -227,7 +224,7 @@ test("reduced or disabled motion retains an immediate next-section link after vi
     assert.equal(env.cue().top, 740);
     assert.equal(env.cue().immediate, true);
     env.resize({ height: 800 });
-    assert.equal(env.cue().top, 740);
+    assert.equal(env.cue().top, 800);
     assert.equal(env.cue().immediate, true);
     assert.equal(env.progress.style.transform, "scaleX(0)");
     env.dispose();
@@ -262,22 +259,20 @@ test("unmount cancels viewport work and restores the incoming hero and header", 
   assert.equal(env.surface.style.opacity, "1");
 });
 
-test("fast wheel and touch arrivals preserve native momentum without writing the scroll position", () => {
+test("fast wheel and touch arrivals cancel overshoot through the page scroller before rendering", () => {
   for (const type of ["wheel", "touchstart"]) {
     const env = mount();
     const arrival = env.api.getHeroHandoffMetrics(740, products.length);
+    const destination = env.api.getHeroScrollMetrics(740, products.length).distance;
     env.harness.onScroll = (top) => { env.context.scrollY = top; };
     env.context.dispatch(type, { type, deltaY: 5000, deltaX: 0 });
     env.context.scrollY = arrival.end + 2000;
     env.context.dispatch("scroll");
-    assert.equal(env.context.scrollY, arrival.end + 2000);
-    assert.equal(env.harness.scrollCalls.length, 0, "the hero must never pull a wheel or touch scroll backwards");
+    assert.equal(env.context.scrollY, destination);
+    assert.equal(env.harness.scrollCalls.at(-1).immediate, true, "cancel pending momentum through the same scroll owner");
     env.settle();
     assert.equal(env.surface.style.opacity, "0", "no opaque first hero remains over the arrival");
     assert.equal(env.incoming.inert, false);
-    env.scroll(0);
-    assert.equal(env.surface.style.opacity, "1", "a fast reverse scroll restores the opening scene");
-    assert.equal(env.incoming.inert, true);
     env.context.dispatch("click");
     env.scroll(arrival.end + 500);
     assert.equal(env.context.scrollY, arrival.end + 500, "explicit navigation must be free to leave");
@@ -285,7 +280,7 @@ test("fast wheel and touch arrivals preserve native momentum without writing the
   }
 });
 
-test("zoom, sideways gestures, explicit End navigation and reduced motion never rewrite scroll position", () => {
+test("zoom, sideways gestures, explicit End navigation and reduced motion bypass the arrival guard", () => {
   for (const event of [
     { type: "wheel", deltaY: 5000, deltaX: 0, ctrlKey: true },
     { type: "wheel", deltaY: 100, deltaX: 1000 },
@@ -304,55 +299,6 @@ test("zoom, sideways gestures, explicit End navigation and reduced motion never 
     assert.equal(env.harness.scrollCalls.length, 0);
     env.dispose();
   }
-});
-
-test("scroll bursts share one frame and never remeasure layout", () => {
-  const env = mount();
-  const reads = env.harness.geometryReads;
-  for (let i = 0; i < 20; i++) {
-    env.context.scrollY = 100 + i;
-    env.context.dispatch("scroll");
-  }
-  assert.equal(env.frames.size, 1);
-  env.settle();
-  assert.equal(env.harness.geometryReads, reads);
-  for (let i = 0; i < 20; i++) env.context.dispatch("resize");
-  assert.equal(env.frames.size, 1);
-  env.settle();
-  assert.equal(env.harness.geometryReads, reads + 2, "one section and one stage read per resize batch");
-  env.dispose();
-});
-
-test("unchanged counters and offscreen jars receive no repeated animation writes", () => {
-  const env = mount();
-  const caption = env.descendants.find((node) => node.props?.className === "caption");
-  const counter = env.nodes.get(caption.props.children[0]);
-  let writes = 0;
-  let label = counter.textContent;
-  Object.defineProperty(counter, "textContent", { get: () => label, set: (value) => { label = value; writes++; } });
-  const jars = env.descendants.filter((node) => node.props?.className === "product").map((node) => env.nodes.get(node));
-  const hiddenTransform = jars.at(-1).style.transform;
-  env.scroll(50);
-  env.scroll(100);
-  assert.equal(writes, 0);
-  assert.equal(jars.at(-1).style.transform, hiddenTransform);
-  assert.equal(jars.at(-1).style.willChange, "auto");
-  env.scroll(600);
-  assert.equal(writes, 1);
-  env.dispose();
-});
-
-test("only the opening jar is preloaded and upcoming images warm before entering", () => {
-  const env = mount();
-  const images = env.descendants.filter((node) => node.type === "img");
-  assert.equal(images.filter((node) => node.props.preload).length, 1);
-  assert.equal(images[1].props.loading, "eager");
-  assert.equal(images.at(-1).props.loading, "lazy");
-  const last = env.nodes.get(images.at(-1));
-  assert.equal(last.loading, "lazy");
-  env.scroll(env.api.getHeroScrollOffset(0.48, 740, products.length));
-  assert.equal(last.loading, "eager");
-  env.dispose();
 });
 
 test("scroll animation moves jars without rewriting their layout dimensions", () => {

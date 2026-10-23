@@ -8,12 +8,12 @@ import { installBenefitsPointer, observeBenefitsEntrance } from "./product-benef
 import styles from "./product-benefits.module.css";
 
 const specimens = [
-  { name: "Amla", image: "amla", alt: "Fresh green amla fruits with delicate leafy branches", benefits: ["Fruit-based hair packs", "Traditional botanical care", "Freshly prepared for each use"], note: "200 g · A botanical hair-pack ingredient." },
-  { name: "Reetha", image: "reetha", alt: "Brown reetha soapnuts, an open shell and green leaves", benefits: ["Soapnut hair-wash ingredient", "Naturally occurring saponins", "A rinse-off cleansing routine"], note: "200 g · For herbal hair washes." },
-  { name: "Shikakai", image: "shikakai", alt: "Dried shikakai pods with green compound leaves", benefits: ["Traditional hair washing", "A pod-based botanical", "A rinse-off cleansing step"], note: "200 g · For herbal hair washing." },
-  { name: "Hibiscus", image: "hibiscus", alt: "A red hibiscus flower with its yellow stamen and green leaves", benefits: ["Floral hair-pack ingredient", "A separate step from washing", "Freshly prepared as directed"], note: "200 g · For botanical hair packs." },
-  { name: "Bhringraj", image: "bhringraj", alt: "Bhringraj leaves and small white flowers", benefits: ["Traditional hair and scalp packs", "Ayurvedic hair-care heritage", "Prepare fresh as directed"], note: "200 g · A traditional hair-pack ritual." },
-  { name: "Indigo", image: "indigo", alt: "Indigo leaves beside a wooden bowl of green botanical powder", benefits: ["Botanical hair-colour ingredient", "For a planned colour process", "Patch and strand-test as directed"], note: "200 g · Hair colour only. Results depend on the complete method." },
+  { name: "Amla", image: "amla", alt: "Fresh green amla fruits with delicate leafy branches", benefits: ["Softer-feeling hair", "Natural-looking shine", "Pre-wash conditioning"] },
+  { name: "Reetha", image: "reetha", alt: "Brown reetha soapnuts, an open shell and green leaves", benefits: ["Cleanses scalp and hair", "Removes everyday oil", "Lifts everyday buildup"] },
+  { name: "Shikakai", image: "shikakai", alt: "Dried shikakai pods with green compound leaves", benefits: ["Botanical cleansing", "Softer-feeling hair", "Easier manageability"] },
+  { name: "Hibiscus", image: "hibiscus", alt: "A red hibiscus flower with its yellow stamen and green leaves", benefits: ["Conditions dry-feeling lengths", "Smoother, more manageable hair", "Natural-looking shine"] },
+  { name: "Bhringraj", image: "bhringraj", alt: "Bhringraj leaves and small white flowers", benefits: ["Hair and scalp conditioning", "Softer-feeling hair", "Easier manageability"] },
+  { name: "Indigo", image: "indigo", alt: "Indigo leaves beside a wooden bowl of green botanical powder", benefits: ["Cooler, deeper-looking tones", "Deepens henna-based colour", "Botanical colour care"], note: "For a suitable henna-based routine. Colour results vary." },
 ];
 
 function Leaf() {
@@ -67,8 +67,8 @@ export function ProductBenefits({ motionSettings }: { motionSettings: MotionSett
       <div className={styles.inner}>
         <header className={styles.header} data-benefit-reveal="header">
           <p className={styles.caption}><span>02 / The Specimen Collection</span></p>
-          <h2 className={styles.heading} id="benefits-title">Know your herbs. <em>Find your care.</em></h2>
-          <p className={styles.subtitle}>Six botanicals, three roles: traditional hair packs, herbal washes and plant-based hair colour.</p>
+          <h2 className={styles.heading} id="benefits-title">Know your herbs. <em>Know their benefits.</em></h2>
+          <p className={styles.subtitle}>Discover what each botanical brings to your hair ritual.</p>
         </header>
         <ol className={styles.cards} role="list">
           {specimens.map((specimen, index) => (

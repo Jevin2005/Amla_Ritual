@@ -51,18 +51,18 @@
 .spread { position: relative; display: grid; grid-template-columns: minmax(0, 56fr) minmax(0, 44fr); }
 .hero { min-width: 0; margin: 0; padding: 26px 4.4% 0 4%; }
 .photoFrame { padding: 7px; border: 1px solid var(--combo-line); }
-.heroPhoto { position: relative; overflow: hidden; aspect-ratio: 1; background: var(--combo-paper); }
-.photo { object-fit: contain; }
+.heroPhoto { position: relative; overflow: hidden; aspect-ratio: 1.3; background: #d8ceb9; }
+.photo { object-fit: cover; }
 .caption { position: relative; display: flex; align-items: center; justify-content: center; gap: 20px; min-height: clamp(74px, 7vw, 112px); padding: 12px 22% 12px 2.5%; }
 .captionRule { width: 14%; min-width: 36px; height: 1px; background: var(--combo-line); }
 .captionText { position: relative; z-index: 1; min-width: 0; text-align: center; font-family: "Combo Script", cursive; font-size: clamp(28px, 3.1vw, 50px); font-weight: 400; line-height: 1.15; }
 .captionBotanical { right: 9%; top: 0; width: 22%; height: 100%; opacity: .73; transform: rotate(-19deg); }
 .entries { min-width: 0; padding: 29px 4.6% 0 7.8%; }
-.featured { position: relative; min-height: 0; padding: 0 0 28px 2.5%; }
+.featured { position: relative; min-height: clamp(243px, 19.1vw, 306px); padding: 0 0 25px 2.5%; }
 .featuredCopy { position: relative; z-index: 1; }
 .folio { display: flex; align-items: center; gap: 10px; margin: 0 0 11px; font-size: clamp(16px, 1.25vw, 20px); font-weight: 600; font-variant-numeric: lining-nums tabular-nums; line-height: 1.2; letter-spacing: .06em; }
 .folio > span:first-child, .slash { color: var(--combo-wine); }
-.featured h3 { position: relative; z-index: 1; margin: 0 0 10px -2px; font-size: clamp(42px, 4.4vw, 68px); font-weight: 700; letter-spacing: -.045em; line-height: 1; text-wrap: balance; }
+.featured h3 { position: relative; z-index: 1; margin: 0 0 2px -4px; font-size: clamp(58px, 5.65vw, 91px); font-weight: 700; letter-spacing: -.055em; line-height: .97; }
 .ingredients, .jarCount { position: relative; z-index: 1; margin: 0; font-size: clamp(20px, 2.15vw, 34px); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
 .jarCount { margin-top: 2px; font-size: clamp(18px, 1.7vw, 27px); }
 .featuredBotanical { right: -6%; top: 1%; width: 39%; height: 92%; opacity: .53; transform: rotate(-84deg); }
@@ -71,16 +71,16 @@
 .primaryButton { width: 64%; min-width: 240px; max-width: 340px; min-height: 48px; margin-top: 25px; border-color: var(--combo-wine); background: var(--combo-wine); color: #fff8e9; font-family: "Combo Cormorant", Georgia, serif; font-size: clamp(16px, 1.5vw, 24px); font-weight: 700; letter-spacing: .13em; }
 .primaryButton::before { position: absolute; top: -16px; left: 0; width: 128%; height: 1px; background: var(--combo-line); content: ""; }
 .otherCombos { border-bottom: 1px solid transparent; }
-.comboRow { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 20px; padding-block: 18px; border-top: 1px solid var(--combo-line); }
+.comboRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.47fr); gap: 16px; padding-block: 11px; border-top: 1px solid var(--combo-line); }
 .rowCopy { align-self: center; min-width: 0; padding-left: 6%; }
 .rowCopy .folio { margin-bottom: 9px; font-size: clamp(14px, 1.15vw, 18px); }
-.rowCopy h3 { margin: 0 0 5px; font-size: clamp(25px, 2.3vw, 36px); font-weight: 700; line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
-.rowCopy .ingredients { margin-top: 3px; font-size: clamp(17px, 1.5vw, 24px); line-height: 1.2; }
+.rowCopy h3 { margin: 0 0 1px; font-size: clamp(25px, 2.65vw, 42px); font-weight: 700; line-height: .98; letter-spacing: -.05em; }
+.rowCopy .ingredients { margin-top: 3px; font-size: clamp(17px, 1.7vw, 27px); line-height: 1.07; }
 .rowCopy .jarCount { font-size: clamp(15px, 1.4vw, 22px); }
 .rowCopy .comboButton { width: 100%; margin-top: 10px; padding-inline: 10px; }
 .rowCopy .arrow { width: 19px; height: 13px; }
-.thumbnail { position: relative; display: block; align-self: center; overflow: hidden; width: 100%; min-width: 0; padding: 5px; border: 1px solid var(--combo-line); aspect-ratio: 1; background: var(--combo-paper); cursor: pointer; }
-.thumbnail img { object-fit: contain; padding: 5px; }
+.thumbnail { position: relative; display: block; align-self: stretch; overflow: hidden; width: 100%; min-width: 0; min-height: 166px; padding: 0; border: 0; aspect-ratio: 1.89; background: #ddd1b9; cursor: pointer; }
+.thumbnail img { object-fit: cover; transition: transform 650ms var(--ease); }
 .pagination { position: relative; z-index: 1; display: flex; align-items: center; gap: 16px; padding: 13px 3% 23px; }
 .pageArrow { display: grid; flex: none; place-items: center; width: 48px; height: 48px; padding: 5px; border: 0; background: transparent; color: var(--combo-ink); cursor: pointer; }
 .pageArrow .arrow { width: 37px; height: 23px; }
@@ -108,7 +108,7 @@
   .comboButton:hover { background: var(--combo-ink); color: var(--combo-paper); }
   .primaryButton:hover { background: var(--forest-dark); box-shadow: 0 5px 15px rgb(21 59 45 / .11); }
   .comboButton:hover .arrow { translate: 4px 0; }
-  .thumbnail:hover { border-color: var(--combo-ink); }
+  .thumbnail:hover img { transform: scale(1.035); }
   .pageArrow:hover .arrow { translate: 4px 0; }
   .pageArrow:first-child:hover .arrow { translate: -4px 0; }
   .dot:hover > span { transform: scale(1.35); }
@@ -120,9 +120,12 @@
   .headingRow h2 { font-size: 6vw; }
   .description { padding-left: 20px; font-size: 21px; }
   .entries { padding-left: 6%; }
-  .featured h3 { font-size: 4.6vw; }
+  .featured { min-height: 232px; }
+  .featured h3 { font-size: 5.6vw; }
   .featured .ingredients { font-size: 23px; }
-  .comboRow { gap: 14px; }
+  .comboRow { gap: 10px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .thumbnail { min-height: 151px; }
+  .heroPhoto { aspect-ratio: 1.1; }
   .rowCopy .comboButton { gap: 6px; padding-inline: 6px; font-size: 9px; }
   .captionText { font-size: 27px; }
   .caption { gap: 12px; padding-right: 17%; }
@@ -143,6 +146,7 @@
   .spread { display: block; animation: inkSettle calc(350ms * var(--combo-pace, 1)) var(--ease) both; }
   .hero { padding: 0 4.5%; }
   .photoFrame { padding: 4px; }
+  .heroPhoto { aspect-ratio: 1.5; }
   .caption { justify-content: flex-start; gap: 12px; min-height: 56px; padding: 8px 20% 8px 1%; }
   .captionRule { width: 19%; min-width: 30px; }
   .captionText { font-size: clamp(25px, 5.7vw, 48px); }
@@ -151,19 +155,20 @@
   .featured { min-height: 0; padding: 0 2.5% 17px; }
   .featuredBotanical { display: none; }
   .folio { margin-bottom: 5px; gap: 10px; font-size: clamp(15px, 3.1vw, 25px); }
-  .featured h3 { margin-left: -2px; font-size: clamp(38px, 8.5vw, 68px); line-height: 1; }
+  .featured h3 { margin-left: -2px; font-size: clamp(48px, 10.6vw, 86px); line-height: .92; }
   .featured .ingredients { margin-top: 2px; font-size: clamp(23px, 4.8vw, 39px); }
   .jarCount { margin-top: 1px; font-size: clamp(18px, 3.7vw, 30px); }
   .primaryButton { width: 100%; min-width: 0; max-width: none; min-height: 44px; margin-top: 14px; padding-block: 8px; font-size: clamp(17px, 3.3vw, 28px); }
   .primaryButton::before { display: none; }
-  .comboRow { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; padding-block: 18px; }
-  .rowCopy { padding-left: 2.5%; }
+  .comboRow { grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: 15px; padding-block: 11px; }
+  .rowCopy { padding-left: 5%; }
   .rowCopy .folio { margin-bottom: 7px; font-size: clamp(14px, 3vw, 25px); }
-  .rowCopy h3 { font-size: clamp(25px, 5.2vw, 42px); line-height: 1.05; }
+  .rowCopy h3 { font-size: clamp(25px, 5.65vw, 47px); line-height: .97; }
   .rowCopy .ingredients { margin-top: 3px; font-size: clamp(18px, 3.7vw, 31px); }
   .rowCopy .jarCount { font-size: clamp(16px, 3.4vw, 28px); }
   .rowCopy .comboButton { min-height: 44px; margin-top: 8px; padding: 7px; gap: 8px; font-size: clamp(10px, 2.15vw, 17px); letter-spacing: .1em; }
   .rowCopy .arrow { width: 18px; }
+  .thumbnail { min-height: 139px; aspect-ratio: 1.9; }
   .pagination { gap: 12px; padding: 6px 5% 10px; }
   .pageArrow { width: 44px; height: 44px; }
   .pageArrow .arrow { width: 31px; }
@@ -180,10 +185,11 @@
   .caption { gap: 8px; padding-right: 16%; }
   .captionText { font-size: 6.4vw; }
   .captionRule { min-width: 20px; width: 12%; }
-  .comboRow { gap: 12px; }
+  .comboRow { gap: 9px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
   .rowCopy h3 { font-size: 24px; }
   .rowCopy .ingredients { font-size: 16px; }
   .rowCopy .comboButton { gap: 6px; min-height: 44px; font-size: 9px; }
+  .thumbnail { min-height: 144px; }
   .featured .ingredients { font-size: 21px; }
   .pagination { gap: 7px; }
 }

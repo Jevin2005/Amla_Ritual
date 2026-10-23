@@ -15,7 +15,7 @@
   font-style: normal;
   font-synthesis: none;
 }
-@supports (height: 100svh) { .hero { --landing-height: 100svh; } }
+@supports (height: 100dvh) { .hero { --landing-height: 100dvh; } }
 .landing { position: relative; isolation: isolate; background: var(--hero-surface, var(--ivory)); }
 /* The outgoing scene overlaps this runway. Native sticky positioning holds the
    complete incoming layout through the fade and a short arrival, in either direction. */

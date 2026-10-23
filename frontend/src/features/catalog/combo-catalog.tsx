@@ -146,7 +146,7 @@ export function ComboCatalog() {
                 <button type="button" onClick={clearFilters}>Show all combos <span aria-hidden="true">→</span></button>
               </div>
             )}
-            <p className={styles.footnote}>Each combo includes the jars shown in its listing. Review the set price before adding it to your bag; shipping and any applicable discounts are calculated at checkout.</p>
+            <p className={styles.footnote}>Each combo adds one of each included jar at its current price. Shipping and any applicable discounts are calculated at checkout.</p>
           </>
         ) : (
           <div className={styles.empty}>

@@ -5,9 +5,9 @@ export const goalOptions: Array<{
   number: string;
   copy: string;
 }> = [
-  { goal: "Cleanse", number: "01", copy: "An ingredient for a herbal hair wash" },
-  { goal: "Hair Packs", number: "02", copy: "An ingredient for a traditional herbal hair pack" },
-  { goal: "Scalp Ritual", number: "03", copy: "A traditional hair-and-scalp routine" },
+  { goal: "Cleanse", number: "01", copy: "A low-lather wash-day reset" },
+  { goal: "Softness + Shine", number: "02", copy: "A conditioning mask for luminous lengths" },
+  { goal: "Scalp Ritual", number: "03", copy: "Grounding care from scalp through ends" },
   { goal: "Botanical Colour", number: "04", copy: "Informed, carefully strand-tested colour" },
 ];
 
@@ -21,7 +21,6 @@ export const hairFeels = [
 export type HairFeel = (typeof hairFeels)[number];
 
 export function matchesQuizGoal(product: Product, goal: string) {
-  if (goal === "Softness + Shine" || goal === "Resilient-Feeling Hair") return matchesRitualGoal(product, goal);
   const known = goalOptions.find((option) => option.goal === goal);
   return known ? matchesRitualGoal(product, known.goal)
     : product.concerns.some((concern) => concern.trim().toLowerCase() === goal.trim().toLowerCase());
@@ -31,7 +30,7 @@ export function catalogueGoalOptions(products: readonly Product[]) {
   const options: Array<{ goal: string; copy: string }> = goalOptions
     .filter(({ goal }) => products.some((product) => matchesRitualGoal(product, goal)))
     .map(({ goal, copy }) => ({ goal, copy }));
-  const seen = new Set([...options.map(({ goal }) => goal.toLowerCase()), "pack", "condition", "colour"]);
+  const seen = new Set([...options.map(({ goal }) => goal.toLowerCase()), "condition", "colour"]);
   for (const product of products) {
     for (const concern of product.concerns) {
       const goal = concern.trim();
@@ -116,14 +115,14 @@ export function recommendRitual(
   if (goal === "Cleanse") {
     const product = selectProduct(
       products,
-      "shikakai-powder",
+      hairFeel === "Oily" ? "reetha-powder" : "shikakai-powder",
       (item) => matchesQuizGoal(item, goal),
     );
     return product ? recommendation(product) : null;
   }
   const product = selectProduct(
     products,
-    "amla-powder",
+    hairFeel === "Dry / textured" ? "hibiscus-powder" : "amla-powder",
     (item) => matchesQuizGoal(item, goal),
   );
   return product ? recommendation(product) : null;

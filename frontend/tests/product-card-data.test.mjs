@@ -35,15 +35,9 @@ test("missing media never impersonates Amla and sold-out cards cannot add to bag
   const html = render({ ritualStep: "", availableForSale: false, availability: "In stock" });
   assert.ok(html.includes("/images/product-placeholder.svg"));
   assert.ok(!html.includes("amla-powder.jpg"));
-  assert.ok(html.includes("Botanical care"));
+  assert.ok(html.includes("Botanical hair care"));
   assert.ok(html.includes("Sold out"));
   assert.match(html, /<button[^>]*disabled=""[^>]*aria-label="Saved Indigo is sold out"/);
-});
-
-test("care labels come from the product and remain visible for dual-use listings", () => {
-  const html = render({ careAreas: ["Hair Care", "Skin Care"], ritualStep: "Condition" });
-  assert.ok(html.includes("Hair Care + Skin Care"));
-  assert.ok(!html.includes("Condition Ritual"));
 });
 
 test("combo listings reuse the product card with their own product URL and price", () => {

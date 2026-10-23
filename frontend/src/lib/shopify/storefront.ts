@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { defaultBotanicalCombos, emptyBotanicalCombos, parseBotanicalCombos, parseProductReferences, type BotanicalCombosContent, type GraphBotanicalCombos } from "@/domain/botanical-combos";
+import { defaultBotanicalCombos, emptyBotanicalCombos, parseBotanicalCombos, type BotanicalCombosContent, type GraphBotanicalCombos } from "@/domain/botanical-combos";
 import { botanicalCombosSelection } from "./botanical-combos-query";
 import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
 import { boundedNumber, defaultHeroSettings, isGlbUrl, parseHeroSettings, type HeroSettings } from "@/domain/catalog/hero";
@@ -10,7 +10,6 @@ import { defaultIngredientClarity, defaultIngredientPosterSettings, parseIngredi
 import {
   bundles as previewBundles,
   products as previewProducts,
-  careAreas,
   type Product,
   type ProductBundle,
   type ProductFaq,
@@ -35,9 +34,6 @@ const DEFAULT_API_VERSION = "2026-07";
 const DEFAULT_PRODUCT_LIMIT = 50;
 
 const productMetafields = `
-  comboProducts: metafield(namespace: "custom", key: "combo_products") { value }
-  comboIngredients: metafield(namespace: "custom", key: "combo_ingredients") { value }
-  comboCaption: metafield(namespace: "custom", key: "combo_caption") { value }
   heroEnabled: metafield(namespace: "custom", key: "hero_enabled") { value }
   heroOrder: metafield(namespace: "custom", key: "hero_order") { value }
   heroDuration: metafield(namespace: "custom", key: "hero_duration") { value }
@@ -63,7 +59,6 @@ const productMetafields = `
   botanical: metafield(namespace: "custom", key: "botanical") { value }
   botanicalName: metafield(namespace: "custom", key: "botanical_name") { value }
   plantPart: metafield(namespace: "custom", key: "plant_part") { value }
-  careAreas: metafield(namespace: "custom", key: "care_areas") { value }
   collectionNumber: metafield(namespace: "custom", key: "collection_number") { value }
   subtitle: metafield(namespace: "custom", key: "subtitle") { value }
   accent: metafield(namespace: "custom", key: "accent") { value }
@@ -452,7 +447,6 @@ type GraphProduct = {
   description: string;
   descriptionHtml?: string;
   productType: string;
-  careAreas?: { value: string } | null;
   vendor: string;
   tags: string[];
   availableForSale: boolean;
@@ -635,12 +629,12 @@ export const previewContent: StorefrontContent = {
   ritualPosters: defaultRitualPosters,
   ritualPosterSettings: defaultIngredientPosterSettings,
   ingredientClarity: defaultIngredientClarity,
-  announcementText: "200 g botanicals for hair packs, cleansing and colour",
+  announcementText: "Rooted in Ayurveda · Made for modern rituals",
   announcementLinkLabel: "",
   announcementLinkUrl: "",
   homeHeroPoster: {
     url: "/images/naturemist-hero.png",
-    altText: "NatureMist botanical care ritual",
+    altText: "NatureMist botanical hair ritual",
     width: 1692,
     height: 930,
   },
@@ -652,7 +646,7 @@ export const previewContent: StorefrontContent = {
   },
   storyPoster: {
     url: "/images/naturemist-hero.png",
-    altText: "NatureMist botanical care",
+    altText: "NatureMist botanical hair care",
     width: 1692,
     height: 930,
   },
@@ -912,16 +906,12 @@ function mapProduct(product: GraphProduct, index: number): Product {
   const fallbackDescription = `Explore ${product.title}.`;
   const ritualStepValue = meta(product, "ritualStep")?.toLowerCase();
   const canonicalStep = ritualStepValue === "color" ? "colour" : ritualStepValue;
-  const ritualStep = (["Cleanse", "Pack", "Condition", "Colour"] as const)
+  const ritualStep = (["Cleanse", "Condition", "Colour"] as const)
     .find((step) => step.toLowerCase() === canonicalStep) || "";
   const experienceValue = meta(product, "experience")?.toLowerCase();
   const experience = (["Beginner", "Familiar", "Advanced"] as const)
     .find((level) => level.toLowerCase() === experienceValue) || "";
   const howToUse = listMeta(product, "howToUse", []);
-  const authoredCareAreas = listMeta(product, "careAreas", []);
-  const productCareAreas = careAreas.filter((area) =>
-    authoredCareAreas.some((value) => value.toLowerCase() === area.toLowerCase()),
-  );
   const featuredImage = toImage(product.featuredImage) || product.images.nodes.map(toImage).find(Boolean) || null;
   const heroReference = (key: string) =>
     (product as unknown as Record<string, GraphMetaobjectField | undefined>)[key]?.reference;
@@ -946,10 +936,6 @@ function mapProduct(product: GraphProduct, index: number): Product {
     slug: canonicalSlug,
     shopifyHandle: product.handle,
     productType: product.productType,
-    comboProductIds: parseProductReferences(meta(product, "comboProducts")),
-    comboIngredients: meta(product, "comboIngredients") || undefined,
-    comboCaption: meta(product, "comboCaption") || undefined,
-    careAreas: productCareAreas,
     name: product.title,
     botanical:
       meta(product, "botanicalName") ||
@@ -1062,6 +1048,14 @@ function contentText(content: GraphSiteContent | null, key: string, fallback: st
 
 function contentImage(content: GraphSiteContent | null, key: string, fallback: StoreImage) {
   return toImage(content?.[key]?.reference?.image) || fallback;
+}
+
+function contentImages(content: GraphSiteContent | null, key: string, fallback: StoreImage): StoreImage[] {
+  const images = (content?.[key]?.references?.nodes || []).flatMap((node) => {
+    const image = toImage(node.image);
+    return image ? [image] : [];
+  });
+  return posterImages(images, fallback);
 }
 
 function storefrontPath(value: string) {
@@ -1375,11 +1369,9 @@ function mapContent(response: ContentResponse): StorefrontContent {
     ritualPosterSettings: parseIngredientPosterSettings(ingredient),
     ingredientClarity: {
       settings: parseIngredientClaritySettings(ingredient),
-      // The supplied 18-photo collection replaces the old independent galleries.
-      // Shopify still owns the section copy, visibility, colors and motion settings.
-      plantImages: defaultIngredientClarity.plantImages,
-      preparationImages: defaultIngredientClarity.preparationImages,
-      lifestyleImages: defaultIngredientClarity.lifestyleImages,
+      plantImages: contentImages(ingredient, "ingredientPlantImages", defaultIngredientClarity.plantImages[0]),
+      preparationImages: contentImages(ingredient, "ingredientPreparationImages", defaultIngredientClarity.preparationImages[0]),
+      lifestyleImages: contentImages(ingredient, "ingredientLifestyleImages", defaultIngredientClarity.lifestyleImages[0]),
       background: toImage(ingredient?.ingredientBackground?.reference?.image),
       mobileBackground: toImage(ingredient?.ingredientMobileBackground?.reference?.image),
       botanical: toImage(ingredient?.ingredientBotanical?.reference?.image),
@@ -1418,7 +1410,7 @@ const previewCatalog: Product[] = previewProducts.map((product) => {
   ],
   collections: [],
   tags: product.searchTerms,
-  hero: product.hero || {
+  hero: {
     eyebrow: `The ${product.name.replace(/ Powder$/i, "")} Ritual · No. ${product.collectionNumber}`,
     headlineFirst: "Discover",
     headlineMiddle: product.name.replace(/ Powder$/i, ""),
@@ -1672,9 +1664,6 @@ async function loadStorefront(): Promise<StorefrontData> {
   const products = rawProducts.sort((a, b) =>
     a.collectionNumber.localeCompare(b.collectionNumber, undefined, { numeric: true }),
   );
-  if (contentResult.status === "fulfilled") {
-    content.botanicalCombos = parseBotanicalCombos(contentResult.value.botanicalCombos, products);
-  }
 
   if (collectionsResult.status === "rejected") {
     warnStorefrontPart("collection", collectionsResult.reason);

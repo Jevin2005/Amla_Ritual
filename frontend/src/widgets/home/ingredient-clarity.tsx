@@ -1,15 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, type CSSProperties } from "react";
+import { useId, useMemo, type CSSProperties } from "react";
 import { defaultIngredientClarity } from "@/domain/ingredient-poster";
 import { IngredientPoster } from "@/features/poster/ingredient-poster";
 import { IngredientSlideshow } from "@/features/poster/ingredient-slideshow";
 import { useStore } from "@/features/store/store-provider";
 import { MagneticLink } from "@/shared/ui/magnetic-link";
 import { BrandMark } from "@/widgets/site-chrome/brand-mark";
-import { useCompactViewport, useFinePointer } from "@/shared/hooks/use-motion-preferences";
 import styles from "./ingredient-clarity.module.css";
+
+// Organic cutout for the mobile plant photo.
+const plantCurve = "M 0 .48 C 0 .31 .12 .21 .34 .18 C .5 .158 .66 .2 .68 0 C .86 0 1 .17 1 .42 V 1 H 0 Z";
 
 function StepCaption({ number, title, children }: { number: string; title: string; children: string }) {
   return (
@@ -25,14 +27,11 @@ function StepCaption({ number, title, children }: { number: string; title: strin
 
 export function IngredientClarity() {
   const { content } = useStore();
-  const compactViewport = useCompactViewport();
-  const finePointer = useFinePointer();
+  const plantClipId = `ingredient-plant-${useId().replace(/:/g, "")}`;
   const media = content.ingredientClarity;
   const settings = media.settings;
   const posterSettings = useMemo(() => ({
     ...content.ritualPosterSettings,
-    // Touch devices use the image fade without decoding 18 WebGL textures.
-    gooey: content.ritualPosterSettings.gooey && !compactViewport && finePointer,
     config: {
       // Give every photo the same unhurried organic reveal.
       // Explicit Shopify effect settings still take precedence.
@@ -40,7 +39,7 @@ export function IngredientClarity() {
       durationIn: { value: .6 },
       ...content.ritualPosterSettings.config,
     },
-  }), [content.ritualPosterSettings, compactViewport, finePointer]);
+  }), [content.ritualPosterSettings]);
   const posterProps = { settings: posterSettings, pace: settings.transitionPace, variant: "editorial" as const };
   const galleries = [media.plantImages, media.preparationImages, media.lifestyleImages];
   const sequenceKey = JSON.stringify(galleries.map((images) => images.map((image) => image.url)));
@@ -56,6 +55,9 @@ export function IngredientClarity() {
       "--clarity-panel": settings.panelColor,
       "--clarity-panel-text": settings.panelTextColor,
     } as CSSProperties}>
+      <svg className={styles.curveDefinitions} aria-hidden="true" focusable="false" width="0" height="0">
+        <defs><clipPath id={plantClipId} clipPathUnits="objectBoundingBox"><path d={plantCurve} /></clipPath></defs>
+      </svg>
       {media.background && (
         <Image src={media.background.url} alt="" fill sizes="100vw" className={`${styles.background} ${media.mobileBackground ? styles.desktopBackground : ""}`} />
       )}
@@ -85,7 +87,7 @@ export function IngredientClarity() {
         </header>
 
         <figure className={styles.plant}>
-          <div className={styles.plantPhoto}>
+          <div className={styles.plantPhoto} style={{ "--plant-photo-clip": `url(#${plantClipId})` } as CSSProperties}>
             <div className={styles.plantPhotoMedia}>
               <IngredientPoster {...posterProps} images={media.plantImages} fallback={defaultIngredientClarity.plantImages[0]} label={settings.plantTitle} sizes="(max-width: 760px) 92vw, 50vw" />
             </div>

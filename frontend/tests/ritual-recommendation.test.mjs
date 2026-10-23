@@ -12,8 +12,8 @@ const product = (overrides = {}) => ({ slug: "custom-powder", ritualStep: "", co
 
 test("quiz choices follow catalogue additions and removals without inventing goals", () => {
   assert.deepEqual(catalogueGoalOptions([product()]), []);
-  const added = product({ concerns: [" Curl care ", "curl care"], ritualStep: "Pack" });
-  assert.deepEqual(catalogueGoalOptions([added]).map((option) => option.goal), ["Hair Packs", "Curl care"]);
+  const added = product({ concerns: [" Curl care ", "curl care"], ritualStep: "Condition" });
+  assert.deepEqual(catalogueGoalOptions([added]).map((option) => option.goal), ["Softness + Shine", "Curl care"]);
   assert.equal(recommendRitual([added], "Curl care", "Balanced").product, added);
   assert.equal(recommendRitual([added], "Unknown", "Balanced"), null);
   assert.deepEqual(catalogueGoalOptions([]), []);

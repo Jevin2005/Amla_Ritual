@@ -1169,7 +1169,7 @@ export function CheckoutForm({
           </button>
 
           <p className="text-center text-[0.66rem] text-[var(--muted)]">
-            By placing your order, you agree to NatureMist’s Terms of Service and Privacy Policy. Review each product’s intended use and current directions before starting your ritual.
+            By placing your order, you agree to NatureMist’s Terms of Service and Privacy Policy. All botanicals are freshly packaged in certified food-grade UV protected jars.
           </p>
         </div>
         </fieldset>

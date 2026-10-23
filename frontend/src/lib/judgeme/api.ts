@@ -24,12 +24,12 @@ export type JudgemeProductReviewSummary = {
 };
 
 export const JUDGEME_CATALOG_PRODUCTS = [
-  { name: "Amla Powder", id: "8494763311290", slug: "amla-powder", tag: "Hair Packs" },
-  { name: "Reetha Powder", id: "8498815107258", slug: "reetha-powder", tag: "Hair Washing" },
-  { name: "Indigo Powder", id: "8531585368250", slug: "indigo-powder", tag: "Hair Colour" },
-  { name: "Bhringraj Powder", id: "8531585433786", slug: "bhringraj-powder", tag: "Hair Packs" },
-  { name: "Hibiscus Powder", id: "8531585499322", slug: "hibiscus-powder", tag: "Hair Packs" },
-  { name: "Shikakai Powder", id: "8531585597626", slug: "shikakai-powder", tag: "Hair Washing" },
+  { name: "Wildcrafted Amla Powder", id: "8494763311290", slug: "amla", tag: "Scalp Health" },
+  { name: "Wildcrafted Reetha Powder", id: "8498815107258", slug: "wildcrafted-amla-powder", tag: "Natural Wash" },
+  { name: "Pure Indigo Powder", id: "8531585368250", slug: "reetha-powder", tag: "Hair Color" },
+  { name: "Bhringraj Scalp Powder", id: "8531585433786", slug: "bhringraj-powder", tag: "Hair Fall" },
+  { name: "Hibiscus Petal Powder", id: "8531585499322", slug: "hibiscus-powder", tag: "Conditioning" },
+  { name: "Shikakai Conditioning Powder", id: "8531585597626", slug: "indigo-powder", tag: "Gentle Cleanse" },
 ] as const;
 
 /**
@@ -202,7 +202,7 @@ export async function getAllJudgemeReviews(): Promise<CustomerReview[]> {
           quote: r.body,
           role: "Customer",
           date: r.createdAt ? r.createdAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
-          tag: p.tag,
+          tag: p.tag as CustomerReview["tag"],
           photos: r.pictures,
         }));
       }),

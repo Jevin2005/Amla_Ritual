@@ -11,20 +11,12 @@
   inset: 0 0 auto;
   z-index: 100;
   color: #183e26;
-  padding: max(10px, env(safe-area-inset-top)) clamp(20px, 2.65vw, 48px) 10px;
-  isolation: isolate;
-}
-
-/* Fade a flat surface instead of blurring every moving pixel behind the header. */
-.header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: #f9f5eb;
-  border-bottom: 1px solid #183e261a;
-  opacity: var(--header-surface);
+  padding: max(calc(var(--padding-start-top) + (10px - var(--padding-start-top)) * var(--header-progress)), env(safe-area-inset-top)) clamp(20px, 2.65vw, 48px) calc(var(--padding-start-bottom) + (10px - var(--padding-start-bottom)) * var(--header-progress));
+  border-bottom: 1px solid rgb(24 62 38 / calc(.1 * var(--header-surface)));
+  background: rgb(249 245 235 / calc(.96 * var(--header-surface)));
+  box-shadow: 0 8px 35px rgb(24 62 38 / calc(.05 * var(--header-surface)));
+  backdrop-filter: blur(calc(14px * var(--header-surface)));
+  transition: padding 450ms var(--ease), background-color 450ms var(--ease), box-shadow 450ms var(--ease), border-color 450ms var(--ease);
 }
 
 .navigation {

@@ -18,9 +18,9 @@ const fallbackNavigation = [
     url: "/shop",
     items: [
       { id: "all", title: "All botanicals", url: "/shop", items: [] },
-      { id: "hair", title: "Hair care", url: "/shop?care=hair", items: [] },
-      { id: "wash", title: "Herbal hair washes", url: "/shop?goal=Cleanse", items: [] },
-      { id: "colour", title: "Hair colour", url: "/shop?care=colour", items: [] },
+      { id: "cleanse", title: "Cleansing rituals", url: "/shop?goal=Cleanse", items: [] },
+      { id: "softness", title: "Softness + shine", url: "/shop?goal=Softness+%2B+Shine", items: [] },
+      { id: "colour", title: "Botanical colour", url: "/shop?goal=Botanical+Colour", items: [] },
     ],
   },
   {
@@ -38,7 +38,7 @@ const fallbackNavigation = [
     title: "Care & Support",
     url: "/contact",
     items: [
-      { id: "contact", title: "Contact our care team", url: "/contact", items: [] },
+      { id: "contact", title: "Contact specialists", url: "/contact", items: [] },
       { id: "tracking", title: "Track an order", url: "/track-order", items: [] },
       { id: "shipping", title: "Shipping + returns", url: "/shipping-returns", items: [] },
       { id: "privacy", title: "Privacy policy", url: "/privacy", items: [] },
@@ -68,7 +68,7 @@ export function SiteFooter() {
         </div>
         <div className="self-end">
           <p className="max-w-[460px] text-[0.98rem] leading-[1.7] text-white/72">
-            Hair-pack and wash routines, ingredient stories and thoughtful new arrivals.
+            Ingredient stories, preparation guides and thoughtful new arrivals.
           </p>
           <NewsletterForm />
         </div>
@@ -83,13 +83,8 @@ export function SiteFooter() {
             <BrandMark variant="footer" />
           </Link>
           <p className="mt-[22px] max-w-[350px] text-[0.92rem] leading-[1.7] text-white/68">
-            Traditional botanical hair care. Six powders in 200 g packs for hair packs, herbal washing and plant-based colour.
+            Traditional Indian botanicals, translated into clear and considered care.
           </p>
-          <nav aria-label="Browse by care" className="mt-4 flex flex-wrap gap-x-5 gap-y-1">
-            <Link className={footerLinkClass} href="/shop?care=hair">Hair care</Link>
-            <Link className={footerLinkClass} href="/shop?goal=Cleanse">Herbal hair washes</Link>
-            <Link className={footerLinkClass} href="/shop?care=colour">Hair colour</Link>
-          </nav>
           <div className="mt-5 flex flex-col items-start gap-1" aria-label="Customer support">
             <h3 className={footerHeadingClass}>Need help?</h3>
             <a className={footerLinkClass} href={SUPPORT.emailHref}>{SUPPORT.email}</a>
