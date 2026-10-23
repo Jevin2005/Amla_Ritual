@@ -2,7 +2,7 @@
   "definition": {
     "name": "Ingredient clarity",
     "type": "ingredient_clarity",
-    "description": "Homepage ingredient collage: all photos, backgrounds, wording, colors and animation. Edit the main entry.",
+    "description": "Botanical uses, tradition and research. Define section and panel text once; only the three ordered poster galleries rotate. Edit the main entry.",
     "displayNameKey": "name",
     "access": {
       "storefront": "PUBLIC_READ"
@@ -80,8 +80,8 @@
       },
       {
         "key": "ingredient_plant_images",
-        "name": "meet the plant images",
-        "description": "Ordered photos for the Meet the plant panel. Up to 8 images; the first is the poster.",
+        "name": "01 - Posters in display order",
+        "description": "Select up to 8 images and arrange them in playback order. The first image appears first. Only these posters rotate; the panel title and description stay fixed.",
         "type": "list.file_reference",
         "validations": [
           {
@@ -97,8 +97,8 @@
       },
       {
         "key": "ingredient_preparation_images",
-        "name": "preparation images",
-        "description": "Ordered photos for the Make it simply panel. Up to 8 images; the first is the poster.",
+        "name": "02 - Posters in display order",
+        "description": "Select up to 8 images and arrange them in playback order. The first image appears first. Only these posters rotate; the panel title and description stay fixed.",
         "type": "list.file_reference",
         "validations": [
           {
@@ -114,8 +114,8 @@
       },
       {
         "key": "ingredient_lifestyle_images",
-        "name": "lifestyle images",
-        "description": "Ordered photos for the Keep it honest panel. Up to 8 images; the first is the poster.",
+        "name": "03 - Posters in display order",
+        "description": "Select up to 8 images and arrange them in playback order. The first image appears first. Only these posters rotate; the panel title and description stay fixed.",
         "type": "list.file_reference",
         "validations": [
           {
@@ -170,9 +170,9 @@
       },
       {
         "key": "ingredient_plant_title",
-        "name": "01 — Plant title",
+        "name": "01 - Fixed title",
         "type": "single_line_text_field",
-        "description": "Leave empty to use the original website wording.",
+        "description": "Define this text once for the whole panel. It stays the same for every poster in this panel. Edit this field only when you want to change the wording.",
         "validations": [
           {
             "name": "max",
@@ -183,9 +183,9 @@
       },
       {
         "key": "ingredient_plant_text",
-        "name": "01 — Plant description",
+        "name": "01 - Fixed description",
         "type": "multi_line_text_field",
-        "description": "Leave empty to use the original website wording.",
+        "description": "Define this text once for the whole panel. It stays the same for every poster in this panel. Edit this field only when you want to change the wording.",
         "validations": [
           {
             "name": "max",
@@ -196,9 +196,9 @@
       },
       {
         "key": "ingredient_preparation_title",
-        "name": "02 — Preparation title",
+        "name": "02 - Fixed title",
         "type": "single_line_text_field",
-        "description": "Leave empty to use the original website wording.",
+        "description": "Define this text once for the whole panel. It stays the same for every poster in this panel. Edit this field only when you want to change the wording.",
         "validations": [
           {
             "name": "max",
@@ -209,9 +209,9 @@
       },
       {
         "key": "ingredient_preparation_text",
-        "name": "02 — Preparation description",
+        "name": "02 - Fixed description",
         "type": "multi_line_text_field",
-        "description": "Leave empty to use the original website wording.",
+        "description": "Define this text once for the whole panel. It stays the same for every poster in this panel. Edit this field only when you want to change the wording.",
         "validations": [
           {
             "name": "max",
@@ -222,9 +222,9 @@
       },
       {
         "key": "ingredient_lifestyle_title",
-        "name": "03 — Lifestyle title",
+        "name": "03 - Fixed title",
         "type": "single_line_text_field",
-        "description": "Leave empty to use the original website wording.",
+        "description": "Define this text once for the whole panel. It stays the same for every poster in this panel. Edit this field only when you want to change the wording.",
         "validations": [
           {
             "name": "max",
@@ -235,9 +235,9 @@
       },
       {
         "key": "ingredient_lifestyle_text",
-        "name": "03 — Lifestyle description",
+        "name": "03 - Fixed description",
         "type": "multi_line_text_field",
-        "description": "Leave empty to use the original website wording.",
+        "description": "Define this text once for the whole panel. It stays the same for every poster in this panel. Edit this field only when you want to change the wording.",
         "validations": [
           {
             "name": "max",
@@ -348,8 +348,8 @@
       },
       {
         "key": "ritual_poster_autoplay",
-        "name": "automatically change images",
-        "description": "Automatically cycle through the poster images while this section is visible. Pauses on hover, keyboard focus, or a background tab.",
+        "name": "Automatically change posters",
+        "description": "Rotate only the three poster galleries. All headings, titles and descriptions stay fixed. Pauses on hover, keyboard focus, or a background tab.",
         "type": "boolean",
         "validations": [],
         "required": false
@@ -424,15 +424,15 @@
         },
         {
           "key": "ingredient_eyebrow",
-          "value": "Notes on botanical care"
+          "value": "Botanical uses, tradition and research"
         },
         {
           "key": "ingredient_heading",
-          "value": "A thoughtful ritual"
+          "value": "Discover each botanical"
         },
         {
           "key": "ingredient_heading_emphasis",
-          "value": "starts with understanding."
+          "value": "and understand its uses."
         },
         {
           "key": "ingredient_plant_images",
@@ -460,27 +460,27 @@
         },
         {
           "key": "ingredient_plant_title",
-          "value": "Meet the plant."
+          "value": "Know the ingredient."
         },
         {
           "key": "ingredient_plant_text",
-          "value": "Know the botanical and the part used."
+          "value": "Explore the plant, the part used and its traditional role. Different species and plant parts can have different uses."
         },
         {
           "key": "ingredient_preparation_title",
-          "value": "Make it simply."
+          "value": "Follow the product directions."
         },
         {
           "key": "ingredient_preparation_text",
-          "value": "Clear preparation and safety guidance."
+          "value": "Use each powder for the purpose shown on its label. Keep washing, pack and colouring steps clear."
         },
         {
           "key": "ingredient_lifestyle_title",
-          "value": "Keep it honest."
+          "value": "Explore beyond hair."
         },
         {
           "key": "ingredient_lifestyle_text",
-          "value": "Realistic claims. No miracle promises."
+          "value": "Read about traditional skin care and skin, body-cleansing and household research. Research on other preparations is not a proven benefit of these powders."
         },
         {
           "key": "ingredient_button_enabled",

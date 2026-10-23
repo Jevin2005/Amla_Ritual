@@ -2,7 +2,15 @@
 
 Open **Shopify Admin → Content → Metaobjects → Ingredient clarity → Homepage ingredient section** (handle `main`).
 
-[Open the installed Shopify entry](https://admin.shopify.com/store/zyv78m-p7/content/metaobjects/entries/ingredient_clarity/431726788794).
+[Open the installed Shopify entry](https://admin.shopify.com/store/amla-ritual/content/metaobjects/entries/ingredient_clarity/431726788794).
+
+## Fixed text and rotating posters
+
+Define the section heading and each panel's **Fixed title** and **Fixed description** once. The text stays visible and does not change when a poster advances. The current wording is preserved.
+
+Use **01 / 02 / 03 - Posters in display order** to replace or reorder each panel's images. The first selected image appears first; the rest play in their saved order and then repeat. Keep corresponding images at the same list position if all three panels should show the same botanical together. Each list supports up to eight images and wraps independently.
+
+Use **Automatically change posters** to enable playback and **image duration (seconds)** to set its interval. The existing setting is six seconds. Save the entry after editing. There is no title or description to repeat for individual posters.
 
 This one entry manages the whole homepage ingredient collage on phones and desktop. The website builds the responsive curves, captions and animations from the saved content; upload individual photos rather than a finished poster containing text.
 
