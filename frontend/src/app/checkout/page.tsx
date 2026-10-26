@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { CheckoutPreview } from "@/features/checkout/checkout-preview";
-import { PageHero } from "@/shared/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Secure Checkout",
@@ -15,11 +14,6 @@ export default function CheckoutPage() {
   ].filter(Boolean);
   return (
     <main id="main-content">
-      <PageHero
-        eyebrow="Your ritual bag"
-        title={<><span>Checkout,</span><br />handled securely.</>}
-        description="Review the latest bag totals, then continue to secure checkout for delivery and payment."
-      />
       <CheckoutPreview checkoutHosts={checkoutHosts} />
     </main>
   );

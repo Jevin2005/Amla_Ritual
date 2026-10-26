@@ -13,6 +13,7 @@ const { outputFiles } = buildSync({
   },
   tsconfig: fileURLToPath(new URL("../tsconfig.json", import.meta.url)),
   bundle: true, platform: "node", format: "cjs", write: false,
+  loader: { ".module.css": "empty" },
   external: ["react", "react/jsx-runtime", "next/link", "@/features/store/store-provider", "./checkout-order-summary"],
 });
 const allowedHosts = ["checkout.naturemist.shop", "zyv78m-p7.myshopify.com"];
