@@ -7,13 +7,7 @@ import { CartProductImage } from "@/features/cart/cart-product-image";
 import { CartBillSummary } from "@/features/cart/cart-bill-summary";
 import { useStore } from "@/features/store/store-provider";
 
-type CheckoutOrderSummaryProps = {
-  shippingFeePaise: number;
-};
-
-export function CheckoutOrderSummary({
-  shippingFeePaise,
-}: CheckoutOrderSummaryProps) {
+export function CheckoutOrderSummary() {
   const {
     products,
     cart,
@@ -44,7 +38,7 @@ export function CheckoutOrderSummary({
     }
   };
 
-  const billing = calculateCartBilling({ items: cart, totalPaise, discountAmountPaise, shippingFeePaise });
+  const billing = calculateCartBilling({ items: cart, totalPaise, discountAmountPaise });
 
   return (
     <aside
@@ -212,7 +206,8 @@ export function CheckoutOrderSummary({
 
       {/* ── Financial Breakdown ── */}
       <div className="border-t border-[var(--line)] pt-4">
-        <CartBillSummary billing={billing} currencyCode={currencyCode} busy={isCartBusy} />
+        <CartBillSummary billing={billing} currencyCode={currencyCode} busy={isCartBusy} shippingPending taxPending />
+        <p className="mt-3 text-[0.74rem] text-[var(--muted)]">Delivery, taxes, and your final total are confirmed at secure checkout.</p>
       </div>
     </aside>
   );

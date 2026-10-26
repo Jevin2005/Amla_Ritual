@@ -1,0 +1,34 @@
+[
+  {
+    "finding": "Gateway amount is accepted from browser without server cart",
+    "observed": true
+  },
+  {
+    "finding": "Failed payment lookup still returns verified captured",
+    "observed": true
+  },
+  {
+    "finding": "Same signed proof creates two paid orders without capture lookup or idempotency",
+    "observed": true
+  },
+  {
+    "finding": "Browser price overrides Shopify order line price",
+    "observed": true
+  },
+  {
+    "finding": "Unknown payment method bypasses online proof and COD-disabled gate",
+    "observed": true
+  },
+  {
+    "finding": "Hardcoded test buyer is verified without purchase",
+    "observed": true
+  },
+  {
+    "finding": "Unverified email plus slug-only input returns order ID/name for unrelated purchase",
+    "observed": true
+  },
+  {
+    "finding": "Order ID alone exposes purchase and destination fields",
+    "observed": true
+  }
+]

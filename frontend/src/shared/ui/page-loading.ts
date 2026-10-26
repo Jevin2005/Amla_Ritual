@@ -60,8 +60,10 @@ export function installPageLoading(view: Window, onPhase: (phase: LoadingPhase) 
     const content = doc.getElementById("site-content");
     if (!content) return false;
     if ([...content.querySelectorAll("[data-page-pending]")].some((element) => isVisible(element, view))) return false;
+    // Media has its own loading states; slow assets should not hide usable content.
+    if (Date.now() - started >= 1200) return true;
     // Web fonts have a short grace period; third-party resources never trap browsing.
-    if (doc.fonts?.status === "loading" && Date.now() - started < 1500) return false;
+    if (doc.fonts?.status === "loading" && Date.now() - started < 1000) return false;
     return [...content.querySelectorAll<HTMLImageElement>("img")].filter((image) => isVisible(image, view, true)).map((image) => {
       if (!image.complete) return false;
       if (!image.naturalWidth || !image.decode) return true;
@@ -83,7 +85,7 @@ export function installPageLoading(view: Window, onPhase: (phase: LoadingPhase) 
     started = Date.now();
     if (!startup) reveal = view.setTimeout(() => onPhase("navigation"), 140);
     // A failed request, script or asset must never leave an overlay stuck on screen.
-    deadline = view.setTimeout(finish, startup ? 8000 : 12000);
+    deadline = view.setTimeout(finish, startup ? 2500 : 12000);
     let settled = 0;
     const check = () => {
       if (current !== generation) return;

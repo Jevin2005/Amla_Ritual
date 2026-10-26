@@ -1,0 +1,395 @@
+{
+  "checkedAt": "2026-10-23T19:15:59.470Z",
+  "note": "Single HTTP sample per route; not Core Web Vitals or a load test.",
+  "routes": [
+    {
+      "path": "/shop",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/shop",
+      "ttfbMs": 377,
+      "decodedBytes": 279076,
+      "title": "Shop Botanical Powders &amp; Combos | My Store",
+      "canonical": "https://www.naturemist.shop/shop",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "HIT",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/combos",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/combos",
+      "ttfbMs": 618,
+      "decodedBytes": 270387,
+      "title": "My Store — Pure Botanicals, Powerful Rituals",
+      "canonical": "https://www.naturemist.shop/combos",
+      "robots": "index, follow",
+      "h1Count": 0,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "PRERENDER",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/",
+      "ttfbMs": 1349,
+      "decodedBytes": 501808,
+      "title": "My Store — Pure Botanicals, Powerful Rituals",
+      "canonical": "https://www.naturemist.shop",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "HIT",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/checkout",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/checkout",
+      "ttfbMs": 528,
+      "decodedBytes": 275786,
+      "title": "Secure Checkout | My Store",
+      "canonical": "https://www.naturemist.shop/checkout",
+      "robots": "noindex, nofollow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "PRERENDER",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/reviews",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/reviews",
+      "ttfbMs": 546,
+      "decodedBytes": 279593,
+      "title": "Customer Reviews &amp; Video Stories | NatureMist | My Store",
+      "canonical": "https://www.naturemist.shop/reviews",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "PRERENDER",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/shop/amla-powder",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/shop/amla-powder",
+      "ttfbMs": 292,
+      "decodedBytes": 550449,
+      "title": "Amla Fruit Powder, 200 g | NatureMist | My Store",
+      "canonical": "https://www.naturemist.shop/shop/amla-powder",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "MISS",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/faqs",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/faqs",
+      "ttfbMs": 30,
+      "decodedBytes": 284697,
+      "title": "Frequently Asked Questions | NatureMist | My Store",
+      "canonical": "https://www.naturemist.shop/faqs",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "STALE",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/contact",
+      "ttfbMs": 274,
+      "decodedBytes": 281005,
+      "title": "Contact &amp; Botanical Consultation | NatureMist | My Store",
+      "canonical": "https://www.naturemist.shop/contact",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "HIT",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/our-story",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/our-story",
+      "ttfbMs": 333,
+      "decodedBytes": 492589,
+      "title": "Our Story — NatureMist | My Store",
+      "canonical": "https://www.naturemist.shop/our-story",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "STALE",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/privacy",
+      "ttfbMs": 247,
+      "decodedBytes": 311865,
+      "title": "Privacy | My Store",
+      "canonical": "https://www.naturemist.shop/privacy",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "HIT",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/shipping-returns",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/shipping-returns",
+      "ttfbMs": 593,
+      "decodedBytes": 278758,
+      "title": "Shipping &amp; Returns | My Store",
+      "canonical": "https://www.naturemist.shop/shipping-returns",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "PRERENDER",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/terms",
+      "ttfbMs": 704,
+      "decodedBytes": 279144,
+      "title": "Terms | My Store",
+      "canonical": "https://www.naturemist.shop/terms",
+      "robots": "index, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "PRERENDER",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/robots.txt",
+      "ttfbMs": 237,
+      "decodedBytes": 598,
+      "h1Count": 0,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "MISS",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/sitemap.xml",
+      "ttfbMs": 273,
+      "decodedBytes": 4959,
+      "h1Count": 0,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "MISS",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    },
+    {
+      "path": "/track-order",
+      "status": 200,
+      "finalUrl": "https://naturemist.shop/track-order",
+      "ttfbMs": 318,
+      "decodedBytes": 283518,
+      "title": "Track Your Order | My Store",
+      "canonical": "https://www.naturemist.shop/track-order",
+      "robots": "noindex, follow",
+      "h1Count": 1,
+      "headers": {
+        "server": "Vercel",
+        "x-vercel-cache": "HIT",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-robots-tag": null
+      }
+    }
+  ],
+  "initialScripts": [
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/20es43nb27oti.js",
+      "decodedBytes": 34718
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/0xry6ddtqxjk_.js",
+      "decodedBytes": 233897
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/33dpb6wrjvqpk.js",
+      "decodedBytes": 158513
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/turbopack-2hjhlqfuw-zq7.js",
+      "decodedBytes": 9692
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/0137wb6m1so_o.js",
+      "decodedBytes": 14377
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/2f4-n2bk_bani.js",
+      "decodedBytes": 37815
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/3caiqn3fk3wd6.js",
+      "decodedBytes": 30059
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/2yyoefwmwifwf.js",
+      "decodedBytes": 98175
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/012za7sprq0rl.js",
+      "decodedBytes": 27668
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/1uncnqr6pyy-x.js",
+      "decodedBytes": 147351
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/35xfcsboh7yrs.js",
+      "decodedBytes": 35696
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/1p9xavoaz65x_.js",
+      "decodedBytes": 1920
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/3nxuyirerf1wh.js",
+      "decodedBytes": 1571
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/0c0hxoamwjsbw.js",
+      "decodedBytes": 112594
+    },
+    {
+      "url": "https://naturemist.shop/_next/static/immutable/chunks/2-3n1x5-na9eq.js",
+      "decodedBytes": 3420
+    }
+  ],
+  "totalInitialJsDecodedBytes": 947466,
+  "sitemap": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:image=\"http://www.google.com/schemas/sitemap-image/1.1\">\n<url>\n<loc>https://www.naturemist.shop</loc>\n<changefreq>monthly</changefreq>\n<priority>1</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop</loc>\n<changefreq>monthly</changefreq>\n<priority>0.7</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/our-story</loc>\n<changefreq>monthly</changefreq>\n<priority>0.7</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shipping-returns</loc>\n<changefreq>monthly</changefreq>\n<priority>0.7</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/privacy</loc>\n<changefreq>monthly</changefreq>\n<priority>0.7</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/terms</loc>\n<changefreq>monthly</changefreq>\n<priority>0.7</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/amla-powder</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Amla_powder_botanical_hero.png?v=1789634129</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/reetha-powder</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistReethaPowderinWarmLight.png?v=1789634963</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/indigo-powder</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistIndigopowderhero.png?v=1789636168</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/bhringraj-powder</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Bhringraj_Powder_in_Sunlight_1c6954f2-7eb5-4c4d-9b54-a0234c40771b.png?v=1789639509</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/hibiscus-powder</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMistHibiscusPowderHero.png?v=1789640062</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/shikakai-powder</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/NatureMist_Shikakai_Powder_Hero.png?v=1789634129</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/classic-trio</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/ca688b08-2fcf-4df4-8999-4749cf7b9bbd.png?v=1792489403</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/amla-reetha-duo</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/bc23ec23-3c47-4c83-8b71-f7b858b5be92.png?v=1792580172</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/amla-shikakai-duo</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/8486a83f-7cf5-4a1a-ae2e-e41e244269ef.png?v=1792580203</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/cleansing-duo</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/3ef0211d-4636-475b-af46-13f70a01acbe.png?v=1792585884</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/botanical-mask-trio</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/fa28f725-b07d-43e5-afa2-4f76629b942c.png?v=1792585935</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/botanical-duo</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/949394c4-cc8e-447c-8777-44f20972733d.png?v=1792586028</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/floral-duo</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/03371c02-2c6b-4f3c-af36-ac5a2c9c17d1.png?v=1792586139</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://www.naturemist.shop/shop/bhringraj-hibiscus-duo</loc>\n<image:image>\n<image:loc>https://cdn.shopify.com/s/files/1/0777/1291/6666/files/5e803373-7a97-40db-8ee0-15094c3e37f7.png?v=1792586268</image:loc>\n</image:image>\n<changefreq>weekly</changefreq>\n<priority>0.8</priority>\n</url>\n</urlset>\n",
+  "robots": "User-Agent: *\nAllow: /\nDisallow: /checkout\nDisallow: /wishlist\nDisallow: /track-order\nDisallow: /api/\n\nUser-Agent: GPTBot\nUser-Agent: ChatGPT-User\nUser-Agent: PerplexityBot\nUser-Agent: ClaudeBot\nUser-Agent: Google-Extended\nUser-Agent: Applebot-Extended\nUser-Agent: Amazonbot\nUser-Agent: Bingbot\nAllow: /\nAllow: /shop\nAllow: /shop/*\nAllow: /combos\nAllow: /our-story\nAllow: /faqs\nAllow: /reviews\nAllow: /contact\nAllow: /shipping-returns\nDisallow: /checkout\nDisallow: /wishlist\nDisallow: /track-order\nDisallow: /api/\n\nHost: https://www.naturemist.shop\nSitemap: https://www.naturemist.shop/sitemap.xml\n"
+}

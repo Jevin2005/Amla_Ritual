@@ -124,14 +124,14 @@ export function CartDrawer() {
                 {notices}
               </div>
               <div className={styles.bill}>
-                <CartBillSummary billing={billing} currencyCode={currencyCode} estimated={totalsEstimated} shippingPending busy={loading} />
-                <p className={styles.note}>{source === "shopify" ? "All taxes are included in product prices. Delivery is confirmed at checkout." : "Preview bag. No order or payment will be created."}</p>
+                <CartBillSummary billing={billing} currencyCode={currencyCode} estimated={totalsEstimated} shippingPending taxPending busy={loading} />
+                <p className={styles.note}>{source === "shopify" ? "Delivery, taxes, and your final total are confirmed at secure checkout." : "Preview bag. No order or payment will be created."}</p>
               </div>
             </div>
             <footer className={styles.footer}>
               <div className={styles.payable} aria-live="polite" aria-atomic="true"><span>{loading ? "Updating bag…" : "Estimated total"}</span><strong>{formatBillingCurrency(billing.totalPaise, currencyCode)}</strong></div>
               {(unavailable || overStock) && <p className={styles.stock} role="status">Remove unavailable items or adjust quantities to continue.</p>}
-              {checkoutBlocked ? <button className={styles.primary} type="button" disabled>{loading ? "Updating bag…" : "Review bag items"}</button> : <Link className={styles.primary} href="/checkout" onClick={() => { track("begin_checkout", { value: billing.totalPaise / 100, currency: currencyCode, mode: "in_app_checkout" }); closeCart(); }}>Continue to checkout <span aria-hidden="true">→</span></Link>}
+              {checkoutBlocked ? <button className={styles.primary} type="button" disabled>{loading ? "Updating bag…" : "Review bag items"}</button> : <Link className={styles.primary} href="/checkout" onClick={() => { track("view_checkout", { value: billing.totalPaise / 100, currency: currencyCode, mode: "shopify_hosted" }); closeCart(); }}>Continue to checkout <span aria-hidden="true">→</span></Link>}
               <button className={styles.continue} type="button" onClick={closeCart}>Continue shopping</button>
             </footer>
           </>

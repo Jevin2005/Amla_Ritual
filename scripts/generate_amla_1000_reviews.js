@@ -4,6 +4,8 @@ const path = require('path');
 const NEW_CSV_FILE = path.join(__dirname, '..', 'amla_only_1000_reviews_judgeme.csv');
 const BULK_CSV_FILE = path.join(__dirname, '..', 'bulk_reviews_judgeme.csv');
 
+// Published verified Shopify catalog details (Checked 24 October 2026)
+// Amla Powder: 200 g / ₹234 (Phyllanthus emblica, fruit pulp, hair packs)
 const PRODUCT_ID = '8494763311290';
 const PRODUCT_HANDLE = 'amla';
 const TARGET_TOTAL = 1000;
@@ -128,9 +130,9 @@ function generateUniqueEmail(name) {
   return email;
 }
 
-function randomDate(startYear, startMonth, endYear, endMonth) {
+function randomDate(startYear, startMonth, endYear, endMonth, endDay = 24) {
   const start = new Date(startYear, startMonth - 1, 1).getTime();
-  const end = new Date(endYear, endMonth - 1, 28).getTime();
+  const end = new Date(endYear, endMonth - 1, endDay).getTime();
   const d = new Date(start + rand() * (end - start));
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -140,258 +142,250 @@ function randomDate(startYear, startMonth, endYear, endMonth) {
 
 // -------------------------------------------------------------
 // ENGLISH REVIEW DATA
+// Strictly compliant with NatureMist Amla specifications (24 Oct 2026):
+// 200g / ₹234, Phyllanthus emblica, fruit pulp, traditional hair pack,
+// separate step before cleansing, patch/strand testing, clean spoon, no medical/regrowth claims.
 // -------------------------------------------------------------
 const EN_TITLES_5 = [
-  "Pure and transformative ritual",
-  "Incredible natural shine",
-  "Authentic earthy fragrance",
-  "Noticeable difference in scalp health",
-  "Purest quality amla in India",
-  "Remarkable reduction in hair shedding",
-  "Silky softness without silicones",
-  "My weekly holy grail hair mask",
-  "Leaves hair glossy and voluminous",
-  "Finest amla powder on the market",
-  "Visible reduction in comb breakage",
-  "Deeply cooling and refreshing",
-  "Restored shine to my dull strands",
-  "Zero grit and dissolves smoothly",
-  "My curls have never looked glossier",
-  "A staple in my Ayurvedic hair routine",
-  "Gentle on my sensitive scalp",
-  "Unbelievable natural luster",
-  "Noticeable new baby hairs along my hairline",
-  "Pure wildcrafted botanical excellence",
-  "Best pre-wash treatment ever",
-  "Hair feels revitalized and stronger",
-  "Natural shine that lasts for days",
-  "Far superior to regular store powders",
-  "Scalp feels squeaky clean and balanced",
-  "Subtle herbal scent and rich texture",
-  "My post-partum hair savior",
-  "Worth every single rupee",
-  "Healthy bounce restored to my waves",
-  "Luxurious hair ritual in a jar",
-  "Helped control my premature greying",
-  "Saved my hair from Bangalore hard water",
-  "Thicker ponytail after 2 months",
-  "Best remedy for itchy flaky scalp",
-  "Works wonders with curd and honey",
-  "The Vitamin C boost my hair needed",
-  "Non-drying and intensely nourishing",
-  "Noticeable baby hairs filling in my temples",
-  "Frizz is completely gone",
-  "Natural dark tones look richer and deeper",
-  "No artificial colors or preservatives",
-  "Miracle cure for monsoon hair fall",
-  "Unbelievable slip and root strength",
-  "Lightweight volume without stickiness",
-  "So soothing during stressful weeks"
+  "Pure fruit pulp with incredible natural shine",
+  "The perfect weekly Ayurvedic hair pack",
+  "Outstanding mirror gloss on dark hair",
+  "Authentic Phyllanthus emblica fruit powder",
+  "Leaves lengths silky, soft and manageable",
+  "My favorite separate pre-wash ritual",
+  "Incredible quality for just ₹234",
+  "Zero grit and rinses out effortlessly",
+  "Deeply cooling and refreshing on the scalp",
+  "A wholesome traditional botanical mask",
+  "Silky slip and natural luster without silicones",
+  "The 200g jar is pure botanical perfection",
+  "Restored healthy gloss to my dull lengths",
+  "Pure single-origin amla without any fillers",
+  "Mixes into a smooth, lump-free paste",
+  "Strand test was perfect, natural dark tones pop",
+  "Grounding Sunday hair-pack ritual",
+  "Gentle on scalp and leaves lengths radiant",
+  "Unbelievable shine after a single thorough rinse",
+  "Natural gloss that catches the light beautifully",
+  "Pure earthy fragrance of dried amla pulp",
+  "Followed the pack directions, stunning results",
+  "The ₹234 price tag is unbelievable value",
+  "Clean scalp feel and silky soft strands",
+  "Lightweight volume and glossy natural bounce",
+  "Essential first step before my cleansing routine",
+  "Worth every single rupee of ₹234",
+  "Subtle herbal aroma and ultra-fine milling",
+  "No artificial colors, pure fruit pulp",
+  "Such a soothing and grounding hair pack",
+  "Completely residue-free after rinsing",
+  "Noticeable softness across my dry ends",
+  "Pure botanical goodness for hair lengths",
+  "Traditional Ayurvedic hair care done right",
+  "Leaves my curls soft, defined and lustrous"
 ];
 
 const EN_TITLES_4 = [
-  "Great herbal wash for roots",
-  "Very good shine, needs thorough rinse",
-  "Nourishing mask for dry ends",
-  "Effective results with consistent use",
-  "High quality amla, earthy aroma",
-  "Leaves hair conditioned and clean",
-  "Visible improvement after 3 weeks",
-  "Wonderful texture, wish a scoop came inside",
-  "Great quality, jar lid was a bit tight",
-  "Needs 20-30 mins of patience but works",
-  "Slightly drying with water alone, best with curd",
-  "Strong herbal aroma, but hair feels amazing",
-  "Takes plenty of water to rinse out thick curls",
-  "Effective for hair fall, wish jar was bigger"
+  "Great natural shine, needs thorough water rinse",
+  "Very good 200g jar, wish a scoop came inside",
+  "Leaves hair conditioned, earthy aroma takes a wash to adjust",
+  "Effective hair pack, needs careful mixing with clean water",
+  "Silky lengths, make sure to use a clean dry spoon",
+  "Strand test is a must on light hair, but results are lovely",
+  "Great ₹234 value, takes 20 minutes of patience",
+  "Effective conditioning pack, discard leftover paste",
+  "Nice slip, best followed by your usual cleanser",
+  "Fine powder quality, jar lid was tightly sealed upon arrival",
+  "Smooth paste, rinse takes plenty of water on thick hair",
+  "Good herbal conditioning, slightly earthy natural scent"
 ];
 
 const EN_TITLES_3 = [
-  "Good quality herb, takes patience to prep",
-  "Effective mask, aroma is quite earthy",
-  "Decent herbal treatment for hair fall",
-  "Good for scalp, needs moisturizing mixer",
-  "Authentic powder, takes 6 weeks to see results",
-  "Fine powder but messy to apply without brush",
-  "Works well, but earthy smell lingers slightly"
+  "Authentic pure amla, takes time and patience to prepare",
+  "Decent hair pack, earthy scent lingers slightly",
+  "Pure botanical powder, must follow with usual cleanser",
+  "Good quality fruit pulp, application can get slightly messy",
+  "Gentle conditioning, requires consistent weekly application",
+  "Fine milling, make sure not to inhale the dry powder",
+  "Pure product, remember to patch test and strand test first"
 ];
 
 const EN_HOOKS = [
-  "After just two weeks of preparing the warm amla paste, my scalp feels deeply nourished and hair shedding has decreased visibly.",
-  "I mix two spoonfuls with warm water and a splash of coconut milk; it gives my hair an authentic healthy sheen without synthetic silicone build-up.",
-  "You can instantly tell this is wildcrafted from the fine texture and fresh earthy aroma with zero artificial coloring.",
-  "Noticeable difference in hair texture within three washes. Scalp feels clean and refreshed without any dryness.",
-  "Very potent vitamin C rich powder. I use it as a pre-wash hair mask every Sunday blended with plain curd.",
-  "Struggled with heavy hair fall after moving to Bangalore and dealing with hard water. This amla mask restored scalp balance remarkably fast.",
-  "I have fine, color-treated wavy hair and was worried about staining, but this rinsed out completely and left my lengths radiant.",
-  "The micro-milled powder consistency is outstanding. It mixes smoothly into a lump-free paste in under a minute.",
-  "Leaves my scalp feeling cool and soothed. The itchiness I used to suffer from between washes has completely disappeared.",
-  "Combined with aloe vera gel, this makes the most hydrating pre-wash treatment. My hairbrush collects barely any stray hairs now.",
-  "My post-partum hair shedding was causing me serious anxiety. Consistent weekly use of this amla paste over six weeks visibly strengthened my roots.",
-  "The natural luster this gives my dark hair is unbelievable. Sunlight brings out a healthy, mirror-like gloss.",
-  "I appreciate that this is 100% pure single-origin amla without any fillers or preservatives. The quality speaks for itself.",
-  "I've tried powders from multiple brands, but NatureMist is on another level in terms of fineness and fresh botanical smell.",
-  "Noticeably thicker feel along my ponytail and my hair holds natural volume much better throughout the day.",
-  "After leaving it on for 25 minutes and rinsing with cool water, my curls feel light, bouncy, and deeply moisturized.",
-  "I was noticing early grey strands near my forehead. Amla's rich antioxidants seem to have slowed down new greying, keeping my dark hair vibrant.",
-  "My scalp gets extremely greasy after two days, but this amla mask regulates excess oil while keeping lengths silky.",
-  "I blend this with a spoon of cold-pressed castor oil and yogurt. My hair breakage during combing has dropped dramatically.",
-  "For anyone struggling with seasonal hair shedding, this authentic Indian gooseberry powder strengthens the follicle bulb right from the roots.",
-  "The collagen-boosting Vitamin C in this amla has revived my split ends and coarse heat-damaged texture.",
-  "No more flakes or scratching my head during dry weather. The natural astringent properties keep my scalp completely dandruff-free.",
-  "I love that there's zero gritty sand in this powder. It washes out in a single thorough rinse without clinging to strands.",
-  "My 2C curls are clumped, bouncy, and soft. Commercial hair masks never gave me this level of shine without product buildup."
+  "I mix two tablespoons of this finely milled amla fruit pulp with clean water into a smooth paste as directed on the pack.",
+  "Using this as a separate hair-pack step before my usual cleansing routine has given my hair an unbelievable natural sheen.",
+  "You can immediately tell this is 100% pure Phyllanthus emblica fruit pulp from its authentic tan-green color and fresh earthy aroma.",
+  "At ₹234 for a generous 200g jar, NatureMist has made pure Ayurvedic hair packs completely accessible.",
+  "I did a patch test first on my inner arm as recommended on the pack, and then applied the smooth paste to my roots and lengths.",
+  "I have porous, color-treated ends, so I followed the directions to strand-test first; it left a lovely, rich, glossy tone.",
+  "The micro-milled fruit pulp mixes smoothly with clean lukewarm water in under a minute without forming gritty lumps.",
+  "After leaving the paste on according to the label's timing, it rinsed out cleanly with water without leaving any sandy residue behind.",
+  "I keep the 200g jar tightly sealed in a cool, dry cupboard and always scoop the powder with a clean, dry spoon.",
+  "This pure amla fruit pulp pack gives my dark hair a healthy, reflective sheen that synthetic silicone masks never delivered.",
+  "I love that NatureMist keeps this strictly as a pure single botanical for hair packs without adding artificial fragrances or fillers.",
+  "Whenever my scalp feels stuffy from everyday buildup, applying this soothing amla pack feels delightfully cooling and refreshing.",
+  "I prepare a fresh mixture for each Sunday ritual and discard any leftover wet paste as instructed on the packaging.",
+  "My strands feel so light, conditioned, and touchably soft after rinsing this out and following with my usual wash routine.",
+  "I pair this amla pack with my gentle wash routine, and it has become the most grounding step of my weekend self-care.",
+  "The natural fruit tannins impart a deep, healthy gloss to dark hair that catches the sunlight brilliantly.",
+  "Rinsing is so clean—just plenty of running water and the botanical paste washes away without clinging to individual strands.",
+  "My 2C curls look clumped, bouncy, and remarkably shiny without any heavy silicone product buildup.",
+  "I appreciate that this is strictly pure fruit pulp intended for hair packs, with no exaggerated claims or artificial ingredients.",
+  "The earthy botanical smell is completely authentic, reminiscent of traditional homemade amla fruit pastes.",
+  "Applying this smooth herbal paste in sections allows my scalp and lengths to absorb pure botanical conditioning.",
+  "I was paying three times this price for imported masks that left waxy buildup; this pure ₹234 powder is far superior.",
+  "The 200g jar lasts over a month when used once a week as a dedicated hair-pack step.",
+  "After the thorough water rinse, my comb glides effortlessly through my wet lengths with zero snags or tangles.",
+  "I have naturally light-brown hair and did a strand test first as directed; it gave my strands a gorgeous luminous depth.",
+  "The packaging is clean and airtight, keeping the dried fruit pulp completely fresh between uses."
 ];
 
 const EN_MIDDLES = [
-  "Hair feels significantly denser at the roots and the natural shine catches the light beautifully.",
-  "It washes out easily with warm water without leaving any gritty sand behind on the scalp.",
-  "My split ends feel sealed and my comb glides through wet hair without snagging or snapping.",
-  "The natural antioxidant potency is evident from the first use; my strands feel resilient and bouncy.",
-  "I pair this with the NatureMist reetha wash for a complete zero-chemical hair cleansing routine.",
-  "The subtle cooling effect on the crown during application is incredibly grounding and therapeutic.",
-  "Hair texture has softened noticeably, especially through the dry mid-lengths and ends.",
-  "Even my hairdresser remarked on how much thicker and healthier my new growth feels.",
-  "My pillowcase and shower drain are no longer covered in loose strands every morning.",
-  "The high tannin and Vitamin C content clearly preserves melanin, making my natural black tones look rich and luminous."
+  "The natural conditioning properties leave my mid-lengths and ends feeling smooth, supple, and noticeably manageable.",
+  "It washes away cleanly under running water without leaving any sandy grit or sticky film behind on the scalp.",
+  "The subtle cooling sensation across the crown during application is deeply relaxing, grounding, and therapeutic.",
+  "My natural dark hair tones look visibly richer, deeper, and full of multidimensional mirror shine.",
+  "My lengths have a natural, airy bounce and silkiness without feeling weighed down in the slightest.",
+  "Using a clean, dry utensil keeps the remaining powder inside the 200g jar completely fresh, dry, and lump-free.",
+  "The strand check on my grey highlights gave me complete confidence before doing a full hair-pack application.",
+  "It works wonderfully as a focused pre-wash step right before my gentle hair cleansing routine.",
+  "My comb glides smoothly through wet strands without snagging or tugging at dry ends.",
+  "The fine botanical milling makes spreading the paste from roots to lengths completely effortless."
 ];
 
 const EN_CONCLUSIONS_5 = [
-  "Definitely ordering the refill jar. Highly recommended to anyone wanting pure Ayurvedic hair care!",
-  "Truly premium grade amla. It has earned a permanent place in my weekly self-care ritual.",
-  "Exceeded my expectations in every way. My hair hasn't felt this healthy in years.",
-  "A must-have for anyone dealing with seasonal hair fall or lack of natural luster.",
-  "100% authentic botanical quality. Will definitely repurchase again and again.",
-  "Such a joyful, grounding ritual. Worth every single rupee!",
-  "If you want real results without toxic chemicals, this is the gold standard.",
-  "My mother and grandmother both approved of this quality, and that says everything!",
-  "Game changer for my hair density. Already recommending it to all my colleagues."
+  "At ₹234 for 200g, this is the gold standard for pure Ayurvedic hair care. Will definitely repurchase!",
+  "Such a grounding, joyful hair ritual. It has earned a permanent spot in my weekly routine.",
+  "Truly authentic botanical quality. Highly recommended to anyone looking for genuine plant-based care!",
+  "My mother and grandmother inspected the powder and immediately approved of its pure fruit pulp quality.",
+  "Incredible natural gloss and manageability. Worth every single rupee of ₹234!",
+  "100% pure single-botanical amla at an honest price. You cannot ask for better hair pack quality.",
+  "If you want real botanical results without synthetic silicones, this 200g jar is pure perfection.",
+  "Exceeded my expectations for a simple water-mixed herbal pack. My hair has never looked shinier."
 ];
 
 const EN_CONCLUSIONS_4 = [
-  "Leaves roots feeling strengthened. Only wish the jar had a small wooden scoop included.",
-  "Very good natural treatment. Just make sure to rinse with plenty of water to remove every bit of paste.",
-  "Takes a little patience to mix smoothly, but the resulting shine and scalp freshness make it well worth the time.",
-  "High quality powder. The earthy aroma takes a wash or two to get used to, but the results are undeniable.",
-  "Leaves hair very soft and shiny. It can feel slightly drying if used with plain water alone, so always add curd or aloe vera.",
-  "Great product overall. The lid was tightly sealed upon delivery, but the contents inside are 10/10."
+  "Leaves hair beautifully soft and glossy. Just wish the 200g jar included a dedicated wooden measuring scoop.",
+  "Very effective hair pack. Remember to rinse with plenty of water to ensure every bit of paste is washed away.",
+  "Takes some patience to prepare and rinse, but the resulting shine and scalp freshness make it well worth it.",
+  "High quality powder. The earthy aroma takes a wash or two to get used to, but the softness is undeniable.",
+  "Great ₹234 value. Be sure to keep the lid tightly sealed in a dry place to preserve the powder freshness.",
+  "Leaves lengths very soft and manageable. Make sure to use a clean dry spoon so no moisture enters the jar."
 ];
 
 const EN_CONCLUSIONS_3 = [
-  "Good herbal powder with genuine benefits, though mixing and rinsing takes noticeable time on busy mornings.",
-  "Decent quality amla. Takes patience to prepare properly, but works well when combined with yogurt.",
-  "Works fine as a scalp mask, though the earthy scent lingers for a while if not washed out with scented shampoo.",
-  "Good pure amla, but you need at least 6 weeks of consistent use before expecting visible results on hair fall.",
-  "Fine powder quality, though application can get messy if made too runny. Best applied with an applicator brush."
+  "Good pure amla fruit pulp. Application can be slightly messy, and you definitely need to follow with your usual wash.",
+  "Authentic powder, though preparing a fresh paste each week requires dedicated time and patience.",
+  "Decent hair pack for shine, but make sure to do a strand test if you have light, porous, or bleached hair.",
+  "Fine botanical quality, though the natural earthy scent lingers slightly if not rinsed thoroughly."
 ];
 
 // -------------------------------------------------------------
 // HINGLISH REVIEW DATA (Natural conversational Hindi-English)
+// Fully compliant with Amla specs: 200g / ₹234, Phyllanthus emblica fruit pulp,
+// traditional hair pack, patch/strand test, dry spoon, no hair regrowth or cure claims.
 // -------------------------------------------------------------
 const HI_TITLES_5 = [
-  "Hair fall sach me bohot kam ho gaya!",
-  "Dahi ke saath best hair mask banta hai",
-  "Pehli baar pure amla powder mila hai",
-  "Baal bilkul silky aur shiny ho gaye",
-  "Ekdum original quality amla hai",
-  "Mummy ko bhi bohot pasand aaya",
-  "Bangalore ke hard water se baal bacha liye",
-  "Kangi karte waqt baal tootna band",
-  "Natural black shine dekhne layak hai",
-  "Scalp ki itching aur dandruff gayab",
-  "Bohot hi fine powder hai, koi grit nahi",
-  "Weekly hair ritual ban gaya hai mera",
-  "Pehle se baal kafi thick lag rahe hain",
-  "Postpartum hair loss me bohot madad mili",
-  "Chemical wale serum se lakh guna behtar",
-  "Hair brush me ab baal nahi aate",
-  "100% pure Ayurvedic quality, loved it!",
-  "Dadi-nani ke nuskhe wala authentic feel",
-  "Baby hairs aane shuru ho gaye hairline pe",
+  "₹234 me itni pure amla fruit pulp, unbelievable!",
   "Dhoop me baal mirror ki tarah shine karte hain",
-  "Bohot cooling effect deta hai scalp par",
-  "Split ends aur dry hair theek ho gaye",
-  "Paison ki poori vasooli hai",
-  "Har Sunday ka fixed routine ban chuka hai",
-  "Ekdum fresh herbal khushboo aati hai",
-  "Grey hair slow down ho gaye kafi hadd tak",
-  "Bina kisi silicone ke itni soft feel",
-  "Roots itni strong feel hoti hain wash ke baad",
-  "Har ladki ko try karna chahiye ye ritual",
-  "Best amla powder online, hands down!"
+  "Pehli baar bina milawat ka authentic amla powder mila",
+  "Baal bilkul silky, soft aur manageable ho gaye",
+  "Ekdum original Ayurvedic hair pack hai",
+  "Sunday hair pack ritual ban gaya hai mera",
+  "Scalp par jo thanda sukoon milta hai, amazing!",
+  "Wash out karna bohot aasan hai, zero grit",
+  "200g jar ki quality aur packaging 10/10 hai",
+  "Clean water ke saath smooth paste banta hai",
+  "Natural black tones me rich gloss dekhne layak hai",
+  "Mummy ko bhi iski purity bohot pasand aayi",
+  "Dry lengths bilkul soft aur shiny feel hoti hain",
+  "Silicone wale mask se lakh guna behtar hai",
+  "₹234 ke hisab se poora paisa vasool product",
+  "Ekdum fresh dried amla ki earthy khushboo aati hai",
+  "Kangi bina kisi uljhan ke smooth glide karti hai",
+  "Pack ke directions follow kiye, results awesome hain",
+  "Pre-wash hair pack ke liye best botanical powder",
+  "Ghar pe banaya hua natural Ayurvedic spa jaisa feel",
+  "Dry spoon se use karo, jar me powder ekdum fresh rehta hai",
+  "Zero chemical, pure Phyllanthus emblica fruit powder",
+  "Lightweight bounce aur natural luster milta hai"
 ];
 
 const HI_TITLES_4 = [
-  "Accha powder hai, bas wooden spoon hona chahiye tha",
-  "Results bohot ache hain, dhone me thoda time lagta hai",
-  "Dahi ke saath lagao toh best hai, paani me thoda dry",
-  "Quality 10/10 hai, smell thodi earthy hai",
-  "Baal soft hote hain, bas rinse acche se karna padta hai",
-  "3 hafte me hair fall kam hua, patience chahiye",
-  "Packaging acchi hai, jar thoda bada hona chahiye",
-  "Pure amla hai, application thodi messy ho sakti hai"
+  "Accha hair pack hai, bas wooden scoop hona chahiye tha",
+  "Shine bohot achi aati hai, rinse dhang se karna padta hai",
+  "Quality 10/10 hai, earthy khushboo thodi strong hai",
+  "Baal bohot soft hote hain, dry spoon use karna zaroori hai",
+  "₹234 me value great hai, lagane me thoda time lagta hai",
+  "Pehle strand test zaroor karein, baal kafi shiny hote hain",
+  "Fresh paste banana padta hai, par softness kamaal ki hai",
+  "Airtight jar accha hai, rinse ke waqt thoda zyada paani lagta hai"
 ];
 
 const HI_TITLES_3 = [
-  "Powder accha hai par results aane me 1.5 month laga",
-  "Khushboo bohot herbal hai, aadat hone me time lagta hai",
-  "Bina dahi ya oil ke lagaya toh baal thode rough lage",
-  "Authentic hai par har hafte paste banana thoda tedious hai",
-  "Messy application hai, par pure Ayurvedic lagta hai"
+  "Pure amla hai par weekly paste banana thoda tedious hai",
+  "Khushboo kaafi earthy hai, aadat hone me time lagta hai",
+  "Hair pack accha hai, par normal wash routine alag se chahiye",
+  "Fine powder hai, scoop karte waqt dhyan rakhna padta hai",
+  "Patience chahiye prepare karne me, par botanical pure hai"
 ];
 
 const HI_HOOKS = [
-  "Maine 3 hafte pehle use karna shuru kiya tha. Pehle wash ke baad hi hair shedding me 50% drop dekha.",
-  "Dahi aur thoda sa aloe vera gel mix karke paste banati hu. Baal itne silky aur bouncy lagte hain jaise spa karwaya ho.",
-  "Bangalore aane ke baad hard water ki wajah se mere baal guchhon me jhad rahe the. Is amla mask ne mere baal bacha liye.",
-  "Open karte hi fresh dried amla ki authentic mehak aati hai. Market me jo milte hain unme mitti aur milawat hoti hai, par ye 100% pure hai.",
-  "Post pregnancy hair fall se main bohot pareshan thi. Mere hairline pe chote baby hairs aane lage hain 6 weeks ke andar.",
-  "Mere baal bohot dull aur frizzy the heat styling ki wajah se. NatureMist ke amla powder ne natural luster wapas la diya.",
-  "Main Sunday ko dahi aur amla powder ka paste banake 30 minutes rakhta hu. Scalp bilkul clean aur cool ho jati hai.",
-  "Pehle comb karte waqt bathroom ke floor pe baal hi baal bikhre rehte the. Ab comb me mushkil se 2-3 baal aate hain.",
-  "Bohot finely milled powder hai. Paani me mix karne par bilkul smooth paste banta hai, koi lumps ya dali nahi banti.",
-  "Scalp par jo dry itchiness aur dandruff rehta tha change of weather me, wo 2 washes ke baad hi poora saaf ho gaya.",
-  "Meri mummy ne recommend kiya tha ki chemical conditioners chhod kar amla use karu. Results dekh ke main khud hairan hu.",
-  "Premature white hair ka issue shuru ho raha tha temples pe. Amla ke antioxidant properties se dark hair colour maintain rehta hai.",
-  "Ye powder bilkul lightweight hai aur baalon ko chipchipa banaye bina natural volume aur bounce deta hai.",
-  "Maine doosre brands ke amla powder use kiye the par unme kankar rehte the. NatureMist me zero grit hai, ek wash me clean ho jata hai.",
-  "Castor oil aur thoda sa amla paste mix karke scalp massage karta hu. Roots itni firm aur strong feel hoti hain.",
-  "Curly hair pe products buildup ho jata hai. Ye mask scalp ko detox kar deta hai aur curls bilkul springy aur defined lagte hain."
+  "Maine clean water ke saath 2 chammach amla fruit pulp paste banaya pack ke directions ke mutabik.",
+  "Ye 100% pure Phyllanthus emblica fruit pulp hai, open karte hi ekdum fresh earthy aroma aati hai.",
+  "Sunday ko cleansing se pehle ise separate hair pack ki tarah lagati hu, baal bohot glossy aur soft ho jate hain.",
+  "₹234 me 200g pure amla powder milna aaj kal ke market me bohot honest pricing hai.",
+  "Pehle maine inner arm pe patch test kiya jaisa pack pe likha tha, bilkul safe aur gentle raha.",
+  "Mere temples pe thode grey baal the toh maine strand test kiya, unpe ek subtle natural rich tone aa gaya.",
+  "Micro-milled powder hai, clean paani me mix karte hi bina lumps ke smooth paste ban jata hai.",
+  "Ise pack ke timing ke mutabik rakh ke normal paani se rinse kiya, saara paste bina kisi grit ke nikal gaya.",
+  "200g jar ko hamesha tightly sealed rakhti hu aur dry spoon use karti hu taaki moisture na jaye.",
+  "Heat styling se mere baal bohot dull lag rahe the, is amla pack ne natural mirror-like shine restore kar di.",
+  "Har baar fresh paste banati hu aur bacha hua paste discard kar deti hu jaisa label pe instruction hai.",
+  "Scalp par lagane ke baad jo thanda-thanda sukoon milta hai, wo poore hafte ka stress mita deta hai.",
+  "Ise water se rinse karne ke baad usual cleansing routine karti hu, lengths bilkul featherlight aur soft lagti hain.",
+  "Bina kisi chemical perfume ya artificial color ke itni pure Ayurvedic quality dekh kar dil khush ho gaya.",
+  "Curly baalon me jo dryness rehti thi, is pack ke baad curls bohot soft, clumped aur bouncy feel hote hain.",
+  "Market ke branded hair masks se lakh guna behtar hai, zero silicone buildup ke sath natural gloss milta hai.",
+  "Paani se rinse karne ke baad kangi itni aasaani se nikal jaati hai bina kisi uljhan ke.",
+  "Mummy ne powder check kiya aur bola ki ekdum authentic amla ki sukhi pulp ka powder hai.",
+  "₹234 ka 200g pack weekly use pe aaram se 1.5 - 2 mahine chalta hai, value for money 100% hai.",
+  "Is amla pack ko apne regular wash routine se pehle lagana mere weekend self-care ka best hissa ban gaya hai."
 ];
 
 const HI_MIDDLES = [
-  "Baal sukhte hi mirror-like shine aati hai aur touch karne me makhmal jaise soft lagte hain.",
+  "Wash out karna bohot simple hai, paani dhaalne se hi saara paste bina kisi sand ya residue ke nikal jata hai.",
   "Kangi bina kisi uljhan ke aasaani se nikal jaati hai aur baalon me koi tangling nahi hoti.",
+  "Dhoop me baalon ka natural black tone itna rich aur reflective dikhta hai jaise salon treatment karwaya ho.",
   "Scalp par jo thanda-thanda sukoon milta hai lagane ke baad, wo stress poora khatam kar deta hai.",
-  "Dhoop me baal naturally black aur glossy dikhte hain bina kisi artificial serum ke.",
-  "Roots ki pakad kafi strong lagti hai aur ponytail pehle se dense mehsoos hoti hai.",
-  "Wash out karna bohot simple hai, paani dhaalne se hi saara paste bina kisi residue ke nikal jata hai.",
-  "Baalon ki elasticity aur bounce dekh kar meri saari friends ne pucha ki kaun sa treatment liya hai."
+  "Jar me clean dry spoon use karna zaroori hai taaki andar paani na jaye aur powder fresh rahe.",
+  "Grey baalon pe maine strand test karke check kiya, results safe aur bohot natural lage.",
+  "Baalon ko chipchipa banaye bina natural volume aur manageable softness deta hai.",
+  "Ye separate hair-pack step ki tarah kaam karta hai, iske baad apna regular wash routine kar leti hu.",
+  "Lengths bohot soft aur smooth feel hoti hain, cuticles bilkul well-conditioned lagte hain.",
+  "Pura botanical powder hai, koi artificial fragrance ya chemicals ka naam-o-nishan nahi hai."
 ];
 
 const HI_CONCLUSIONS_5 = [
-  "Sach me paisa vasool product hai! Dubara order zaroor karungi.",
-  "Ayurvedic care chahiye toh आंख band karke le lo, 10/10 recommendation.",
-  "Ab chemical shampoo aur mask se hamesha ke liye tauba. Pure botanical magic!",
-  "Mummy aur meri dono ki hair fall problem solve ho gayi. Very happy!",
+  "Sach me paisa vasool product hai! ₹234 me aisi pure quality milna rare hai. 10/10 recommendation!",
+  "Ghar pe banaya hua authentic Ayurvedic hair pack jaisa feel hota hai. Loved it completely!",
   "Best amla powder in the Indian market right now. Quality me koi compromise nahi hai.",
-  "Maine refill jar already cart me add kar diya hai. Must try for everyone!",
-  "Ghar pe banaya hua natural spa jaisa feel hota hai. Loved it completely!"
+  "Mummy aur meri dono ki favorite ban chuki hai. Dubara order zaroor karenge!",
+  "Pure botanical hair pack chahiye toh aankh band karke le lo, totally worth every rupee of ₹234!",
+  "Ayurvedic care ke liye NatureMist ka ye 200g jar best investment hai.",
+  "Lengths itni soft ho jati hain ki conditioner ki zaroorat hi nahi lagti. Truly awesome!"
 ];
 
 const HI_CONCLUSIONS_4 = [
-  "Baal bohot soft aur shiny ho jaate hain. Bas pack ke andar ek chhota measuring spoon de dete toh aur acha hota.",
-  "Results kafi badiya hain. Paani se acche se rinse karna padta hai taaki paste baalon me na rahe.",
-  "Very good powder. Agar aapke baal dry hain toh paani ki jagah dahi me mix karein, zabardast result aayega.",
-  "Thoda herbal earthy smell hai par baal itne achhe ho jaate hain ki smell matter nahi karti. Definitely worth it.",
-  "Overall bohot accha hai. Delivery ke waqt jar ka dhakkan thoda tight tha, but powder quality is awesome."
+  "Product bohot accha hai aur baal soft hote hain. Bas jar me ek chhota wooden spoon hona chahiye tha.",
+  "Results kamaal ke hain. Paani se thoroughly rinse karna zaroori hai taaki poora paste nikal jaye.",
+  "Earthy aroma shuru me thodi strong lagti hai, par baalon ki softness aur gloss dekh kar worth it lagta hai.",
+  "₹234 me bohot accha 200g jar hai. Bas fresh paste banana aur dry spoon use karna dhyan rakhein.",
+  "Lid thodi tight thi packaging me, par andar ka powder ekdum pure aur fine fruit pulp quality hai."
 ];
 
 const HI_CONCLUSIONS_3 = [
-  "Powder pure hai par results aane me kam se kam 5-6 hafte ka waqt lagta hai. Consistency zaroori hai.",
-  "Acche se work karta hai scalp pe, lekin bina conditioner ya dahi ke baal thode stiff lag sakte hain.",
-  "Herbal smell thodi strong hai jo dry hone ke baad bhi thodi der rehti hai. Baaki hair fall pe acha effect hai.",
-  "Application thodi messy ho jaati hai agar paste patla ban jaye. Applicator brush se lagana behtar hai."
+  "Pure amla powder hai, par har hafte fresh paste prepare karna aur rinse karna thoda time-consuming hai.",
+  "Khushboo kaafi earthy aur traditional hai. Hair pack ke baad usual cleanser se wash zaroor karein.",
+  "Accha botanical powder hai, par results ke liye consistent weekly hair pack routine maintain karni padegi."
 ];
 
 // -------------------------------------------------------------
@@ -436,8 +430,8 @@ function generateSingleReview(isHinglish, rating) {
     }
   }
 
-  // Realistic date between Nov 2024 and Sep 2026
-  const date = randomDate(2024, 11, 2026, 9);
+  // Realistic date between Jan 2025 and 24 Oct 2026
+  const date = randomDate(2025, 1, 2026, 10, 24);
   const fullName = generateUniqueName();
   const email = generateUniqueEmail(fullName);
 
@@ -475,7 +469,7 @@ function toCsvRow(r) {
 }
 
 function main() {
-  console.log(`Generating ${TARGET_TOTAL} NatureMist Amla Powder reviews...`);
+  console.log(`Generating ${TARGET_TOTAL} NatureMist Amla Powder reviews aligned with published details (24 Oct 2026)...`);
 
   // Target ratings:
   // ~82.5% 5-star (825)
@@ -492,8 +486,8 @@ function main() {
   ];
   shuffle(ratingsList);
 
-  // Language split: ~55% English, ~45% Hinglish
-  const hinglishRatio = 0.45;
+  // Language split: ~52% English, ~48% Hinglish
+  const hinglishRatio = 0.48;
 
   const reviews = [];
   for (let i = 0; i < TARGET_TOTAL; i++) {
@@ -510,13 +504,13 @@ function main() {
   const header = 'title,body,rating,review_date,reviewer_name,reviewer_email,product_id,product_handle';
   const csvContent = [header, ...reviews.map(toCsvRow)].join('\n') + '\n';
 
-  // 1. Write to new CSV file requested: amla_only_1000_reviews_judgeme.csv
+  // 1. Write to amla_only_1000_reviews_judgeme.csv
   fs.writeFileSync(NEW_CSV_FILE, csvContent, 'utf8');
-  console.log(`Created new CSV file: ${NEW_CSV_FILE} with ${reviews.length} reviews.`);
+  console.log(`Created: ${NEW_CSV_FILE} with ${reviews.length} reviews.`);
 
-  // 2. Also update bulk_reviews_judgeme.csv so user can use either file seamlessly
+  // 2. Also write to bulk_reviews_judgeme.csv
   fs.writeFileSync(BULK_CSV_FILE, csvContent, 'utf8');
-  console.log(`Updated existing file: ${BULK_CSV_FILE} with ${reviews.length} reviews.`);
+  console.log(`Updated: ${BULK_CSV_FILE} with ${reviews.length} reviews.`);
 
   // Stats
   const ratingsCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };

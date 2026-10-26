@@ -21,6 +21,7 @@ export function VideoReviewModal({
 }) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<HTMLVideoElement>(null);
   const { addToCart, products } = useStore();
   const media = useMemo(
     () => getPlayableVideoMedia(video),
@@ -48,7 +49,7 @@ export function VideoReviewModal({
         : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
+    closeButtonRef.current?.focus({ preventScroll: true });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -76,9 +77,26 @@ export function VideoReviewModal({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
-      previousFocus?.focus();
+      previousFocus?.focus({ preventScroll: true });
     };
   }, [onClose, video]);
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player || media?.kind !== "video") return;
+    // Restore the source after React's development effect cleanup/replay too.
+    if (player.getAttribute("src") !== media.url) player.src = media.url;
+    const pauseWhenHidden = () => {
+      if (document.hidden) player.pause();
+    };
+    document.addEventListener("visibilitychange", pauseWhenHidden);
+    return () => {
+      document.removeEventListener("visibilitychange", pauseWhenHidden);
+      player.pause();
+      player.removeAttribute("src");
+      player.load();
+    };
+  }, [media]);
 
   if (!video) return null;
 
@@ -96,7 +114,7 @@ export function VideoReviewModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
@@ -134,11 +152,13 @@ export function VideoReviewModal({
             />
           ) : media?.kind === "video" ? (
             <video
+              key={media.url}
+              ref={playerRef}
               src={media.url}
               controls
               autoPlay
               playsInline
-              preload="auto"
+              preload="none"
               poster={video.image}
               crossOrigin={captionsUrl ? "anonymous" : undefined}
               className="size-full object-contain"

@@ -1,0 +1,356 @@
+NATUREMIST — PRODUCTION READINESS AUDIT
+24 October 2026 (Asia/Calcutta)
+Website: https://naturemist.shop
+Local revision at completion: 46c1002
+
+VERDICT
+Do not approve the current custom checkout for production yet. Payment amount
+validation, capture verification, duplicate-order prevention and customer-data
+access need correction first. This is a readiness assessment, not evidence that
+the store has been compromised or that these flaws have been exploited.
+
+The earlier release-readiness report established build and regression health.
+It did not establish security readiness. The blockers below supersede its
+recommendation to proceed directly to deployment.
+
+SCOPE AND EVIDENCE
+- Read local storefront, checkout/payment/order, reviews, tracking, catalogue,
+  quiz/content, loading/3D, navigation, SEO and deployment code.
+- Inspected public production pages in Chrome, including a 390x844 viewport.
+- Checked 15 public routes over HTTP; all returned 200 in the initial sample.
+- Added one Amla to the live cart, inspected checkout, then removed it. The cart
+  was verified empty. No real payment, order or review was submitted.
+- Executed actual local API handlers with fully mocked gateway/Shopify services.
+  Eight unsafe behaviours were reproduced. No live customer records were read.
+- Ran a production dependency audit and inspected the actual public Amla GLB.
+- The live version changed during the audit: a fresh page showed the updated
+  quiz and category filters. These are NOT reported as missing from production.
+- The final HTTP remeasurement timed out from this environment. Asset figures
+  below describe the earlier snapshot, not a guaranteed post-update baseline.
+- The exact deployed server revision, gateway settings, Vercel WAF/alerts,
+  fulfilment settings and real payment lifecycle were not independently audited.
+
+Evidence files: audit-evidence-2026-10-24/ in this directory.
+Source references below are relative to the project root.
+
+PRIORITY 0 — PAYMENT AND CUSTOMER-DATA BLOCKERS
+
+01. Browser controls the gateway amount and Shopify line prices
+Status: confirmed local code and isolated reproduction. Severity: critical.
+Sources:
+  frontend/src/app/api/razorpay/create-order/route.ts:33
+  frontend/src/app/api/shopify/order/route.ts:248
+The create-order endpoint accepts amountPaise from the request rather than
+recalculating a trusted server cart. The Shopify order endpoint similarly uses
+browser-provided item prices and shipping fees. Frontend checks cannot protect
+these public APIs. The mock accepted a 100-paise gateway amount without a server
+cart and a browser-supplied one-rupee order line.
+Impact: manipulated totals and a payment that does not cover the ordered goods.
+Required fix: persist a server checkout intent; validate variant IDs, quantity,
+inventory, price, discount, shipping, tax and currency against trusted data.
+Acceptance: changing any client total cannot alter the server amount or produce
+an order for a different cart. A changed cart requires a new/revalidated intent.
+
+02. Payment verification fails open and is not bound to the order
+Status: confirmed local code and isolated reproduction. Severity: critical.
+Sources:
+  frontend/src/app/api/razorpay/verify-payment/route.ts:76
+  frontend/src/app/api/shopify/order/route.ts:80
+The verifier defaults to captured. A failed gateway lookup can still return
+verified=true and captured. It also accepts authorized payments. The order API
+checks the signature but independently marks an online order paid without
+verifying captured amount/currency against a server-owned cart and gateway order.
+The mock returned verified/captured after a simulated gateway HTTP 503.
+Required fix: fail closed on lookup failure; confirm the required capture state,
+amount, currency and gateway order against the stored checkout intent. Perform
+this in the order-creation path too; a prior browser verification is insufficient.
+Acceptance: authorized, failed, mismatched and unavailable gateway responses
+cannot create a paid order. Genuine pending states remain recoverable.
+
+03. Payment proof can be replayed to create duplicate paid orders
+Status: confirmed local code and isolated reproduction. Severity: critical.
+Source: frontend/src/app/api/shopify/order/route.ts
+Two requests with the same valid mock signature created two paid Shopify orders.
+There is no durable uniqueness/idempotency guard for the payment and intent.
+Required fix: atomic persistent state with unique gateway payment/intent IDs;
+return the existing order on retries. Coordinate browser and webhook processing.
+Acceptance: concurrent requests, refreshes and repeated webhooks produce exactly
+one Shopify order and return the same result.
+
+04. Unsupported payment methods bypass the expected proof requirement
+Status: confirmed local code and isolated reproduction. Severity: high.
+Source: frontend/src/app/api/shopify/order/route.ts:50
+The TypeScript request cast does not validate runtime input. Unknown method
+strings bypass both the exact COD-disabled check and online-payment checks.
+UPI without a payment ID also avoids the online branch. This creates pending
+orders, not verified paid orders, but enables unwanted orders and policy bypass.
+Required fix: strict runtime schema, supported method enum, per-method proof
+requirements, bounded quantities/body sizes and server-side policy enforcement.
+Acceptance: invalid methods and incomplete online proof return a controlled 4xx
+without any Shopify mutation.
+
+05. Review verification and tracking expose customer/order information
+Status: confirmed local code and isolated reproduction. Severity: high.
+Sources:
+  frontend/src/app/api/reviews/verify-buyer/route.ts:94
+  frontend/src/app/api/reviews/verify-buyer/route.ts:209
+  frontend/src/app/api/shopify/track-order/route.ts:44
+An unverified email can be submitted to the buyer-check endpoint, which returns
+customer name and order ID. A slug-only request with an empty product name can
+match an unrelated line through an empty substring comparison. Tracking accepts
+an order ID without establishing ownership and returns purchase/destination
+information. Together these form a credible customer-data exposure path.
+Required fix: authenticated customer ownership, email OTP, or scoped unguessable
+tracking tokens; remove public buyer-check identity/order-ID disclosure; use
+exact product identity matching and abuse controls.
+Acceptance: another person's order is inaccessible without authorized ownership;
+knowing an email or order ID alone is insufficient. No production data was used
+to reproduce this finding.
+
+PRIORITY 1 — RELIABILITY, PATCHES AND CUSTOMER TRUST
+
+06. Payment-to-Shopify recovery depends on the customer's browser
+Status: confirmed code gap. Severity: high.
+Sources:
+  frontend/src/features/checkout/checkout-form.tsx:390
+  frontend/src/features/checkout/checkout-preview.tsx
+After payment, the browser verifies and creates the Shopify order. No durable
+Razorpay webhook/reconciliation pipeline was found. The UI does show a sync-
+pending warning and retains the cart when sync fails, which is useful, but a
+closed tab or network failure can still leave money collected without an order.
+Confirmation state is held in React and can disappear on refresh. A purchase
+analytics event is emitted even when Shopify synchronization is pending.
+Required fix: signed gateway webhook, durable checkout state, idempotent retries,
+reconciliation/alerts and a refresh-safe order status page. Define analytics
+events distinctly for captured payment and successfully created order.
+Acceptance: simulate payment success followed by tab closure, Shopify outage and
+webhook retries; recover one correct order without charging again.
+
+07. Production dependencies have published security advisories
+Status: npm audit confirmed; exploitability depends on the deployed paths.
+Severity: high-priority patch work.
+Four affected package entries: next (critical), sharp (high), source-map-js
+(high), sanitize-html (moderate). These are package counts, not counts of CVEs.
+Installed Next was 16.3.0; npm proposed 16.4.3. Sharp was 0.35.3.
+Do not assume every advisory is reachable: Windows-specific issues do not
+describe Vercel Linux, some next/og issues require attacker-controlled SVG, and
+managed image optimization infrastructure may differ from the local runtime.
+Required fix: update supported patched versions and aligned tooling; rerun audit,
+build, checkout and image rendering checks. Do not blindly apply force updates.
+Acceptance: resolve applicable advisories or document a specific, verified
+non-applicability assessment and compensating control.
+
+08. Shipping promises and charged shipping disagree
+Status: confirmed live and code. Severity: high business impact.
+Source: frontend/src/features/checkout/checkout-form.tsx:159
+Live policy: Rs80 below Rs999 and free above the threshold. Live checkout for
+one Rs234 Amla: standard FREE, total Rs234; express Rs149. Checkout and policy
+also give different dispatch expectations. Shipping is hardcoded in the form.
+Required fix: one authoritative rate/eligibility/policy source; include address,
+discount and threshold calculations server-side before payment.
+Acceptance: below/at/above-threshold baskets and supported delivery locations
+show identical shipping in policy, checkout, gateway amount and Shopify order.
+
+09. Review verification and submission are not dependable
+Status: confirmed code; one public test review observed. Severity: high trust.
+Sources:
+  frontend/src/app/api/reviews/verify-buyer/route.ts:153
+  frontend/src/features/reviews/write-review-modal.tsx:284
+A hardcoded QA buyer bypass works outside an explicit test environment. Purchase
+matching scans only the latest 100 orders, uses permissive text matching and
+does not sufficiently establish a qualifying paid purchase. Older real buyers
+can be rejected. Submission does not check the Judge.me response status and
+can report success/create a local verified review after a remote failure.
+Video previews use temporary blob URLs rather than durable uploaded media.
+Live Amla page visibly included “Test Reviewer” / “Testing API Review” / “This
+is a test review submission.” This does not establish that other reviews are fake.
+Required fix: remove test bypass from production; verified server-side identity
+and purchase matching; remote success acknowledgment; supported media uploads;
+remove the identified test content through the normal review-management process.
+Acceptance: failed submissions show an actionable error, genuine old purchases
+work, unrelated/unverified users cannot acquire a verified badge, and uploaded
+media survives a fresh browser session.
+
+10. FAQ and product information conflict
+Status: confirmed live and source. Severity: high content/trust impact.
+Source: frontend/src/features/faqs/faqs-page.tsx:17
+The FAQ claims third-party testing of every batch and absolute hair/scalp/skin
+safety, and gives a generic Amla-or-Shikakai application recipe/contact time.
+Product information says the current Amla pack is for hair and that skin/body
+suitability is not established. Other FAQ claims include packaging, shelf life
+and processing/provenance details that were not supported by records supplied
+for this audit. The terms fallback also includes lab-tested claims.
+Required fix: centralize approved product-specific claims and label directions.
+Publish batch testing, shelf life and packaging claims only with supporting
+records. Keep Ayurvedic/research context separate from finished-product claims.
+Acceptance: FAQ, quiz, PDP, policies, labels and posters agree. Each product has
+manufacturer-confirmed directions where sold for that purpose; generic research
+does not automatically authorize face/body use or a contact time.
+This audit does not certify scientific efficacy or regulatory compliance.
+
+PERFORMANCE AND MOBILE READINESS
+
+11. The 3D jar is a credible mobile graphics-memory pressure source
+Status: asset measured; memory estimated; real-device profiling still required.
+Source: frontend/src/features/catalog/product-model.tsx
+Public Amla GLB: 3,343,436 bytes (about 3.19 MiB), with five 2048x2048 textures.
+Estimated RGBA texture memory including mipmaps: about 106.7 MiB. This is NOT a
+measured GPU allocation; actual usage depends on device, format and renderer.
+The jar reached ready in the browser, so it is not universally unavailable.
+Required fix: optimize mobile texture resolution/materials/geometry, load only
+visible models, keep a small active-model budget, pause offscreen rendering and
+provide graceful loading/context-loss recovery. The code already lazy-loads the
+viewer and contains useful render scheduling; preserve those measures.
+Acceptance: profile a real lower/mid-range Android and iPhone; test repeated
+navigation, scroll, rotation, low-memory conditions and WebGL context recovery.
+
+12. Large page data and JavaScript can delay interaction
+Status: measured initial live snapshot, before the later version change.
+Sources: frontend/src/app/layout.tsx:15; frontend/src/lib/shopify/storefront.ts
+Initial homepage HTML: 501,808 decoded bytes (about 490 KiB). Amla page:
+550,449 decoded bytes (about 538 KiB). Fifteen initial homepage scripts totalled
+947,466 decoded bytes (about 925 KiB), excluding lazy 3D/other later requests.
+Decoded sizes are not compressed network transfer sizes. The global store
+serializes rich catalogue data on routes that do not need all product details.
+Required fix: minimal global product/cart data, route-specific detail fetching,
+lazy below-fold features and measured image/script budgets.
+Acceptance: compare fresh production bundles and real-device LCP, INP and CLS
+before/after. No Lighthouse score or Core Web Vitals result was claimed here.
+
+13. Full-page loading gate can make the website feel stalled
+Status: code risk; not independently timed on real phones.
+Source: frontend/src/shared/ui/page-loading.ts
+The gate waits on visible images/fonts and polls visibility/style state, with
+deadlines of about 8 seconds at startup and 12 seconds for navigation. Slow
+assets can keep usable content hidden and repeated checks add main-thread work.
+Required fix: show usable content promptly, localize skeletons/load indicators,
+and minimize repeated layout/style checks. Trace scroll/main-thread performance
+before assigning blame to smooth-scrolling code; touch synchronization is already
+disabled in Lenis and there is on-demand animation scheduling.
+Acceptance: cold load and navigation stay usable on slower networks, and touch,
+wheel, keyboard and reduced-motion paths are checked on real devices.
+
+CONTENT, NAVIGATION AND SEO
+
+14. Essential footer and checkout links are missing
+Status: live and code confirmed. Priority: medium.
+Source: frontend/src/widgets/site-chrome/site-footer.tsx:51
+Live footer showed contact details and only a Search navigation link pointing to
+checkout.naturemist.shop/search. A nonempty Shopify menu replaces the complete
+fallback and is sliced to three entries. Terms, Privacy, Shipping and Tracking
+are difficult to find despite existing pages. Checkout policy names are plain
+text rather than clickable links.
+Fix/acceptance: persistent essential policy/contact/tracking links independent
+of an incomplete menu, correct headless URLs, keyboard-accessible checkout links.
+
+15. Search metadata is not fully branded or aligned
+Status: initial live HTTP snapshot plus source. Priority: medium.
+Sources: frontend/src/app/layout.tsx:29; frontend/src/app/sitemap.ts
+Titles include “My Store”; /combos uses the generic homepage title. The initial
+combos response had no server-rendered H1, which is not proof the hydrated DOM
+also lacks one. Sitemap omits /combos, /faqs, /contact and /reviews. Canonicals
+point to www while Chrome navigation resolves to the non-www host.
+Fix/acceptance: NatureMist brand metadata, distinct page titles/descriptions,
+useful server-rendered headings, complete intentional sitemap and one canonical
+host consistently used by redirects, metadata and URLs. Browser access worked;
+a local HTTP-client certificate error is not evidence of a production TLS fault.
+
+16. Newsletter capture and address-saving promises are incomplete
+Status: source confirmed. Priority: medium.
+Source: frontend/src/features/newsletter/newsletter-form.tsx:17
+Newsletter submission reports preview behaviour and does not store the address.
+Checkout's save-address checkbox has no durable implementation. Contact uses
+mailto and correctly states that the website itself does not send the message,
+but this depends on the visitor having an email application configured.
+Fix/acceptance: implement acknowledged subscriptions/consent and address storage,
+or remove unsupported promises. Consider a dependable contact submission service.
+
+17. Catalogue failures can resemble an empty real shop
+Status: source-confirmed fallback; no production outage demonstrated.
+Sources: frontend/src/lib/shopify/storefront.ts:1643;
+  frontend/src/widgets/home/home-page.tsx:34
+Some fetch failures return an empty catalogue; the UI can say a new harvest is
+coming instead of reporting temporary unavailability. Strict runtime paths may
+throw instead. Missing configuration can also select preview behaviour.
+Fix/acceptance: validate production configuration, retain appropriate last-known
+good catalogue data, distinguish unavailable data from genuinely empty stock,
+and alert on failures. Test Shopify unavailability in a controlled environment.
+
+OPERATIONS AND RELEASE CONTROLS
+
+18. Public sensitive APIs need stronger abuse and failure controls
+Status: application-code gap; edge protections not inspected. Priority: high.
+No application rate limiting was found on the payment/order/verification/tracking
+paths. Critical fetches lack consistent timeouts and several request paths lack
+bounded runtime schemas/body limits. This does not prove Vercel has no WAF rules.
+Fix/acceptance: layered limits, server schemas, bounded inputs/timeouts, useful
+non-sensitive errors, and monitored abuse thresholds. Preserve working cart
+body limits and webhook validation already present.
+
+19. Shopify Admin REST versions need a controlled migration
+Status: source confirmed. Priority: medium.
+Order, tracking and review paths hardcode API version 2024-01. Unsupported Shopify
+versions fall forward, so actual behaviour may change without a deliberate code
+upgrade. REST Admin is legacy.
+Fix/acceptance: select a currently supported version, verify the actual response
+version, plan GraphQL migration, and test order/tracking/review contracts.
+
+20. Monitoring, CI and recovery are not sufficiently demonstrated
+Status: repository gaps; hosting configuration not inspected. Priority: high.
+No checked-in CI workflow was found. Logging is primarily console-based; no
+application error/checkout reconciliation alert pipeline was found. External
+hosting alerts, backups and rollback configuration remain unverified.
+Fix/acceptance: automated build/regression/security gates; checkout-failure and
+paid-without-order alerts; documented reconciliation, rollback and recovery;
+production configuration checks and deployment-version visibility.
+
+21. Browser security policy can be strengthened
+Status: sampled live headers. Priority: medium.
+HSTS, nosniff, frame denial and referrer policy were present. Content-Security-
+Policy was absent in the sample.
+Fix/acceptance: introduce a tested CSP compatible with Razorpay and Judge.me,
+starting with reporting if appropriate; verify legitimate checkout still works.
+
+WHAT ALREADY WORKED
+- Earlier lint, TypeScript, Next build, compatibility/Sites build and 503 tests
+  passed. No production behaviour was changed in this audit, so those broad
+  checks were not rerun solely for documentation.
+- All 15 sampled public routes responded successfully.
+- Product browsing, cart add/remove and displayed Amla item price worked.
+- The updated quiz/category controls appeared on a freshly loaded live page.
+- The jar loaded successfully in the sampled browser session.
+- Sampled mobile pages had no horizontal overflow; header controls were usable.
+- Cart cookies/validation and Shopify webhook signature/body protections provide
+  useful existing safeguards. Sampled browser error logs were empty.
+
+RECOMMENDED IMPLEMENTATION ORDER
+1. Secure pricing/payment/order creation and customer-data ownership (01–05).
+2. Add durable payment recovery and patch applicable dependencies (06–07).
+3. Align shipping, reviews and approved product information (08–10).
+4. Profile/optimize mobile 3D, initial payload and loading gates (11–13).
+5. Complete navigation, SEO, capture flows and resilience (14–21).
+6. In test mode verify success, decline, pending capture, timeout, duplicate
+   requests/webhooks, Shopify outage/recovery, refresh, cancellation and refunds.
+   Validate tax/discount/shipping and inventory handling end-to-end.
+7. Deploy the verified release, run controlled smoke checks and monitor actual
+   transactions. Preserve old botanical_combo entries until the replacement is
+   deployed and verified; this audit did not remove or alter any entries.
+
+LIMITATIONS
+This is a broad code and public-site audit, not a formal penetration test, a
+full accessibility certification, a legal/claims approval or a load test. No
+real Android/iPhone Safari performance trace, customer database inspection,
+live transaction or gateway/dashboard configuration inspection was performed.
+Source defects are locally reproducible; exact live server exploitability was
+deliberately not tested. No changes were pushed, deployed or written to Shopify
+by this audit. Another process/user changed the revision/live content during it.
+
+PRIMARY EXTERNAL REFERENCES
+Razorpay payment security and server-side amount verification:
+  https://razorpay.com/security/checklist
+Razorpay integration and payment capture lifecycle:
+  https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/integration-steps/
+Shopify API version fall-forward behaviour:
+  https://shopify.dev/docs/api/admin-rest/usage/versioning
+Next.js publisher advisory (applicability must be checked):
+  https://github.com/vercel/next.js/security/advisories/GHSA-2464-fhr4-w9xw

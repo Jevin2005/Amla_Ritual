@@ -196,7 +196,7 @@ test("visible image decoding starts together and newly streamed fallback resets 
 
 test("missing content and a stuck font or image request have bounded startup waits", async () => {
   const missing = fixture({ contentPresent: false });
-  await missing.advance(7999);
+  await missing.advance(2499);
   assert.deepEqual(missing.phases, []);
   await missing.advance(1);
   assert.deepEqual(missing.phases, ["idle"]);
@@ -204,7 +204,7 @@ test("missing content and a stuck font or image request have bounded startup wai
   missing.cleanup();
 
   const fonts = fixture({ fonts: "loading" });
-  await fonts.advance(1499);
+  await fonts.advance(999);
   assert.deepEqual(fonts.phases, []);
   await fonts.advance(201);
   assert.deepEqual(fonts.phases, ["idle"], "font grace period cannot hold the site forever");
@@ -212,7 +212,9 @@ test("missing content and a stuck font or image request have bounded startup wai
 
   const image = fixture();
   image.content.images.push(image.element({ complete: false }));
-  await image.advance(8000);
+  await image.advance(1199);
+  assert.deepEqual(image.phases, [], "briefly allow the hero image to settle");
+  await image.advance(161);
   assert.deepEqual(image.phases, ["idle"]);
   assert.equal(image.timers.size, 0);
   image.cleanup();

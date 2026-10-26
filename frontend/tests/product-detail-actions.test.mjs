@@ -120,7 +120,7 @@ test("successful Buy Now navigates once and records the selected variant price",
   await new Promise((resolve) => setImmediate(resolve));
   assert.deepEqual(harness.calls, [[product.slug, 2, false, product.variants[1].id, product]]);
   assert.deepEqual(harness.routes, ["/checkout"]);
-  assert.deepEqual(harness.events, [["begin_checkout", {
-    item_id: product.variants[1].id, quantity: 2, value: 499, currency: "INR", mode: "in_app_checkout",
+  assert.deepEqual(harness.events, [["view_checkout", {
+    item_id: product.variants[1].id, quantity: 2, value: 499, currency: "INR", mode: "shopify_hosted",
   }]]);
 });

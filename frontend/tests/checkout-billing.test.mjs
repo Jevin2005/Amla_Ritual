@@ -4,214 +4,217 @@ import { buildSync } from "esbuild";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 
 const require = createRequire(import.meta.url);
 const { outputFiles } = buildSync({
   stdin: {
-    contents: 'export * from "./checkout-form.tsx"; export * from "./checkout-order-success.tsx"; export * from "./checkout-cart.ts";',
+    contents: 'export * from "./shopify-checkout.ts"; export * from "./checkout-cart.ts"; export * from "./checkout-preview.tsx";',
     resolveDir: fileURLToPath(new URL("../src/features/checkout/", import.meta.url)),
   },
   tsconfig: fileURLToPath(new URL("../tsconfig.json", import.meta.url)),
-  bundle: true,
-  platform: "node",
-  format: "cjs",
-  write: false,
-  external: ["react", "react/jsx-runtime", "next/script", "next/link", "@/features/store/store-provider", "@/shared/ui/page-scroll"],
-  define: { "process.env.NEXT_PUBLIC_ENABLE_COD": '"true"' },
+  bundle: true, platform: "node", format: "cjs", write: false,
+  external: ["react", "react/jsx-runtime", "next/link", "@/features/store/store-provider", "./checkout-order-summary"],
 });
-
+const allowedHosts = ["checkout.naturemist.shop", "zyv78m-p7.myshopify.com"];
 const item = {
   lineId: "line-amla", slug: "amla", productName: "Amla", variantId: "variant-amla",
-  variantTitle: "100 g", quantity: 2, availableForSale: true, pricePaise: 24975,
-  compareAtPricePaise: 29900, lineSubtotalPaise: 49950, lineTotalPaise: 44955,
-  discountAmountPaise: 4995, currencyCode: "INR",
+  variantTitle: "100 g", quantity: 2, availableForSale: true, quantityAvailable: 6,
+  pricePaise: 24975, compareAtPricePaise: 29900, lineSubtotalPaise: 49950,
+  lineTotalPaise: 44955, discountAmountPaise: 4995, currencyCode: "INR",
 };
 const cart = {
-  items: [item], subtotalPaise: 49950, totalPaise: 44955,
-  discountAmountPaise: 4995, currencyCode: "INR",
-};
-const customer = {
-  email: "buyer@example.com", phone: "9876543210", newsletter: false,
-  firstName: "Test", lastName: "Buyer", address1: "1 Garden Road", address2: "",
-  city: "Pune", province: "Maharashtra", zip: "411001", country: "India",
-  saveAddress: false, shippingMethod: "express", paymentMethod: "shopify",
+  checkoutUrl: "https://checkout.naturemist.shop/checkouts/old-cart?key=old",
+  items: [item], totalQuantity: 2, subtotalPaise: 49950, totalPaise: 44955,
+  discountAmountPaise: 4995, currencyCode: "INR", discountCodes: [],
+  subtotalEstimated: false, totalEstimated: true,
 };
 
-function loadCheckout({ currentCart = cart, refreshedCart = currentCart, paymentMethod = "shopify" } = {}) {
-  const errors = [];
-  const submissionStates = [];
-  const store = {
-    ...currentCart, cart: currentCart.items, source: "shopify", isCartBusy: false,
-    updateBuyerIdentity: async () => refreshedCart,
-    clearCart: async () => {}, track: () => {},
-  };
+function loadCheckout(overrides = {}) {
+  const compiled = { exports: {} };
   const fakeRequire = (name) => {
-    if (name === "@/features/store/store-provider") return { useStore: () => store };
-    if (name === "@/shared/ui/page-scroll") return { scrollPageTo: () => {} };
-    if (name === "next/script") return function MockScript() { return null; };
+    if (name in overrides) return overrides[name];
+    if (name === "./checkout-order-summary") return { CheckoutOrderSummary: () => null };
+    if (name === "@/features/store/store-provider") return { useStore: () => ({}) };
     if (name === "next/link") return function MockLink(props) { return React.createElement("a", props); };
-    if (name === "react") return {
-      ...React,
-      useState: (initial) => [
-        initial && typeof initial === "object" && "email" in initial ? { ...customer, paymentMethod } : initial,
-        (value) => {
-          if (typeof initial === "string") errors.push(value);
-          if (typeof initial === "boolean") submissionStates.push(value);
-        },
-      ],
-    };
     return require(name);
   };
-  const compiled = { exports: {} };
   new Function("require", "module", "exports", outputFiles[0].text)(fakeRequire, compiled, compiled.exports);
-  return { ...compiled.exports, errors, submissionStates };
+  return compiled.exports;
+}
+const { prepareShopifyCheckout, validateCheckoutUrl, hasCheckoutCartChanged } = loadCheckout();
+const prepare = (overrides = {}) => prepareShopifyCheckout({
+  source: "shopify", previousCart: cart, allowedHosts,
+  refreshCart: async () => structuredClone(cart), ...overrides,
+});
+function deferred() {
+  let resolve;
+  const promise = new Promise((yes) => { resolve = yes; });
+  return { promise, resolve };
 }
 
-function submitForm(CheckoutForm, onOrderSuccess = () => {}, shippingFeePaise = 14900) {
-  const tree = CheckoutForm({ onOrderSuccess, shippingFeePaise, onShippingChange: () => {} });
-  const form = tree.props.children.find((child) => child?.type === "form");
-  return form.props.onSubmit({ preventDefault() {} });
-}
+test("handoff waits for the latest Shopify cart and preserves its URL verbatim", async (t) => {
+  t.mock.method(globalThis, "fetch", () => { throw new Error("Checkout must not create a separate payment or order"); });
+  const pending = deferred();
+  let refreshes = 0;
+  let completed = false;
+  const result = prepare({ refreshCart: () => { refreshes += 1; return pending.promise; } });
+  result.then(() => { completed = true; });
+  await Promise.resolve();
+  assert.equal(refreshes, 1);
+  assert.equal(completed, false);
+  const fresh = { ...cart, checkoutUrl: "https://checkout.naturemist.shop/cart/c/fresh-token?key=a%2Fb%2Bc&locale=en-IN&buyer_identity%5Bcountry_code%5D=IN" };
+  pending.resolve(fresh);
+  assert.deepEqual(await result, { url: fresh.checkoutUrl, cart: fresh });
+  assert.equal(globalThis.fetch.mock.callCount(), 0);
+});
 
-test("buyer refresh requires review for changed totals, currency, discounts, or lines", () => {
-  const { hasCheckoutCartChanged } = loadCheckout();
-  assert.equal(hasCheckoutCartChanged(cart, structuredClone(cart)), false);
+test("changed totals, currency, discounts or lines require review before a second handoff", async () => {
   for (const changed of [
-    { ...cart, totalPaise: 44956 },
-    { ...cart, currencyCode: "USD" },
-    { ...cart, discountAmountPaise: 5000 },
+    { ...cart, totalPaise: 44956 }, { ...cart, subtotalPaise: 49951 },
+    { ...cart, currencyCode: "USD" }, { ...cart, discountAmountPaise: 5000 },
     { ...cart, items: [{ ...item, quantity: 3 }] },
     { ...cart, items: [{ ...item, variantId: "another-variant" }] },
-    { ...cart, items: [{ ...item, availableForSale: false }] },
-    { ...cart, items: [] },
-  ]) assert.equal(hasCheckoutCartChanged(cart, changed), true);
-  const twoLines = { ...cart, items: [item, { ...item, lineId: "line-second" }] };
+    { ...cart, items: [{ ...item, lineTotalPaise: 44956 }] },
+  ]) {
+    await assert.rejects(prepare({ refreshCart: async () => changed }), /Review the updated items and totals/);
+    assert.equal((await prepare({ previousCart: changed, refreshCart: async () => changed })).url, changed.checkoutUrl);
+  }
+  const twoLines = { ...cart, items: [item, { ...item, lineId: "second-line" }] };
   assert.equal(hasCheckoutCartChanged(twoLines, { ...twoLines, items: [...twoLines.items].reverse() }), false);
 });
 
-test("checkout does not start payment when the buyer refresh fails or changes the bag", async (t) => {
-  const requests = [];
-  t.mock.method(globalThis, "fetch", async (...args) => { requests.push(args); throw new Error("Unexpected payment request"); });
-  for (const refreshedCart of [null, { ...cart, totalPaise: 59955 }]) {
-    const { CheckoutForm, errors } = loadCheckout({ refreshedCart });
-    await submitForm(CheckoutForm);
-    assert.match(errors.at(-1), refreshedCart ? /review the updated order summary/ : /could not confirm your latest bag total/);
+test("refresh failure or expiry cannot fall back to the saved checkout URL", async () => {
+  await assert.rejects(prepare({ refreshCart: async () => null }), /could not confirm your latest bag/);
+  await assert.rejects(prepare({ refreshCart: async () => { throw new Error("Shopify unavailable"); } }), /Shopify unavailable/);
+  await assert.rejects(prepare({ refreshCart: async () => ({ ...cart, items: [] }) }), /bag is empty/);
+  await assert.rejects(prepare({ refreshCart: async () => ({ ...cart, checkoutUrl: null }) }), /temporarily unavailable/);
+});
+
+test("current availability and quantity limits are checked before checkout", async () => {
+  for (const changedItem of [
+    { ...item, availableForSale: false }, { ...item, quantity: 0 },
+    { ...item, quantity: 1.5 }, { ...item, quantity: 13, quantityAvailable: 100 },
+    { ...item, quantityAvailable: 1 }, { ...item, quantityAvailable: 0 },
+  ]) {
+    await assert.rejects(prepare({ refreshCart: async () => ({ ...cart, items: [changedItem] }) }), /unavailable items|available stock/);
   }
-  assert.equal(requests.length, 0);
+  const untracked = { ...cart, items: [{ ...item, quantityAvailable: null }] };
+  assert.equal((await prepare({ refreshCart: async () => untracked })).url, cart.checkoutUrl);
 });
 
-test("online checkout rejects totals below the minimum without increasing the charge", async (t) => {
-  const requests = [];
-  t.mock.method(globalThis, "fetch", async (...args) => { requests.push(args); throw new Error("Unexpected payment request"); });
-  const zeroCart = { ...cart, totalPaise: 0, discountAmountPaise: item.lineSubtotalPaise };
-  const { CheckoutForm, errors } = loadCheckout({ currentCart: zeroCart });
-  await submitForm(CheckoutForm, undefined, 0);
-  assert.match(errors.at(-1), /minimum total of ₹1\.00/);
-  assert.equal(requests.length, 0);
+test("only HTTPS checkout paths on explicitly trusted Shopify hosts are accepted", () => {
+  for (const value of [
+    null, "", "/checkouts/token", "not a URL",
+    "http://checkout.naturemist.shop/checkouts/token", "javascript:alert(1)",
+    "https://attacker.example/checkouts/token",
+    "https://checkout.naturemist.shop.attacker.example/checkouts/token",
+    "https://another.myshopify.com/checkouts/token",
+    "https://user:password@checkout.naturemist.shop/checkouts/token",
+    "https://checkout.naturemist.shop:444/checkouts/token",
+    "https://checkout.naturemist.shop/products/amla", "https://checkout.naturemist.shop/cart",
+    "https://checkout.naturemist.shop/cart/c",
+    "https://checkout.naturemist.shop/checkouts-elsewhere/token",
+    "https://checkout.naturemist.shop/checkouts/../products/amla",
+  ]) assert.throws(() => validateCheckoutUrl(value, allowedHosts), /temporarily unavailable/);
+  for (const value of [
+    "https://checkout.naturemist.shop/checkouts/token?key=exact%2Btoken",
+    "https://zyv78m-p7.myshopify.com/cart/c/token?key=exact%2Ftoken",
+  ]) assert.equal(validateCheckoutUrl(value, allowedHosts), value);
 });
 
-test("checkout sends the exact displayed total and blocks a different gateway amount", async (t) => {
-  t.mock.method(console, "error", () => {});
-  const requests = [];
-  t.mock.method(globalThis, "fetch", async (url, options) => {
-    requests.push({ url, body: JSON.parse(options.body) });
-    return { ok: true, json: async () => ({ orderId: "order_test", amountPaise: 59956, currency: "INR" }) };
-  });
-  const { CheckoutForm, errors } = loadCheckout();
-  await submitForm(CheckoutForm);
-  assert.equal(requests[0].body.amountPaise, 59855);
-  assert.match(errors.at(-1), /payment amount does not match/);
+test("preview checkout cannot refresh the cart or start payment", async (t) => {
+  const refresh = t.mock.fn(async () => cart);
+  t.mock.method(globalThis, "fetch", () => { throw new Error("Unexpected payment call"); });
+  await assert.rejects(prepare({ source: "preview", refreshCart: refresh }), /preview mode/);
+  assert.equal(refresh.mock.callCount(), 0);
+  assert.equal(globalThis.fetch.mock.callCount(), 0);
 });
 
-test("payment excludes extra upstream taxes from tax-inclusive prices", async (t) => {
-  t.mock.method(console, "error", () => {});
-  const requests = [];
-  t.mock.method(globalThis, "fetch", async (url, options) => {
-    requests.push({ url, body: JSON.parse(options.body) });
-    // Reject a gateway that tries to re-add the upstream charge.
-    return { ok: true, json: async () => ({ orderId: "order_test", amountPaise: 61655, currency: "INR" }) };
-  });
-  const taxedCart = { ...cart, totalPaise: cart.totalPaise + 1800 };
-  const { CheckoutForm, errors } = loadCheckout({ currentCart: taxedCart });
-  await submitForm(CheckoutForm);
-  assert.equal(requests[0].body.amountPaise, 59855);
-  assert.match(errors.at(-1), /payment amount does not match/);
-});
-
-test("cash on delivery retains a zero total and snapshots the receipt breakdown", async (t) => {
-  const requests = [];
-  t.mock.method(globalThis, "fetch", async (url, options) => {
-    requests.push({ url, body: JSON.parse(options.body) });
-    return { ok: true, json: async () => ({ success: true, shopifyOrderCreated: true, orderId: "order_cod" }) };
-  });
-  const zeroCart = { ...cart, totalPaise: 0, discountAmountPaise: item.lineSubtotalPaise };
-  const { CheckoutForm } = loadCheckout({ currentCart: zeroCart, paymentMethod: "cod" });
-  let confirmation;
-  await submitForm(CheckoutForm, (order) => { confirmation = order; }, 0);
-  assert.equal(requests[0].body.totalPaise, 0);
-  assert.equal(confirmation.subtotalPaise, 49950);
-  assert.equal(confirmation.discountPaise, 49950);
-  assert.equal(confirmation.shippingFeePaise, 0);
-  assert.equal(confirmation.totalPaise, 0);
-  assert.equal(confirmation.items[0].pricePaise, 49950);
-});
-
-test("online payment keeps its amount snapshot and submit lock until payment completes", async (t) => {
-  let paymentOptions;
-  const previousWindow = globalThis.window;
+function componentFixture(t, refreshCart) {
+  const slots = [], effects = [], navigations = [], analytics = [], cleanup = [];
+  const listeners = new Map();
+  let cursor = 0;
+  let mounted = false;
+  const oldWindow = globalThis.window;
   globalThis.window = {
-    Razorpay: class {
-      constructor(options) { paymentOptions = options; }
-      open() {}
-      on() {}
+    location: { assign: (url) => navigations.push(url) },
+    addEventListener: (name, callback) => listeners.set(name, callback),
+    removeEventListener: (name) => listeners.delete(name),
+  };
+  const store = {
+    ...cart, cart: cart.items, source: "shopify", isHydrated: true, isCartBusy: false,
+    cartError: "", cartWarnings: [], refreshCart, track: (...args) => analytics.push(args),
+  };
+  const hooks = {
+    ...React,
+    useState(initial) {
+      const index = cursor++;
+      if (!(index in slots)) slots[index] = typeof initial === "function" ? initial() : initial;
+      return [slots[index], (value) => { slots[index] = typeof value === "function" ? value(slots[index]) : value; }];
     },
+    useRef(initial) { return hooks.useState(() => ({ current: initial }))[0]; },
+    useEffect(effect) { if (!mounted) effects.push(effect); },
+  };
+  const { CheckoutPreview } = loadCheckout({ react: hooks, "@/features/store/store-provider": { useStore: () => store } });
+  const render = () => {
+    cursor = 0;
+    const tree = CheckoutPreview({ checkoutHosts: allowedHosts });
+    if (!mounted) {
+      mounted = true;
+      for (const effect of effects) cleanup.push(effect());
+    }
+    return tree;
   };
   t.after(() => {
-    if (previousWindow === undefined) delete globalThis.window;
-    else globalThis.window = previousWindow;
+    for (const fn of cleanup) fn?.();
+    if (oldWindow === undefined) delete globalThis.window;
+    else globalThis.window = oldWindow;
   });
-  t.mock.method(globalThis, "fetch", async (url) => ({
-    ok: true,
-    json: async () => url.endsWith("create-order")
-      ? { orderId: "order_online", amountPaise: 59855, currency: "INR" }
-      : url.endsWith("verify-payment")
-        ? { verified: true }
-        : { success: true, shopifyOrderCreated: true, orderId: "order_online" },
-  }));
-  const { CheckoutForm, submissionStates } = loadCheckout();
-  let confirmation;
-  await submitForm(CheckoutForm, (order) => { confirmation = order; });
-  assert.equal(paymentOptions.amount, 59855);
-  assert.deepEqual(submissionStates, [true]);
-  await paymentOptions.handler({ razorpay_payment_id: "payment_test", razorpay_signature: "signature_test" });
-  assert.equal(confirmation.subtotalPaise, 49950);
-  assert.equal(confirmation.discountPaise, 4995);
-  assert.equal(confirmation.shippingFeePaise, 14900);
-  assert.equal(confirmation.totalPaise, 59855);
-  assert.equal(confirmation.items[0].pricePaise, 49950);
-  assert.deepEqual(submissionStates, [true, false]);
+  function find(tree, predicate) {
+    if (!tree || typeof tree !== "object") return null;
+    if (predicate(tree)) return tree;
+    for (const child of [tree.props?.children].flat(Infinity)) {
+      const match = find(child, predicate);
+      if (match) return match;
+    }
+    return null;
+  }
+  return { store, render, find, navigations, analytics, listeners };
+}
+
+test("double clicks produce one handoff and browser back enables a fresh attempt", async (t) => {
+  const pending = deferred();
+  let refreshes = 0;
+  const fresh = { ...cart, checkoutUrl: "https://checkout.naturemist.shop/checkouts/fresh?key=exact%2Bkey" };
+  const fixture = componentFixture(t, () => { refreshes += 1; return refreshes === 1 ? pending.promise : Promise.resolve(fresh); });
+  const button = fixture.find(fixture.render(), (node) => node.type === "button");
+  button.props.onClick();
+  button.props.onClick();
+  assert.equal(refreshes, 1);
+  assert.equal(fixture.find(fixture.render(), (node) => node.type === "button").props.disabled, true);
+  assert.deepEqual(fixture.navigations, []);
+  pending.resolve(fresh);
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(fixture.navigations, [fresh.checkoutUrl]);
+  assert.deepEqual(fixture.analytics, [["begin_checkout", { value: 449.55, currency: "INR", mode: "shopify_hosted" }]]);
+  fixture.listeners.get("pageshow")({ persisted: true });
+  const restoredButton = fixture.find(fixture.render(), (node) => node.type === "button");
+  assert.equal(restoredButton.props.disabled, false);
+  restoredButton.props.onClick();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(refreshes, 2);
+  assert.equal(fixture.navigations.length, 2);
 });
 
-test("confirmation and print receipt show the same subtotal, discount, shipping, and exact total", (t) => {
-  // esbuild does not transform Next's styled-jsx attributes for this static render.
-  t.mock.method(console, "error", () => {});
-  const { CheckoutOrderSuccess } = loadCheckout();
-  const order = {
-    orderId: "order_test", placedAt: "17 Oct 2026", customerName: "Test Buyer",
-    email: customer.email, phone: customer.phone, shippingAddress: "Pune, India",
-    paymentMethod: "Paid online", shippingMethod: "Priority delivery",
-    subtotalPaise: 49950, discountPaise: 4995,
-    shippingFeePaise: 14900, totalPaise: 59855, currencyCode: "INR",
-    items: [{ name: "Amla", variant: "100 g", quantity: 2, pricePaise: 49950, slug: "amla" }],
-  };
-  const html = renderToStaticMarkup(React.createElement(CheckoutOrderSuccess, { order }));
-  const receipt = html.slice(html.indexOf("print-only-view print-receipt-container"));
-  assert.match(receipt, /Subtotal:<\/span><span[^>]*>₹499\.50<\/span>/);
-  assert.match(receipt, /Discount:<\/span><span[^>]*>-₹49\.95<\/span>/);
-  assert.match(receipt, /Shipping:<\/span><span[^>]*>₹149\.00<\/span>/);
-  assert.match(receipt, /Taxes:<\/span><span[^>]*>Included in price<\/span>/);
-  assert.doesNotMatch(html, /Other charges|Other adjustments/);
-  assert.match(receipt, /Grand Total:<\/span><span[^>]*>₹598\.55<\/span>/);
-  assert.equal((html.match(/₹598\.55/g) ?? []).length, 2);
+test("failed handoff displays an error and permits retry without payment or navigation", async (t) => {
+  t.mock.method(globalThis, "fetch", () => { throw new Error("Unexpected payment call"); });
+  const fixture = componentFixture(t, async () => null);
+  fixture.find(fixture.render(), (node) => node.type === "button").props.onClick();
+  await new Promise((resolve) => setImmediate(resolve));
+  const tree = fixture.render();
+  assert.match(fixture.find(tree, (node) => node.props?.role === "alert").props.children, /could not confirm/);
+  assert.equal(fixture.find(tree, (node) => node.type === "button").props.disabled, false);
+  assert.deepEqual(fixture.navigations, []);
+  assert.deepEqual(fixture.analytics, []);
+  assert.equal(globalThis.fetch.mock.callCount(), 0);
 });

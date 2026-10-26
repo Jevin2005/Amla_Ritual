@@ -1,0 +1,407 @@
+NATUREMIST: PRODUCTION, ORDER SYSTEM AND LAUNCH AUDIT
+25 October 2026 | Asia/Calcutta
+Website: https://naturemist.shop
+Workspace: E:/jevin/Amla_Ritual
+Revision: 46c1002 plus existing uncommitted changes
+
+DECISION
+Architecture correction from follow-up review: retaining direct Razorpay while
+recording these checkout transactions through Shopify's API is conditional on
+Shopify authorization. See the platform-compatibility addendum at the end; it
+qualifies the custom-checkout alternative described below.
+The storefront is online and the catalogue is connected, but the current custom
+Razorpay-to-Shopify checkout is not ready for unattended production orders.
+Prioritize payment correctness, inventory, duplicate prevention, recovery and
+customer privacy before increasing traffic or advertising spend.
+These are demonstrated code weaknesses and business risks, not evidence that
+anyone has exploited the store or that every genuine order fails.
+
+WHAT WAS CHECKED TODAY
+- Read the current payment, order, cart, tracking, authentication, webhook,
+  checkout, billing, catalogue, review, newsletter, metadata and loading code.
+- Reviewed deployment/dependency configuration, tests, existing documentation
+  and selected product/FAQ/content modules. This was not a line-by-line review
+  of every CSS rule or an audit of every setting in external dashboards.
+- 17 intended public routes/endpoints returned HTTP 200: home, shop, checkout,
+  shipping/returns, sitemap, search catalogue, Amla product, combos, FAQs,
+  contact, reviews, story, privacy, terms, tracking, wishlist and robots.
+- Public catalogue returned 14 products. Browser showed 6 individual powders
+  and 8 combos, with Amla 200 g priced at Rs234.
+- Browser rendered the homepage and current quiz/category controls. One add-to-
+  bag action was attempted; browser control disconnected while the bag was
+  loading. Completion/removal could not be verified. A jar may remain in that
+  browser's bag. No checkout submission, payment or real order was made.
+- All 512 existing tests passed using --test-concurrency=1. The first default
+  run hit local Node memory exhaustion. Tests passing does not establish that
+  payment security, refunds or fulfilment work correctly.
+- Eight diagnostic checks against actual handlers reproduced unsafe behavior
+  using mocked network services and invented credentials/data only. See
+  audit-evidence-2026-10-25/check-handlers.mjs and handler-results.json.
+- npm audit --omit=dev reported 4 affected production packages: 1 critical,
+  2 high and 1 moderate at package severity level. See dependency section.
+- Fresh lint and typecheck could not complete: Node crashed locally, including
+  memory-allocation errors. These are incomplete checks, not diagnosed lint or
+  TypeScript defects. A fresh production build was not completed today.
+- Yesterday's successful build report is historical evidence only. It does
+  not establish the build health of today's uncommitted changes.
+- No source fixes, dependency updates, deployments, Shopify changes, customer
+  record lookups, live payment security probes or review submissions were made.
+  Only this report and local diagnostic artifacts were added.
+
+ACTUAL COMMERCE ARCHITECTURE
+Shopify supplies the catalogue and cart. The browser then calculates an amount,
+asks the server to create a Razorpay order, opens Razorpay, verifies the callback,
+and asks another server endpoint to create an order using Shopify Admin REST.
+This is a custom payment/order bridge, despite README statements describing
+Shopify hosted checkout. A Shopify cart checkoutUrl already exists but the
+current form uses the custom payment flow.
+
+MUST FIX BEFORE RELYING ON REAL ORDERS
+
+1. CRITICAL: The customer browser controls payment and order prices.
+Evidence: frontend/src/app/api/razorpay/create-order/route.ts:33;
+frontend/src/app/api/shopify/order/route.ts:236.
+The gateway amount comes directly from amountPaise in the request. Shopify line
+prices, quantities and shipping fees also come from the request. There is no
+server-side comparison against the cookie-bound Shopify cart or a saved quote.
+Consequence: a modified request can underpay, alter prices or attach a legitimate
+payment proof to a different basket. HMAC alone does not establish basket value.
+Fix: derive products, variant IDs, quantities, discounts, taxes, shipping and
+currency server-side; persist an immutable checkout quote bound to the session
+and Razorpay order; reject mismatches before payment/order creation.
+Pass condition: changing browser amounts or items cannot change the paid order.
+
+2. CRITICAL: Payment status verification fails open.
+Evidence: frontend/src/app/api/razorpay/verify-payment/route.ts:76,89;
+frontend/src/app/api/shopify/order/route.ts:80,152.
+Verification starts with status='captured'. A non-OK gateway response or caught
+lookup error can still return verified=true. An authorized payment is accepted.
+The order endpoint checks a signature but does not independently verify payment
+capture, expected amount/currency or a stored order association before marking
+the Shopify order paid. The local 503 simulation returned verified/captured.
+Consequence: paid status can be recorded without confirmed captured funds.
+Fix: fail closed or record a pending verification state; fetch authoritative
+gateway state; compare all saved identifiers and amounts; only mark paid after
+capture is confirmed. Razorpay distinguishes authorization from capture [1].
+
+3. CRITICAL: One payment proof can create multiple paid orders.
+Evidence: frontend/src/app/api/shopify/order/route.ts:138-355.
+There is no durable payment-to-order uniqueness record or replay guard. The same
+proof created two orders against a mock Shopify service. UI disabling cannot
+protect against network retries, concurrent requests or direct API calls.
+Consequence: duplicate dispatch, duplicate revenue records and stock errors.
+Fix: durable idempotency with a unique payment/order identifier, concurrency
+control and recovery for the case where Shopify accepts an order but its response
+is lost. Repeating a request must return the existing order, not create another.
+
+4. CRITICAL BUSINESS RISK: Successful payment can have no recoverable order.
+Evidence: frontend/src/features/checkout/checkout-form.tsx, checkout-preview.tsx;
+frontend/src/app/api/shopify/webhooks/route.ts.
+Shopify order submission depends on the browser callback. No durable checkout
+record, Razorpay webhook consumer, retry queue or reconciliation job was found.
+The existing webhook only invalidates Shopify catalogue cache. A support message
+and payment reference are useful, but confirmation state is only in React memory.
+Consequence: browser closure, refresh or a Shopify outage after payment can leave
+money captured with no order or complete server-side fulfilment information.
+Fix: save the checkout before charging; process signed payment webhooks; retry
+idempotently; provide a refresh-safe status page and alert on paid-without-order.
+Pass condition: closing the browser and temporarily failing Shopify still result
+in exactly one recoverable order or a documented refund path.
+
+5. HIGH: Inventory is not claimed by the current order request.
+Evidence: frontend/src/app/api/shopify/order/route.ts:170-286.
+The REST create-order request omits inventory_behaviour. Shopify documents its
+default as bypass: product inventory is not claimed [2]. This is separate from
+availability checks on a cart; a cart does not make this custom order safe.
+Consequence: stock can remain unchanged after sales, allowing overselling.
+Fix: use native checkout or deliberately implement inventory claiming that obeys
+stock policy, with handling for a stock race after payment. Verify any external
+inventory automation before changing behavior to avoid double deductions.
+Pass condition: sell the last unit concurrently; stock changes once and excess
+orders cannot be silently accepted. Check combo/component stock as well.
+Actual live inventory changes were not tested.
+
+6. HIGH: Customer purchase and destination information lacks ownership checks.
+Evidence: frontend/src/app/api/reviews/verify-buyer/route.ts:94,174,217;
+frontend/src/app/api/shopify/track-order/route.ts:40-58.
+Buyer verification accepts an email without proving ownership and returns a name
+and order ID. With productName omitted, includes('') can match an unrelated item.
+Tracking accepts an order ID alone and returns purchased items, total, postcode
+and tracking information. The handlers can be chained; a numeric ID is not
+customer authentication. This was reproduced with invented records only.
+Fix: authenticated customer access or expiring signed links/OTP; server-side
+exact product matching; return minimum data and enforce rate limits.
+Also remove verified_email:true on newly supplied, unverified customer email.
+
+7. HIGH: Invalid payment methods bypass the intended payment policy.
+Evidence: frontend/src/app/api/shopify/order/route.ts:48-84.
+TypeScript types do not validate JSON at runtime. An unknown method, or UPI
+without Razorpay proof, avoids the online proof branch. The mock unknown-method
+request created a pending order even with COD disabled; it did NOT create a paid
+order. Consequence: unpaid/junk orders can enter the fulfilment workflow.
+Fix: runtime enum/schema validation and explicit authorized payment transitions.
+Reject unexpected methods, invalid quantities, malformed addresses and missing
+variant IDs before calling any external service.
+
+8. HIGH: Shipping, discounts and tax/accounting are not one consistent quote.
+Evidence: frontend/src/features/checkout/checkout-form.tsx;
+frontend/src/domain/cart/billing.ts:38; order/route.ts:236-277.
+Live shipping policy says Rs80 below Rs999, free above Rs999. Checkout initializes
+standard shipping to zero; express is hardcoded Rs149. The exact Rs999 boundary
+is also unclear in the policy. No postal-code serviceability lookup was found.
+The UI billing helper uses discount allocations, but order submission sends
+lineTotalPaise rather than that calculated discounted line value. For a cart
+where an order-level allocation is not included in lineTotalPaise, the gateway
+and Shopify order can disagree. The order ignores requested totalPaise and does
+not reconcile Shopify's returned total. Discount-code/tax-line information is
+not explicitly transferred. Billing also discards upstream positive tax/fee
+differences based on an assumption that all prices include tax.
+Consequence: shipping losses, mismatched totals, inaccurate discount reporting,
+invoice/accounting problems, or payment for an undeliverable address.
+Fix: one authoritative quote with documented tax-inclusive behavior and delivery
+rates; compare final Shopify and gateway totals. Validate discounts at both
+line/order level, multi-quantity rounding and below/at/above Rs999 baskets.
+Actual Shopify tax settings and tax obligations were not audited.
+
+9. HIGH: Dependency security updates remain outstanding.
+Today's registry audit flags Next.js 16.3.0 (critical aggregate severity), sharp
+(high), source-map-js (high), and sanitize-html (moderate). The audit suggests
+Next.js 16.4.3; confirm compatibility and current advisories when implementing.
+These are package findings, not proof that all listed attacks reach this site:
+Windows-only server issues differ from Vercel Linux, image vulnerabilities depend
+on the production optimizer/input path, and HTML sanitizer reachability depends
+on the allowed tags. Patch supported versions with aligned Next/ESLint tooling,
+then rerun audit, builds and image/review/checkout checks. Avoid forced updates.
+
+ORDER OPERATIONS AND CUSTOMER TRUST
+
+10. HIGH: Delivered orders can remain pending; other milestones are guessed.
+Evidence: frontend/src/app/api/shopify/track-order/route.ts:109,172.
+The code checks fulfillment.status==='delivered'. Shopify supplies delivery in
+shipment_status, while fulfillment status includes values such as success [3].
+Mock status=success/shipment_status=delivered displayed delivery as pending.
+Any fulfillment object also implies dispatched, even failed/cancelled records.
+Cancelled/partially fulfilled orders retain overly optimistic generic milestones.
+Fix: map payment, cancellation, partial fulfilment and shipment states separately;
+use actual carrier data and honest unknown/pending states. Distinguish API failure
+from order-not-found. Verify shipped, delivered, failed, returned and cancelled.
+
+11. HIGH: Refund and fulfilment automation are unproven.
+Gateway references are stored in notes/tags; no custom gateway refund webhook,
+refund synchronization or reconciliation implementation was found. Setting
+payment_gateway_names does not establish a working refund integration.
+Do not assume pressing Refund in one dashboard moves money in the other system.
+Verify capture, cancellation, full/partial refund and restocking against both
+systems in test mode. Confirm courier integration, labels, pickup, delivery
+coverage, packing process and who resolves payment/order mismatches.
+The live Razorpay/Shopify/courier dashboard configuration was not inspected.
+
+12. HIGH: Reviews have false-success and verification weaknesses.
+Evidence: reviews/verify-buyer/route.ts:153;
+frontend/src/features/reviews/write-review-modal.tsx:192,284,315,344.
+Three QA email addresses receive verified status without a production guard.
+Only the latest 100 orders are searched, so older genuine buyers can be rejected.
+Submission does not check Judge.me HTTP success and still creates a local
+'Verified Buyer' review. Media is not included in the remote review submission;
+video blob URLs are temporary and do not establish durable uploads.
+Fix: remove QA bypass; verify ownership and qualifying purchase server-side;
+acknowledge real remote success; use supported durable media uploads.
+The repository also contains scripts that manufacture names, dates, ratings and
+review text, including generate_amla_1000_reviews.js. These are not evidence of
+real customer experience. Do not import/publish generated testimonials as real
+reviews. Establish provenance for existing imports and remove identified test
+content through normal review management. This audit did not establish that any
+particular published review came from those scripts.
+
+13. HIGH CONTENT PRIORITY: Product/FAQ claims are inconsistent or unsupported.
+Evidence: frontend/src/features/faqs/faqs-page.tsx:17 onward;
+frontend/src/widgets/home/content.ts and current public homepage.
+FAQ claims every batch is independently screened, 'absolute safety' for skin,
+UV-protective glass and an 18-month benefit, plus generic preparation recipes.
+Other product material limits current powders to their label-directed hair uses.
+Homepage still says final pack facts will be confirmed 'before launch'.
+Fix: obtain actual supplier/label/testing records and publish consistent approved
+product-specific descriptions, storage, shelf life and directions. Remove
+absolute safety promises. This report does not certify product safety or legal
+compliance, and does not provide replacement medical or regulatory advice.
+
+CONVERSION, RELIABILITY AND DISCOVERY
+
+14. MEDIUM: Branding and essential links need correction.
+Live home title: 'My Store — Pure Botanicals, Powerful Rituals'. Product titles
+also append 'My Store'; /combos inherits the generic title. The footer exposes
+only Search (to checkout.naturemist.shop/search) plus support contacts, because
+any nonempty Shopify menu replaces the fuller fallback and is sliced to 3 groups.
+Checkout policy text should be clickable. Add persistent Terms, Privacy,
+Shipping/Returns, Contact and Tracking links independent of merchant menu gaps.
+Sources: app/layout.tsx:29; widgets/site-chrome/site-footer.tsx:51,94.
+
+15. MEDIUM: Sitemap/host consistency and documentation need cleanup.
+Sitemap omits /combos, /faqs, /contact and /reviews. Live sitemap uses www while
+browser navigation uses the non-www host; verify the chosen canonical and redirect
+policy. Do not call this a TLS outage: public requests succeeded today.
+A nonexistent product returned streamed HTTP 200 WITH a not-found view and
+noindex; it is not being reported as a published/indexable product.
+README is materially stale about hosted checkout, tracking, tests and directories.
+The root lists a backend workspace which is absent; actual handlers are in the
+frontend. .env.example does not document all current Admin/Razorpay/COD settings.
+Update deployment/runbook instructions and add production configuration checks.
+
+16. MEDIUM: Newsletter and saved-address promises are incomplete.
+NewsletterForm reports that email was not stored; it has no subscription service.
+saveAddress is checked by default but no durable address-saving feature was found.
+Customer login/order history is absent; wishlist is device-local. These features
+are not required for a guest-checkout launch, but should not be promised if absent.
+Connect genuine opt-in subscriptions or remove the capture promise. Contact is
+mailto-based and depends on the visitor's email app; verify support delivery.
+
+17. MEDIUM: Page weight and 3D need measured mobile testing.
+Today's decoded HTTP payloads: home 457,510 bytes, Amla page 553,197 bytes,
+checkout 277,195 bytes, public search catalogue 65,028 bytes. These are decoded
+response sizes, not compressed transfer sizes or measured Core Web Vitals.
+The root global store still spreads rich product objects on many routes, although
+it now restricts images and default variants. Further trim shared catalogue data.
+Yesterday's evidence measured the Amla GLB around 3.19 MiB with large textures;
+that is historical asset evidence, not a new mobile memory measurement.
+Profile low/mid-range Android and iPhone for loading, scroll, repeated navigation,
+model context loss, touch/keyboard and reduced motion. Optimize visible-model
+budgets and texture size if traces justify it. No current Lighthouse score or
+full accessibility certification is claimed.
+The loading code HAS improved: image/font grace is about 1.2 seconds and startup
+deadline is now 2.5 seconds. Navigation can still run to 12 seconds if commit or
+pending state stalls. Do not repeat yesterday's 8-second-startup finding.
+
+18. HIGH OPERATIONS PRIORITY: API resilience and monitoring need evidence.
+No application rate limiter, durable checkout alerting, payment reconciliation
+worker or checked-in CI workflow was found. Several sensitive handlers lack
+bounded runtime schemas, consistent timeouts and body limits. Cart and Shopify
+webhook already have useful body/signature/cookie protections; preserve them.
+Sensitive endpoints should have rate limits, request bounds, safe error messages,
+timeouts, retries only where safe, and correlation IDs without logging secrets.
+Shopify catalogue failure can produce an empty shop instead of an availability
+message. Keep a suitable last-good catalogue and alert on refresh failure.
+Sampled production responses lacked CSP. Add a tested policy compatible with
+Razorpay/Judge.me. External WAF/hosting alerts/backups were not inspected.
+
+19. MEDIUM: API versions and analytics require maintenance.
+Order, tracking and review verification hardcode Shopify REST 2024-01.
+Unsupported versions fall forward; plan a supported-version/GraphQL migration
+and test contracts rather than relying on undocumented version drift [4].
+Analytics dispatches local events and pushes only if dataLayer already exists.
+No end-to-end analytics provider configuration was established. purchase fires
+even when Shopify sync fails, and begin_checkout can say shopify_hosted despite
+the custom form. Separate payment received, order confirmed and sync failure;
+deduplicate confirmed purchase events and verify real reporting before running
+conversion-optimized campaigns.
+
+WHAT IS ALREADY USEFUL
+- Live catalogue, product detail routes, category/quiz UI and support contacts.
+- HTTP-only production-secure cart cookie, private/no-store cart responses,
+  cart validation/pagination and Shopify webhook HMAC/body bounds.
+- Refreshable Admin authentication and write_orders preflight before Razorpay.
+- Timing-safe signature comparison, although full payment validation is missing.
+- Cart refresh before payment, current bill presentation and no cart clearing on
+  unsuccessful Shopify sync; explicit 'do not pay again' support screen.
+- 512 passing regression tests and recent review/loading improvements.
+Preserve these; a complete visual rebuild is not necessary to resolve checkout.
+
+RECOMMENDED UPDATE ORDER
+Phase A: Make a reliable sales path.
+Keep the existing storefront and cart; evaluate handing customers to the existing
+Shopify checkoutUrl, using a supported, properly configured payment integration.
+Shopify documents this as the Cart API handoff [5]. Verify the merchant account,
+payment activation, shipping, inventory, taxes, notifications and checkout domain
+before choosing it. Close unused public custom order/payment endpoints, otherwise
+switching the visible button leaves their security risks reachable.
+This is an architectural recommendation, not a claim that those settings are
+already ready. If custom checkout is essential, complete findings 1-8 and 11 with
+durable storage, webhooks, recovery and stock handling before accepting orders.
+
+Phase B: Restore customer trust and operational accuracy.
+Secure tracking/review identity, fix delivery states, reconcile shipping policies,
+audit review provenance and product claims, patch dependencies, and verify real
+confirmation/dispatch messages and refunds. Add essential policy links.
+
+Phase C: Prepare traffic and retention.
+Fix NatureMist metadata, sitemap/canonical consistency, connect newsletter and
+confirmed-purchase analytics, then profile mobile performance. Avoid broad design
+changes until checkout reliability and measurement are established.
+
+RELEASE ACCEPTANCE CHECKS
+Run in a test/staging environment with real provider test modes first:
+1. Successful UPI/card flow -> one capture, one Shopify order, correct stock.
+2. Declined, abandoned, authorized-only and delayed payments never become paid
+   orders until a confirmed capture arrives.
+3. Modified price, amount, currency, variant, quantity or shipping is rejected.
+4. Double-click, request retry, repeated webhook and response timeout still
+   produce exactly one order and one stock deduction.
+5. Browser closure after payment and a temporary Shopify outage recover without
+   another payment; an alert identifies any unresolved paid-without-order case.
+6. Last-unit stock race and combo/component stock cannot oversell silently.
+7. Discounts, tax treatment, quantity rounding and delivery threshold/serviceability
+   agree between page, gateway, Shopify and customer confirmation.
+8. Full/partial refunds and cancellations reconcile money, order state and stock.
+9. Tracking shows partial, dispatched, delivered, failed and cancelled correctly;
+   unrelated visitors cannot read private order information.
+10. Genuine older buyers can submit; remote failure is reported; media persists;
+    no QA bypass or generated testimonial is represented as a real purchase.
+11. Fresh lint, TypeScript, production build and regression/security checks pass
+    on a functioning build environment; test the exact release being deployed.
+12. After release, run a separately authorized controlled transaction and refund,
+    then confirm email delivery, courier workflow and monitoring. No real payment
+    was authorized or executed as part of this audit.
+
+STARTING TO EARN
+A working website enables sales; it does not establish demand or profit. Start
+with a small monitored launch after the release checks, and expand only when
+order completion, delivery and customer support are reliable.
+Calculate contribution per order from collected sales minus product, packaging,
+shipping, gateway fees, discounts, expected returns/RTO and applicable taxes.
+Use actual business figures; none were supplied or verified here. Measure
+visits -> product view -> add to bag -> checkout -> confirmed order, plus failed
+payments, paid-without-order, refund/RTO rate and contribution after advertising.
+Do not set an advertising budget from gross revenue alone.
+
+LIMITS
+Not a formal penetration test, load test, full accessibility audit or legal/tax
+approval. No actual settlements, refunds, customer records, stock movements,
+supplier certificates, external dashboards or live payment lifecycle inspected.
+Source findings do not identify the exact deployed server revision. Browser
+inspection ended early when its connection closed; mobile testing remains open.
+Existing uncommitted work was preserved. No claim of complete production safety
+or guaranteed earnings is made.
+
+PRIMARY REFERENCES (checked today)
+[1] Razorpay integration, authorization/capture and verification:
+https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/integration-steps/
+[2] Shopify REST Order: create-order default inventory behaviour:
+https://shopify.dev/docs/api/admin-rest/latest/resources/order
+[3] Shopify Fulfillment: status versus shipment_status:
+https://shopify.dev/docs/api/admin-rest/latest/resources/fulfillment
+[4] Shopify API version support and fall-forward behavior:
+https://shopify.dev/docs/api/admin-rest/usage/versioning
+[5] Shopify cart and hosted checkout handoff:
+https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/cart/manage
+
+PLATFORM-COMPATIBILITY ADDENDUM: FOLLOW-UP REVIEW, 25 OCTOBER 2026
+The earlier description of retaining direct Razorpay addressed technical repairs
+but omitted a material Shopify platform restriction. Shopify's current API terms,
+section 2.3.18, require express written authorization for an alternative checkout
+or payment processor for Shopify merchants, including registering associated
+transactions through the Shopify API. No such authorization was verified here.
+Do not assume fixing the security bugs alone makes this architecture supported.
+Source: https://www.shopify.com/legal/api-terms
+
+For the existing Shopify-backed business, the recommended launch path remains
+the current NatureMist storefront with Shopify checkout branded for NatureMist.
+Configure the checkout domain, supported payment provider, branding, navigation,
+shipping, taxes, inventory and notifications, and verify them end-to-end.
+Shopify supports checkout logos, colors and fonts, with advanced options subject
+to plan limitations; identical arbitrary Next.js layout is not promised.
+Source: https://help.shopify.com/en/manual/checkout-settings/customize-checkout-configurations/checkout-style
+
+If an identical custom checkout is essential, obtain the appropriate Shopify
+authorization before retaining the direct Razorpay/Shopify transaction bridge,
+or evaluate a commerce backend that supports independently operated checkout.
+Moving backend is a larger migration, not an immediate patch. No migration,
+provider change, subscription purchase or deployment was performed.

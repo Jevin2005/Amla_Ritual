@@ -1,0 +1,44 @@
+{
+  "url": "https://checkout.naturemist.shop/cdn/shop/3d/models/o/78395f4475addb2e/naturemist-amla-floating.glb",
+  "status": 200,
+  "glbBytes": 3343436,
+  "textures": [
+    {
+      "format": "jpeg",
+      "width": 2048,
+      "height": 2048,
+      "compressedBytes": 488226,
+      "estimatedRgbaBytesWithMips": 22369621
+    },
+    {
+      "format": "jpeg",
+      "width": 2048,
+      "height": 2048,
+      "compressedBytes": 298605,
+      "estimatedRgbaBytesWithMips": 22369621
+    },
+    {
+      "format": "jpeg",
+      "width": 2048,
+      "height": 2048,
+      "compressedBytes": 403148,
+      "estimatedRgbaBytesWithMips": 22369621
+    },
+    {
+      "format": "jpeg",
+      "width": 2048,
+      "height": 2048,
+      "compressedBytes": 169362,
+      "estimatedRgbaBytesWithMips": 22369621
+    },
+    {
+      "format": "png",
+      "width": 2048,
+      "height": 2048,
+      "compressedBytes": 84115,
+      "estimatedRgbaBytesWithMips": 22369621
+    }
+  ],
+  "estimatedRgbaBytesWithMips": 111848105,
+  "note": "Approximate uncompressed RGBA texture memory with mipmaps, not a measured GPU allocation."
+}

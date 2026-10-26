@@ -411,6 +411,114 @@ test("initial Shopify hydration restores the server cart when no action supersed
   assert.equal(harness.requests[0].method, "GET");
 });
 
+test("checkout refresh gets the authoritative bag and locks concurrent bag actions", async (t) => {
+  const harness = setup(t);
+  await seedRemoteCart(harness);
+  let resolveRefresh;
+  harness.responses.push(new Promise((resolve) => { resolveRefresh = resolve; }));
+  const store = harness.render();
+  const refreshing = store.refreshCart();
+  assert.equal(harness.render().isCartBusy, true);
+  assert.equal(await store.refreshCart(), null);
+  assert.equal(await store.addToCart(product.slug), null);
+  await store.updateQuantity(product.slug, 2);
+  await store.removeFromCart(product.slug);
+  assert.equal(await store.applyDiscountCode("WELCOME10"), false);
+  assert.equal(harness.requests.length, 1);
+  assert.equal(harness.requests[0].method, "GET");
+  assert.equal(harness.render().isCartBusy, true, "Rejected operations must not unlock the pending refresh");
+  const fresh = {
+    ...remoteCart, checkoutUrl: "https://example.myshopify.com/checkouts/fresh-token?key=exact%2Fkey",
+    totalPaise: 9700, items: [{ ...remoteCart.items[0], quantityAvailable: 2 }],
+  };
+  resolveRefresh({ body: { cart: fresh, warnings: [{ message: "Only two remain" }] } });
+  assert.deepEqual(await refreshing, fresh);
+  const updated = harness.render();
+  assert.equal(updated.checkoutUrl, fresh.checkoutUrl);
+  assert.equal(updated.totalPaise, fresh.totalPaise);
+  assert.equal(updated.cart[0].quantityAvailable, 2);
+  assert.equal(updated.isCartBusy, false);
+  assert.equal(updated.announcement, "Only two remain");
+  assert.deepEqual(harness.events, [], "Refreshing must not emit add-to-cart or purchase analytics");
+});
+
+test("checkout refresh cannot overlap a pending cart mutation", async (t) => {
+  const harness = setup(t);
+  await seedRemoteCart(harness);
+  let resolveMutation;
+  harness.responses.push(new Promise((resolve) => { resolveMutation = resolve; }));
+  const updating = harness.render().updateQuantity(product.slug, 2);
+  assert.equal(await harness.render().refreshCart(), null);
+  assert.equal(harness.render().isCartBusy, true);
+  assert.deepEqual(harness.requests.map(({ method }) => method), ["POST"]);
+  resolveMutation({ body: { cart: remoteCart } });
+  await updating;
+  assert.equal(harness.render().isCartBusy, false);
+});
+
+for (const [name, response] of [
+  ["missing cookie or expired cart", { body: { cart: null } }],
+  ["explicit expiry", { status: 410, body: { code: "CART_EXPIRED", error: "Your bag has expired" } }],
+]) {
+  test(`checkout refresh clears stale items after ${name} without creating a new cart`, async (t) => {
+    const harness = setup(t);
+    await seedRemoteCart(harness);
+    harness.responses.push(response);
+    assert.equal(await harness.render().refreshCart(), null);
+    const store = harness.render();
+    assert.equal(store.cartCount, 0);
+    assert.equal(store.checkoutUrl, null);
+    assert.match(store.cartError, /expired/);
+    assert.equal(store.isCartBusy, false);
+    assert.deepEqual(harness.requests.map(({ method }) => method), ["GET"]);
+    assert.deepEqual(harness.events, []);
+  });
+}
+
+for (const [name, response, message] of [
+  ["network failure", new Error("Shopify unavailable"), "Shopify unavailable"],
+  ["HTTP failure", { status: 503, body: { error: "Please retry" } }, "Please retry"],
+  ["Shopify user error", { body: { cart: remoteCart, userErrors: [{ message: "Cart cannot check out" }] } }, "Cart cannot check out"],
+]) {
+  test(`checkout refresh fails closed and preserves the bag after ${name}`, async (t) => {
+    const harness = setup(t);
+    const previous = await seedRemoteCart(harness);
+    harness.responses.push(response);
+    assert.equal(await harness.render().refreshCart(), null);
+    const store = harness.render();
+    assert.deepEqual(displayedCart(store), previous);
+    assert.equal(store.cartError, message);
+    assert.equal(store.isCartBusy, false);
+    assert.deepEqual(harness.events, []);
+  });
+}
+
+test("preview checkout refresh does not make a Shopify request", async (t) => {
+  const harness = setup(t, { source: "preview" });
+  await harness.render().addToCart(product.slug);
+  const previous = displayedCart(harness.render());
+  assert.equal(await harness.render().refreshCart(), null);
+  assert.deepEqual(displayedCart(harness.render()), previous);
+  assert.deepEqual(harness.requests, []);
+});
+
+test("late hydration cannot restore an expired bag after checkout refresh", async (t) => {
+  const harness = setup(t);
+  let resolveHydration;
+  harness.responses.push(new Promise((resolve) => { resolveHydration = resolve; }));
+  harness.render();
+  harness.flushMountEffects();
+  harness.responses.push({ body: { cart: null } });
+  assert.equal(await harness.render().refreshCart(), null);
+  const expiry = harness.render().cartError;
+  resolveHydration({ body: { cart: remoteCart } });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(harness.render().cartCount, 0);
+  assert.equal(harness.render().checkoutUrl, null);
+  assert.equal(harness.render().cartError, expiry);
+  assert.equal(harness.render().isCartBusy, false);
+});
+
 for (const [name, staleResponse] of [
   ["empty cart", { body: { cart: null, warnings: [{ message: "Old warning" }], userErrors: [{ message: "Old error" }] } }],
   ["old cart", { body: { cart: { ...remoteCart, totalQuantity: 8, totalPaise: 80000 } } }],

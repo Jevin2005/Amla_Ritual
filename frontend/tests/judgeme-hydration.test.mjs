@@ -13,10 +13,12 @@ const bundle = await build({
   },
   tsconfig: fileURLToPath(new URL("../tsconfig.json", import.meta.url)),
   bundle: true, platform: "node", format: "esm", jsx: "automatic", write: false,
+  loader: { ".module.css": "empty" },
   plugins: [{ name: "hydration-boundaries", setup(builder) {
     builder.onResolve({ filter: /^(react(?:\/jsx-runtime)?|next\/script)$/ }, ({ path }) => ({ path, namespace: "fixture" }));
     builder.onLoad({ filter: /.*/, namespace: "fixture" }, ({ path }) => ({ contents: {
       react: `export const useState = () => [globalThis.__judge.configured, value => {globalThis.__judge.configured = value}];
+        export const useRef = () => ({current: null});
         export const useEffect = effect => {globalThis.__judge.effects.push(effect)};
         export const useSyncExternalStore = (subscribe, client, server) => globalThis.__judge.hydrated ? client() : server();`,
       "react/jsx-runtime": "export const jsx = (type, props) => ({type, props}); export const jsxs = jsx; export const Fragment = 'fragment';",

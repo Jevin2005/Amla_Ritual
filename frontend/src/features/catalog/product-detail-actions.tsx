@@ -85,12 +85,12 @@ export function ProductDetailActions({ product }: { product: Product }) {
     try {
       const nextCart = await add(false);
       if (!nextCart) return;
-      track("begin_checkout", {
+      track("view_checkout", {
         item_id: selectedVariant?.id || product.slug,
         quantity,
         value: (pricePaise * quantity) / 100,
         currency: currencyCode,
-        mode: "in_app_checkout",
+        mode: "shopify_hosted",
       });
       router.push("/checkout");
     } finally {

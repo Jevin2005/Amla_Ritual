@@ -1,0 +1,14 @@
+﻿{
+  "diagnostic": "Current unsafe behavior reproduced with mocks; these are not security acceptance tests",
+  "checks": 8,
+  "evidence": [
+    "Client amount is used without a server cart lookup",
+    "Payment lookup HTTP 503 still returns verified/captured",
+    "Repeated proof creates two paid orders with client price and no gateway lookup",
+    "Unknown payment method creates a pending order with COD disabled",
+    "Order payload omits inventory behaviour, explicit tax lines, discount codes and transactions",
+    "Slug-only verification matches an unrelated purchase and discloses order ID without email ownership",
+    "Order ID alone returns purchase and destination postcode",
+    "A delivered shipment is shown as pending because the wrong field is checked"
+  ]
+}

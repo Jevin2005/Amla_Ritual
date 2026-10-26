@@ -9,6 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function CheckoutPage() {
+  const checkoutHosts = [
+    process.env.SHOPIFY_STORE_DOMAIN || "",
+    process.env.SHOPIFY_CHECKOUT_DOMAIN || "checkout.naturemist.shop",
+  ].filter(Boolean);
   return (
     <main id="main-content">
       <PageHero
@@ -16,7 +20,7 @@ export default function CheckoutPage() {
         title={<><span>Checkout,</span><br />handled securely.</>}
         description="Review the latest bag totals, then continue to secure checkout for delivery and payment."
       />
-      <CheckoutPreview />
+      <CheckoutPreview checkoutHosts={checkoutHosts} />
     </main>
   );
 }

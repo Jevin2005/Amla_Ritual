@@ -125,6 +125,7 @@ type StoreContextValue = {
   applyDiscountCode: (code: string) => Promise<boolean>;
   removeDiscountCode: (code: string) => Promise<void>;
   updateBuyerIdentity: (identity: BuyerIdentity) => Promise<StoreCart | null>;
+  refreshCart: () => Promise<StoreCart | null>;
   clearCartError: () => void;
   toggleWishlist: (slug: string) => void;
   isWishlisted: (slug: string) => boolean;
@@ -1090,6 +1091,23 @@ export function StoreProvider({
     ],
   );
 
+  const refreshCart = useCallback(async () => {
+    if (source !== "shopify" || !beginOperation()) return null;
+    try {
+      const payload = await fetchCart();
+      if (!payload.cart) {
+        commitCart(emptyCart(fallbackCurrency));
+        throw new Error("Your bag has expired or is empty. Please add your items again.");
+      }
+      return handleApiPayload(payload, "Your bag is up to date.");
+    } catch (error) {
+      handleOperationError(error);
+      return null;
+    } finally {
+      finishOperation();
+    }
+  }, [source, beginOperation, commitCart, fallbackCurrency, handleApiPayload, handleOperationError, finishOperation]);
+
   const buyNow = useCallback(
     async (slug: string, quantity = 1, variantId?: string) => {
       const nextCart = await addToCart(slug, quantity, false, variantId);
@@ -1100,7 +1118,7 @@ export function StoreProvider({
             item.slug === slug &&
             (variantId ? item.variantId === variantId : true),
         )?.pricePaise || nextCart.totalPaise;
-      track("begin_checkout", {
+      track("view_checkout", {
         item_id: variantId || slug,
         quantity,
         value: (pricePaise * quantity) / 100,
@@ -1167,6 +1185,7 @@ export function StoreProvider({
       applyDiscountCode,
       removeDiscountCode,
       updateBuyerIdentity,
+      refreshCart,
       clearCartError,
       toggleWishlist,
       isWishlisted: (slug) => wishlist.includes(slug),
@@ -1204,6 +1223,7 @@ export function StoreProvider({
       toggleWishlist,
       track,
       updateBuyerIdentity,
+      refreshCart,
       updateQuantity,
       wishlist,
     ],

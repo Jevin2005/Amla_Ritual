@@ -84,4 +84,12 @@ function verify(filename) {
 }
 
 verify('amla_only_1000_reviews_judgeme.csv');
+verify('reetha_only_1000_reviews_judgeme.csv');
+verify('shikakai_only_reviews_judgeme.csv');
+verify('bhringraj_only_reviews_judgeme.csv');
+verify('hibiscus_only_reviews_judgeme.csv');
+verify('indigo_only_reviews_judgeme.csv');
+verify('classic_trio_only_reviews_judgeme.csv');
 verify('bulk_reviews_judgeme.csv');
+
+

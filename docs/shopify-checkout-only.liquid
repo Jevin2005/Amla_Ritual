@@ -1,0 +1,49 @@
+{% doc %}
+  Returns Shopify theme browsing to the NatureMist storefront while preserving
+  Shopify checkout, authentication, policies, and order status routes.
+  Render once inside the head of layout/theme.liquid, replacing older redirect code.
+
+  @example
+  {% render 'naturemist-checkout-only' %}
+{% enddoc %}
+
+{%- unless request.design_mode -%}
+  <meta name="robots" content="noindex, nofollow">
+  <script>
+    (() => {
+      const storefront = 'https://naturemist.shop';
+      const localeRoot = {{ routes.root_url | json }}.replace(/\/$/, '');
+      let path = window.location.pathname;
+
+      if (localeRoot && (path === localeRoot || path.startsWith(localeRoot + '/'))) {
+        path = path.slice(localeRoot.length) || '/';
+      }
+
+      const checkoutServices = /^\/(?:checkouts?|account|authentication|customer_authentication|auth|orders|policies|challenge|services)(?:\/|$)/;
+      const checkoutCart = /^\/cart\/c\//;
+      const legacyOrderStatus = /^\/\d+\/(?:orders|checkouts)(?:\/|$)/;
+
+      if (checkoutServices.test(path) || checkoutCart.test(path) || legacyOrderStatus.test(path)) {
+        return;
+      }
+
+      let destination = storefront;
+      const product = path.match(/^\/(?:collections\/[^/]+\/)?products\/([a-zA-Z0-9_-]+)\/?$/);
+
+      if (product) {
+        destination += '/shop/' + product[1];
+      } else if (/^\/cart\/?$/.test(path)) {
+        destination += '/checkout';
+      } else if (/^\/(?:collections|search)(?:\/|$)/.test(path)) {
+        destination += '/shop';
+      }
+
+      window.location.replace(destination);
+    })();
+  </script>
+  {%- assign browsing_types = ',index,product,collection,list-collections,cart,search,page,blog,article,404,metaobject,' -%}
+  {%- assign current_type = request.page_type | prepend: ',' | append: ',' -%}
+  {%- if browsing_types contains current_type -%}
+    <noscript><meta http-equiv="refresh" content="0;url=https://naturemist.shop"></noscript>
+  {%- endif -%}
+{%- endunless -%}

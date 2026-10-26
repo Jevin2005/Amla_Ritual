@@ -25,6 +25,38 @@
 
 .judgeme-review-widget-container .jdgm-rev-widg { display: block !important; }
 .judgeme-review-widget-container .jdgm-temp-hiding-style { display: none !important; }
+.product-review-pages { position: relative; scroll-margin-top: 24px; outline: none; }
+.product-review-loading { position: absolute; inset: 0; z-index: 3; overflow: hidden; }
+.review-loading-status { display: flex; align-items: center; gap: 10px; height: 44px; margin-bottom: 16px; color: var(--muted); font: 500 12px/1.5 var(--font-sans); }
+.review-loading-spinner { width: 15px; height: 15px; flex-shrink: 0; border: 2px solid #153b2d20; border-top-color: var(--botanical); border-radius: 50%; animation: review-loader-spin .85s linear infinite; }
+.review-skeleton-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.review-skeleton-card { position: relative; min-width: 0; overflow: hidden; padding: 20px; border: 1px solid #d7ddcf; border-radius: 20px; background: var(--paper); }
+.review-skeleton-card::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 50%) 50%, transparent 80%); animation: review-loader-shimmer 1.8s ease-in-out infinite; pointer-events: none; }
+.review-skeleton-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.review-skeleton-avatar, .review-skeleton-name, .review-skeleton-date, .review-skeleton-rating, .review-skeleton-title, .review-skeleton-lines span { display: block; border-radius: 4px; background: #e8ebdf; }
+.review-skeleton-avatar { width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; }
+.review-skeleton-name { width: 28%; height: 10px; }
+.review-skeleton-date { width: 16%; height: 8px; margin-left: auto; opacity: .65; }
+.review-skeleton-rating { width: 80px; height: 9px; margin-bottom: 16px; background: #e7e5d4; }
+.review-skeleton-title { width: 72%; height: 16px; margin-bottom: 18px; }
+.review-skeleton-lines { display: grid; gap: 11px; }
+.review-skeleton-lines span { height: 9px; opacity: .7; }
+.review-skeleton-lines span:last-child { width: 62%; }
+@keyframes review-loader-spin { to { transform: rotate(360deg); } }
+@keyframes review-loader-shimmer { to { transform: translateX(100%); } }
+@media (max-width: 680px) {
+  .review-skeleton-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .review-skeleton-card { padding: 18px; border-radius: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .review-loading-spinner, .review-skeleton-card::after { animation: none; }
+  .review-skeleton-card::after { display: none; }
+}
+.product-review-pages[aria-busy="true"] > .jdgm-widget { opacity: 0; pointer-events: none; }
+.product-review-page-status { position: sticky; top: 88px; z-index: 2; min-height: 28px; color: var(--muted); font: 400 12px/1.6 var(--font-sans); }
+.product-review-page-status:has(button) { padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+.product-review-page-status button { min-height: 44px; cursor: pointer; color: var(--forest); }
+.product-review-pages[aria-busy="true"] .jdgm-paginate { opacity: .55; cursor: wait; }
 
 /* The surrounding product section supplies the accessible heading. */
 #customer-reviews .judgeme-review-widget-container .jdgm-rev-widg__title { display: none !important; }

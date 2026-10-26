@@ -1,5 +1,7 @@
 # How to Stop AI & Search Engines from Showing `checkout.naturemist.shop`
 
+> Superseded on 25 October 2026 by [the Shopify checkout setup guide](shopify-checkout-setup.md) and [the checkout-safe redirect snippet](shopify-checkout-only.liquid). The historical instructions below allow all `/cart` URLs and overstate search-engine blocking. Use the new guide: preserve `/cart/c/` checkout handoffs, redirect the standalone `/cart`, and remember that redirects and robots directives are not access controls or guaranteed de-indexing. The canonical storefront is `https://naturemist.shop`.
+
 ## Why This Happens
 
 When you connect a domain or subdomain like `checkout.naturemist.shop` to Shopify for headless checkout:

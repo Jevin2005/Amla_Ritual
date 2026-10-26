@@ -33,11 +33,16 @@ export function SiteLoading() {
     <noscript><style>{"#site-startup-loader{display:none!important}img[aria-busy=true]{background:none!important;animation:none!important}"}</style></noscript>
     {phase === "startup" && <div id="site-startup-loader" className={styles.startup}>
       <div className={styles.brand}>NatureMist<span>Botanical rituals</span></div>
-      <LoadingIndicator label="Preparing your botanical ritual…" />
+      <div className={styles.startupContent}>
+        <span className={styles.eyebrow}>Rooted in nature</span>
+        <h2 className={styles.heading}>A moment for<br /><em>your ritual.</em></h2>
+        <LoadingIndicator label="Preparing your botanical world…" />
+      </div>
+      <div className={styles.signature} aria-hidden="true"><span />Nature, at your own pace.<span /></div>
     </div>}
     {phase === "navigation" && <div className={styles.navigation} role="status" aria-live="polite" aria-atomic="true">
       <span className={styles.navigationTrack} aria-hidden="true" />
-      <span className={styles.navigationLabel}>Preparing your page…</span>
+      <span className={styles.navigationLabel}>Opening your next chapter…</span>
     </div>}
   </>;
 }

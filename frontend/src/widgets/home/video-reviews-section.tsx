@@ -9,7 +9,6 @@ import {
   type VideoReview,
 } from "@/domain/reviews/custom-reviews";
 import { ReviewCard } from "@/features/reviews/review-card";
-import { VideoAutoplayPreview } from "@/features/reviews/video-autoplay-preview";
 import { VideoReviewModal } from "@/features/reviews/video-review-modal";
 import { useStore } from "@/features/store/store-provider";
 
@@ -58,7 +57,7 @@ function CarouselControls({
   );
 }
 
-function useCarousel(ref: React.RefObject<HTMLDivElement | null>) {
+function useCarousel(ref: React.RefObject<HTMLDivElement | null>, itemCount: number) {
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
@@ -74,21 +73,34 @@ function useCarousel(ref: React.RefObject<HTMLDivElement | null>) {
     const element = ref.current;
     if (!element) return;
     const maximum = Math.max(0, element.scrollWidth - element.clientWidth);
-    setState({
+    const next = {
       hasOverflow: maximum > 4,
       canPrevious: element.scrollLeft > 4,
       canNext: element.scrollLeft < maximum - 4,
-    });
+    };
+    setState((previous) =>
+      previous.hasOverflow === next.hasOverflow &&
+      previous.canPrevious === next.canPrevious &&
+      previous.canNext === next.canNext ? previous : next,
+    );
   }, [ref]);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
-    update();
-    element.addEventListener("scroll", update, { passive: true });
+    let frame = 0;
+    const scheduleUpdate = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+    scheduleUpdate();
+    element.addEventListener("scroll", scheduleUpdate, { passive: true });
     const observer =
-      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(scheduleUpdate);
     observer?.observe(element);
 
     // Global release listener: guarantees dragging stops the instant mouse is released anywhere
@@ -103,13 +115,17 @@ function useCarousel(ref: React.RefObject<HTMLDivElement | null>) {
     };
 
     window.addEventListener("mouseup", handleGlobalMouseUp);
+    window.addEventListener("blur", handleGlobalMouseUp);
 
     return () => {
-      element.removeEventListener("scroll", update);
+      cancelAnimationFrame(frame);
+      handleGlobalMouseUp();
+      element.removeEventListener("scroll", scheduleUpdate);
       observer?.disconnect();
       window.removeEventListener("mouseup", handleGlobalMouseUp);
+      window.removeEventListener("blur", handleGlobalMouseUp);
     };
-  }, [ref, update]);
+  }, [ref, update, itemCount]);
 
   const move = useCallback((direction: -1 | 1) => {
     const element = ref.current;
@@ -117,7 +133,7 @@ function useCarousel(ref: React.RefObject<HTMLDivElement | null>) {
     const scrollAmount = Math.max(300, element.clientWidth * 0.75);
     element.scrollBy({
       left: direction * scrollAmount,
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
     });
   }, [ref]);
 
@@ -129,7 +145,7 @@ function useCarousel(ref: React.RefObject<HTMLDivElement | null>) {
     if (!element) return;
     isDragging.current = true;
     hasMoved.current = false;
-    startX.current = e.pageX - element.offsetLeft;
+    startX.current = e.clientX;
     scrollLeft.current = element.scrollLeft;
     element.style.scrollBehavior = "auto";
     element.style.scrollSnapType = "none";
@@ -140,7 +156,7 @@ function useCarousel(ref: React.RefObject<HTMLDivElement | null>) {
     const element = ref.current;
     if (!element) return;
     e.preventDefault();
-    const x = e.pageX - element.offsetLeft;
+    const x = e.clientX;
     const walk = (x - startX.current) * 1.3;
     if (Math.abs(walk) > 4) {
       hasMoved.current = true;
@@ -191,7 +207,7 @@ function VideoStoryCard({
     <button
       type="button"
       onClick={onOpen}
-      className="group relative aspect-[3/4.2] w-[270px] min-w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl border border-black/5 bg-[#0b2117] text-left shadow-[0_8px_24px_rgba(21,59,45,0.08)] transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1.5 hover:border-[var(--botanical)] hover:shadow-[0_18px_40px_rgba(21,59,45,0.18)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:w-[78vw] max-[680px]:min-w-[240px] max-[680px]:max-w-[280px]"
+      className="group relative aspect-[3/4.2] w-[270px] min-w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl border border-black/5 bg-[#0b2117] text-left shadow-[0_8px_24px_rgba(21,59,45,0.08)] transition-colors hover:border-[var(--botanical)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--forest)] max-[680px]:w-[78vw] max-[680px]:min-w-[240px] max-[680px]:max-w-[280px]"
       aria-label={`${isDirectVideo ? "Play" : "Open"} ${video.title} by ${video.creator}`}
     >
       <div className="relative size-full overflow-hidden">
@@ -201,24 +217,18 @@ function VideoStoryCard({
           alt=""
           fill
           sizes="(max-width: 680px) 78vw, 270px"
-          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          className="object-cover object-center"
+          draggable={false}
         />
 
-        {/* Video element: always starts and stays visible on display */}
-        {isDirectVideo && (
-          <VideoAutoplayPreview
-            url={media.url}
-            poster={video.image}
-            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        )}
+        {/* Mount media only in the dialog after Play, never while scrolling. */}
 
         <span className="absolute inset-0 bg-gradient-to-t from-[#0b2117]/95 via-black/10 to-black/20 pointer-events-none" />
 
         {/* Play Icon Badge */}
         <span className="absolute inset-0 grid place-items-center pointer-events-none">
           <span
-            className="grid size-14 place-items-center rounded-full border border-white/80 bg-black/30 text-white shadow-xl backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:border-transparent group-hover:bg-[var(--botanical)] group-hover:text-[var(--forest-dark)]"
+            className="grid size-14 place-items-center rounded-full border border-white/80 bg-black/50 text-white transition-colors group-hover:border-transparent group-hover:bg-[var(--botanical)] group-hover:text-[var(--forest-dark)]"
           >
             <span className="ml-1 text-xl" aria-hidden="true">
               ▶
@@ -230,7 +240,7 @@ function VideoStoryCard({
         <span className="absolute bottom-0 left-0 right-0 block p-4 text-white z-10 pointer-events-none">
           <span className="flex items-center justify-between gap-2 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-[#dce8b6]">
             <span>{video.creator}</span>
-            <span className="rounded-full bg-black/50 px-2.5 py-0.5 backdrop-blur-xs text-[0.64rem]">
+            <span className="rounded-full bg-black/70 px-2.5 py-0.5 text-[0.64rem]">
               {video.duration}
             </span>
           </span>
@@ -279,8 +289,6 @@ function selectBestHomeVideos(
 export function VideoReviewsSection() {
   const videoRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
-  const videoCarousel = useCarousel(videoRef);
-  const reviewCarousel = useCarousel(reviewRef);
   const [activeVideo, setActiveVideo] = useState<VideoReview | null>(null);
   const { content } = useStore();
 
@@ -327,8 +335,10 @@ export function VideoReviewsSection() {
     return list;
   }, [content.videoReviews, mergedReviews]);
 
-  const videos = selectBestHomeVideos(customerVideos, 6);
-  const reviews = selectBestHomeReviews(mergedReviews, 8);
+  const videos = useMemo(() => selectBestHomeVideos(customerVideos, 6), [customerVideos]);
+  const reviews = useMemo(() => selectBestHomeReviews(mergedReviews, 8), [mergedReviews]);
+  const videoCarousel = useCarousel(videoRef, videos.length);
+  const reviewCarousel = useCarousel(reviewRef, reviews.length);
   const closeVideo = useCallback(() => setActiveVideo(null), []);
 
   if (videos.length === 0 && reviews.length === 0) return null;
@@ -382,8 +392,9 @@ export function VideoReviewsSection() {
             onMouseDown={videoCarousel.handleMouseDown}
             onMouseMove={videoCarousel.handleMouseMove}
             onMouseUp={videoCarousel.handleMouseUp}
+            onMouseLeave={videoCarousel.handleMouseUp}
             onClickCapture={videoCarousel.handleClickCapture}
-            className="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 pt-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[680px]:gap-3.5 cursor-grab active:cursor-grabbing"
+            className="flex items-start gap-5 overflow-x-auto snap-x snap-proximity pb-4 pt-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[680px]:gap-3.5 cursor-grab active:cursor-grabbing"
             role="region"
             aria-label="Customer video stories carousel"
           >
@@ -426,15 +437,16 @@ export function VideoReviewsSection() {
             onMouseDown={reviewCarousel.handleMouseDown}
             onMouseMove={reviewCarousel.handleMouseMove}
             onMouseUp={reviewCarousel.handleMouseUp}
+            onMouseLeave={reviewCarousel.handleMouseUp}
             onClickCapture={reviewCarousel.handleClickCapture}
-            className="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 pt-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
+            className="flex items-start gap-5 overflow-x-auto snap-x snap-proximity pb-4 pt-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
             role="region"
             aria-label="Written customer reviews carousel"
           >
             {reviews.map((review) => (
               <div
                 key={review.id}
-                className="w-[360px] min-w-[320px] shrink-0 snap-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(21,59,45,0.09)] max-[680px]:w-[84vw] max-[680px]:min-w-[260px]"
+                className="w-[360px] min-w-[320px] shrink-0 snap-start max-[680px]:w-[84vw] max-[680px]:min-w-[260px]"
               >
                 <ReviewCard review={review} showProductLink />
               </div>
