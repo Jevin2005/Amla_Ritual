@@ -31,6 +31,12 @@ const bundled = await build({
   plugins: [{
     name: "cart-action-hook-harness",
     setup(builder) {
+      builder.onResolve({ filter: /^@\/features\/analytics\/runtime$/ }, ({ path }) => ({ path, namespace: "test-analytics" }));
+      builder.onLoad({ filter: /.*/, namespace: "test-analytics" }, () => ({ contents: `
+        export const trackLegacy = () => {};
+        export const trackConfirmedShopifyCart = () => {};
+        export const trackEcommerce = (event, payload) => window.dispatchEvent(new CustomEvent("test:analytics", { detail: { event, ...payload } }));
+      ` }));
       builder.onResolve({ filter: /^react(?:\/jsx-runtime)?$/ }, ({ path }) => ({ path, namespace: "test-react" }));
       builder.onLoad({ filter: /.*/, namespace: "test-react" }, ({ path }) => ({
         contents: path === "react" ? reactHarness : "export const jsx = (type, props) => ({ type, props }); export const jsxs = jsx;",
@@ -223,9 +229,14 @@ const detailProduct = { ...product, variants: [...product.variants, detailVarian
 
 test("complete product detail context purchases a non-default variant with its own stock and price", async (t) => {
   const harness = setup(t);
+  harness.responses.push({ body: { cart: null } });
+  harness.render();
+  harness.flushMountEffects();
+  await new Promise((resolve) => setImmediate(resolve));
+  harness.requests.length = 0;
   const returnedCart = {
     ...remoteCart,
-    items: [{ ...remoteCart.items[0], variantId: detailVariant.id, variantTitle: detailVariant.title, quantity: 3, pricePaise: 24950, quantityAvailable: 3 }],
+    items: [{ ...remoteCart.items[0], variantId: detailVariant.id, variantTitle: detailVariant.title, quantity: 3, pricePaise: 24950, quantityAvailable: 3, lineSubtotalPaise: 74850, lineTotalPaise: 74850, discountAmountPaise: 0 }],
     totalQuantity: 3,
     subtotalPaise: 74850,
     totalPaise: 74850,
@@ -238,10 +249,36 @@ test("complete product detail context purchases a non-default variant with its o
   });
   assert.equal(harness.render().cart[0].variantId, detailVariant.id);
   assert.equal(harness.render().totalPaise, 74850);
-  assert.deepEqual(harness.events, [{ event: "add_to_cart", item_id: detailVariant.id, item_variant: "250g", quantity: 3, value: 748.5, currency: "INR" }]);
+  assert.deepEqual(harness.events, [{ event: "add_to_cart", items: [{ item_id: product.id, item_name: product.name, item_category: "Botanical care", item_variant: "250g", price: 249.5, quantity: 3 }], value: 748.5, currency: "INR" }]);
   assert.equal(await harness.render().addToCart(product.slug, 1, false, detailVariant.id, detailProduct), null);
   assert.match(harness.render().cartError, /already in your bag/);
   assert.equal(harness.requests.length, 1, "The detail variant stock limit includes its existing cart quantity");
+});
+
+test("an action before hydration cannot count old persisted items as additions", async (t) => {
+  const harness = setup(t);
+  harness.responses.push({ body: { cart: remoteCart } });
+  await harness.render().addToCart(product.slug);
+  assert.deepEqual(harness.events, []);
+});
+
+test("quantity deltas and clearing report only confirmed Shopify changes", async (t) => {
+  const harness = setup(t);
+  await seedRemoteCart(harness);
+  const two = { ...remoteCart, items: [{ ...remoteCart.items[0], quantity: 2, lineTotalPaise: 19000 }], totalQuantity: 2 };
+  harness.responses.push({ body: { cart: two } });
+  await harness.render().updateQuantity(product.slug, 3);
+  assert.equal(harness.events[0].event, "add_to_cart");
+  assert.equal(harness.events[0].items[0].quantity, 1, "Shopify clamped the request to two total units");
+  assert.equal(harness.events[0].value, 95);
+  harness.responses.push({ body: { cart: remoteCart } });
+  await harness.render().updateQuantity(product.slug, 1);
+  assert.equal(harness.events[1].event, "remove_from_cart");
+  assert.equal(harness.events[1].items[0].quantity, 1);
+  harness.responses.push({ body: { cart: { ...remoteCart, items: [], totalQuantity: 0 } } });
+  await harness.render().clearCart();
+  assert.equal(harness.events[2].event, "remove_from_cart");
+  assert.equal(harness.events[2].items[0].quantity, 1);
 });
 
 test("detail variant validation rejects mismatched products, foreign options and unavailable stock", async (t) => {

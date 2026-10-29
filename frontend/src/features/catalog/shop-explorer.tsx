@@ -10,6 +10,7 @@ import type { ComboCatalogSize } from "@/domain/combo-catalog";
 import { CollectionGrid } from "./collection-grid";
 import { CollectionTypeFilter } from "./collection-type-filter";
 import { useStore } from "@/features/store/store-provider";
+import { useSearchTracking } from "@/features/analytics/search-tracking";
 import styles from "./shop-explorer.module.css";
 
 const steps = ["All", "Cleanse", "Condition", "Colour"] as const;
@@ -38,6 +39,7 @@ export function ShopExplorer() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const entries = useMemo(() => buildCollectionCatalog(products, content.botanicalCombos.combos, source), [products, content.botanicalCombos.combos, source]);
   const filtered = useMemo(() => filterCollectionCatalog(entries, { kind, query, goal, step, collection, size: kind === "individual" ? "all" : size, availableOnly, sort }), [entries, kind, query, goal, step, collection, size, availableOnly, sort]);
+  useSearchTracking(query, products, filtered.length, source === "shopify");
   const individualCount = entries.filter((entry) => entry.kind === "product").length;
   const counts = { all: entries.length, individual: individualCount, combos: entries.length - individualCount };
   const collectionTitle = collection ? products.flatMap((product) => product.collections ?? []).find((membership) => membership.handle.toLowerCase() === collection)?.title : null;

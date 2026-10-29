@@ -2,6 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Suspense, type CSSProperties, type ReactNode } from "react";
 import { getDefaultVariant, type Product } from "@/domain/catalog/products";
 import { StoreProvider } from "@/features/store/store-provider";
+import { AnalyticsBridge } from "@/features/analytics/analytics-bridge";
+import { resolveAnalyticsConfig } from "@/features/analytics/config";
+import { ShopifyConsentScripts } from "@/features/analytics/shopify-scripts";
+import { getShopifyPrivacyConfig } from "@/lib/shopify/privacy-config";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { SUPPORT } from "@/shared/config/support";
 import { getStorefront } from "@/lib/shopify/storefront";
@@ -11,6 +15,15 @@ import { SiteLoading } from "@/shared/ui/site-loading";
 import { LoadingIndicator } from "@/shared/ui/loading-indicator";
 import "./globals.css";
 import "@/features/reviews/judgeme.css";
+
+function analyticsConfig() {
+  return resolveAnalyticsConfig({
+    enabled: process.env.NEXT_PUBLIC_ANALYTICS_ENABLED,
+    shopifyEnabled: process.env.NEXT_PUBLIC_SHOPIFY_ANALYTICS_ENABLED,
+    gaId: process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID,
+    hosts: process.env.NEXT_PUBLIC_ANALYTICS_HOSTS,
+  });
+}
 
 function productForGlobalStore(product: Product): Product {
   const defaultVariant = getDefaultVariant(product);
@@ -153,6 +166,9 @@ async function StorefrontShell({ children }: { children: ReactNode }) {
           content={storefront.content}
           source={storefront.source}
         >
+          <Suspense fallback={null}>
+            <AnalyticsBridge config={analyticsConfig()} />
+          </Suspense>
           <SiteChrome>{children}</SiteChrome>
         </StoreProvider>
         <JudgemeScript />
@@ -160,9 +176,14 @@ async function StorefrontShell({ children }: { children: ReactNode }) {
   );
 }
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const storefront = await getStorefront();
+  const privacyShop = getShopifyPrivacyConfig(storefront.shopId);
   return (
     <html lang="en-IN" className="scroll-pt-[calc(var(--header-height)+20px)] bg-[var(--ivory)] [--header-height:88px] max-[1180px]:[--header-height:76px] max-[680px]:[--header-height:60px]">
+      <head>
+        {privacyShop && <ShopifyConsentScripts shop={privacyShop} analyticsEnabled={analyticsConfig().shopifyEnabled} />}
+      </head>
       <body className="m-0 min-h-screen overflow-x-hidden bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
         <SiteLoading />
         <div id="site-content" style={{ display: "contents" }}>

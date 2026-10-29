@@ -14,7 +14,7 @@ const { outputFiles } = buildSync({
   tsconfig: fileURLToPath(new URL("../tsconfig.json", import.meta.url)),
   bundle: true, platform: "node", format: "cjs", write: false,
   loader: { ".module.css": "empty" },
-  external: ["react", "react/jsx-runtime", "next/link", "@/features/store/store-provider", "./checkout-order-summary"],
+  external: ["react", "react/jsx-runtime", "next/link", "@/features/store/store-provider", "./checkout-order-summary", "@/features/analytics/runtime"],
 });
 const allowedHosts = ["checkout.naturemist.shop", "zyv78m-p7.myshopify.com"];
 const item = {
@@ -36,6 +36,7 @@ function loadCheckout(overrides = {}) {
     if (name in overrides) return overrides[name];
     if (name === "./checkout-order-summary") return { CheckoutOrderSummary: () => null };
     if (name === "@/features/store/store-provider") return { useStore: () => ({}) };
+    if (name === "@/features/analytics/runtime") return { trackEcommerce: () => {} };
     if (name === "next/link") return function MockLink(props) { return React.createElement("a", props); };
     return require(name);
   };
@@ -156,7 +157,8 @@ function componentFixture(t, refreshCart) {
     useRef(initial) { return hooks.useState(() => ({ current: initial }))[0]; },
     useEffect(effect) { if (!mounted) effects.push(effect); },
   };
-  const { CheckoutPreview } = loadCheckout({ react: hooks, "@/features/store/store-provider": { useStore: () => store } });
+  const { CheckoutPreview } = loadCheckout({ react: hooks, "@/features/store/store-provider": { useStore: () => store },
+    "@/features/analytics/runtime": { trackEcommerce: (...args) => analytics.push(args) } });
   const render = () => {
     cursor = 0;
     const tree = CheckoutPreview({ checkoutHosts: allowedHosts });
@@ -197,7 +199,11 @@ test("double clicks produce one handoff and browser back enables a fresh attempt
   pending.resolve(fresh);
   await new Promise((resolve) => setImmediate(resolve));
   assert.deepEqual(fixture.navigations, [fresh.checkoutUrl]);
-  assert.deepEqual(fixture.analytics, [["begin_checkout", { value: 449.55, currency: "INR", mode: "shopify_hosted" }]]);
+  assert.equal(fixture.analytics.length, 1);
+  assert.equal(fixture.analytics[0][0], "checkout_handoff");
+  assert.equal(fixture.analytics[0][1].value, 449.55);
+  assert.equal(fixture.analytics[0][1].currency, "INR");
+  assert.equal(fixture.analytics[0][1].items[0].quantity, 2);
   fixture.listeners.get("pageshow")({ persisted: true });
   const restoredButton = fixture.find(fixture.render(), (node) => node.type === "button");
   assert.equal(restoredButton.props.disabled, false);

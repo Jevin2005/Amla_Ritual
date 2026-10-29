@@ -1,6 +1,8 @@
 import "server-only";
 
 import { cache } from "react";
+import type { CartRequestSession } from "./cart-session";
+import type { StorefrontQueryString } from "@shopify/hydrogen";
 import { defaultBotanicalCombos, emptyBotanicalCombos, parseBotanicalCombos, type BotanicalCombosContent, type GraphBotanicalCombos } from "@/domain/botanical-combos";
 import { botanicalCombosSelection } from "./botanical-combos-query";
 import { isRetiredRitualUrl } from "@/shared/config/retired-routes";
@@ -228,6 +230,7 @@ const SHOP_QUERY = `#graphql
     $language: LanguageCode
   ) @inContext(country: $country, language: $language) {
     shop {
+      id
       name
       primaryDomain { url }
       privacyPolicy { title handle url body }
@@ -477,6 +480,7 @@ export type StorefrontPolicy = {
   body: string;
 };
 type GraphShop = {
+  id: string;
   name: string;
   primaryDomain: { url: string };
   privacyPolicy: StorefrontPolicy | null;
@@ -587,6 +591,7 @@ export type StorefrontData = {
   bundles: ProductBundle[];
   content: StorefrontContent;
   shopName: string;
+  shopId?: string;
   shopUrl: string | null;
   policies: {
     privacy: StorefrontPolicy | null;
@@ -688,10 +693,16 @@ export async function shopifyStorefrontRequest<T>(
   options: {
     allowPartialData?: boolean;
     buyerIp?: string | null;
+    session?: CartRequestSession;
     revalidate?: number;
     tags?: string[];
   } = {},
 ): Promise<T> {
+  if (options.session) {
+    const result = await options.session.client.graphql(query as StorefrontQueryString<T, Record<string, unknown>>, { variables });
+    if (result.errors?.length || !result.data) throw new Error("Shopify could not complete the cart request.");
+    return result.data;
+  }
   const config = configuration();
   if (!config.domain || (!config.publicToken && !config.privateToken)) {
     throw new Error("Shopify Storefront API is not configured.");
@@ -939,6 +950,7 @@ function mapProduct(product: GraphProduct, index: number): Product {
     slug: canonicalSlug,
     shopifyHandle: product.handle,
     productType: product.productType,
+    vendor: product.vendor,
     name: product.title,
     botanical:
       meta(product, "botanicalName") ||
@@ -1647,6 +1659,7 @@ async function loadStorefront(): Promise<StorefrontData> {
       bundles: [],
       content,
       shopName: shop?.name || "NatureMist",
+      shopId: shop?.id,
       shopUrl: shop?.primaryDomain.url || null,
       policies: {
         privacy: shop?.privacyPolicy || null,
@@ -1687,6 +1700,7 @@ async function loadStorefront(): Promise<StorefrontData> {
     bundles,
     content,
     shopName: shop?.name || "NatureMist",
+    shopId: shop?.id,
     shopUrl: shop?.primaryDomain.url || null,
     policies: {
       privacy: shop?.privacyPolicy || null,

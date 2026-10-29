@@ -5,6 +5,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { formatCurrency } from "@/domain/catalog/products";
 import { searchProducts, toSearchProduct, type SearchProduct } from "@/domain/catalog/search";
 import { useStore } from "@/features/store/store-provider";
+import { ecommercePayload } from "@/features/analytics/ecommerce";
+import { trackEcommerce } from "@/features/analytics/runtime";
+import { useSearchTracking } from "@/features/analytics/search-tracking";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
 import { MediaImage } from "@/shared/ui/media-image";
 import styles from "./search-dialog.module.css";
@@ -19,7 +22,7 @@ function SearchIcon() {
 }
 
 function SearchPanel() {
-  const { products, closeSearch, track } = useStore();
+  const { products, closeSearch, source } = useStore();
   const [query, setQuery] = useState("");
   const [catalog, setCatalog] = useState<SearchProduct[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -74,6 +77,8 @@ function SearchPanel() {
   const suggestions = useMemo(() => [...new Set(entries.map((product) => product.ritual).filter(Boolean))].slice(0, 5), [entries]);
   const clear = () => { setQuery(""); inputRef.current?.focus(); };
 
+  useSearchTracking(query, entries, results.length, source === "shopify" && !loading);
+
   useEffect(() => {
     resultsRef.current?.scrollTo({ top: 0 });
   }, [query]);
@@ -99,7 +104,13 @@ function SearchPanel() {
         </div>
         <div className={styles.results} ref={resultsRef} aria-label="Product results" aria-busy={loading}>
           {results.length > 0 ? <ul className={styles.grid}>{results.map((product) => <li key={product.id}>
-            <Link className={styles.card} href={`/shop/${product.slug}`} onClick={() => { track("search", { result_count: results.length, selected_item: product.slug }); closeDialog(); }}>
+            <Link className={styles.card} href={`/shop/${product.slug}`} onClick={() => {
+              trackEcommerce("select_item", { ...ecommercePayload([{
+                item_id: product.id, item_name: product.name, item_category: product.ritual || "Botanical care",
+                price: product.pricePaise / 100, quantity: 1,
+              }], product.currencyCode), item_list_id: "search_results", item_list_name: "Search results" });
+              closeDialog();
+            }}>
               <div className={styles.image}><MediaImage src={product.image?.url || "/images/product-placeholder.svg"} alt="" fill sizes="(max-width: 600px) 84px, 108px" /> </div>
               <div className={styles.copy}>
                 {product.ritual && <span className={styles.category}>{product.ritual} ritual</span>}

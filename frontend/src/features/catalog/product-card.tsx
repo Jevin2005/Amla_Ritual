@@ -11,6 +11,7 @@ import { StarRating } from "@/features/reviews/star-rating";
 import { JudgemePreviewBadge } from "@/features/reviews/judgeme-preview-badge";
 import { isJudgemeConfigured } from "@/lib/judgeme/config";
 import { useStore } from "@/features/store/store-provider";
+import { useProductListImpression } from "@/features/analytics/product-tracking";
 import styles from "./product-card.module.css";
 
 function CardDestination({ onPreview, children, ...props }: ComponentProps<typeof Link> & { onPreview?: () => void }) {
@@ -32,6 +33,11 @@ export function ProductCard({
   unpublished?: boolean;
 }) {
   const { addToCart, toggleWishlist, isWishlisted, track, content } = useStore();
+  const impressionRef = useProductListImpression(product, !unpublished);
+  const preview = onPreview ? () => {
+    if (!unpublished) track("select_item", { item_id: product.slug });
+    onPreview();
+  } : undefined;
   const wished = isWishlisted(product.slug);
   const reviewSummary = getProductReviewSummary(
     content.customerReviews,
@@ -62,6 +68,7 @@ export function ProductCard({
 
   return (
     <article
+      ref={impressionRef}
       className="group/card @container relative flex flex-col self-start overflow-hidden rounded-[var(--radius-md)] bg-[var(--paper)] ring-1 ring-[var(--line)] [--product-accent:var(--botanical)] [--product-soft:var(--beige)] transition-[transform,box-shadow,ring-color] duration-[420ms] ease-[var(--ease)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] hover:ring-[color-mix(in_srgb,var(--product-accent)_34%,transparent)] max-[680px]:rounded-lg"
       style={style}
       data-collection-kind={isCombo ? "combo" : "product"}
@@ -91,7 +98,7 @@ export function ProductCard({
 
         {/* Full-Cover listing product photo */}
         <CardDestination
-          onPreview={onPreview}
+          onPreview={preview}
           href={`/shop/${product.slug}`}
           className={styles.photoLink}
           data-alternate={Boolean(alternateImage && loadedAlternate === alternateImage.url)}
@@ -130,7 +137,7 @@ export function ProductCard({
         </p>
 
         <CardDestination
-          onPreview={onPreview}
+          onPreview={preview}
           href={`/shop/${product.slug}`}
           className="mb-1 block [font-family:var(--font-display)] text-[clamp(1.45rem,1.75vw,1.95rem)] leading-[1.08] tracking-[-0.03em] text-[var(--forest)] transition-colors duration-200 hover:text-[var(--product-accent)] max-[680px]:mb-1 max-[680px]:text-[1.18rem] max-[420px]:text-[1.05rem]"
           onClick={() => track("select_item", { item_id: product.slug, placement: "product_title" })}
@@ -215,7 +222,7 @@ export function ProductCard({
             <button
               type="button"
               className="grid size-11 place-items-center rounded-full border border-[var(--product-accent)] bg-[var(--product-accent)] text-[1.15rem] text-white shadow-[0_6px_18px_color-mix(in_srgb,var(--product-accent)_24%,transparent)] transition-[background,color,transform,box-shadow] duration-[240ms] ease-[ease] hover:-translate-y-0.5 hover:bg-[var(--forest)] hover:shadow-[0_10px_28px_rgba(21,59,45,0.2)] active:scale-95 disabled:cursor-not-allowed disabled:border-[var(--line-strong)] disabled:bg-[var(--line-strong)] disabled:text-[var(--muted)] disabled:shadow-none disabled:hover:translate-y-0 max-[680px]:size-9 max-[680px]:text-[0.95rem] max-[420px]:size-8.5 max-[420px]:text-[0.88rem]"
-              onClick={() => onPreview ? onPreview() : addToCart(product.slug)}
+              onClick={() => preview ? preview() : addToCart(product.slug)}
               disabled={!isAvailable && !onPreview}
               aria-haspopup={onPreview ? "dialog" : undefined}
               aria-label={

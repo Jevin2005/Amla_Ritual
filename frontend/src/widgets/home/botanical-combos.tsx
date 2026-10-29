@@ -132,7 +132,7 @@ export function BotanicalCombos() {
 
 function ComboBook({ content, catalog }: { content: BotanicalCombosContent; catalog: ComboCatalogEntry[] }) {
   const { combos } = content;
-  const { content: { motionSettings } } = useStore();
+  const { content: { motionSettings }, track } = useStore();
   const [pageIndex, setPageIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [turn, setTurn] = useState<PageTurn | null>(null);
@@ -145,6 +145,11 @@ function ComboBook({ content, catalog }: { content: BotanicalCombosContent; cata
   const dotStart = Math.max(0, Math.min(pageIndex - 2, page.pageCount - 5));
   const visiblePages = Array.from({ length: Math.min(5, page.pageCount) }, (_, index) => dotStart + index);
   const preview = previewIndex === null ? null : catalog.find((entry) => entry.combo.id === combos[previewIndex]?.id);
+  function openPreview(index: number) {
+    const product = catalog.find((entry) => entry.combo.id === combos[index]?.id)?.listingProduct;
+    if (product?.id) track("select_item", { item_id: product.id });
+    setPreviewIndex(index);
+  }
   const finishTurn = useCallback(() => {
     const pending = turnRef.current;
     if (!pending) return;
@@ -202,7 +207,7 @@ function ComboBook({ content, catalog }: { content: BotanicalCombosContent; cata
           <div className={styles.bookStage}>
             <div key={pageIndex} className={styles.spread} inert={Boolean(turn)} aria-hidden={turn ? true : undefined}>
               <PhotoPage combo={page.combos[0]} />
-              <DetailsPage content={content} pageIndex={pageIndex} onPreview={setPreviewIndex} />
+              <DetailsPage content={content} pageIndex={pageIndex} onPreview={openPreview} />
             </div>
             {turn && <BotanicalBookTurn
               key={turn.id}

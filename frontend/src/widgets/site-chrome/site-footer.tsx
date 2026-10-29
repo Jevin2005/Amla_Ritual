@@ -5,6 +5,7 @@ import { NewsletterForm } from "@/features/newsletter/newsletter-form";
 import { useStore } from "@/features/store/store-provider";
 import { BrandMark } from "./brand-mark";
 import { SUPPORT } from "@/shared/config/support";
+import { CookieSettings } from "@/features/analytics/cookie-settings";
 
 const footerHeadingClass =
   "m-0 mb-[18px] text-[0.7rem] font-bold tracking-[0.14em] text-[var(--amla)] uppercase";
@@ -91,7 +92,7 @@ export function SiteFooter() {
             <a className={footerLinkClass} href={SUPPORT.phoneHref}>{SUPPORT.phoneDisplay}</a>
           </div>
         </div>
-        {navigation.slice(0, 3).map((group) => (
+        {navigation.slice(0, 3).map((group, index) => (
           <nav className="flex flex-col" aria-label={`${group.title} links`} key={group.id}>
             <h3 className={footerHeadingClass}>{group.title}</h3>
             {(group.items.length ? group.items : [group]).map((item) => (
@@ -99,6 +100,7 @@ export function SiteFooter() {
                 {item.title}
               </Link>
             ))}
+            {index === Math.min(navigation.length, 3) - 1 && <CookieSettings className={`${footerLinkClass} cursor-pointer border-0 bg-transparent p-0 text-left`} />}
           </nav>
         ))}
       </div>

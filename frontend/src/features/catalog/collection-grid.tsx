@@ -3,14 +3,12 @@
 import { useCallback, useState } from "react";
 import type { CollectionEntry } from "@/domain/collection-catalog";
 import { getComboArtworkFallback } from "@/domain/combo-artwork";
-import { useStore } from "@/features/store/store-provider";
 import { ComboPreview } from "@/widgets/home/combo-preview";
 import { ComboCard } from "./combo-card";
 import { ProductCard } from "./product-card";
 import styles from "./collection-grid.module.css";
 
 export function CollectionGrid({ entries, eagerImages = false }: { entries: CollectionEntry[]; eagerImages?: boolean }) {
-  const { track } = useStore();
   const [previewId, setPreviewId] = useState<string | null>(null);
   const closePreview = useCallback(() => setPreviewId(null), []);
   const selected = entries.find((entry) => entry.kind === "combo" && entry.id === previewId);
@@ -24,7 +22,6 @@ export function CollectionGrid({ entries, eagerImages = false }: { entries: Coll
         ) : (
           <ComboCard key={entry.id} entry={entry.combo} eagerImage={eagerImages && index < 3} onPreview={() => {
             setPreviewId(entry.id);
-            track("select_item", { item_id: entry.combo.combo.id, placement: "collection_grid" });
           }} />
         ))}
       </div>

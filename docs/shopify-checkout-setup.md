@@ -2,6 +2,14 @@
 
 Prepared on 25 October 2026. Checkout branding was saved in the Shopify editor during this implementation, as recorded below. Other configuration and release checks remain pending unless explicitly marked verified.
 
+## Production update — 26 October 2026
+
+The frontend is now deployed at `https://naturemist.shop` through the existing Vercel project `amla-ritual-frontend`. Commit `0fe622eff6370951c0f84fc38dcdc0ca9e17e3c7` simplifies checkout to a compact order card with one secure-checkout button, editable items, a collapsed discount field, and estimated totals. The large hero and repeated explanatory text were removed. This was a one-time deployment; no deployment schedule or automation was created.
+
+Vercel reported success for deployment `6ZrAysmcWJmcFbjy1uMK2zUYqBSZ`. Live checks returned HTTP 200 for the homepage, checkout and catalog API; the checkout HTML contains the new layout without the previous heading. All four retired custom payment/order endpoints returned HTTP 410 with `CHECKOUT_RETIRED`. TypeScript, scoped ESLint, the production build with live Shopify data, and all regression tests passed. Desktop and 390px mobile previews were checked; a temporary one-item cart reached branded Shopify checkout and browser Back restored the button. The test cart was cleared without an order or payment.
+
+Shopify theme publication remains separate and pending: live theme is still Horizon `156107178170`; the original prepared draft `160824033466` remains unpublished. A newer unpublished copy `160851624122` was found on 26 October. Neither draft was published in this release. Real payment, shipping, inventory deduction and confirmation-email testing remain pending. The historical preparation notes below describe the state before this deployment.
+
 ## Implementation and release status
 
 - **Implemented locally:** Shopify checkout is the only payment flow. The bag is refreshed immediately before navigating to Shopify's unchanged checkout URL; changed prices/items require another review. Empty, unavailable, over-stock, preview, and failed-refresh carts cannot proceed. Duplicate clicks are locked and returning with the Back button restores the button. The former Razorpay and direct Shopify order endpoints return HTTP 410 without reading credentials or creating payments/orders.

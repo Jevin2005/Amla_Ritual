@@ -11,6 +11,7 @@ import {
   type Product,
 } from "@/domain/catalog/products";
 import { useStore } from "@/features/store/store-provider";
+import { useProductView } from "@/features/analytics/product-tracking";
 
 export function ProductDetailActions({ product }: { product: Product }) {
   const router = useRouter();
@@ -43,6 +44,7 @@ export function ProductDetailActions({ product }: { product: Product }) {
     variants.find((variant) => variant.id === selectedVariantId) ||
     defaultVariant;
   const pricePaise = selectedVariant?.pricePaise ?? product.pricePaise;
+  useProductView(product, selectedVariant);
   const compareAtPricePaise =
     selectedVariant?.compareAtPricePaise ?? product.compareAtPricePaise ?? null;
   const currencyCode =

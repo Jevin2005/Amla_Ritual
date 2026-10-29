@@ -183,14 +183,14 @@ export function RitualFinder({ onProgress }: RitualFinderProps) {
                       </div>
                       <div className={styles.resultCopy}>
                         <p className={styles.productRole}>{!browsingOnly && displayedItems.length > 1 ? `Step ${index + 1} · ` : ""}{role === "Condition" ? "Hair pack" : role === "Cleanse" ? "Hair cleansing" : "Indigo colour stage"}</p>
-                        <h5 className={styles.productName} style={{ "--reveal-order": 1 } as CSSProperties}><Link href={`/shop/${product.slug}${result.kind === "conditional" ? "#product-directions" : ""}`} className={styles.productNameLink}>{product.name}</Link></h5>
+                        <h5 className={styles.productName} style={{ "--reveal-order": 1 } as CSSProperties}><Link href={`/shop/${product.slug}${result.kind === "conditional" ? "#product-directions" : ""}`} onClick={() => { if (product.id) track("select_item", { item_id: product.id }); }} className={styles.productNameLink}>{product.name}</Link></h5>
                         <div className={styles.matchReasons} style={{ "--reveal-order": 2 } as CSSProperties}>
                           <p className={styles.reasonLabel}>{browsingOnly ? "About this botanical" : "Why this fits your answers"}</p>
                           <p>{reason}</p>
                         </div>
                         <div className={styles.productLinks}>
-                          <Link href={`/shop/${product.slug}`} className={styles.productLink} aria-label={`${result.kind === "candidate" ? "Shop" : "Explore"} ${product.name}`}>{result.kind === "candidate" ? "Shop" : "Explore"} {product.name} <span aria-hidden="true">↗</span></Link>
-                          <Link href={`/shop/${product.slug}#product-directions`} className={styles.directionsLink} aria-label={`View ${product.name} directions`}>Read directions <span aria-hidden="true">↗</span></Link>
+                          <Link href={`/shop/${product.slug}`} onClick={() => { if (product.id) track("select_item", { item_id: product.id }); }} className={styles.productLink} aria-label={`${result.kind === "candidate" ? "Shop" : "Explore"} ${product.name}`}>{result.kind === "candidate" ? "Shop" : "Explore"} {product.name} <span aria-hidden="true">↗</span></Link>
+                          <Link href={`/shop/${product.slug}#product-directions`} onClick={() => { if (product.id) track("select_item", { item_id: product.id }); }} className={styles.directionsLink} aria-label={`View ${product.name} directions`}>Read directions <span aria-hidden="true">↗</span></Link>
                         </div>
                       </div>
                     </li>

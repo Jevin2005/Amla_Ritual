@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "@/features/store/store-provider";
+import { cartPayload } from "@/features/analytics/ecommerce";
+import { trackEcommerce } from "@/features/analytics/runtime";
 import { CheckoutOrderSummary } from "./checkout-order-summary";
 import { checkoutCartIssue, prepareShopifyCheckout } from "./shopify-checkout";
 import styles from "./checkout.module.css";
 
 export function CheckoutPreview({ checkoutHosts }: { checkoutHosts: string[] }) {
   const { source, cart, subtotalPaise, totalPaise, discountAmountPaise, currencyCode,
-    isHydrated, isCartBusy, cartError, cartWarnings, refreshCart, track } = useStore();
+    isHydrated, isCartBusy, cartError, cartWarnings, refreshCart, products } = useStore();
   const [handoffError, setHandoffError] = useState("");
   const [isLeaving, setIsLeaving] = useState(false);
   const submitting = useRef(false);
@@ -27,7 +29,8 @@ export function CheckoutPreview({ checkoutHosts }: { checkoutHosts: string[] }) 
     try {
       const next = await prepareShopifyCheckout({ source, allowedHosts: checkoutHosts,
         previousCart: { items: cart, subtotalPaise, totalPaise, discountAmountPaise, currencyCode }, refreshCart });
-      track("begin_checkout", { value: next.cart.totalPaise / 100, currency: next.cart.currencyCode, mode: "shopify_hosted" });
+      // Shopify's Google app owns begin_checkout on actual checkout arrival.
+      trackEcommerce("checkout_handoff", cartPayload(next.cart, products));
       window.location.assign(next.url);
     } catch (error) {
       setHandoffError(error instanceof Error ? error.message : "Checkout could not be opened. Please try again.");

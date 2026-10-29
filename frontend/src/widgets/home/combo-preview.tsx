@@ -8,6 +8,7 @@ import { createPortal, flushSync } from "react-dom";
 import { formatCurrency, getDefaultVariant, type Product } from "@/domain/catalog/products";
 import { getComboPurchaseSummary } from "@/domain/combo-catalog";
 import { useStore } from "@/features/store/store-provider";
+import { useProductView } from "@/features/analytics/product-tracking";
 import { useModalFocus } from "@/shared/hooks/use-modal-focus";
 import styles from "./combo-preview.module.css";
 
@@ -98,6 +99,7 @@ export function ComboPreview({
   const { items } = getComboPurchaseSummary(products, expectedProductCount, source);
   const selectedVariant = listingProduct?.variants?.find((variant) => variant.id === variantId) || (listingProduct ? getDefaultVariant(listingProduct) : null);
   const selectedProduct = listingProduct ? { ...listingProduct, variants: selectedVariant ? [selectedVariant] : listingProduct.variants } : undefined;
+  useProductView(listingProduct, selectedVariant);
   const summary = getComboPurchaseSummary(selectedProduct ? [selectedProduct] : [], 1, source);
   const { total, currencyCode } = summary;
   const missingListing = purchaseUnavailable || !listingProduct;
@@ -127,7 +129,7 @@ export function ComboPreview({
         // Release the dialog's focus trap before opening another surface.
         flushSync(close);
         if (checkout) {
-          track("begin_checkout", { item_id: summary.items[0]?.variant?.id || listingProduct.slug, quantity: purchaseQuantity, value: total * purchaseQuantity / 100, currency: currencyCode, mode: "in_app_checkout" });
+          track("view_checkout", { mode: "in_app_checkout" });
           router.push("/checkout");
         } else openCart();
       } else {
@@ -232,7 +234,13 @@ export function ComboPreview({
                     {product.ingredient && <p><strong>Ingredients:</strong> {product.ingredient}</p>}
                     {product.howTo?.length > 0 && <ol>{product.howTo.map((step, index) => <li key={index}>{step}</li>)}</ol>}
                     <p>Individual price: {Number.isFinite(price) && price >= 0 ? formatCurrency(price, currency) : "Price unavailable"}{!available && " · Individually unavailable"}</p>
-                    <Link href={`/shop/${product.slug}`} onClick={(event) => { if (submittingRef.current) event.preventDefault(); else close(); }} className={styles.productLink}>View full product <span aria-hidden="true">↗</span></Link>
+                    <Link href={`/shop/${product.slug}`} onClick={(event) => {
+                      if (submittingRef.current) event.preventDefault();
+                      else {
+                        if (product.id) track("select_item", { item_id: product.id });
+                        close();
+                      }
+                    }} className={styles.productLink}>View full product <span aria-hidden="true">↗</span></Link>
                   </div>
                 </details>
               </li>

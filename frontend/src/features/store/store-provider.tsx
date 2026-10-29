@@ -18,6 +18,8 @@ import {
   type StoreImage,
 } from "@/domain/catalog/products";
 import type { StorefrontContent } from "@/lib/shopify/storefront";
+import { cartChanges } from "@/features/analytics/ecommerce";
+import { trackConfirmedShopifyCart, trackEcommerce, trackLegacy } from "@/features/analytics/runtime";
 
 export type StorefrontSource = "shopify" | "preview";
 
@@ -47,6 +49,8 @@ export type CartDiscountCode = {
 };
 
 export type StoreCart = {
+  analyticsCart?: import("@shopify/hydrogen").AnalyticsCart;
+  analyticsCartId?: string;
   checkoutUrl: string | null;
   items: CartItem[];
   totalQuantity: number;
@@ -90,6 +94,7 @@ type StoreContextValue = {
   content: StorefrontContent;
   source: StorefrontSource;
   cart: CartItem[];
+  analyticsCart?: StoreCart["analyticsCart"];
   cartCount: number;
   subtotalPaise: number;
   totalPaise: number;
@@ -413,6 +418,7 @@ export function StoreProvider({
     emptyCart(fallbackCurrency),
   );
   const cartRef = useRef(storeCart);
+  const cartSnapshotKnown = useRef(false);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -430,6 +436,7 @@ export function StoreProvider({
   );
 
   const commitCart = useCallback((cart: StoreCart) => {
+    cartSnapshotKnown.current = true;
     cartRef.current = cart;
     setStoreCart(cart);
   }, []);
@@ -515,20 +522,21 @@ export function StoreProvider({
   }, [hydrated, wishlist]);
 
   const track = useCallback((event: string, payload: AnalyticsPayload = {}) => {
-    if (typeof window === "undefined") return;
-    const detail = { event, ...payload };
-    window.dispatchEvent(new CustomEvent("naturemist:analytics", { detail }));
-    const analyticsWindow = window as Window & {
-      dataLayer?: Array<Record<string, unknown>>;
-    };
-    analyticsWindow.dataLayer?.push(detail);
-  }, []);
+    if (source === "shopify") trackLegacy(event, payload);
+  }, [source]);
+
+  const trackCartChanges = useCallback((before: StoreCart, after: StoreCart) => {
+    if (source !== "shopify") return;
+    trackConfirmedShopifyCart(before.analyticsCart, after.analyticsCart);
+    const changes = cartChanges(before, after, initialProducts);
+    if (changes.added.items.length) trackEcommerce("add_to_cart", changes.added);
+    if (changes.removed.items.length) trackEcommerce("remove_from_cart", changes.removed);
+  }, [initialProducts, source]);
 
   const openCart = useCallback(() => {
     setIsSearchOpen(false);
     setIsCartOpen(true);
-    track("view_cart");
-  }, [track]);
+  }, []);
 
   const closeCart = useCallback(() => setIsCartOpen(false), []);
 
@@ -558,7 +566,9 @@ export function StoreProvider({
   }, []);
 
   const handleApiPayload = useCallback(
-    (payload: CartApiPayload, successMessage: string) => {
+    (payload: CartApiPayload, successMessage: string, measureChange = false) => {
+      const previousCart = cartRef.current;
+      const baselineKnown = cartSnapshotKnown.current;
       if (payload.cart) commitCart(payload.cart);
       const userErrors = payload.userErrors || [];
       const warnings = payload.warnings || [];
@@ -571,10 +581,13 @@ export function StoreProvider({
           throw new Error("We could not update your bag. Please try again.");
         }
         setAnnouncement(warnings[0]?.message || successMessage);
+        // A mutation before hydration can return old persisted items as well as
+        // the new line. Without a baseline, suppress rather than count old items.
+        if (measureChange && baselineKnown) trackCartChanges(previousCart, payload.cart);
       }
       return userErrors.length ? null : payload.cart;
     },
-    [commitCart],
+    [commitCart, trackCartChanges],
   );
 
   const handleOperationError = useCallback(
@@ -656,8 +669,6 @@ export function StoreProvider({
         setIsCartOpen(true);
       }
 
-      const pricePaise = variant?.pricePaise ?? product.pricePaise;
-      const currencyCode = variant?.currencyCode || product.currencyCode || "INR";
       try {
         let nextCart: StoreCart | null = null;
         if (source === "shopify") {
@@ -668,6 +679,7 @@ export function StoreProvider({
           nextCart = handleApiPayload(
             payload,
             `${product.name} added to your bag.`,
+            true,
           );
         } else {
           const newLine = previewLine(product, safeQuantity, variant);
@@ -689,15 +701,6 @@ export function StoreProvider({
           setAnnouncement(`${product.name} added to your bag.`);
         }
 
-        if (nextCart) {
-          track("add_to_cart", {
-            item_id: merchandiseId || slug,
-            item_variant: variant?.title,
-            quantity: safeQuantity,
-            value: (pricePaise * safeQuantity) / 100,
-            currency: currencyCode,
-          });
-        }
         return nextCart;
       } catch (error) {
         handleOperationError(error);
@@ -715,7 +718,6 @@ export function StoreProvider({
       handleOperationError,
       productsBySlug,
       source,
-      track,
     ],
   );
 
@@ -781,16 +783,10 @@ export function StoreProvider({
           nextCart = handleApiPayload(
             payload,
             `${selections.length} ritual jars added to your bag.`,
+            true,
           );
         }
 
-        if (nextCart) {
-          track("add_to_cart", {
-            item_count: selections.length,
-            mode: "bundle",
-            currency: nextCart.currencyCode,
-          });
-        }
         return nextCart;
       } catch (error) {
         handleOperationError(error);
@@ -808,7 +804,6 @@ export function StoreProvider({
       handleOperationError,
       productsBySlug,
       source,
-      track,
     ],
   );
 
@@ -828,7 +823,7 @@ export function StoreProvider({
             action: "remove",
             lineIds: [item.lineId],
           });
-          if (!handleApiPayload(payload, `${item.productName} removed from your bag.`)) return;
+          if (!handleApiPayload(payload, `${item.productName} removed from your bag.`, true)) return;
         } else {
           const nextCart = previewCart(
             cartRef.current.items.filter((entry) => entry.lineId !== item.lineId),
@@ -839,10 +834,6 @@ export function StoreProvider({
           setAnnouncement(`${item.productName} removed from your bag.`);
         }
 
-        track("remove_from_cart", {
-          item_id: item.variantId || item.slug,
-          quantity: item.quantity,
-        });
       } catch (error) {
         handleOperationError(error);
       } finally {
@@ -857,7 +848,6 @@ export function StoreProvider({
       handleApiPayload,
       handleOperationError,
       source,
-      track,
     ],
   );
 
@@ -887,7 +877,7 @@ export function StoreProvider({
             action: "update",
             lines: [{ id: item.lineId, quantity: safeQuantity }],
           });
-          handleApiPayload(payload, `${item.productName} quantity updated.`);
+          handleApiPayload(payload, `${item.productName} quantity updated.`, true);
         } else {
           const nextCart = previewCart(
             cartRef.current.items.map((entry) =>
@@ -931,7 +921,7 @@ export function StoreProvider({
           action: "remove",
           lineIds: current.items.map((item) => item.lineId),
         });
-        handleApiPayload(payload, "Your bag is now empty.");
+        handleApiPayload(payload, "Your bag is now empty.", true);
       } else {
         commitCart(emptyCart(fallbackCurrency));
         setAnnouncement("Your bag is now empty.");
@@ -1160,6 +1150,7 @@ export function StoreProvider({
       content,
       source,
       cart: storeCart.items,
+      analyticsCart: storeCart.analyticsCart,
       cartCount: storeCart.totalQuantity,
       subtotalPaise: storeCart.subtotalPaise,
       totalPaise: storeCart.totalPaise,

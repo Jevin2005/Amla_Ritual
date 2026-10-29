@@ -14,7 +14,7 @@ import { HeroDiscoverHint } from "./hero-discover-hint";
 import styles from "./product-hero.module.css";
 
 export function ProductHero({ products, settings }: { products: Product[]; settings: HeroSettings }) {
-  const { content: { motionSettings } } = useStore();
+  const { content: { motionSettings }, track } = useStore();
   const slides = useMemo(() => getImageHeroProducts(products), [products]);
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -489,7 +489,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
               height: `calc(var(--initial-jar-height) * ${initialScale})`,
               width: `calc(var(--initial-jar-height) * ${initialScale * 0.74})`,
             };
-            return <Link key={product.heroEntryId} ref={(element) => { productLinks.current[i] = element; }} href={`/shop/${product.slug}`} className={styles.product} data-hero-product={i} aria-label={`Discover ${product.name}`} aria-describedby={slides.length > 1 ? "jar-browse-instructions" : undefined} draggable={false} tabIndex={initial.poses[i].x > -0.12 && initial.poses[i].x < 1.12 ? 0 : -1} style={{ ...openingStyle, transform: `translate(-50%, -50%) rotate(${initialRoll}rad)` }}>
+            return <Link key={product.heroEntryId} ref={(element) => { productLinks.current[i] = element; }} href={`/shop/${product.slug}`} onClick={(event) => { if (!event.defaultPrevented && product.id) track("select_item", { item_id: product.id }); }} className={styles.product} data-hero-product={i} aria-label={`Discover ${product.name}`} aria-describedby={slides.length > 1 ? "jar-browse-instructions" : undefined} draggable={false} tabIndex={initial.poses[i].x > -0.12 && initial.poses[i].x < 1.12 ? 0 : -1} style={{ ...openingStyle, transform: `translate(-50%, -50%) rotate(${initialRoll}rad)` }}>
               <div className={styles.float}>
                 <div className={styles.artwork} style={{ animationDelay: `${i * 70}ms` }}>
                   <MediaImage src={product.heroImage.url} alt={product.heroImage.altText} fill sizes="(max-width: 480px) 70vw, (max-width: 1024px) 77vw, 62dvh" preload draggable={false} className={styles.jarImage} />

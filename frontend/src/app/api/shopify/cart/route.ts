@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { shopifyStorefrontRequest } from "@/lib/shopify/storefront";
+import { createCartRequestSession, getShopifyBuyerIp, type CartRequestSession } from "@/lib/shopify/cart-session";
 
 const CART_COOKIE = "naturemist_shopify_cart";
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 14;
@@ -65,6 +66,8 @@ const CART_LINE_FIELDS = `
         id
         handle
         title
+        vendor
+        productType
         featuredImage { url altText width height }
       }
     }
@@ -75,6 +78,7 @@ const CART_FRAGMENT = `#graphql
   fragment NatureMistCartFields on Cart {
     id
     checkoutUrl
+    updatedAt
     totalQuantity
     discountCodes {
       code
@@ -211,6 +215,8 @@ type GraphCartLine = {
       id: string;
       handle: string;
       title: string;
+      vendor: string;
+      productType: string;
       featuredImage: GraphImage | null;
     };
   };
@@ -218,6 +224,7 @@ type GraphCartLine = {
 
 type GraphCart = {
   id: string;
+  updatedAt: string;
   checkoutUrl: string;
   totalQuantity: number;
   discountCodes: Array<{ code: string; applicable: boolean }>;
@@ -280,7 +287,7 @@ function toImage(image: GraphImage | null | undefined) {
   };
 }
 
-async function completeCartLines(cart: GraphCart, ip: string | null) {
+async function completeCartLines(cart: GraphCart, session: CartRequestSession) {
   const lines = [...cart.lines.nodes];
   let pageInfo = cart.lines.pageInfo;
 
@@ -291,7 +298,7 @@ async function completeCartLines(cart: GraphCart, ip: string | null) {
     const data = await shopifyStorefrontRequest<CartLinesPageResponse>(
       CART_LINES_PAGE_QUERY,
       { cartId: cart.id, after: pageInfo.endCursor },
-      { buyerIp: ip },
+      { buyerIp: session.buyerIp, session },
     );
     if (!data.cart) throw new Error("The bag session expired while it was loading.");
 
@@ -348,6 +355,26 @@ function normalizeCart(cart: GraphCart) {
 
   return {
     checkoutUrl: cart.checkoutUrl,
+    // Analytics needs only the public cart token. Never expose the ?key= secret.
+    analyticsCartId: cart.id.split("?")[0],
+    analyticsCart: {
+      id: cart.id.split("?")[0],
+      updatedAt: cart.updatedAt,
+      cost: cart.cost,
+      lines: { nodes: cart.lines.nodes.flatMap((line) => {
+        const variant = line.merchandise;
+        const product = variant.product;
+        if (!variant.id || !product) return [];
+        return [{
+          id: line.id.split("?")[0], quantity: line.quantity,
+          merchandise: {
+            id: variant.id, title: variant.title || product.title,
+            price: line.cost.amountPerQuantity,
+            product: { id: product.id, title: product.title, handle: product.handle, vendor: product.vendor, productType: product.productType },
+          },
+        }];
+      }) },
+    },
     items,
     totalQuantity: cart.totalQuantity,
     subtotalPaise: toPaise(cart.cost.subtotalAmount),
@@ -411,32 +438,6 @@ function clearCartCookie(response: NextResponse) {
   return response;
 }
 
-function validIpv4(value: string) {
-  const parts = value.split(".");
-  return (
-    parts.length === 4 &&
-    parts.every((part) => /^\d{1,3}$/.test(part) && Number(part) <= 255)
-  );
-}
-
-function buyerIp(request: NextRequest) {
-  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0];
-  const candidate = (
-    request.headers.get("cf-connecting-ip") ||
-    forwarded ||
-    request.headers.get("x-real-ip") ||
-    ""
-  ).trim();
-  if (validIpv4(candidate)) return candidate;
-  if (
-    candidate.length <= 45 &&
-    candidate.includes(":") &&
-    /^[0-9a-f:.]+$/i.test(candidate)
-  ) {
-    return candidate;
-  }
-  return null;
-}
 
 function readQuantity(value: unknown, allowZero = false) {
   if (typeof value !== "number" || !Number.isInteger(value)) return null;
@@ -552,7 +553,7 @@ function readBuyerIdentity(value: unknown) {
   };
 }
 
-async function payloadResponse(payload: GraphCartPayload, ip: string | null) {
+async function payloadResponse(payload: GraphCartPayload, session: CartRequestSession) {
   const userErrors = normalizeIssues(payload.userErrors);
   const warnings = normalizeIssues(payload.warnings || []);
   if (!payload.cart) {
@@ -566,7 +567,7 @@ async function payloadResponse(payload: GraphCartPayload, ip: string | null) {
     );
   }
 
-  const completeCart = await completeCartLines(payload.cart, ip);
+  const completeCart = await completeCartLines(payload.cart, session);
   const response = json({
     cart: normalizeCart(completeCart),
     userErrors,
@@ -578,7 +579,7 @@ async function payloadResponse(payload: GraphCartPayload, ip: string | null) {
 async function createCart(
   lines: CartLineInput[],
   discountCodes: string[],
-  ip: string | null,
+  session: CartRequestSession,
 ) {
   const countryCode =
     process.env.SHOPIFY_DEFAULT_COUNTRY?.trim().toUpperCase() || "IN";
@@ -591,12 +592,12 @@ async function createCart(
         buyerIdentity: { countryCode },
       },
     },
-    { buyerIp: ip },
+    { buyerIp: session.buyerIp, session },
   );
   return data.cartCreate;
 }
 
-export async function GET(request: NextRequest) {
+async function getCart(request: NextRequest, session: CartRequestSession) {
   const cartId = request.cookies.get(CART_COOKIE)?.value;
   if (!cartId) return json({ cart: null, userErrors: [], warnings: [] });
 
@@ -604,14 +605,14 @@ export async function GET(request: NextRequest) {
     const data = await shopifyStorefrontRequest<CartQueryResponse>(
       CART_QUERY,
       { cartId },
-      { buyerIp: buyerIp(request) },
+      { buyerIp: session.buyerIp, session },
     );
     if (!data.cart) {
       return clearCartCookie(
         json({ cart: null, userErrors: [], warnings: [] }),
       );
     }
-    const completeCart = await completeCartLines(data.cart, buyerIp(request));
+    const completeCart = await completeCartLines(data.cart, session);
     return setCartCookie(
       json({ cart: normalizeCart(completeCart), userErrors: [], warnings: [] }),
       completeCart.id,
@@ -624,7 +625,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+async function postCart(request: NextRequest, session: CartRequestSession) {
   let body: Record<string, unknown>;
   try {
     const parsed = await readLimitedJson(request, MAX_CART_BODY_BYTES);
@@ -641,7 +642,6 @@ export async function POST(request: NextRequest) {
 
   const action = body.action;
   const cartId = request.cookies.get(CART_COOKIE)?.value || null;
-  const ip = buyerIp(request);
 
   try {
     if (action === "create") {
@@ -650,7 +650,7 @@ export async function POST(request: NextRequest) {
       if (!lines || !discountCodes) {
         return json({ error: "The cart lines or discount codes are invalid." }, 400);
       }
-      return payloadResponse(await createCart(lines, discountCodes, ip), ip);
+      return payloadResponse(await createCart(lines, discountCodes, session), session);
     }
 
     if (action === "add") {
@@ -658,12 +658,12 @@ export async function POST(request: NextRequest) {
       if (!lines?.length) {
         return json({ error: "At least one valid merchandise line is required." }, 400);
       }
-      if (!cartId) return payloadResponse(await createCart(lines, [], ip), ip);
+      if (!cartId) return payloadResponse(await createCart(lines, [], session), session);
 
       const data = await shopifyStorefrontRequest<CartLinesAddResponse>(
         CART_LINES_ADD_MUTATION,
         { cartId, lines },
-        { buyerIp: ip },
+        { buyerIp: session.buyerIp, session },
       );
       if (!data.cartLinesAdd.cart) {
         // A null mutation cart can also mean validation failed. Only replace the
@@ -671,7 +671,7 @@ export async function POST(request: NextRequest) {
         const existing = await shopifyStorefrontRequest<CartQueryResponse>(
           CART_QUERY,
           { cartId },
-          { buyerIp: ip },
+          { buyerIp: session.buyerIp, session },
         );
         if (existing.cart) {
           return payloadResponse({
@@ -680,14 +680,14 @@ export async function POST(request: NextRequest) {
             userErrors: data.cartLinesAdd.userErrors.length
               ? data.cartLinesAdd.userErrors
               : [{ field: null, message: "Shopify did not confirm this bag update. Please try again." }],
-          }, ip);
+          }, session);
         }
         if (existing.cart !== null) {
           throw new Error("Shopify did not confirm whether the existing bag expired.");
         }
-        return payloadResponse(await createCart(lines, [], ip), ip);
+        return payloadResponse(await createCart(lines, [], session), session);
       }
-      return payloadResponse(data.cartLinesAdd, ip);
+      return payloadResponse(data.cartLinesAdd, session);
     }
 
     if (!cartId) {
@@ -708,9 +708,9 @@ export async function POST(request: NextRequest) {
       const data = await shopifyStorefrontRequest<CartLinesUpdateResponse>(
         CART_LINES_UPDATE_MUTATION,
         { cartId, lines },
-        { buyerIp: ip },
+        { buyerIp: session.buyerIp, session },
       );
-      return payloadResponse(data.cartLinesUpdate, ip);
+      return payloadResponse(data.cartLinesUpdate, session);
     }
 
     if (action === "remove") {
@@ -719,9 +719,9 @@ export async function POST(request: NextRequest) {
       const data = await shopifyStorefrontRequest<CartLinesRemoveResponse>(
         CART_LINES_REMOVE_MUTATION,
         { cartId, lineIds },
-        { buyerIp: ip },
+        { buyerIp: session.buyerIp, session },
       );
-      return payloadResponse(data.cartLinesRemove, ip);
+      return payloadResponse(data.cartLinesRemove, session);
     }
 
     if (action === "discount") {
@@ -730,9 +730,9 @@ export async function POST(request: NextRequest) {
       const data = await shopifyStorefrontRequest<CartDiscountResponse>(
         CART_DISCOUNT_CODES_UPDATE_MUTATION,
         { cartId, discountCodes },
-        { buyerIp: ip },
+        { buyerIp: session.buyerIp, session },
       );
-      return payloadResponse(data.cartDiscountCodesUpdate, ip);
+      return payloadResponse(data.cartDiscountCodesUpdate, session);
     }
 
     if (action === "buyerIdentity") {
@@ -741,9 +741,9 @@ export async function POST(request: NextRequest) {
       const data = await shopifyStorefrontRequest<CartBuyerIdentityResponse>(
         CART_BUYER_IDENTITY_UPDATE_MUTATION,
         { cartId, buyerIdentity },
-        { buyerIp: ip },
+        { buyerIp: session.buyerIp, session },
       );
-      return payloadResponse(data.cartBuyerIdentityUpdate, ip);
+      return payloadResponse(data.cartBuyerIdentityUpdate, session);
     }
 
     return json({ error: "This cart action is not supported." }, 400);
@@ -753,4 +753,19 @@ export async function POST(request: NextRequest) {
       502,
     );
   }
+}
+
+// A fresh context per request keeps visitor consent and session cookies isolated.
+export async function GET(request: NextRequest) {
+  const session = createCartRequestSession(request, getShopifyBuyerIp(request));
+  const response = await getCart(request, session);
+  session.client.requestContext.applyResponseHeaders(response.headers);
+  return response;
+}
+
+export async function POST(request: NextRequest) {
+  const session = createCartRequestSession(request, getShopifyBuyerIp(request));
+  const response = await postCart(request, session);
+  session.client.requestContext.applyResponseHeaders(response.headers);
+  return response;
 }

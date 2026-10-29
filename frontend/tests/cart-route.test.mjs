@@ -29,7 +29,7 @@ const originalId = "gid://shopify/Cart/original?key=private-test-key";
 const freshId = "gid://shopify/Cart/new?key=new-private-test-key";
 const money = (amount) => ({ amount, currencyCode: "INR" });
 const graphCart = (id = originalId) => ({
-  id, checkoutUrl: "https://test.myshopify.com/checkouts/original", totalQuantity: 1,
+  id, updatedAt: "2026-10-26T10:00:00Z", checkoutUrl: "https://test.myshopify.com/checkouts/original", totalQuantity: 1,
   discountCodes: [{ code: "SAVED10", applicable: true }],
   cost: { subtotalAmount: money("100"), totalAmount: money("90"), subtotalAmountEstimated: false, totalAmountEstimated: true },
   lines: {
@@ -40,7 +40,7 @@ const graphCart = (id = originalId) => ({
       merchandise: {
         id: "gid://shopify/ProductVariant/1", title: "100g", availableForSale: true,
         quantityAvailable: 4, selectedOptions: [], image: null,
-        product: { id: "gid://shopify/Product/1", handle: "amla", title: "Amla", featuredImage: null },
+        product: { id: "gid://shopify/Product/1", handle: "amla", title: "Amla", vendor: "NatureMist", productType: "Botanical", featuredImage: null },
       },
     }],
     pageInfo: { hasNextPage: false, endCursor: null },
@@ -89,6 +89,11 @@ test("a rejected add preserves the existing Shopify bag, error, discount and che
   assert.equal(body.cart.checkoutUrl, graphCart().checkoutUrl);
   assert.equal(body.cart.discountCodes[0].code, "SAVED10");
   assert.equal(body.cart.totalPaise, 9000);
+  assert.equal(body.cart.analyticsCartId, "gid://shopify/Cart/original");
+  assert.ok(!body.cart.analyticsCartId.includes("private-test-key"));
+  assert.equal(body.cart.analyticsCart.updatedAt, "2026-10-26T10:00:00Z");
+  assert.equal(body.cart.analyticsCart.lines.nodes[0].merchandise.product.vendor, "NatureMist");
+  assert.ok(!JSON.stringify(body.cart.analyticsCart).includes("private-test-key"));
   assert.equal(body.warnings[0].code, "NOTICE");
   assert.equal(response.cookies.get("naturemist_shopify_cart").value, originalId);
   assert.equal(requests.length, 2);
