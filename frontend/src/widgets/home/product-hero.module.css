@@ -30,6 +30,8 @@
   overflow: hidden;
   background: radial-gradient(ellipse at 52% 20%, #fffcf580, transparent 70%), var(--hero-cream);
   pointer-events: auto;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
 }
 .botanicalBackdrop {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -41,7 +43,6 @@
   /* Phones can explore the whole catalog by swiping; vertical scrolling moves
      directly into the next scene without waiting for every product. */
   .hero { --story-extra: 0px; }
-  .stage { touch-action: pan-y pinch-zoom; user-select: none; }
   .botanicalBackdrop { background: none; opacity: .28; }
   .botanicalBackdrop::before,
   .botanicalBackdrop::after {
@@ -77,14 +78,16 @@
 .arc text { fill: var(--hero-lime); font-family: var(--font-cormorant), Georgia, serif; font-size: 74px; font-weight: 500; letter-spacing: 1.4px; text-rendering: geometricPrecision; }
 .products { position: absolute; inset: 0; width: 100%; height: 100%; }
 .products { z-index: 4; pointer-events: none; }
-.product { position: absolute; display: block; width: 40.7dvh; pointer-events: auto; border-radius: 15%; -webkit-tap-highlight-color: transparent; will-change: transform; touch-action: pan-y pinch-zoom; user-select: none; }
+.product { position: absolute; z-index: 1; display: block; width: 40.7dvh; pointer-events: auto; border-radius: 15%; -webkit-tap-highlight-color: transparent; will-change: transform; touch-action: pan-y pinch-zoom; user-select: none; }
 .product:focus-visible { outline: 1px solid var(--forest); outline-offset: 14px; }
 .float { position: absolute; inset: 0; pointer-events: none; }
 .swipeHint { display: none; }
 /* Frame the transparent source at the jar bounds without changing its artwork. */
 .artwork { position: absolute; left: -33.2%; top: -13%; width: 166.4%; height: 123%; pointer-events: none; animation: jarEntrance 700ms var(--ease) both; }
 @keyframes jarEntrance { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-.jarImage { object-fit: contain; filter: brightness(var(--jar-brightness, 1)) drop-shadow(10px 18px 18px #172c1310); }
+/* The artwork supplies its own lighting. Keep swipes on image layers without
+   a changing filter or stacking order at any viewport width. */
+.jarImage { object-fit: contain; }
 .discover {
   position: fixed; left: 0; top: 0; z-index: 7; width: max-content;
   color: var(--forest); pointer-events: none; user-select: none;

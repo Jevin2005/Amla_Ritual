@@ -475,7 +475,12 @@ export function PreviousProductHero({ products, settings }: { products: Product[
             onTouchStart={start3DInteraction}
           >
             <ProductModel model={{ ...product.heroModel, altText: product.heroModel.altText || `${product.name} in 3D` }}
-              settings={settings} presentation="showcase" paused={paused || !inView} cameraDistancePercent={95} eager enabled preload={nearHero && pageVisible}
+              settings={settings} presentation="showcase" paused={paused || !inView} cameraDistancePercent={95} eager
+              // On phones the short opening story puts this model near the
+              // viewport immediately. Wait for the reveal before decoding its
+              // large textures so jar swiping keeps the main thread available.
+              enabled={!compactViewport || (inView && pageVisible)}
+              preload={(compactViewport ? inView : nearHero) && pageVisible}
               poster={product.featuredImage || product.heroPoster}
               onLoadingChange={handleModelLoading} />
           </div>

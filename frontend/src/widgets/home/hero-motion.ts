@@ -187,7 +187,8 @@ export function getHeroBackdrop(width: number, height: number) {
 export function getHeroFrame(progress: number, count: number, compact = false, manualOffset = 0, speed = 0, layout?: HeroLayout, looping = false) {
   const p = clamp(progress);
   const drift = smoothstep(p / 0.48);
-  const travel = getHeroTravel(p, count, looping);
+  // Looping the horizontal band must not change the desktop page timeline.
+  const travel = getHeroTravel(p, count, looping && compact);
   const manual = Number.isFinite(manualOffset) ? manualOffset : 0;
   const velocity = Number.isFinite(speed) ? speed : 0;
   // Adding jars must not retime the established cover, header, or section handoff.

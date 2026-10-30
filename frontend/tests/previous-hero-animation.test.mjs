@@ -454,6 +454,38 @@ test("the current 3D model warms near the covered hero independently of slide-im
   env.dispose();
 });
 
+test("mobile 3D loading waits for the actual reveal instead of geometric proximity", () => {
+  const env = environment({ compact: true, outgoing: { handoff: "true", reducedMotion: "false", revealing: "false" } });
+  const viewer = () => all(env.tree).find((node) => node.type === "ProductModel");
+  assert.equal(viewer().props.enabled, false);
+  env.near(true);
+  env.intersect(true);
+  assert.equal(viewer().props.enabled, false, "an overlapping model's own observer cannot activate it through the cover");
+  assert.equal(viewer().props.preload, false, "nearby hidden textures must not compete with opening jar swipes");
+  assert.equal(viewer().props.paused, true);
+
+  env.updateOutgoing({ revealing: "true" });
+  assert.equal(viewer().props.enabled, true);
+  assert.equal(viewer().props.preload, true, "the model can begin immediately when the scene is revealed");
+  assert.equal(viewer().props.paused, false);
+  assert.equal(viewer().props.eager, true);
+
+  env.updateOutgoing({ revealing: "false" });
+  assert.equal(viewer().props.enabled, false);
+  assert.equal(viewer().props.preload, false);
+  assert.equal(viewer().props.paused, true);
+  env.updateOutgoing({ revealing: "true" });
+  env.harness.visible = false; env.render();
+  assert.equal(viewer().props.enabled, false);
+  assert.equal(viewer().props.preload, false);
+  env.harness.visible = true; env.render();
+  assert.equal(viewer().props.enabled, true);
+  env.intersect(false);
+  assert.equal(viewer().props.enabled, false, "an offscreen scene does not request initial model activation");
+  assert.equal(viewer().props.paused, true, "a model that has already warmed pauses instead of animating behind the cover");
+  env.dispose();
+});
+
 test("mobile changes retain outgoing images until the incoming poster and edge canvas are ready", () => {
   const env = ready({ compact: true });
   env.flushFrames();

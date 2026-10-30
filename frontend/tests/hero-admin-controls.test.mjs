@@ -113,7 +113,7 @@ function environment(kind, motion = {}, reduced = false) {
       if (observer.target === target) observer.callback([{ target }]);
     }),
     advanceTime: (milliseconds) => { time += milliseconds; },
-    flush: () => { time += 16.7; const pending = [...frames.values()]; frames.clear(); pending.forEach((callback) => callback(time)); },
+    flush: (milliseconds = 16.7) => { time += milliseconds; const pending = [...frames.values()]; frames.clear(); pending.forEach((callback) => callback(time)); },
     flushTimers: () => { const pending = [...timers.values()]; timers.clear(); timerDeadlines.clear(); pending.forEach((callback) => callback()); },
     tickTimers: (milliseconds) => {
       time += milliseconds;
@@ -196,7 +196,7 @@ async function mountHero(options = {}) {
   const captures = new Set();
   const section = element({ clientWidth: options.width ?? (options.compact ? 390 : 1440),
     setPointerCapture: (id) => captures.add(id),
-    releasePointerCapture: (id) => { captures.delete(id); section.emit("lostpointercapture", { pointerId: id }); },
+    releasePointerCapture: (id) => { captures.delete(id); section.emit("lostpointercapture", { target: section, pointerId: id }); },
     hasPointerCapture: (id) => captures.has(id),
   });
   const incoming = options.noIncoming ? null : element({ hasAttribute: (name) => name === "data-previous-hero" });
@@ -351,8 +351,8 @@ test("horizontal jar dragging settles with momentum and suppresses only the drag
   assert.ok(env.frames.size > 0, "released input should settle through the existing animation loop");
   env.settle();
   assert.notEqual(jarStyle(env.links[0]).left, releasePosition);
-  const centered = env.links.findIndex((link) => Math.abs(parseFloat(jarStyle(link).left) - 50) < 0.01);
-  assert.ok(centered > 0, "the drag settles a later product in the foreground");
+  const centered = env.links.reduce((nearest, link, index) => Math.abs(parseFloat(jarStyle(link).left) - 50) < Math.abs(parseFloat(jarStyle(env.links[nearest]).left) - 50) ? index : nearest, 0);
+  assert.ok(!env.links.some((link) => Math.abs(parseFloat(jarStyle(link).left) - 50) < 0.01), "released momentum keeps its fractional position instead of snapping to a jar");
   assert.equal(env.links[centered].properties.get("--jar-blur"), undefined);
   assert.equal(env.context.scrollY, 0);
   assert.equal(env.progress.style.transform, "scaleX(0)");
@@ -383,14 +383,14 @@ test("vertical touch intent and small taps preserve page gestures without captur
   const tapMovement = env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 177, clientY: 302, timeStamp: 116 });
   assert.equal(tapMovement.defaultPrevented, false);
   assert.equal(env.captures.size, 0);
-  env.jarEvent("pointerup", 0, { pointerType: "touch", timeStamp: 132 });
+  env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 177, clientY: 302, timeStamp: 132 });
   assert.equal(env.jarEvent("click", 0, { timeStamp: 133 }).defaultPrevented, false);
   env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 180, clientY: 300, timeStamp: 200 });
   const vertical = env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 177, clientY: 350, timeStamp: 216 });
   const laterHorizontal = env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 70, clientY: 355, timeStamp: 232 });
   assert.equal(vertical.defaultPrevented, false);
   assert.equal(laterHorizontal.defaultPrevented, false, "once a gesture belongs to the page it must not be stolen back");
-  env.jarEvent("pointerup", 0, { pointerType: "touch", timeStamp: 248 });
+  env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 70, clientY: 355, timeStamp: 248 });
   env.settle();
   assert.equal(env.captures.size, 0);
   assert.deepEqual(env.snapshot(), opening);
@@ -403,7 +403,7 @@ test("interrupted drags release pointer capture and clear tooltip suppression th
     blur(env) { env.context.emit("blur"); },
     hidden(env) { env.context.document.hidden = true; env.context.document.emit("visibilitychange"); },
     cancelled(env) { env.jarEvent("pointercancel", 0, { timeStamp: 140 }); },
-    lostCapture(env) { env.captures.clear(); env.section.emit("lostpointercapture", { pointerId: 1 }); },
+    lostCapture(env) { env.captures.clear(); env.section.emit("lostpointercapture", { target: env.section, pointerId: 1 }); },
     disposed(env) { env.dispose(); },
   };
   for (const [name, interrupt] of Object.entries(cases)) {
@@ -427,6 +427,42 @@ test("interrupted drags release pointer capture and clear tooltip suppression th
   }
 });
 
+test("touch capture transferred from a jar or background child keeps the drag alive at every width", async () => {
+  for (const width of [390, 820, 1440]) for (const onJar of [true, false]) for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: true, width });
+    const child = element({ closest: (selector) => onJar && selector === "[data-hero-product]" ? env.links[0] : null });
+    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * width;
+    const opening = x();
+    env.jarEvent("pointerdown", 0, { target: child, pointerType: "touch", clientX: 190, clientY: 300 });
+    env.jarEvent("pointermove", 0, { target: child, pointerType: "touch", clientX: 190 + direction * 20, clientY: 300, timeStamp: 116 });
+    assert.equal(env.captures.has(1), true);
+    // Touch initially captures its child target. Transferring capture to the
+    // section bubbles a loss from that child before later moves target the section.
+    env.section.emit("lostpointercapture", { target: child, pointerId: 1, pointerType: "touch" });
+    assert.equal(env.section.dataset.dragging, "true", "a child's implicit capture loss must not cancel the section's new capture");
+    assert.equal(env.captures.has(1), true);
+    env.flush();
+    assert.ok(Math.abs(x() - opening - direction * 20) < 0.001);
+    env.section.emit("lostpointercapture", { target: env.section, pointerId: 2, pointerType: "touch" });
+    assert.equal(env.section.dataset.dragging, "true", "another pointer cannot cancel the active drag");
+    for (const [sample, distance] of [36, 52, 68, 84, 100, 84, 68, 52, 36, 20, -4, -28].entries()) {
+      const move = env.jarEvent("pointermove", 0, { target: env.section, pointerType: "touch", clientX: 190 + direction * distance, clientY: 300, timeStamp: 132 + sample * 16 });
+      env.flush();
+      assert.equal(move.defaultPrevented, true);
+      assert.ok(Math.abs(x() - opening - direction * distance) < 0.001, `captured touch follows both directions at ${width}px`);
+    }
+    const beforeLoss = x();
+    env.captures.delete(1);
+    env.section.emit("lostpointercapture", { target: env.section, pointerId: 1, pointerType: "touch" });
+    assert.equal(env.section.dataset.dragging, "false", "a true section capture loss ends the matching gesture");
+    const staleMove = env.jarEvent("pointermove", 0, { target: env.section, pointerType: "touch", clientX: 20, clientY: 300, timeStamp: 340 });
+    env.settle();
+    assert.equal(staleMove.defaultPrevented, false);
+    assert.ok(Math.abs(x() - beforeLoss) < 0.001, "later input cannot resume the cancelled gesture");
+    env.dispose();
+  }
+});
+
 test("pointer leave cancels an unstarted gesture but preserves a captured drag until release", async () => {
   const env = await mountHero({ products: sixProducts });
   env.jarEvent("pointerdown");
@@ -446,14 +482,14 @@ test("pointer leave cancels an unstarted gesture but preserves a captured drag u
   env.dispose();
 });
 
-test("horizontal wheel browsing is local while vertical scrolling, pinch zoom, and boundary input pass through", async () => {
+test("horizontal wheel browsing loops locally while vertical scrolling, pinch zoom, and controls keep their input", async () => {
   const env = await mountHero({ products: sixProducts });
   const opening = env.snapshot();
   for (const options of [
     { deltaX: 4, deltaY: 80 },
     { deltaX: 80, deltaY: 0, ctrlKey: true },
-    { deltaX: 80, deltaY: 0, target: element() },
-    { deltaX: -80, deltaY: 0 },
+    { deltaX: 80, deltaY: 0, metaKey: true },
+    { deltaX: 80, deltaY: 0, target: element({ closest: (selector) => selector.includes("button") ? {} : null }) },
   ]) {
     const event = env.jarEvent("wheel", 0, { deltaMode: 0, ctrlKey: false, ...options });
     assert.equal(event.defaultPrevented, false);
@@ -466,15 +502,19 @@ test("horizontal wheel browsing is local while vertical scrolling, pinch zoom, a
   assert.ok(parseFloat(jarStyle(env.links[0]).left) < 50);
   assert.equal(env.context.scrollY, 0);
   assert.equal(env.surface.style.opacity, "1");
+  const reverse = env.jarEvent("wheel", 0, { deltaX: -320, deltaY: 0, deltaMode: 0 });
+  assert.equal(reverse.defaultPrevented, true, "the previous side of the first product remains scrollable");
+  env.settle();
+  assert.ok(parseFloat(jarStyle(env.links[0]).left) > 50);
   env.scrollTo(0.56);
   const exiting = env.jarEvent("wheel", 0, { deltaX: 240, deltaY: 0, deltaMode: 0, ctrlKey: false });
   assert.equal(exiting.defaultPrevented, false, "the established page exit sequence owns input after jar browsing");
   env.dispose();
 });
 
-test("all six jars remain reachable by keyboard, including reduced and disabled motion", async () => {
-  for (const options of [{}, { reduced: true }, { motion: { enabled: false } }]) {
-    const env = await mountHero({ ...options, products: sixProducts, compact: true });
+test("all six jars remain reachable by keyboard at every width, including reduced and disabled motion", async () => {
+  for (const width of [390, 820, 1440]) for (const options of [{}, { reduced: true }, { motion: { enabled: false } }]) {
+    const env = await mountHero({ ...options, products: sixProducts, compact: width <= 680, width });
     const reduced = options.reduced || options.motion?.enabled === false;
     assert.equal(env.links.length, 6);
     assert.equal(env.links[3].tabIndex, -1, "offscreen links must not remain in the tab sequence");
@@ -490,7 +530,7 @@ test("all six jars remain reachable by keyboard, including reduced and disabled 
       assert.ok(Math.abs(parseFloat(jarStyle(env.links[index + 1]).left) - 50) < 0.01);
       if (reduced) for (const link of env.links) {
         assert.equal(link.properties.get("--jar-blur"), undefined);
-        assert.equal(link.properties.get("--jar-brightness"), "1");
+        assert.equal(link.properties.get("--jar-brightness"), undefined);
       }
     }
     assert.equal(env.counter.textContent, "06 / 06");
@@ -508,10 +548,10 @@ test("all six jars remain reachable by keyboard, including reduced and disabled 
   }
 });
 
-test("mobile arrow browsing loops across both ends for multiple turns and focuses the centered copy", async () => {
-  for (const count of [2, 3, 6]) {
+test("arrow browsing loops across both ends at every width and focuses the centered copy", async () => {
+  for (const width of [390, 820, 1440]) for (const count of [2, 3, 6]) {
     for (const options of [{}, { reduced: true }, { motion: { enabled: false } }]) {
-      const env = await mountHero({ ...options, products: sixProducts.slice(0, count), compact: true });
+      const env = await mountHero({ ...options, products: sixProducts.slice(0, count), compact: width <= 680, width });
       let logical = 0;
       for (const direction of [-1, 1]) {
         for (let step = 0; step < count * 3; step += 1) {
@@ -534,67 +574,319 @@ test("mobile arrow browsing loops across both ends for multiple turns and focuse
   }
 });
 
-test("a phone drag follows the finger in its first frame and releases into free momentum", async () => {
-  const env = await mountHero({ products: sixProducts, compact: true });
-  const opening = parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
-  env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 250, clientY: 300 });
-  env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 116 });
-  env.flush();
-  const afterOneFrame = opening - parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
-  assert.ok(Math.abs(afterOneFrame - 100) < 0.001, "the jar follows the full 100px finger movement in the next display frame");
-  env.flush(); env.flush();
-  const afterThreeFrames = opening - parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
-  assert.ok(Math.abs(afterThreeFrames - 100) < 0.001, "holding the finger still does not add easing drift");
-  env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 132 });
-  env.settle();
-  assert.equal(env.context.scrollY, 0);
-  assert.equal(env.captures.size, 0);
-  assert.equal(env.jarEvent("click", 0, { timeStamp: 133 }).defaultPrevented, true);
-  assert.ok(!env.links.some((link) => Math.abs(parseFloat(jarStyle(link).left) - 50) < 0.01), "a swipe is not rounded to a whole product slot");
-  env.dispose();
-});
-
-test("phone swipes and horizontal wheels start between jars while unrelated controls keep their input", async () => {
-  for (const direction of [-1, 1]) {
-    const env = await mountHero({ products: sixProducts, compact: true });
-    const background = element({ closest: () => null });
-    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
-    const opening = x();
-    env.jarEvent("pointerdown", 0, { target: background, pointerType: "touch", clientX: 190, clientY: 250 });
-    const move = env.jarEvent("pointermove", 0, { target: background, pointerType: "touch", clientX: 190 + direction * 80, clientY: 250, timeStamp: 116 });
-    env.flush();
-    assert.equal(move.defaultPrevented, true, "empty space in the hero must respond to a horizontal swipe");
-    assert.ok(Math.abs(x() - opening - direction * 80) < 0.001);
-    env.jarEvent("pointerup", 0, { target: background, pointerType: "touch", clientX: 190 + direction * 80, clientY: 250, timeStamp: 250 });
+test("Home and End choose the nearby loop copy at every width", async () => {
+  for (const width of [390, 820, 1440]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    env.jarEvent("keydown", 0, { key: "End" }); env.flush();
+    assert.ok(parseFloat(jarStyle(env.links[0]).left) > 50, "End moves one slot toward the nearby last jar instead of crossing the whole catalog");
     env.settle();
-    const beforeWheel = x();
-    const wheel = env.jarEvent("wheel", 0, { target: background, deltaX: direction * 40, deltaY: 0, deltaMode: 0 });
-    assert.equal(wheel.defaultPrevented, true);
+    assert.equal(env.harness.focusedLink, env.links[5]);
+    assert.equal(env.counter.textContent, "06 / 06");
+    env.jarEvent("keydown", 5, { key: "Home" }); env.flush();
+    assert.ok(parseFloat(jarStyle(env.links[5]).left) < 50, "Home returns along the nearby one-slot path");
     env.settle();
-    assert.ok(Math.abs(x() - beforeWheel + direction * 40) < 0.001);
-    assert.equal(env.context.scrollY, 0);
+    assert.equal(env.harness.focusedLink, env.links[0]);
+    assert.equal(env.counter.textContent, "01 / 06");
+    assert.equal(env.harness.focusOptions.preventScroll, true);
     env.dispose();
   }
-  for (const kind of ["a", "button", "input", "textarea", "select", '[role="button"]', "[contenteditable]", "[data-native-scroll]"]) {
-    const env = await mountHero({ products: sixProducts, compact: true });
-    const control = element({ closest: (selector) => selector.split(",").map((part) => part.trim()).includes(kind) ? control : null });
-    const opening = env.snapshot();
-    env.jarEvent("pointerdown", 0, { target: control, pointerType: "touch", clientX: 190, clientY: 250 });
-    const move = env.jarEvent("pointermove", 0, { target: control, pointerType: "touch", clientX: 90, clientY: 250, timeStamp: 116 });
-    const wheel = env.jarEvent("wheel", 0, { target: control, deltaX: 100, deltaY: 0, deltaMode: 0 });
-    assert.equal(move.defaultPrevented, false, `${kind} keeps native pointer behavior`);
-    assert.equal(wheel.defaultPrevented, false, `${kind} keeps native wheel behavior`);
-    env.jarEvent("pointerup", 0, { target: control, pointerType: "touch", clientX: 90, clientY: 250, timeStamp: 132 });
+});
+
+test("repeated held drags loop through the catalog in both directions at every width", async () => {
+  for (const width of [390, 820, 1440]) for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const slotPixels = env.components.getHeroLayout(width, 900).spacing * width;
+    let logical = 0;
+    for (let turn = 0; turn < 18; turn += 1) {
+      const fromX = direction > 0 ? width * 0.2 : width * 0.8;
+      const toX = fromX + direction * slotPixels;
+      const timeStamp = 100 + turn * 300;
+      env.jarEvent("pointerdown", logical, { pointerType: "touch", clientX: fromX, clientY: 300, timeStamp });
+      env.jarEvent("pointermove", logical, { pointerType: "touch", clientX: toX, clientY: 300, timeStamp: timeStamp + 16 });
+      env.flush();
+      logical = (logical - direction + 6) % 6;
+      assert.ok(Math.abs(parseFloat(jarStyle(env.links[logical]).left) - 50) < 0.001, "a one-slot finger movement immediately centers the adjacent jar, including across the seam");
+      env.jarEvent("pointerup", logical, { pointerType: "touch", clientX: toX, clientY: 300, timeStamp: timeStamp + 160 });
+      env.settle();
+      assert.equal(env.counter.textContent, `${String(logical + 1).padStart(2, "0")} / 06`);
+      assert.equal(env.context.scrollY, 0);
+    }
+    env.dispose();
+  }
+});
+
+test("a drag follows the finger in its first frame and releases into free momentum at every width", async () => {
+  for (const width of [390, 820, 1440]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const opening = parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 250, clientY: 300 });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 116 });
+    env.flush();
+    const afterOneFrame = opening - parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+    assert.ok(Math.abs(afterOneFrame - 100) < 0.001, "the jar follows the full 100px finger movement in the next display frame");
+    env.flush(); env.flush();
+    const afterThreeFrames = opening - parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+    assert.ok(Math.abs(afterThreeFrames - 100) < 0.001, "holding the finger still does not add easing drift");
+    env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 132 });
     env.settle();
-    assert.deepEqual(env.snapshot(), opening);
+    assert.equal(env.context.scrollY, 0);
+    assert.equal(env.captures.size, 0);
+    assert.equal(env.jarEvent("click", 0, { timeStamp: 133 }).defaultPrevented, true);
+    assert.ok(!env.links.some((link) => Math.abs(parseFloat(jarStyle(link).left) - 50) < 0.01), "a swipe is not rounded to a whole product slot");
+    env.dispose();
+  }
+});
+
+test("releasing before the pending drag frame preserves the full finger displacement", async () => {
+  for (const width of [390, 820, 1440]) for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * width;
+    const opening = x();
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: 100 });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 100, clientY: 300, timeStamp: 116 });
+    assert.equal(x(), opening, "the final drag sample is still waiting for its animation frame");
+    env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 190 + direction * 100, clientY: 300, timeStamp: 120 });
+    env.flush();
+    assert.ok((x() - opening) * direction >= 100 - 0.001, "the first release frame must include the entire drag before any momentum");
     assert.equal(env.captures.size, 0);
     env.dispose();
   }
 });
 
-test("short phone drags remain where released instead of snapping backward in either direction", async () => {
+test("the final release coordinate contributes the same movement as an explicit last pointer sample", async () => {
+  for (const width of [390, 820, 1440]) for (const direction of [-1, 1]) {
+    const releaseOnly = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const explicitSample = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const x = (env) => parseFloat(jarStyle(env.links[0]).left) / 100 * width;
+    for (const env of [releaseOnly, explicitSample]) {
+      env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: 100 });
+      env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 60, clientY: 300, timeStamp: 116 });
+      env.flush();
+    }
+    explicitSample.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 100, clientY: 300, timeStamp: 132 });
+    for (const env of [releaseOnly, explicitSample]) {
+      env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 190 + direction * 100, clientY: 300, timeStamp: 132 });
+      env.flush();
+    }
+    assert.ok(Math.abs(x(releaseOnly) - x(explicitSample)) < 0.001, "pointerup must apply the last position even when no pointermove delivered it");
+    releaseOnly.settle(); explicitSample.settle();
+    assert.ok(Math.abs(x(releaseOnly) - x(explicitSample)) < 0.001, "the last release movement also produces the same momentum");
+    releaseOnly.dispose(); explicitSample.dispose();
+  }
+});
+
+test("equal physical swipes coast consistently across event frequencies and viewport widths", async () => {
+  for (const direction of [-1, 1]) {
+    const coastBySpeed = [];
+    for (const speed of [1, 6]) {
+      const coasts = [];
+      for (const width of [390, 820, 1440]) for (const interval of [4, 8, 16]) {
+        const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+        const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * width;
+        const started = env.context.performance.now();
+        const duration = speed === 1 ? 96 : 16;
+        env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: started });
+        for (let elapsed = interval; elapsed <= duration; elapsed += interval) {
+          env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * speed * elapsed, clientY: 300, timeStamp: started + elapsed });
+          env.flush(interval);
+        }
+        const released = x();
+        env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 190 + direction * speed * duration, clientY: 300, timeStamp: started + duration });
+        env.settle();
+        const coast = (x() - released) * direction;
+        assert.ok(coast > 20, "a moving release must coast in its physical direction");
+        coasts.push(coast);
+        env.dispose();
+      }
+      assert.ok(Math.max(...coasts) - Math.min(...coasts) < 1, `a ${speed}px/ms swipe must not depend on 4/8/16ms samples or screen width`);
+      coastBySpeed.push(coasts[0]);
+    }
+    assert.ok(coastBySpeed[1] > coastBySpeed[0], "a faster flick travels farther");
+    assert.ok(coastBySpeed[1] < coastBySpeed[0] * 3, "extreme release speeds are bounded in physical pixels");
+  }
+});
+
+test("released momentum follows elapsed time even when display frames are dropped", async () => {
+  for (const width of [390, 820, 1440]) {
+    const regular = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const delayed = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const x = (env) => parseFloat(jarStyle(env.links[0]).left) / 100 * width;
+    for (const env of [regular, delayed]) {
+      const started = env.context.performance.now();
+      env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: started });
+      env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 94, clientY: 300, timeStamp: started + 96 });
+      env.flush(96);
+      env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 94, clientY: 300, timeStamp: started + 96 });
+    }
+    const released = x(regular);
+    for (const elapsed of [120, 360]) {
+      for (let time = 0; time < elapsed; time += 8) regular.flush(8);
+      delayed.flush(elapsed);
+      assert.ok(Math.abs(x(regular) - x(delayed)) < 0.001, "one delayed frame reaches the same position as many timely frames");
+      assert.ok(x(delayed) < released, "the comparison includes actual released motion");
+    }
+    regular.settle(); delayed.settle();
+    assert.ok(Math.abs(x(regular) - x(delayed)) < 0.001);
+    regular.dispose(); delayed.dispose();
+  }
+});
+
+test("holding the last pointer position before release stops residual momentum", async () => {
+  for (const width of [390, 820, 1440]) for (const pause of [100, 160]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * width;
+    const started = Math.ceil(env.context.performance.now());
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: started });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 94, clientY: 300, timeStamp: started + 16 });
+    env.flush(16);
+    const held = x();
+    env.advanceTime(pause);
+    env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 94, clientY: 300, timeStamp: started + 16 + pause });
+    env.flush(); env.settle();
+    assert.ok(Math.abs(x() - held) < 0.001, "an old velocity sample cannot move the jar after a deliberate hold");
+    env.dispose();
+  }
+});
+
+test("swipe frames move jars without rewriting stationary styles or unchanged counters at every width", async () => {
+  for (const width of [390, 820, 1440]) for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    env.settle();
+    const writes = new Map();
+    const record = (name, value) => {
+      if (!writes.has(name)) writes.set(name, []);
+      writes.get(name).push(value);
+    };
+    const watchProperty = (target, key, name) => {
+      let value = target[key];
+      Object.defineProperty(target, key, {
+        configurable: true, enumerable: true,
+        get: () => value,
+        set: (next) => { record(name, next); value = next; },
+      });
+    };
+    const watchStyleProperties = (style, name, include = () => true) => {
+      for (const method of ["setProperty", "removeProperty"]) {
+        const original = style[method];
+        style[method] = (...args) => {
+          if (include(args[0])) record(name, args);
+          return original(...args);
+        };
+      }
+    };
+    watchProperty(env.counter, "textContent", "counter");
+    watchStyleProperties(env.header.style, "stationary scene");
+    for (const [target, properties] of [
+      [env.seal.style, ["transform"]], [env.arc.style, ["transform", "opacity"]],
+      [env.surface.style, ["opacity", "pointerEvents"]], [env.surface, ["inert"]],
+      [env.incoming, ["inert"]], [env.progress.style, ["transform"]],
+      [env.cue.style, ["opacity", "visibility", "pointerEvents"]], [env.cue, ["tabIndex"]],
+    ]) for (const property of properties) watchProperty(target, property, "stationary scene");
+    for (const link of env.links) {
+      watchProperty(link.style, "transform", "jar transforms");
+      watchProperty(link.style, "zIndex", "jar stacking");
+      watchStyleProperties(link.style, "jar brightness", (property) => property === "--jar-brightness");
+    }
+    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+    const opening = x();
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300 });
+    for (let sample = 1; sample <= 16; sample += 1) {
+      const distance = 6 + sample * 4;
+      env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * distance, clientY: 300, timeStamp: 100 + sample * 16 });
+      env.flush();
+      assert.ok(Math.abs(x() - opening - direction * distance) < 0.001, "each display frame follows its real pointer sample");
+    }
+    assert.equal(env.counter.textContent, "01 / 06");
+    assert.equal(writes.get("counter")?.length ?? 0, 0, "remaining on the same product must not replace the counter text node");
+    assert.ok(writes.get("jar transforms").length >= 16, "the write check must include actual animation frames");
+    const focusDistance = env.components.getHeroLayout(width, 900).spacing * width * 0.6;
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * focusDistance, clientY: 300, timeStamp: 372 });
+    env.flush();
+    const nextCounter = direction < 0 ? "02 / 06" : "06 / 06";
+    assert.deepEqual(writes.get("counter"), [nextCounter], "crossing to the next product updates the counter once");
+    for (let sample = 1; sample <= 12; sample += 1) {
+      env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * (focusDistance + sample), clientY: 300, timeStamp: 372 + sample * 16 });
+      env.flush();
+    }
+    assert.deepEqual(writes.get("counter"), [nextCounter], "continued frames within the same product need no counter writes");
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: 580 });
+    env.flush();
+    env.jarEvent("pointercancel", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: 596 });
+    env.settle();
+    assert.deepEqual(writes.get("counter"), [nextCounter, "01 / 06"], "reversing to the original product makes just one further update");
+    for (const name of ["stationary scene", "jar stacking", "jar brightness"]) {
+      assert.equal(writes.get(name)?.length ?? 0, 0, `${name} should not be rewritten during horizontal swiping or its settling frames`);
+    }
+    env.dispose();
+  }
+});
+
+test("phone jars remain rendered just outside the viewport without offscreen tab stops", async () => {
   for (const direction of [-1, 1]) {
     const env = await mountHero({ products: sixProducts, compact: true });
+    const arriving = env.links[direction > 0 ? 1 : 5];
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300 });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 70, clientY: 300, timeStamp: 116 });
+    env.flush();
+    const pose = jarStyle(arriving);
+    const x = parseFloat(pose.left) / 100 * env.section.clientWidth;
+    const height = parseFloat(pose.height) / 100 * env.surface.clientHeight;
+    const angle = Number(arriving.style.transform.match(/rotate\(([-\d.e]+)rad\)/)[1]);
+    const reach = (parseFloat(pose.width) * Math.abs(Math.cos(angle)) + height * Math.abs(Math.sin(angle))) / 2;
+    assert.ok(direction > 0 ? x - reach > env.section.clientWidth : x + reach < 0, "the rotated jar link is entirely outside the screen");
+    assert.equal(arriving.style.visibility, "visible", "the next artwork is ready before its link enters the viewport");
+    assert.equal(arriving.tabIndex, -1, "offscreen preparation must not add an invisible keyboard destination");
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 20, clientY: 300, timeStamp: 132 });
+    env.flush();
+    assert.equal(arriving.style.visibility, "visible");
+    assert.equal(arriving.tabIndex, 0, "the same link becomes keyboard reachable when it enters the viewport");
+    env.dispose();
+  }
+});
+
+test("swipes and horizontal wheels start between jars at every width while controls keep their input", async () => {
+  for (const width of [390, 820, 1440]) {
+    for (const direction of [-1, 1]) {
+      const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+      const background = element({ closest: () => null });
+      const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+      const opening = x();
+      env.jarEvent("pointerdown", 0, { target: background, pointerType: "touch", clientX: 190, clientY: 250 });
+      const move = env.jarEvent("pointermove", 0, { target: background, pointerType: "touch", clientX: 190 + direction * 80, clientY: 250, timeStamp: 116 });
+      env.flush();
+      assert.equal(move.defaultPrevented, true, "empty space in the hero must respond to a horizontal swipe");
+      assert.ok(Math.abs(x() - opening - direction * 80) < 0.001);
+      env.jarEvent("pointerup", 0, { target: background, pointerType: "touch", clientX: 190 + direction * 80, clientY: 250, timeStamp: 250 });
+      env.settle();
+      const beforeWheel = x();
+      const wheel = env.jarEvent("wheel", 0, { target: background, deltaX: direction * 40, deltaY: 0, deltaMode: 0 });
+      assert.equal(wheel.defaultPrevented, true);
+      env.settle();
+      assert.ok(Math.abs(x() - beforeWheel + direction * 40) < 0.001);
+      assert.equal(env.context.scrollY, 0);
+      env.dispose();
+    }
+    for (const kind of ["a", "button", "input", "textarea", "select", '[role="button"]', "[contenteditable]", "[data-native-scroll]"]) {
+      const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+      const control = element({ closest: (selector) => selector.split(",").map((part) => part.trim()).includes(kind) ? control : null });
+      const opening = env.snapshot();
+      env.jarEvent("pointerdown", 0, { target: control, pointerType: "touch", clientX: 190, clientY: 250 });
+      const move = env.jarEvent("pointermove", 0, { target: control, pointerType: "touch", clientX: 90, clientY: 250, timeStamp: 116 });
+      const wheel = env.jarEvent("wheel", 0, { target: control, deltaX: 100, deltaY: 0, deltaMode: 0 });
+      assert.equal(move.defaultPrevented, false, `${kind} keeps native pointer behavior`);
+      assert.equal(wheel.defaultPrevented, false, `${kind} keeps native wheel behavior`);
+      env.jarEvent("pointerup", 0, { target: control, pointerType: "touch", clientX: 90, clientY: 250, timeStamp: 132 });
+      env.settle();
+      assert.deepEqual(env.snapshot(), opening);
+      assert.equal(env.captures.size, 0);
+      env.dispose();
+    }
+  }
+});
+
+test("short drags remain where released at every width instead of snapping backward in either direction", async () => {
+  for (const width of [390, 820, 1440]) for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
     const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
     const opening = x();
     env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300 });
@@ -614,9 +906,9 @@ test("short phone drags remain where released instead of snapping backward in ei
   }
 });
 
-test("phone momentum follows the latest reversal and a new drag catches an existing glide", async () => {
-  for (const direction of [-1, 1]) {
-    const env = await mountHero({ products: sixProducts, compact: true });
+test("momentum follows the latest reversal and new drags catch a glide at every width", async () => {
+  for (const width of [390, 820, 1440]) for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
     const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
     env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300 });
     env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 100, clientY: 300, timeStamp: 116 });
@@ -664,30 +956,35 @@ test("background phone gestures preserve vertical scrolling, pinch zoom and canc
   assert.equal(env.section.listeners.size, 0);
 });
 
-test("phone vertical scrolling carries the browsed jar forward and retraces it when scrolling back", async () => {
-  const env = await mountHero({ products: sixProducts, compact: true });
-  env.jarEvent("keydown", 0, { key: "End" }); env.settle();
-  const selected = env.links[5];
-  assert.equal(env.counter.textContent, "06 / 06");
-  const poses = new Map();
-  for (const phase of [0, 0.01, 0.1, 0.3, 0.65, 0.8, 1]) {
-    env.scrollTo(phase);
-    const pose = jarStyle(selected);
-    poses.set(phase, { left: pose.left, top: pose.top, height: pose.height });
-    if (phase <= 0.3) assert.ok(Math.abs(parseFloat(pose.left) - (50 - phase * 2.4 * 60)) < 0.001, "vertical motion starts from the selected jar, without snapping back to Amla");
+test("vertical scrolling carries the browsed jar forward and retraces it at every width", async () => {
+  for (const width of [390, 820, 1440]) {
+    const env = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const reference = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    env.jarEvent("keydown", 0, { key: "End" }); env.settle();
+    const selected = env.links[5];
+    assert.equal(env.counter.textContent, "06 / 06");
+    const poses = new Map();
+    for (const phase of [0, 0.01, 0.1, 0.3, 0.65, 0.8, 1]) {
+      env.scrollTo(phase);
+      reference.scrollTo(phase);
+      const pose = jarStyle(selected);
+      poses.set(phase, { left: pose.left, top: pose.top, height: pose.height });
+      const referencePose = jarStyle(reference.links[0]);
+      for (const property of ["left", "top", "height"]) assertNumericStyle(pose[property], referencePose[property]);
+    }
+    assert.equal(env.surface.style.opacity, "0");
+    for (const phase of [0.8, 0.65, 0.3, 0.1, 0.01, 0]) {
+      env.scrollTo(phase);
+      const pose = jarStyle(selected);
+      assert.deepEqual({ left: pose.left, top: pose.top, height: pose.height }, poses.get(phase));
+    }
+    assert.equal(env.counter.textContent, "06 / 06");
+    assert.ok(Math.abs(parseFloat(jarStyle(selected).left) - 50) < 0.01);
+    env.dispose(); reference.dispose();
   }
-  assert.equal(env.surface.style.opacity, "0");
-  for (const phase of [0.8, 0.65, 0.3, 0.1, 0.01, 0]) {
-    env.scrollTo(phase);
-    const pose = jarStyle(selected);
-    assert.deepEqual({ left: pose.left, top: pose.top, height: pose.height }, poses.get(phase));
-  }
-  assert.equal(env.counter.textContent, "06 / 06");
-  assert.ok(Math.abs(parseFloat(jarStyle(selected).left) - 50) < 0.01);
-  env.dispose();
 });
 
-test("small mobile catalogs keep repeated jar destinations correct and release their work on unmount", async () => {
+test("small catalogs keep repeated destinations through viewport changes and release their work on unmount", async () => {
   for (const count of [2, 3]) {
     const env = await mountHero({ products: sixProducts.slice(0, count), compact: true });
     assert.equal(env.productCount, count);
@@ -707,11 +1004,12 @@ test("small mobile catalogs keep repeated jar destinations correct and release t
     env.jarEvent("pointerup", centered, { pointerType: "touch", timeStamp: 116 });
     assert.equal(env.jarEvent("click", centered, { timeStamp: 117 }).defaultPrevented, false, "tapping the repeated jar retains product navigation");
     env.resize(1440, 900);
-    for (const link of env.links.slice(count)) {
-      assert.equal(link.style.visibility, "hidden");
-      assert.equal(link.tabIndex, -1);
-    }
+    assert.ok(Math.abs(parseFloat(jarStyle(env.links[centered]).left) - 50) < 0.01, "the selected repeated copy stays centered on larger screens");
+    assert.equal(env.links[centered].style.visibility, "visible");
+    assert.equal(env.links[centered].tabIndex, 0);
+    assert.equal(env.counter.textContent, `${String(count).padStart(2, "0")} / ${String(count).padStart(2, "0")}`);
     env.resize(390, 900);
+    assert.ok(Math.abs(parseFloat(jarStyle(env.links[centered]).left) - 50) < 0.01, "returning to a phone preserves the same copy");
     env.jarEvent("pointerdown", 0, { pointerType: "touch", timeStamp: 200 });
     env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 500, timeStamp: 216 });
     assert.ok(env.frames.size > 0);
@@ -740,34 +1038,38 @@ test("six-product browsing preserves the single-jar header, cover, and section h
       assertNumericStyle(six.header.properties.get("--hero-header-progress"), baseline.header.properties.get("--hero-header-progress"));
       assertNumericStyle(six.header.properties.get("--hero-header-surface"), baseline.header.properties.get("--hero-header-surface"));
     }
-    const retained = compact ? 5 : 0;
-    assert.ok(Math.abs(parseFloat(jarStyle(six.links[retained]).left) - 50) < 0.01, compact ? "phone page scrolling retains the browsed jar" : "desktop page scrolling resets manual browsing to Amla");
+    assert.ok(Math.abs(parseFloat(jarStyle(six.links[5]).left) - 50) < 0.01, "page scrolling retains the browsed jar at every viewport width");
     baseline.dispose(); six.dispose();
   }
 });
 
-test("fine vertical scroll increments reset manual browsing and return to the finite product sequence", async () => {
-  const manual = await mountHero({ products: sixProducts });
-  const reference = await mountHero({ products: sixProducts });
-  manual.jarEvent("keydown", 0, { key: "End" }); manual.settle();
-  assert.ok(Math.abs(parseFloat(jarStyle(manual.links.at(-1)).left) - 50) < 0.01);
-  for (let step = 1; step <= 40; step += 1) {
-    for (const env of [manual, reference]) {
-      env.setScrollPhase(step * 0.001);
-      env.context.emit("scroll");
-      env.flush();
+test("fine vertical scroll increments retain the browsed product and preserve page transition timing", async () => {
+  for (const width of [390, 820, 1440]) {
+    const manual = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    const reference = await mountHero({ products: sixProducts, compact: width <= 680, width });
+    manual.jarEvent("keydown", 0, { key: "End" }); manual.settle();
+    assert.ok(Math.abs(parseFloat(jarStyle(manual.links.at(-1)).left) - 50) < 0.01);
+    for (let step = 1; step <= 40; step += 1) {
+      for (const env of [manual, reference]) {
+        env.setScrollPhase(step * 0.001);
+        env.context.emit("scroll");
+        env.flush();
+      }
     }
+    manual.settle(); reference.settle();
+    manual.links.forEach((link, index) => {
+      const expected = reference.links[(index + 1) % 6];
+      for (const property of ["left", "top", "height", "width", "transform", "opacity"]) assertNumericStyle(link.style[property], expected.style[property]);
+      assert.equal(link.style.visibility, expected.style.visibility);
+      assert.equal(link.tabIndex, expected.tabIndex);
+    });
+    assert.equal(manual.counter.textContent, "06 / 06", "small page movements keep the manually selected product in focus");
+    assert.equal(reference.counter.textContent, "01 / 06");
+    assert.equal(manual.surface.style.opacity, reference.surface.style.opacity);
+    assert.equal(manual.header.properties.get("--hero-header-progress"), reference.header.properties.get("--hero-header-progress"));
+    assert.equal(manual.header.properties.get("--hero-header-surface"), reference.header.properties.get("--hero-header-surface"));
+    manual.dispose(); reference.dispose();
   }
-  manual.settle(); reference.settle();
-  manual.links.forEach((link, index) => {
-    for (const property of ["left", "top", "height", "width", "transform", "opacity", "visibility"]) assert.equal(link.style[property], reference.links[index].style[property], `${property} follows normal scroll for jar ${index}`);
-    assert.equal(link.tabIndex, reference.links[index].tabIndex);
-  });
-  assert.equal(manual.counter.textContent, reference.counter.textContent);
-  assert.equal(manual.surface.style.opacity, reference.surface.style.opacity);
-  assert.equal(manual.header.properties.get("--hero-header-progress"), reference.header.properties.get("--hero-header-progress"));
-  assert.equal(manual.header.properties.get("--hero-header-surface"), reference.header.properties.get("--hero-header-surface"));
-  manual.dispose(); reference.dispose();
 });
 
 test("each six-product slot receives 558 physical scroll pixels at a 900px viewport", async () => {
@@ -820,6 +1122,27 @@ test("resizing recalculates responsive jars and story dimensions without a break
   const disposed = env.links.map((link) => ({ ...link.style }));
   env.resize(390, 844);
   assert.deepEqual(env.links.map((link) => ({ ...link.style })), disposed, "the resize observer disconnects with the hero");
+});
+
+test("resizing across the phone breakpoint preserves the browsed product and partial swipe position", async () => {
+  for (const startingWidth of [390, 1440]) {
+    const env = await mountHero({ products: sixProducts, compact: startingWidth <= 680, width: startingWidth });
+    env.jarEvent("keydown", 0, { key: "End" }); env.settle();
+    const partialSlots = 60 / (env.components.getHeroLayout(startingWidth, 900).spacing * startingWidth);
+    env.jarEvent("pointerdown", 5, { pointerType: "touch", clientX: 190, clientY: 300 });
+    env.jarEvent("pointermove", 5, { pointerType: "touch", clientX: 250, clientY: 300, timeStamp: 116 });
+    env.flush();
+    assert.equal(env.captures.has(1), true);
+    for (const width of startingWidth === 390 ? [820, 1440, 390] : [390, 820, 1440]) {
+      env.resize(width, 900);
+      const expected = 50 + partialSlots * env.components.getHeroLayout(width, 900).spacing * 100;
+      assert.ok(Math.abs(parseFloat(jarStyle(env.links[5]).left) - expected) < 0.001, "responsive spacing changes without discarding the partial manual offset");
+      assert.equal(env.counter.textContent, "06 / 06");
+      assert.equal(env.section.dataset.dragging, "false", "a breakpoint change ends pointer capture without resetting the selected product");
+      assert.equal(env.captures.size, 0);
+    }
+    env.dispose();
+  }
 });
 
 test("dragging and horizontal wheel input use the current responsive jar spacing after resize", async () => {
