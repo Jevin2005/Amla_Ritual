@@ -184,7 +184,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         {privacyShop && <ShopifyConsentScripts shop={privacyShop} analyticsEnabled={analyticsConfig().shopifyEnabled} />}
       </head>
-      <body className="m-0 min-h-screen overflow-x-hidden bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
+      <body className="m-0 min-h-screen bg-[var(--ivory)] font-sans text-base leading-[1.6] text-[var(--charcoal)] antialiased [text-rendering:optimizeLegibility] selection:bg-[var(--amla)] selection:text-[var(--forest-dark)] [&_*:focus-visible]:outline-2 [&_*:focus-visible]:outline-offset-4 [&_*:focus-visible]:outline-[var(--botanical)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-45 max-[680px]:text-[15px]">
         <SiteLoading />
         <div id="site-content" style={{ display: "contents" }}>
           <Suspense fallback={<LoadingIndicator page label="Opening the botanical cabinet…" />}>

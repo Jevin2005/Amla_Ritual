@@ -54,7 +54,7 @@ export function HomePage() {
   const hasHero = getImageHeroProducts(products).length > 0;
   const CollectionHeading = hasHero ? "h2" : "h1";
   return (
-    <main className="overflow-x-clip" id="main-content" data-home-motion="calm" style={{ "--motion-duration": homeMotion.duration } as CSSProperties}>
+    <main id="main-content" data-home-motion="calm" style={{ "--motion-duration": homeMotion.duration } as CSSProperties}>
       <ProductHero products={products} settings={content.heroSettings} />
       <PreviousProductHero products={products} settings={content.heroSettings} />
       <section

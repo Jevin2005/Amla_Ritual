@@ -326,7 +326,9 @@ export function PreviousProductHero({ products, settings }: { products: Product[
   const heroTransitionDuration = mediaDuration;
 
   return (
-    <section id="previous-hero" data-previous-hero ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
+    // The scroll handoff owns this scene's visibility. A generic section reveal
+    // would move its sticky surface and fade out the background during arrival.
+    <section id="previous-hero" data-previous-hero data-reveal-ignore ref={root} className={styles.hero} aria-label="Featured botanical rituals" aria-roledescription="carousel"
       onPointerEnter={(event) => { if (event.pointerType === "mouse") setHovered(true); }}
       onPointerLeave={() => setHovered(false)}
       onFocusCapture={(event) => {

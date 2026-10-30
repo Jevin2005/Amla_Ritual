@@ -22,6 +22,7 @@
     "test:hero": "node --test tests/hero.test.mjs",
     "test:poster": "node --test tests/ingredient-poster.test.mjs",
     "test:background": "node --test tests/hero-background.test.mjs",
+    "test:scroll-layout": "node scripts/check-scroll-layout.mjs",
     "typecheck": "next typegen && tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run build && npm run check:site"
   },

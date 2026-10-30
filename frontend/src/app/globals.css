@@ -101,8 +101,9 @@
   }
 
   body {
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    /* Clip sideways artwork without creating a second scroll container for
+       the sticky scenes. Native document scrolling owns touch momentum. */
+    overflow-x: clip;
     background:
       radial-gradient(circle at 12% 8%, rgb(255 255 255 / 45%), transparent 30%),
       var(--ivory);
