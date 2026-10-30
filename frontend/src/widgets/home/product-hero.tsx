@@ -35,6 +35,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     section.dataset.handoff = String(Boolean(incoming));
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const visualViewport = window.visualViewport;
     let disposed = false;
     let frame = 0;
     let width = 1;
@@ -216,6 +217,18 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       // The visible scene follows browser chrome; the story keeps the small
       // viewport's scroll distances so hiding the address bar cannot skip ahead.
       storyHeight = Number.parseFloat(getComputedStyle(surface).minHeight) || height;
+      // dvh can lag behind the toolbar animation. Use the visual viewport for
+      // both sticky scenes so the outgoing background cannot expose the next
+      // hero through a strip at the bottom. Keep svh as the story's timebase.
+      // Pinch zoom changes the visual viewport, not the document composition.
+      if (!visualViewport || visualViewport.scale === 1) {
+        const visibleHeight = visualViewport?.height || window.innerHeight;
+        if (Number.isFinite(visibleHeight) && visibleHeight > 0) {
+          height = Math.max(storyHeight, visibleHeight);
+          section.style.setProperty("--stage-height", `${height}px`);
+          incoming?.style.setProperty("--landing-height", `${height}px`);
+        }
+      }
       layout = getHeroLayout(width, height);
       for (const link of productLinks.current) {
         if (!link) continue;
@@ -244,6 +257,12 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       section.style.setProperty("--arc-size", `${backdrop.arcSize}px`);
       section.style.setProperty("--arc-top", `${backdrop.arcTop}px`);
       readScroll();
+      // ResizeObserver runs after animation callbacks. Commit the new jar and
+      // cover geometry now, before the resized background is painted.
+      if (active && !document.hidden) {
+        cancelDraw();
+        draw(performance.now());
+      }
     };
     const preferencesChanged = () => {
       arrival.reset();
@@ -386,6 +405,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
     window.addEventListener("popstate", arrival.reset);
     window.addEventListener("hashchange", arrival.reset);
     window.addEventListener("resize", measure, { passive: true });
+    visualViewport?.addEventListener("resize", measure, { passive: true });
     window.addEventListener("pageshow", resume);
     window.addEventListener("blur", windowBlur);
     window.addEventListener("pointermove", trackPointer, { passive: true });
@@ -415,6 +435,7 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
       window.removeEventListener("popstate", arrival.reset);
       window.removeEventListener("hashchange", arrival.reset);
       window.removeEventListener("resize", measure);
+      visualViewport?.removeEventListener("resize", measure);
       window.removeEventListener("pageshow", resume);
       window.removeEventListener("blur", windowBlur);
       window.removeEventListener("pointermove", trackPointer);
@@ -435,7 +456,9 @@ export function ProductHero({ products, settings }: { products: Product[]; setti
         delete incoming.dataset.arrival;
         incoming.style.removeProperty("--arrival-runway");
         incoming.style.removeProperty("--arrival-lead");
+        incoming.style.removeProperty("--landing-height");
       }
+      section.style.removeProperty("--stage-height");
       section.style.removeProperty("--handoff-overlap");
       surface.inert = false;
       surface.style.opacity = "1";

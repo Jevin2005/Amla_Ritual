@@ -77,12 +77,17 @@ function mount(options = {}) {
   const surface = { dataset: {}, style: style(), inert: false };
   const reducedMotion = eventTarget({ matches: Boolean(options.reduced) });
   const finePointer = eventTarget({ matches: false });
+  const visualViewport = options.noVisualViewport ? undefined : eventTarget();
+  if (visualViewport) Object.defineProperties(visualViewport, {
+    height: { get: () => viewport.visualHeight ?? viewport.height },
+    scale: { get: () => viewport.scale ?? 1 },
+  });
   const document = eventTarget({
     hidden: false, querySelector: () => header,
     documentElement: { classList: { contains: (name) => name === "lenis" } },
   });
   const context = eventTarget({
-    harness, document, console, performance: { now: () => time }, module: { exports: {} }, scrollY: 0, innerHeight: viewport.height,
+    harness, document, visualViewport, console, performance: { now: () => time }, module: { exports: {} }, scrollY: 0, innerHeight: viewport.height,
     matchMedia: (query) => query.includes("prefers-reduced-motion") ? reducedMotion : finePointer,
     getComputedStyle: () => ({ minHeight: options.minHeight ?? `${viewport.storyHeight}px` }),
     requestAnimationFrame: (callback) => { frames.set(++nextFrame, callback); return nextFrame; },
@@ -100,11 +105,11 @@ function mount(options = {}) {
   });
   Object.defineProperties(section, {
     clientWidth: { get: () => viewport.width },
-    offsetHeight: { get: () => viewport.height },
+    offsetHeight: { get: () => Number.parseFloat(section.style.getPropertyValue("--stage-height")) || viewport.height },
   });
   Object.defineProperties(surface, {
     clientWidth: { get: () => viewport.width },
-    clientHeight: { get: () => viewport.height },
+    clientHeight: { get: () => Number.parseFloat(section.style.getPropertyValue("--stage-height")) || viewport.height },
   });
   section.getBoundingClientRect = () => ({ top: -context.scrollY, bottom: 6000 - context.scrollY, width: viewport.width, height: 6000 });
   surface.getBoundingClientRect = () => ({ top: 0, left: 0, bottom: viewport.height, width: viewport.width, height: viewport.height });
@@ -129,7 +134,7 @@ function mount(options = {}) {
   const cueNode = descendants.find((node) => node.props?.className === "scrollCue");
   const progressNode = descendants.find((node) => node.props?.className === "progress").props.children;
   const env = {
-    api, viewport, context, document, harness, section, surface, incoming, header, frames, observers, reducedMotion, finePointer,
+    api, viewport, context, document, visualViewport, harness, section, surface, incoming, header, frames, observers, reducedMotion, finePointer,
     seal: byClass("seal"), jar: byClass("product"), progress: nodes.get(progressNode),
     settle() {
       for (let i = 0; i < 240 && frames.size; i += 1) {
@@ -211,6 +216,52 @@ test("orientation changes remeasure both viewport dimensions and the story ancho
   assert.equal(env.cue().top, portraitDestination);
   assert.equal(env.jar.style.width, portraitWidth);
   env.dispose();
+});
+
+test("visual-only toolbar changes fill both scenes before CSS or window resize catches up", () => {
+  for (const phase of [0.28, 0.6, 0.8, 0.99]) {
+    const env = mount();
+    env.scroll(env.api.getHeroScrollOffset(phase, 740, products.length));
+    const original = timing(env);
+    for (const height of [760, 800, 844, 800, 760, 740]) {
+      // Leave innerHeight and the CSS viewport at 740px throughout the gesture.
+      env.viewport.visualHeight = height;
+      env.visualViewport.dispatch("resize");
+      assert.equal(env.surface.clientHeight, height, "outgoing scene covers the visible viewport immediately");
+      assert.equal(env.incoming.style.getPropertyValue("--landing-height"), `${height}px`, "incoming scene shares the same height");
+      const layout = env.api.getHeroLayout(390, height);
+      assert.equal(env.jar.style.height, `${layout.centerHeight * height}px`);
+      env.settle();
+      assert.deepEqual(timing(env), original, "toolbar motion cannot advance the reveal or move its destination");
+    }
+    env.dispose();
+    assert.equal(env.visualViewport.listeners.size, 0);
+    assert.equal(env.section.style.getPropertyValue("--stage-height"), "");
+    assert.equal(env.incoming.style.getPropertyValue("--landing-height"), "");
+  }
+});
+
+test("pinch zoom does not shrink the hero, and older browsers use window height", () => {
+  const env = mount();
+  env.viewport.visualHeight = 800;
+  env.visualViewport.dispatch("resize");
+  const originalJar = env.jar.style.height;
+  env.viewport.visualHeight = 400;
+  env.viewport.scale = 2;
+  env.visualViewport.dispatch("resize");
+  assert.equal(env.surface.clientHeight, 800);
+  assert.equal(env.jar.style.height, originalJar);
+  env.viewport.scale = 1;
+  env.viewport.visualHeight = 740;
+  env.visualViewport.dispatch("resize");
+  assert.equal(env.surface.clientHeight, 740);
+  env.dispose();
+
+  const fallback = mount({ noVisualViewport: true });
+  fallback.resize({ height: 800 }, "window");
+  assert.equal(fallback.surface.clientHeight, 800);
+  assert.equal(fallback.incoming.style.getPropertyValue("--landing-height"), "800px");
+  fallback.dispose();
 });
 
 test("reduced or disabled motion retains an immediate next-section link after viewport changes", () => {
