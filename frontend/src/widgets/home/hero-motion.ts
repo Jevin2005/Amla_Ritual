@@ -11,9 +11,9 @@ const scrollInputs = (height: number, count: number) => ({
 });
 
 /** Physical scroll distances in pixels, with a fixed-duration final handoff. */
-export function getHeroScrollMetrics(height: number, count: number) {
+export function getHeroScrollMetrics(height: number, count: number, mobile = false) {
   const measured = scrollInputs(height, count);
-  const travelDistance = measured.count > 1
+  const travelDistance = !mobile && measured.count > 1
     ? (measured.count - 1) * Math.max(380, measured.height * 0.62)
     : measured.height * 0.648;
   const finishDistance = measured.height * 0.702;
@@ -24,13 +24,13 @@ export function getHeroScrollMetrics(height: number, count: number) {
 /** Map physical scroll to the existing frame timeline without accelerating
  * through the middle jars. The last .52 of that timeline keeps its old pace.
  */
-export function getHeroScrollProgress(offset: number, height: number, count: number) {
+export function getHeroScrollProgress(offset: number, height: number, count: number, mobile = false) {
   const measured = scrollInputs(height, count);
-  const metrics = getHeroScrollMetrics(measured.height, measured.count);
+  const metrics = getHeroScrollMetrics(measured.height, measured.count, mobile);
   const position = clamp(Number.isNaN(offset) ? 0 : offset, 0, metrics.distance);
   if (position <= 0) return 0;
   if (position >= metrics.distance) return 1;
-  if (measured.count <= 1) return clamp(position / (measured.height * 1.35));
+  if (mobile || measured.count <= 1) return clamp(position / (measured.height * 1.35));
   if (position >= metrics.travelDistance) {
     return clamp(0.48 + (position - metrics.travelDistance) / (measured.height * 1.35));
   }
@@ -40,13 +40,13 @@ export function getHeroScrollProgress(offset: number, height: number, count: num
 }
 
 /** Inverse mapping for anchors and checks that address a particular hero phase. */
-export function getHeroScrollOffset(phase: number, height: number, count: number) {
+export function getHeroScrollOffset(phase: number, height: number, count: number, mobile = false) {
   const measured = scrollInputs(height, count);
-  const metrics = getHeroScrollMetrics(measured.height, measured.count);
+  const metrics = getHeroScrollMetrics(measured.height, measured.count, mobile);
   const progress = clamp(Number.isNaN(phase) ? 0 : phase);
   if (progress <= 0) return 0;
   if (progress >= 1) return metrics.distance;
-  if (measured.count <= 1) return progress * measured.height * 1.35;
+  if (mobile || measured.count <= 1) return progress * measured.height * 1.35;
   return progress <= 0.48
     ? smoothstep(progress / 0.48) * metrics.travelDistance
     : metrics.travelDistance + (progress - 0.48) * measured.height * 1.35;
@@ -55,15 +55,15 @@ export function getHeroScrollOffset(phase: number, height: number, count: number
 /** Keep the next composition at its beginning throughout the crossfade, then
  * absorb a short amount of continuing wheel/touch travel before releasing it.
  */
-export function getHeroHandoffMetrics(height: number, count: number) {
+export function getHeroHandoffMetrics(height: number, count: number, mobile = false) {
   const measured = scrollInputs(height, count);
-  const { distance } = getHeroScrollMetrics(measured.height, measured.count);
-  const start = getHeroScrollOffset(0.72, measured.height, measured.count);
+  const { distance } = getHeroScrollMetrics(measured.height, measured.count, mobile);
+  const start = getHeroScrollOffset(0.72, measured.height, measured.count, mobile);
   const lead = distance - start;
-  const hold = clamp(measured.height * 0.85, 480, 960);
+  const hold = mobile ? 0 : clamp(measured.height * 0.85, 480, 960);
   return {
     start,
-    revealEnd: getHeroScrollOffset(0.9, measured.height, measured.count),
+    revealEnd: getHeroScrollOffset(0.9, measured.height, measured.count, mobile),
     end: distance + hold,
     overlap: measured.height + lead,
     runway: lead + hold,
@@ -85,6 +85,7 @@ export function createHeroArrivalGuard() {
     reset,
     arm() { armed = true; },
     limit(offset: number, time: number, metrics: ReturnType<typeof getHeroHandoffMetrics>) {
+      if (metrics.hold === 0) return offset;
       if (offset < metrics.start) { arrivedAt = null; released = false; }
       if (!armed || released) return offset;
       if (offset < metrics.revealEnd) { arrivedAt = null; return offset; }
@@ -93,6 +94,25 @@ export function createHeroArrivalGuard() {
       return Math.min(offset, metrics.end - metrics.hold);
     },
   };
+}
+
+/** The phone carousel keeps moving as the finite page transition completes. */
+export function getHeroTravel(progress: number, count: number, mobile = false) {
+  const p = clamp(Number.isNaN(progress) ? 0 : progress);
+  if (count <= 1) return 0;
+  return mobile ? p * 2.4 : smoothstep(p / 0.48) * Math.max(0, count - 1);
+}
+
+export function wrapHeroIndex(value: number, count: number) {
+  if (!Number.isFinite(value) || !Number.isFinite(count) || count <= 0) return 0;
+  return ((value % count) + count) % count;
+}
+
+/** Repeat small catalogs so a slot only wraps once it is fully offscreen. */
+export function getHeroLoopSlotCount(count: number) {
+  if (!Number.isFinite(count) || count <= 0) return 0;
+  const size = Math.trunc(count);
+  return size === 2 || size === 3 ? size * 2 : size;
 }
 
 export type JarPose = {
@@ -164,10 +184,10 @@ export function getHeroBackdrop(width: number, height: number) {
 /** Manual offset is measured in product slots; speed is signed slots per ms.
  * Positive values move the band left. Neither changes the page's finite timeline.
  */
-export function getHeroFrame(progress: number, count: number, compact = false, manualOffset = 0, speed = 0, layout?: HeroLayout) {
+export function getHeroFrame(progress: number, count: number, compact = false, manualOffset = 0, speed = 0, layout?: HeroLayout, looping = false) {
   const p = clamp(progress);
   const drift = smoothstep(p / 0.48);
-  const travel = drift * Math.max(0, count - 1);
+  const travel = getHeroTravel(p, count, looping);
   const manual = Number.isFinite(manualOffset) ? manualOffset : 0;
   const velocity = Number.isFinite(speed) ? speed : 0;
   // Adding jars must not retime the established cover, header, or section handoff.
@@ -176,8 +196,11 @@ export function getHeroFrame(progress: number, count: number, compact = false, m
   const textOpacity = 1 - smoothstep((p - 0.44) / 0.16);
   // Reveal the next section while the last jar leaves, with no empty hold.
   const reveal = smoothstep((p - 0.72) / 0.18);
-  const focus = Math.min(count - 1, Math.max(0, Math.round(travel + (count > 1 ? manual : 0))));
-  const poses: JarPose[] = Array.from({ length: count }, (_, index) => {
+  const focus = looping
+    ? wrapHeroIndex(Math.round(travel + (count > 1 ? manual : 0)), count)
+    : Math.min(count - 1, Math.max(0, Math.round(travel + (count > 1 ? manual : 0))));
+  const slotCount = looping ? getHeroLoopSlotCount(count) : count;
+  const poses: JarPose[] = Array.from({ length: slotCount }, (_, index) => {
     if (count === 1) {
       const driftWidth = layout ? 0.085 - clamp((layout.spacing - 0.34) / 0.26) * 0.06 : compact ? 0.025 : 0.085;
       return {
@@ -190,9 +213,10 @@ export function getHeroFrame(progress: number, count: number, compact = false, m
         depthBlur: 0,
       };
     }
-    // Preserve the existing centred Amla at the opening, then pass each jar
-    // through that foreground slot without wrapping the vertical scroll story.
-    const offset = index - travel - manual;
+    // Wrap the rendered slot, never the interpolated travel value. This keeps
+    // swipes continuous through any number of turns in either direction.
+    const rawOffset = index - travel - manual;
+    const offset = looping ? wrapHeroIndex(rawOffset + slotCount / 2, slotCount) - slotCount / 2 : rawOffset;
     const x = 0.5 + offset * (layout?.spacing ?? (compact ? 0.68 : 0.37));
     const prominence = 1 - smoothstep(Math.abs(offset) / 1.8);
     const centerHeight = layout ? layout.centerHeight * (1 - drift * 0.09) : (compact ? 0.48 : 0.55) - drift * 0.045;

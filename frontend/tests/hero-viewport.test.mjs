@@ -180,12 +180,12 @@ function timing(env) {
 test("collapsing and expanding phone toolbars resize the scene without retiming the story or arrival", () => {
   for (const phase of [0.28, 0.6, 0.8, 0.99]) {
     const env = mount();
-    env.scroll(env.api.getHeroScrollOffset(phase, 740, products.length));
+    env.scroll(env.api.getHeroScrollOffset(phase, 740, products.length, true));
     const original = timing(env);
     const originalTop = env.section.style.getPropertyValue("--seal-top");
     const originalJarHeight = env.jar.style.height;
     const originalCover = env.seal.style.transform;
-    assert.equal(original.destination, env.api.getHeroScrollMetrics(740, products.length).distance);
+    assert.equal(original.destination, env.api.getHeroScrollMetrics(740, products.length, true).distance);
     env.resize({ height: 800 });
     assert.deepEqual(timing(env), original, `toolbar collapse must not change phase ${phase}`);
     assert.notEqual(env.section.style.getPropertyValue("--seal-top"), originalTop, "backdrop follows the larger visible area");
@@ -221,7 +221,7 @@ test("orientation changes remeasure both viewport dimensions and the story ancho
 test("visual-only toolbar changes fill both scenes before CSS or window resize catches up", () => {
   for (const phase of [0.28, 0.6, 0.8, 0.99]) {
     const env = mount();
-    env.scroll(env.api.getHeroScrollOffset(phase, 740, products.length));
+    env.scroll(env.api.getHeroScrollOffset(phase, 740, products.length, true));
     const original = timing(env);
     for (const height of [760, 800, 844, 800, 760, 740]) {
       // Leave innerHeight and the CSS viewport at 740px throughout the gesture.
@@ -284,14 +284,14 @@ test("reduced or disabled motion retains an immediate next-section link after vi
 
 test("unresolved minimum height falls back to the measured surface without invalid geometry", () => {
   const env = mount({ minHeight: "auto" });
-  assert.equal(env.cue().top, env.api.getHeroScrollMetrics(740, products.length).distance);
+  assert.equal(env.cue().top, env.api.getHeroScrollMetrics(740, products.length, true).distance);
   assert.ok(!/NaN|Infinity/.test(env.section.style.getPropertyValue("--story-extra")));
   env.dispose();
 });
 
 test("unmount cancels viewport work and restores the incoming hero and header", () => {
   const env = mount();
-  env.context.scrollY = env.api.getHeroScrollOffset(0.8, 740, products.length);
+  env.context.scrollY = env.api.getHeroScrollOffset(0.8, 740, products.length, true);
   env.context.dispatch("scroll");
   assert.ok(env.frames.size > 0);
   env.dispose();
@@ -310,9 +310,9 @@ test("unmount cancels viewport work and restores the incoming hero and header", 
   assert.equal(env.surface.style.opacity, "1");
 });
 
-test("fast wheel and touch arrivals cancel overshoot through the page scroller before rendering", () => {
+test("desktop arrivals still cancel overshoot through the page scroller before rendering", () => {
   for (const type of ["wheel", "touchstart"]) {
-    const env = mount();
+    const env = mount({ viewport: { width: 1440 } });
     const arrival = env.api.getHeroHandoffMetrics(740, products.length);
     const destination = env.api.getHeroScrollMetrics(740, products.length).distance;
     env.harness.onScroll = (top) => { env.context.scrollY = top; };
@@ -327,6 +327,23 @@ test("fast wheel and touch arrivals cancel overshoot through the page scroller b
     env.context.dispatch("click");
     env.scroll(arrival.end + 500);
     assert.equal(env.context.scrollY, arrival.end + 500, "explicit navigation must be free to leave");
+    env.dispose();
+  }
+});
+
+test("phone arrival follows native scrolling without a forced pause or return jump", () => {
+  for (const type of ["wheel", "touchstart"]) {
+    const env = mount();
+    const arrival = env.api.getHeroHandoffMetrics(740, products.length, true);
+    env.context.dispatch(type, { type, deltaY: 1000, deltaX: 0 });
+    env.scroll(arrival.end + 80);
+    assert.equal(env.context.scrollY, arrival.end + 80);
+    assert.equal(env.harness.scrollCalls.length, 0, "the page is never snapped back by the arrival guard");
+    assert.equal(env.surface.style.opacity, "0");
+    assert.equal(env.incoming.inert, false);
+    env.scroll(arrival.start - 100);
+    assert.equal(env.context.scrollY, arrival.start - 100);
+    assert.equal(env.surface.style.opacity, "1");
     env.dispose();
   }
 });

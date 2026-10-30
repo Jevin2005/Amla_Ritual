@@ -208,6 +208,7 @@ async function mountHero(options = {}) {
   env.context.innerHeight = surface.clientHeight;
   all(env.tree).filter((node) => node.props?.["data-hero-product"] !== undefined).forEach((node) => {
     const link = element({
+      props: node.props,
       viewport: { section, surface },
       getAttribute: (name) => name === "data-hero-product" ? String(node.props["data-hero-product"]) : null,
       closest: (selector) => selector === "[data-hero-product]" ? link : null,
@@ -215,7 +216,8 @@ async function mountHero(options = {}) {
     });
     links.push(link);
   });
-  Object.defineProperty(section, "offsetHeight", { get: () => section.dataset.reducedMotion === "true" ? surface.clientHeight : env.components.getHeroScrollMetrics(surface.clientHeight, links.length).sectionHeight });
+  const productCount = new Set(links.map((link) => link.getAttribute("data-hero-product"))).size;
+  Object.defineProperty(section, "offsetHeight", { get: () => section.dataset.reducedMotion === "true" ? surface.clientHeight : env.components.getHeroScrollMetrics(surface.clientHeight, productCount, section.clientWidth <= 680).sectionHeight });
   section.documentTop = 0;
   section.getBoundingClientRect = () => ({ top: section.documentTop - env.context.scrollY, bottom: section.documentTop - env.context.scrollY + section.offsetHeight });
   const cleanups = env.harness.effects.map((effect) => effect());
@@ -223,7 +225,7 @@ async function mountHero(options = {}) {
   env.flush();
   assert.ok(links.every((link) => link.style.left), "hero should position its images directly in the DOM");
   return {
-    ...env, section, surface, seal, arc, cue, counter, progress, links, incoming, captures,
+    ...env, section, surface, seal, arc, cue, counter, progress, links, productCount, incoming, captures,
     jarEvent(type, index = 0, extra = {}) {
       const event = { type, target: links[index], pointerId: 1, pointerType: "mouse", isPrimary: true, button: 0,
         clientX: 600, clientY: 350, timeStamp: 100, detail: 1, defaultPrevented: false, propagationStopped: false,
@@ -237,7 +239,7 @@ async function mountHero(options = {}) {
       assert.equal(env.frames.size, 0, "the idle hero must stop scheduling frames");
     },
     setScrollPhase(phase) {
-      env.context.scrollY = env.components.getHeroScrollOffset(phase, surface.clientHeight, links.length);
+      env.context.scrollY = env.components.getHeroScrollOffset(phase, surface.clientHeight, productCount, section.clientWidth <= 680);
     },
     scrollTo(progress) {
       this.setScrollPhase(progress);
@@ -475,7 +477,8 @@ test("all six jars remain reachable by keyboard, including reduced and disabled 
     const env = await mountHero({ ...options, products: sixProducts, compact: true });
     const reduced = options.reduced || options.motion?.enabled === false;
     assert.equal(env.links.length, 6);
-    assert.equal(env.links.at(-1).tabIndex, -1, "offscreen links must not remain in the tab sequence");
+    assert.equal(env.links[3].tabIndex, -1, "offscreen links must not remain in the tab sequence");
+    assert.equal(env.links.at(-1).tabIndex, 0, "the looping previous jar is visible at the left edge");
     for (let index = 0; index < 5; index += 1) {
       const key = env.jarEvent("keydown", index, { key: "ArrowRight" });
       assert.equal(key.defaultPrevented, true);
@@ -505,6 +508,223 @@ test("all six jars remain reachable by keyboard, including reduced and disabled 
   }
 });
 
+test("mobile arrow browsing loops across both ends for multiple turns and focuses the centered copy", async () => {
+  for (const count of [2, 3, 6]) {
+    for (const options of [{}, { reduced: true }, { motion: { enabled: false } }]) {
+      const env = await mountHero({ ...options, products: sixProducts.slice(0, count), compact: true });
+      let logical = 0;
+      for (const direction of [-1, 1]) {
+        for (let step = 0; step < count * 3; step += 1) {
+          const centered = env.links.findIndex((link) => link.style.visibility === "visible" && Math.abs(parseFloat(jarStyle(link).left) - 50) < 0.01);
+          assert.ok(centered >= 0);
+          const event = env.jarEvent("keydown", centered, { key: direction < 0 ? "ArrowLeft" : "ArrowRight" });
+          assert.equal(event.defaultPrevented, true);
+          env.settle();
+          logical = (logical + direction + count) % count;
+          const focused = env.harness.focusedLink;
+          assert.equal(Number(focused.getAttribute("data-hero-product")), logical);
+          assert.equal(focused.style.visibility, "visible", `keyboard focus must follow the visible copy: ${count} products, direction ${direction}, step ${step}`);
+          assert.ok(Math.abs(parseFloat(jarStyle(focused).left) - 50) < 0.01, `focused copy should be centered with ${count} products moving ${direction}`);
+          assert.equal(env.counter.textContent, `${String(logical + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`);
+          assert.equal(env.context.scrollY, 0);
+        }
+      }
+      env.dispose();
+    }
+  }
+});
+
+test("a phone drag follows the finger in its first frame and releases into free momentum", async () => {
+  const env = await mountHero({ products: sixProducts, compact: true });
+  const opening = parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+  env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 250, clientY: 300 });
+  env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 116 });
+  env.flush();
+  const afterOneFrame = opening - parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+  assert.ok(Math.abs(afterOneFrame - 100) < 0.001, "the jar follows the full 100px finger movement in the next display frame");
+  env.flush(); env.flush();
+  const afterThreeFrames = opening - parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+  assert.ok(Math.abs(afterThreeFrames - 100) < 0.001, "holding the finger still does not add easing drift");
+  env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 132 });
+  env.settle();
+  assert.equal(env.context.scrollY, 0);
+  assert.equal(env.captures.size, 0);
+  assert.equal(env.jarEvent("click", 0, { timeStamp: 133 }).defaultPrevented, true);
+  assert.ok(!env.links.some((link) => Math.abs(parseFloat(jarStyle(link).left) - 50) < 0.01), "a swipe is not rounded to a whole product slot");
+  env.dispose();
+});
+
+test("phone swipes and horizontal wheels start between jars while unrelated controls keep their input", async () => {
+  for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: true });
+    const background = element({ closest: () => null });
+    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+    const opening = x();
+    env.jarEvent("pointerdown", 0, { target: background, pointerType: "touch", clientX: 190, clientY: 250 });
+    const move = env.jarEvent("pointermove", 0, { target: background, pointerType: "touch", clientX: 190 + direction * 80, clientY: 250, timeStamp: 116 });
+    env.flush();
+    assert.equal(move.defaultPrevented, true, "empty space in the hero must respond to a horizontal swipe");
+    assert.ok(Math.abs(x() - opening - direction * 80) < 0.001);
+    env.jarEvent("pointerup", 0, { target: background, pointerType: "touch", clientX: 190 + direction * 80, clientY: 250, timeStamp: 250 });
+    env.settle();
+    const beforeWheel = x();
+    const wheel = env.jarEvent("wheel", 0, { target: background, deltaX: direction * 40, deltaY: 0, deltaMode: 0 });
+    assert.equal(wheel.defaultPrevented, true);
+    env.settle();
+    assert.ok(Math.abs(x() - beforeWheel + direction * 40) < 0.001);
+    assert.equal(env.context.scrollY, 0);
+    env.dispose();
+  }
+  for (const kind of ["a", "button", "input", "textarea", "select", '[role="button"]', "[contenteditable]", "[data-native-scroll]"]) {
+    const env = await mountHero({ products: sixProducts, compact: true });
+    const control = element({ closest: (selector) => selector.split(",").map((part) => part.trim()).includes(kind) ? control : null });
+    const opening = env.snapshot();
+    env.jarEvent("pointerdown", 0, { target: control, pointerType: "touch", clientX: 190, clientY: 250 });
+    const move = env.jarEvent("pointermove", 0, { target: control, pointerType: "touch", clientX: 90, clientY: 250, timeStamp: 116 });
+    const wheel = env.jarEvent("wheel", 0, { target: control, deltaX: 100, deltaY: 0, deltaMode: 0 });
+    assert.equal(move.defaultPrevented, false, `${kind} keeps native pointer behavior`);
+    assert.equal(wheel.defaultPrevented, false, `${kind} keeps native wheel behavior`);
+    env.jarEvent("pointerup", 0, { target: control, pointerType: "touch", clientX: 90, clientY: 250, timeStamp: 132 });
+    env.settle();
+    assert.deepEqual(env.snapshot(), opening);
+    assert.equal(env.captures.size, 0);
+    env.dispose();
+  }
+});
+
+test("short phone drags remain where released instead of snapping backward in either direction", async () => {
+  for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: true });
+    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+    const opening = x();
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300 });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 25, clientY: 300, timeStamp: 116 });
+    env.flush();
+    const released = x();
+    assert.ok(Math.abs(released - opening - direction * 25) < 0.001);
+    // Release after a brief hold, with no residual finger velocity.
+    env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 190 + direction * 25, clientY: 300, timeStamp: 250 });
+    for (let frame = 0; frame < 20; frame += 1) {
+      env.flush();
+      assert.ok(Math.abs(x() - released) < 0.001, "a partial-slot release must not drift back to a centered jar");
+    }
+    env.settle();
+    assert.equal(env.captures.size, 0);
+    env.dispose();
+  }
+});
+
+test("phone momentum follows the latest reversal and a new drag catches an existing glide", async () => {
+  for (const direction of [-1, 1]) {
+    const env = await mountHero({ products: sixProducts, compact: true });
+    const x = () => parseFloat(jarStyle(env.links[0]).left) / 100 * env.section.clientWidth;
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300 });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 100, clientY: 300, timeStamp: 116 });
+    env.flush();
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 88, clientY: 300, timeStamp: 132 });
+    env.flush();
+    const reversed = x();
+    env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 190 + direction * 88, clientY: 300, timeStamp: 140 });
+    env.flush(); env.flush();
+    assert.ok((x() - reversed) * direction < 0, "release momentum follows the final 12px reversal, not the older 100px movement");
+    const caught = x();
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", clientX: 190, clientY: 300, timeStamp: 180 });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 190 + direction * 20, clientY: 300, timeStamp: 196 });
+    env.flush();
+    assert.ok(Math.abs(x() - caught - direction * 20) < 0.001, "the new drag takes control without waiting for the old destination");
+    env.jarEvent("pointerup", 0, { pointerType: "touch", clientX: 190 + direction * 20, clientY: 300, timeStamp: 330 });
+    env.settle();
+    assert.ok(Math.abs(x() - caught - direction * 20) < 0.001);
+    env.dispose();
+  }
+});
+
+test("background phone gestures preserve vertical scrolling, pinch zoom and cancellation", async () => {
+  const env = await mountHero({ products: sixProducts, compact: true });
+  const background = element({ closest: () => null });
+  const opening = env.snapshot();
+  env.jarEvent("pointerdown", 0, { target: background, pointerType: "touch", clientX: 190, clientY: 300 });
+  const vertical = env.jarEvent("pointermove", 0, { target: background, pointerType: "touch", clientX: 188, clientY: 360, timeStamp: 116 });
+  const sideways = env.jarEvent("pointermove", 0, { target: background, pointerType: "touch", clientX: 70, clientY: 365, timeStamp: 132 });
+  assert.equal(vertical.defaultPrevented, false);
+  assert.equal(sideways.defaultPrevented, false, "a vertical gesture is never reclaimed as a carousel drag");
+  assert.equal(env.jarEvent("wheel", 0, { target: background, deltaX: 100, deltaY: 0, deltaMode: 0, ctrlKey: true }).defaultPrevented, false);
+  env.settle();
+  assert.deepEqual(env.snapshot(), opening);
+  env.jarEvent("pointerdown", 0, { target: background, pointerType: "touch", clientX: 190, clientY: 300, timeStamp: 200 });
+  env.jarEvent("pointermove", 0, { target: background, pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 216 });
+  env.flush();
+  const cancelled = jarStyle(env.links[0]).left;
+  env.jarEvent("pointercancel", 0, { target: background, pointerType: "touch", clientX: 150, clientY: 300, timeStamp: 232 });
+  env.settle();
+  assert.equal(jarStyle(env.links[0]).left, cancelled, "cancellation does not project momentum or snap to another slot");
+  assert.equal(env.captures.size, 0);
+  env.dispose();
+  assert.equal(env.frames.size, 0);
+  assert.equal(env.section.listeners.size, 0);
+});
+
+test("phone vertical scrolling carries the browsed jar forward and retraces it when scrolling back", async () => {
+  const env = await mountHero({ products: sixProducts, compact: true });
+  env.jarEvent("keydown", 0, { key: "End" }); env.settle();
+  const selected = env.links[5];
+  assert.equal(env.counter.textContent, "06 / 06");
+  const poses = new Map();
+  for (const phase of [0, 0.01, 0.1, 0.3, 0.65, 0.8, 1]) {
+    env.scrollTo(phase);
+    const pose = jarStyle(selected);
+    poses.set(phase, { left: pose.left, top: pose.top, height: pose.height });
+    if (phase <= 0.3) assert.ok(Math.abs(parseFloat(pose.left) - (50 - phase * 2.4 * 60)) < 0.001, "vertical motion starts from the selected jar, without snapping back to Amla");
+  }
+  assert.equal(env.surface.style.opacity, "0");
+  for (const phase of [0.8, 0.65, 0.3, 0.1, 0.01, 0]) {
+    env.scrollTo(phase);
+    const pose = jarStyle(selected);
+    assert.deepEqual({ left: pose.left, top: pose.top, height: pose.height }, poses.get(phase));
+  }
+  assert.equal(env.counter.textContent, "06 / 06");
+  assert.ok(Math.abs(parseFloat(jarStyle(selected).left) - 50) < 0.01);
+  env.dispose();
+});
+
+test("small mobile catalogs keep repeated jar destinations correct and release their work on unmount", async () => {
+  for (const count of [2, 3]) {
+    const env = await mountHero({ products: sixProducts.slice(0, count), compact: true });
+    assert.equal(env.productCount, count);
+    assert.equal(env.links.length, count * 2);
+    for (let index = 0; index < env.links.length; index += 1) {
+      const link = env.links[index];
+      assert.equal(link.props.href, `/shop/${sixProducts[index % count].slug}`);
+      assert.equal(link.getAttribute("data-hero-product"), String(index % count));
+      assert.equal(link.props["aria-label"], `Discover ${sixProducts[index % count].name}`);
+      if (link.style.visibility === "hidden") assert.equal(link.tabIndex, -1);
+    }
+    // A leftward keyboard step exposes the previous copy at the loop's start.
+    env.jarEvent("keydown", 0, { key: "ArrowLeft" }); env.settle();
+    const centered = env.links.findIndex((link) => Math.abs(parseFloat(jarStyle(link).left) - 50) < 0.01);
+    assert.equal(env.links[centered].props.href, `/shop/${sixProducts[count - 1].slug}`);
+    env.jarEvent("pointerdown", centered, { pointerType: "touch" });
+    env.jarEvent("pointerup", centered, { pointerType: "touch", timeStamp: 116 });
+    assert.equal(env.jarEvent("click", centered, { timeStamp: 117 }).defaultPrevented, false, "tapping the repeated jar retains product navigation");
+    env.resize(1440, 900);
+    for (const link of env.links.slice(count)) {
+      assert.equal(link.style.visibility, "hidden");
+      assert.equal(link.tabIndex, -1);
+    }
+    env.resize(390, 900);
+    env.jarEvent("pointerdown", 0, { pointerType: "touch", timeStamp: 200 });
+    env.jarEvent("pointermove", 0, { pointerType: "touch", clientX: 500, timeStamp: 216 });
+    assert.ok(env.frames.size > 0);
+    env.dispose();
+    assert.equal(env.frames.size, 0);
+    assert.equal(env.captures.size, 0);
+    assert.equal(env.section.listeners.size, 0);
+    assert.equal(env.context.listeners.size, 0);
+    assert.equal(env.context.document.listeners.size, 0);
+    assert.equal(env.media.listeners.size, 0);
+  }
+});
+
 test("six-product browsing preserves the single-jar header, cover, and section handoff timing", async () => {
   for (const compact of [false, true]) {
     const baseline = await mountHero({ compact });
@@ -520,7 +740,8 @@ test("six-product browsing preserves the single-jar header, cover, and section h
       assertNumericStyle(six.header.properties.get("--hero-header-progress"), baseline.header.properties.get("--hero-header-progress"));
       assertNumericStyle(six.header.properties.get("--hero-header-surface"), baseline.header.properties.get("--hero-header-surface"));
     }
-    assert.ok(Math.abs(parseFloat(jarStyle(six.links[0]).left) - 50) < 0.01, "page scrolling resets manual browsing without changing the opening Amla position");
+    const retained = compact ? 5 : 0;
+    assert.ok(Math.abs(parseFloat(jarStyle(six.links[retained]).left) - 50) < 0.01, compact ? "phone page scrolling retains the browsed jar" : "desktop page scrolling resets manual browsing to Amla");
     baseline.dispose(); six.dispose();
   }
 });
@@ -579,8 +800,8 @@ test("resizing recalculates responsive jars and story dimensions without a break
   assert.ok(Math.abs(jarHeight() - 218.4) < 1e-10, "phone sizing follows the smaller reference-width scale instead of retaining a desktop jar height");
   assert.ok(parseFloat(jarStyle(env.links[0]).width) < 390 * 0.75);
   assert.equal(env.surface.clientHeight, 844);
-  assert.equal(env.section.offsetHeight, env.components.getHeroScrollMetrics(844, 6).sectionHeight);
-  assert.equal(parseFloat(env.section.properties.get("--story-extra")), env.components.getHeroScrollMetrics(844, 6).distance - 844 * 1.35);
+  assert.equal(env.section.offsetHeight, env.components.getHeroScrollMetrics(844, 6, true).sectionHeight);
+  assert.equal(parseFloat(env.section.properties.get("--story-extra")), env.components.getHeroScrollMetrics(844, 6, true).distance - 844 * 1.35);
   assert.equal(jarStyle(env.links[0]).left, "50%");
   assert.equal(env.surface.style.opacity, "1");
   assert.equal(env.header.properties.get("--hero-header-progress"), "0");
@@ -815,7 +1036,7 @@ test("the handoff synchronizes incoming arrival geometry with responsive height 
     const env = await mountHero({ products });
     for (const [width, height] of [[320, 568], [390, 844], [768, 1024], [1440, 900], [2560, 1440]]) {
       env.resize(width, height);
-      const handoff = env.components.getHeroHandoffMetrics(height, env.links.length);
+      const handoff = env.components.getHeroHandoffMetrics(height, env.productCount, width <= 680);
       assert.equal(env.incoming.dataset.arrival, "true");
       assert.equal(env.section.properties.get("--handoff-overlap"), `calc(var(--stage-height) + ${handoff.lead}px)`);
       assert.equal(parseFloat(env.incoming.properties.get("--arrival-runway")), handoff.runway);
@@ -839,7 +1060,7 @@ test("arrival pinning is disabled for reduced motion and restored with current d
     assert.equal(env.incoming.dataset.arrival, "false");
     assert.equal(env.section.dataset.reducedMotion, "true");
     assert.equal(env.section.offsetHeight, env.surface.clientHeight, "reduced motion uses ordinary section height");
-    const handoff = env.components.getHeroHandoffMetrics(env.surface.clientHeight, env.links.length);
+    const handoff = env.components.getHeroHandoffMetrics(env.surface.clientHeight, env.productCount, env.section.clientWidth <= 680);
     assert.equal(parseFloat(env.incoming.properties.get("--arrival-runway")), handoff.runway, "inactive metrics stay current if the preference is later restored");
     assert.equal(env.incoming.inert, false);
   };
@@ -859,7 +1080,7 @@ test("arrival pinning is disabled for reduced motion and restored with current d
   assertNormalFlow(env);
   env.media.matches = false;
   env.media.emit("change"); env.settle();
-  const handoff = env.components.getHeroHandoffMetrics(844, 6);
+  const handoff = env.components.getHeroHandoffMetrics(844, 6, true);
   assert.equal(env.incoming.dataset.arrival, "true");
   assert.equal(parseFloat(env.incoming.properties.get("--arrival-runway")), handoff.runway);
   assert.equal(env.section.properties.get("--handoff-overlap"), `calc(var(--stage-height) + ${handoff.lead}px)`);
@@ -1214,13 +1435,15 @@ test("the discover cue lands on the fully revealed following hero with native mo
     const cue = all(env.tree).find((node) => node.props?.className === "scrollCue");
     cue.props.onClick({ preventDefault() { prevented = true; } });
     const reduced = options.reduced || options.motion?.enabled === false;
-    const distance = env.components.getHeroScrollMetrics(env.surface.clientHeight, env.links.length).distance;
+    const mobile = env.section.clientWidth <= 680;
+    const distance = env.components.getHeroScrollMetrics(env.surface.clientHeight, env.productCount, mobile).distance;
     assert.equal(prevented, true);
     assert.equal(env.harness.scrollRequest.behavior, reduced ? "instant" : "smooth");
     assert.equal(env.harness.scrollRequest.top, env.section.documentTop + (reduced ? env.section.offsetHeight : distance));
     if (!reduced) {
-      const handoff = env.components.getHeroHandoffMetrics(env.surface.clientHeight, env.links.length);
-      assert.ok(distance >= handoff.revealEnd && distance < handoff.end, "landing completes the reveal while retaining arrival room");
+      const handoff = env.components.getHeroHandoffMetrics(env.surface.clientHeight, env.productCount, mobile);
+      assert.ok(distance >= handoff.revealEnd && distance <= handoff.end, "landing completes the reveal");
+      assert.equal(distance === handoff.end, mobile, "only phones release immediately without an arrival hold");
       env.context.scrollY = env.harness.scrollRequest.top;
       env.context.emit("scroll");
       env.settle();

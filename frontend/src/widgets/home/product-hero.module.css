@@ -12,6 +12,7 @@
   --initial-wave: 7dvh;
   --stage-height: 100vh;
   --story-height: 100vh;
+  --story-extra: var(--catalog-story-extra, 0px);
   position: relative;
   z-index: 81;
   height: calc(var(--stage-height) + var(--story-height) * 1.35 + var(--story-extra, 0px));
@@ -37,6 +38,10 @@
   /* The supplied transparent center keeps the wordmark and foreground clear. */
 }
 @media (max-width: 680px) {
+  /* Phones can explore the whole catalog by swiping; vertical scrolling moves
+     directly into the next scene without waiting for every product. */
+  .hero { --story-extra: 0px; }
+  .stage { touch-action: pan-y pinch-zoom; user-select: none; }
   .botanicalBackdrop { background: none; opacity: .28; }
   .botanicalBackdrop::before,
   .botanicalBackdrop::after {
